@@ -9,6 +9,7 @@
 // you need to create an adapter
 // Sie müssen einen Adapter erstellen
 const utils = require("@iobroker/adapter-core");
+const { exists } = require("fs");
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
@@ -35,16 +36,30 @@ class AlexaTimerVis extends utils.Adapter {
 	 */
 	async onReady() {
 		// Initialize your adapter here
-		this.log.warn("Gucken ob es geht");
+
+		this.setState("info.connection", false, true);
+		
+		this.getForeignObject('alexa2.0.History.summary',  (err, obj) => {
+			if (err || obj == null) {
+				this.log.error("" + err)
+				this.log.error("Der Datenpunkt 'alexa2.0.History.summary' wurde nicht gefunden");
+			} else {
+				this.log.info("Alexa Datenpunkt wurde gefunden");
+				this.setState("info.connection", true, true);
+			}
+		});
+	
+		
+		
 
 		// Reset the connection indicator during startup
-		this.setState("info.connection", false, true);
-		this.setState("info.connection",true, true );
-
+		
+		//this.setState("info.connection",true, true );
+		
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.info("config option1: " + this.config.option1);
-		this.log.info("config option2: " + this.config.option2);
+		//this.log.info("config option1: " + this.config.option1);
+		//this.log.info("config option2: " + this.config.option2);
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
