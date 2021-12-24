@@ -43,20 +43,21 @@ async onReady() {
 
 	this.setState("info.connection", false, true);        
 	
-	// Suchen nach dem Alexa Datenpunkt
+	
+	// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 	
 	this.getForeignObject('alexa2.0.History.summary',  (err, obj) => {
 		if (err || obj == null) {
-			this.log.error("" + err)
+			this.log.error(JSON.stringify(err))
 			this.log.error("Der Datenpunkt 'alexa2.0.History.summary' wurde nicht gefunden");
 		} else {
-			this.log.info("Alexa Datenpunkt wurde gefunden");
 			
+			this.log.info("Alexa Datenpunkt wurde gefunden");
 			this.setState("info.connection", true, true);
 		}
 	});
 
-	let timerObject =     {
+	let timerObject = {
 		"timerActiv":{     
 			"timerCount": 0,
 			"condition": {            
@@ -81,6 +82,9 @@ async onReady() {
 				"minute": 0,
 				"second": 0,
 				"string_Timer": "",
+				"onlySec": 0,
+				"index": 0,
+				"name":""
 				},
 			},
 		"zahlen":{
@@ -120,6 +124,8 @@ async onReady() {
 		 * 
 		 * @param {number} sec Sekunden des neuen Timers
 		 * @param {string} name Name des Timers
+		 * 
+		 * 
 		 */
 
 		startTimer(sec, name){
@@ -128,8 +134,7 @@ async onReady() {
 			let endTime = startTimer + timerInMillisecond;
 			let hour = 0;
 			let minutes = 0;
-			let seconds = 0;
-			
+			let seconds = 0;			
 
 			//this.log.info("Starttimer " + startTimer)
 			//this.log.info("Timer in Millisekunden " + timerInMillisecond)
@@ -172,7 +177,7 @@ async onReady() {
 				seconds = Math.round(seconds);
 
 				
-				let time = hour +" Std " + minutes + " Min " + seconds + " Sek"
+				let time = hour +" : " + minutes + " : " + seconds + " Std"
 
 				// Timer Werte zum Objekt hinzufügen
 				
@@ -183,6 +188,9 @@ async onReady() {
 				timerObject.timer[index].string_Timer = time;
 				timerObject.timer[index].onlySec = sec;
 				timerObject.timer[index].index = index;
+				if (name == null || name == undefined || name == ""){
+					name = "Timer"
+				}
 				timerObject.timer[index].name = name;
 				
 				//timerObject.timer[index].stopTimer = timerInterval;
@@ -204,10 +212,10 @@ async onReady() {
 					timerObject.timer[index].hour = 0;
 					timerObject.timer[index].minute = 0;
 					timerObject.timer[index].second = 0;
-					timerObject.timer[index].string_Timer = "";
+					timerObject.timer[index].string_Timer = "00 : 00 : 00 Std";
 					timerObject.timer[index].onlySec = 0;
 					timerObject.timer[index].index = 0;
-					timerObject.timer[index].name = "";
+					timerObject.timer[index].name = "Timer";
 
 					//this.log.info("Timer entfernt: ")
 					//this.log.info(timerObject)
@@ -296,15 +304,10 @@ async onReady() {
 					timerObject.timerActiv.timer[element] = false;
 				}
 			}             
-		},
-
+		},		
+	};	
 		
-		
-	};
-
-	
-	
-			let init = false;
+			let init = false; 
 			// Auf Änderung des Datenpunkts reagieren
 			this.on('stateChange', (id, state)=> {
 				if (state?.val !== "" && init == false){
@@ -487,8 +490,21 @@ async onReady() {
 							write: true,
 						},
 						native: {},
-					})
+					});
+					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".name", {
+						type: "state",
+						common: {
+							name: "Name des Timers",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+						},
+						native: {},
+					});
+
 				}catch(e){
+					this.log.error(e);
 
 				} 
 			
@@ -498,23 +514,27 @@ async onReady() {
 				try {
 					let timers = timerObject.timerActiv.timer
 					for (const element in timers){
-						if (timers[element] == true){
+						//if (timers[element] == true){
 						this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
 						this.setState(element +".hour", timerObject.timer[element].hour, true);
 						this.setState(element +".minute", timerObject.timer[element].minute, true);
 						this.setState(element +".second", timerObject.timer[element].second, true);
 						this.setState(element +".string", timerObject.timer[element].string_Timer, true);
+						this.setState(element +".name", timerObject.timer[element].name, true);
 														
-						}
-						else{
-							this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
-						}
+						//}
+						//else{
+						//	this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
+						//}
 					}
+					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0){
 						clearInterval(setStates);
 					}
 				}
-				catch (e){}
+				catch (e){
+					this.log.error(e);
+				}
 			},1000)
 		}
 				
