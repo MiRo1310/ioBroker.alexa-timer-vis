@@ -402,27 +402,19 @@ async onReady() {
 							writeState();
 							
 							break;
-						} 
-					}
-				}      
-			};
-
+							} 
+						}
+					}      
+				};
 
 			// Code Ende	
             }
-
 
             // you can use the ack flag to detect if state is command(false) or status(true)
             if (!state?.ack) {
                 this.log.info('ack is not set!');
             }
-        });
-        
-        
-        
-
-		// Reset the connection indicator during startup
-		
+        }); 
 			
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
@@ -446,7 +438,7 @@ async onReady() {
 							write: true,
 						},
 						native: {},
-					})
+					});
 					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".hour", {
 						type: "state",
 						common: {
@@ -514,18 +506,14 @@ async onReady() {
 				try {
 					let timers = timerObject.timerActiv.timer
 					for (const element in timers){
-						//if (timers[element] == true){
+						
 						this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
 						this.setState(element +".hour", timerObject.timer[element].hour, true);
 						this.setState(element +".minute", timerObject.timer[element].minute, true);
 						this.setState(element +".second", timerObject.timer[element].second, true);
 						this.setState(element +".string", timerObject.timer[element].string_Timer, true);
 						this.setState(element +".name", timerObject.timer[element].name, true);
-														
-						//}
-						//else{
-						//	this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
-						//}
+						
 					}
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0){
@@ -536,7 +524,7 @@ async onReady() {
 					this.log.error(e);
 				}
 			},1000)
-		}
+		};
 				
 		// 		await this.setObjectNotExistsAsync(timer, {
 		// 			type: "state",
@@ -552,10 +540,8 @@ async onReady() {
 
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
 		// Um Statusupdates zu erhalten, müssen Sie diese abonnieren. Die folgende Zeile fügt ein Abonnement für unsere oben erstellte Variable hinzu
-		this.subscribeStates("testVariable");
-        this.subscribeForeignStates('alexa2.0.History.summary');
-        
-         
+		//this.subscribeStates("testVariable");
+        this.subscribeForeignStates('alexa2.0.History.summary');    
         
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates("lights.*");
