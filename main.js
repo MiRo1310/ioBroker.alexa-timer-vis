@@ -417,7 +417,8 @@ async onReady() {
             }
 
             // you can use the ack flag to detect if state is command(false) or status(true)
-            if (!state?.ack) {
+            // @ts-ignore
+            if (!state.ack) {
                 this.log.info('ack is not set!');
             }
         }); 
