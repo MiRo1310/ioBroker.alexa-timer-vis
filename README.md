@@ -11,17 +11,32 @@
 
 **Tests:** ![Test and Release](https://github.com/MiRo1310/ioBroker.alexa-timer-vis/workflows/Test%20and%20Release/badge.svg)
 
-## alexa-timer-vis adapter for ioBroker
+## alexa-timer-vis adapter für den ioBroker
 
 Alexa Timer ausgeben um in der Vis anzuzeigen
 
-## Changelog
-<!--
-	Placeholder for the next version (at the beginning of the line):
-	### **WORK IN PROGRESS**
--->
 
-### **WORK IN PROGRESS**
+## Funktionsweise
+
+Es können unbegrenzt Timer mit Alexa erstellt werden. Es werden Datenpunkte für jeden Timer erstellt, die man dann in der Vis sich anzeigen lassen kann.
+
+### Timer hinzufügen ( Beispiele )
+
+* Alexa, Timer 5 Minuten
+* Alexa, Pommes Timer 9 Minuten
+* Alexa, stelle einen Timer auf 1 Stunde und 30 Minuten
+
+### Timer löschen ( Beispiele )
+
+* Alexa, lösche alle Timer
+* Alexa, lösche Pommes Timer
+* Alexa, lösche 5 Minuten Timer
+
+
+
+## Changelog
+
+### 0.0.1 (25.12.2021)
 * (Michael Roling) initial release
 
 ## License
