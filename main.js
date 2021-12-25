@@ -40,6 +40,7 @@ constructor(options) {
 
 async onReady() {
 	// Initialize your adapter here
+	
 
 	this.setState("info.connection", false, true);        
 	
@@ -66,7 +67,7 @@ async onReady() {
 			},
 			"data":{
 				"notNoted":["sekunde", "sekunden", "timer"],
-				"stopTimer":["stoppe", "lösche", "lösch"],
+				"stopTimer":["stoppe", "lösche", "lösch","stopp"],
 				"stopAll": ["alle"],
 				"connecter":["und"],
 				"hour":["stunde", "stunden"],
@@ -269,7 +270,7 @@ async onReady() {
 					timerString += timerObject.zahlen[element];            
 				}
 				else {
-					name = element;
+					name = firstLetterToUpperCase(element);
 				}           
 				
 						
@@ -306,25 +307,20 @@ async onReady() {
 			}             
 		},		
 	};	
-		
+			
 			let init = false; 
 			// Auf Änderung des Datenpunkts reagieren
 			this.on('stateChange', (id, state)=> {
 				// @ts-ignore
 				if (state.val !== "" && init == false){
 					
-
-					this.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
+					//this.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
 					
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 					init = true;
 					let timeout = this.setTimeout(()=>{
 						init = false;
 					},5000);
-
-					// @ts-ignore
-					this.log.info("State.val" + JSON.stringify(state.val))
-			
 
 					// Code Anfang
 					
@@ -336,6 +332,9 @@ async onReady() {
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 				if(value.indexOf("timer") >= 0){
 					this.log.info("Timer Befehl gefunden");
+					this.log.info(value);
+	
+
 					//this.log.info("Spracheingabe: " + value);
 
 					// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
@@ -390,10 +389,10 @@ async onReady() {
 							
 							// Anzahl Aktiver Timer um eins hochzählen
 							timerObject.timerActiv.timerCount++; 
-							
+
 							// States erstellen lassen
 							createState();
-
+										
 							// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
 							//this.log.info("" + timerObject.timerActiv.timerCount)
 								let timer = "timer" + timerObject.timerActiv.timerCount
@@ -434,10 +433,27 @@ async onReady() {
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/ 
-				
+
+		/**
+		 * Ersetzt den ersten Buchstaben des eingegebenen Wortes durch den selbigen Großbuchstaben
+		 * @param {string} name 
+		 * @return {string}
+		 */
+		const firstLetterToUpperCase = (name) =>{
+			let firstLetter = name.slice(0,1);
+			let leftoverLetters = name.slice(1);
+			name = firstLetter.toUpperCase() + leftoverLetters;
+
+			return name;
+		};
+		
+		/**
+		 * States erstellen
+		 */
 		const createState = () =>{
+			let i = timerObject.timerActiv.timerCount;
 				try { 
-					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".alive", {
+					this.setObjectNotExistsAsync("timer" + i +".alive", {
 						type: "state",
 						common: {
 							name: "Timer activ",
@@ -448,7 +464,7 @@ async onReady() {
 						},
 						native: {},
 					});
-					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".hour", {
+					this.setObjectNotExistsAsync("timer" + i +".hour", {
 						type: "state",
 						common: {
 							name: "Hours",
@@ -459,7 +475,7 @@ async onReady() {
 						},
 						native: {},
 					});
-					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".minute", {
+					this.setObjectNotExistsAsync("timer" + i +".minute", {
 						type: "state",
 						common: {
 							name: "Minutes",
@@ -470,7 +486,7 @@ async onReady() {
 						},
 						native: {},
 					});
-					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".second", {
+					this.setObjectNotExistsAsync("timer" + i +".second", {
 						type: "state",
 						common: {
 							name: "Seconds",
@@ -481,7 +497,7 @@ async onReady() {
 						},
 						native: {},
 					});
-					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".string", {
+					this.setObjectNotExistsAsync("timer" + i +".string", {
 						type: "state",
 						common: {
 							name: "String",
@@ -492,7 +508,7 @@ async onReady() {
 						},
 						native: {},
 					});
-					this.setObjectNotExistsAsync("timer" + timerObject.timerActiv.timerCount +".name", {
+					this.setObjectNotExistsAsync("timer" + i +".name", {
 						type: "state",
 						common: {
 							name: "Name des Timers",
@@ -510,19 +526,25 @@ async onReady() {
 				} 
 			
 		};
+
+		/**
+		 * States in Datenpunkten schreiben
+		 */
 		const writeState = ()=>{
 			let setStates = setInterval(()=>{
 				try {
 					let timers = timerObject.timerActiv.timer
 					for (const element in timers){
-						
-						this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
-						this.setState(element +".hour", timerObject.timer[element].hour, true);
-						this.setState(element +".minute", timerObject.timer[element].minute, true);
-						this.setState(element +".second", timerObject.timer[element].second, true);
-						this.setState(element +".string", timerObject.timer[element].string_Timer, true);
-						this.setState(element +".name", timerObject.timer[element].name, true);
-						
+							// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
+							if (timerObject.timer[element].hour !== undefined){
+							this.setState(element +".alive", timerObject.timerActiv.timer[element] , true);
+							this.setState(element +".hour", timerObject.timer[element].hour, true);
+							this.setState(element +".minute", timerObject.timer[element].minute, true);
+							this.setState(element +".second", timerObject.timer[element].second, true);
+							this.setState(element +".string", timerObject.timer[element].string_Timer, true);
+							this.setState(element +".name", timerObject.timer[element].name, true);
+							}
+
 					}
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0){
