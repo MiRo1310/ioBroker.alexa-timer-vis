@@ -61,7 +61,7 @@ async onReady() {
 		"timerActiv":{     
 			"timerCount": 0,
 			"condition": {            
-				"deleteTimer":["stopp", "stoppe", "anhalten" ,"lösche"],
+				"deleteTimer":["stopp", "stoppe", "anhalten" ,"lösche", "lösch"],
 				"activateTimer":["stunde", "minute" , "sekunde"],
 			},
 			"data":{
@@ -310,26 +310,28 @@ async onReady() {
 			let init = false; 
 			// Auf Änderung des Datenpunkts reagieren
 			this.on('stateChange', (id, state)=> {
-				let val;
 				// @ts-ignore
-				if (state.val !== "" || state.val !== undefined || state.val !== null ){
-					// @ts-ignore
-					val = state.val
-				}
-				if (init == false){
-					//this.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
+				if (state.val !== "" && init == false){
+					
+
+					this.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
 					
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 					init = true;
 					let timeout = this.setTimeout(()=>{
 						init = false;
 					},5000);
-					
+
+					// @ts-ignore
+					this.log.info("State.val" + JSON.stringify(state.val))
+			
+
 					// Code Anfang
 					
-					timerObject.timerActiv.data.value = val;
+					// @ts-ignore
+					timerObject.timerActiv.data.value = state.val;
+					
 					let value = timerObject.timerActiv.data.value;
-		
 			
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 				if(value.indexOf("timer") >= 0){
