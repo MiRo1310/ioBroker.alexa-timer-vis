@@ -310,8 +310,8 @@ async onReady() {
 			let init = false; 
 			// Auf Änderung des Datenpunkts reagieren
 			this.on('stateChange', (id, state)=> {
-				const val = state?.val
-				if (val !== "" && init == false){
+				// @ts-ignore
+				if ((state.val !== "" || state.val !== undefined || state.val !== null ) && init == false){
 					//this.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
 					
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
