@@ -1,7 +1,7 @@
 ![Logo](admin/alexa-timer-vis.png)
 # ioBroker.alexa-timer-vis
 
-![](admin/timer.png)
+
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.alexa-timer-vis.svg)](https://www.npmjs.com/package/iobroker.alexa-timer-vis)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.alexa-timer-vis.svg)](https://www.npmjs.com/package/iobroker.alexa-timer-vis)
@@ -16,6 +16,8 @@
 ## alexa-timer-vis adapter für den ioBroker
 
 Alexa Timer ausgeben um in der Vis anzuzeigen
+
+![](admin/timer.png)
 
 
 ## Funktionsweise
