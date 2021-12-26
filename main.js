@@ -32,51 +32,51 @@ class AlexaTimerVis extends utils.Adapter {
 		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
 	}
-
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
-
 	async onReady() {
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
-		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 
+		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 		this.getForeignObject("alexa2.0.History.summary", (err, obj) => {
 			if (err || obj == null) {
+				// Error
 				this.log.error(JSON.stringify(err));
 				this.log.error("Der Datenpunkt 'alexa2.0.History.summary' wurde nicht gefunden");
 			} else {
-				//timerObject.timerActiv.data.interval = parseInt(this.config.interval);
+				// Datenpunkt wurde gefunden
 				this.log.info("Alexa Datenpunkt wurde gefunden");
 				this.setState("info.connection", true, true);
+
+				// Datenpunkte erzeugen (Anzahl)
 				createState(4);
-				//this.log.info("Interval: " + timerObject.timerActiv.data.interval + " ms")
 			}
 		});
 
-
+		// Objekt mit Einstellungen und Daten
 		const timerObject = {
 			"timerActiv": {
-				"timerCount": 0,
+				"timerCount": 0, // Anzahl aktiver Timer
 				"condition": {
-					"deleteTimer": ["stopp", "stoppe", "anhalten", "lösche", "lösch"],
-					"activateTimer": ["stunde", "minute", "sekunde"],
+					"deleteTimer": ["stopp", "stoppe", "anhalten", "lösche", "lösch"], // Vorselektion stoppen oder löschen
+					"activateTimer": ["stunde", "minute", "sekunde"], // Vorselektion hinzufügen
 				},
 				"data": {
-					"interval": 1000,
-					"notNoted": ["sekunde", "sekunden", "timer"],
-					"stopTimer": ["stoppe", "lösche", "lösch", "stopp"],
-					"stopAll": ["alle"],
-					"connecter": ["und"],
-					"hour": ["stunde", "stunden"],
-					"minute": ["minute", "minuten"],
+					"interval": 1000,// Aktualisierungsinterval
+					"notNoted": ["sekunde", "sekunden", "timer"], // Wörter die nicht beachtet werden sollen
+					"stopTimer": ["stoppe", "lösche", "lösch", "stopp"], // Wörter die ein stoppen defienieren
+					"stopAll": ["alle"], // Spezielle Definition zum löschen aller Timer
+					"connecter": ["und"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
+					"hour": ["stunde", "stunden"], // Wörter für Stunden, dient als Multiplikator
+					"minute": ["minute", "minuten"], // Wörter für Minuten, dient als Multiplikator
 				},
-				"timer": {
+				"timer": { // Liste mit Timern, zeigt den aktuellen Zustand
 					"timer1": false,
 				},
 			},
-			"timer": {
+			"timer": { // Werte für Timer
 				"timer1": {
 					"hour": 0,
 					"minute": 0,
@@ -88,7 +88,7 @@ class AlexaTimerVis extends utils.Adapter {
 					"name_output":""
 				},
 			},
-			"zahlen": {
+			"zahlen": { // Zahl als Wort zu Zahl nummerisch
 				"eins": 1,
 				"eine": 1,
 				"zwei": 2,
@@ -118,195 +118,14 @@ class AlexaTimerVis extends utils.Adapter {
 				"achtig": 80,
 				"neunzig": 90,
 				"hundert": 100,
-			},
-
-			/**
-			 * Timer
-			 *
-			 * @param {number} sec Sekunden des neuen Timers
-			 * @param {string} name Name des Timers
-			 *
-			 *
-			 */
-
-			startTimer(sec, name) {
-				const startTimer = new Date().getTime();
-				const timerInMillisecond = sec * 1000;
-				const endTime = startTimer + timerInMillisecond;
-				let hour = 0;
-				let minutes = 0;
-				let seconds = 0;
-
-				//this.log.info("Starttimer " + startTimer)
-				//this.log.info("Timer in Millisekunden " + timerInMillisecond)
-				//this.log.info("Endtimer " + endTime)
-
-				// Index für Timer bestimmen
-				let index;
-
-				for (const i in timerObject.timerActiv.timer) {
-					//this.log.info("i " + i)
-					if (timerObject.timerActiv.timer[i] === false) {
-						//this.log.info("index " + i)
-						timerObject.timerActiv.timer[i] = true;
-						index = i;
-						break;
-					}
-				}
-
-				// Intervall
-				const timerInterval = setInterval(() => {
-					const timeLeft = endTime - new Date().getTime();
-
-					// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
-					const timeLeftSec = Math.round(timeLeft / 1000);
-
-					// Wieviel Stunden sind enthalten
-					hour = timeLeftSec / (60 * 60);
-					hour = Math.floor(hour);
-					const hourInSec = hour * 60 * 60;
-
-					// Wieviele Minuten, timeLeft - Stunden in Millisekunden, Rest in Minuten
-
-					minutes = (timeLeftSec - hourInSec) / 60;
-					minutes = Math.floor(minutes);
-					const minutesInSec = minutes * 60;
-
-
-					// Sekunden
-					seconds = timeLeftSec - hourInSec - minutesInSec;
-					seconds = Math.round(seconds);
-
-
-					const time = hour + " : " + minutes + " : " + seconds + " Std";
-
-					// Timer Werte zum Objekt hinzufügen
-
-
-					timerObject.timer[index].hour = hour;
-					timerObject.timer[index].minute = minutes;
-					timerObject.timer[index].second = seconds;
-					timerObject.timer[index].string_Timer = time;
-					timerObject.timer[index].onlySec = sec;
-					timerObject.timer[index].index = index;
-					if(name == ""|| name == null || name == undefined){
-						name = "Timer";
-					}
-					timerObject.timer[index].name = name;
-
-					// Timer anhalten
-					//this.log.info(timeLeftSec)
-					if (timeLeftSec <= 0 || timerObject.timerActiv.timer[index] == false) {
-
-
-						timerObject.timerActiv.timerCount--;
-						timerObject.timerActiv.timer[index] = false;
-
-						// Werte des Timers zurück auf 0 setzen
-						timerObject.timer[index].hour = 0;
-						timerObject.timer[index].minute = 0;
-						timerObject.timer[index].second = 0;
-						timerObject.timer[index].string_Timer = "00 : 00 : 00 Std";
-						timerObject.timer[index].onlySec = 0;
-						timerObject.timer[index].index = 0;
-						timerObject.timer[index].name = "Timer";
-
-						//this.log.info("Timer entfernt: ")
-						//this.log.info(timerObject)
-
-						clearInterval(timerInterval);
-					}
-				}, timerObject.timerActiv.data.interval);
-			},
-
-			/**
-			 * Funktion der Erfassung der gewünschten Zeit und des Namen
-			 * Erstellt einen String in einem Array [0], um Sekunden berechnen zu können
-			 * und den Namen im Array an Position [1]
-			 *
-			 * @param {[]} input Eingabe von Alexa, als Array
-			 * @return {{}}  mit einem String (Evaluieren), dem Namen und dem Index zum Löschen der Timer
-			*/
-			zeiterfassung(input) {
-				let timerString = "";
-				let name = "";
-				let deleteVal = 0; // Nummer zum bestimmen der Art Timer zu löschen
-
-				input.forEach(element => {
-					const data = timerObject.timerActiv.data;
-					// Elemente finden die nicht beachtet werden sollen
-					if (data.notNoted.indexOf(element) >= 0) {
-						return;
-					}
-					// Nach Elementen suchen um die Menge der zu löschenden Timer zu bestimmen
-					else if (data.stopTimer.indexOf(element) >= 0) {
-						deleteVal++;
-					} // Es wird auf 1 gesetzt, wenn nur ein Timer aktiv ist wird dieser gelöscht
-					else if (data.stopAll.indexOf(element) >= 0) {
-						deleteVal++;
-					} // Variable wird auf 2 gesetzt somit werden alle Timer gelöscht
-
-					// Nach Und suchen
-					else if (data.connecter.indexOf(element) >= 0) {
-						if (timerString.charAt(timerString.length - 1) !== "+") {
-							timerString += "+";
-						}
-					}
-					// Nach Stunden suchen, um den Fakor einzufügen
-					else if (data.hour.indexOf(element) >= 0) {
-						timerString += "*3600+";
-					}
-					// Nach Minuten suchen, um den Fakor einzufügen
-					else if (data.minute.indexOf(element) >= 0) {
-						timerString += "*60+";
-					}
-					// Überprüfen ob es sich um Zahlen handelt
-					else if (timerObject.zahlen[element] > 0) {
-						timerString += timerObject.zahlen[element];
-					}
-					else {
-						name = element;
-					}
-				});
-				// Wenn das letzte Zeichen ein + ist soll es entfernt werden
-				if (timerString.charAt(timerString.length - 1) == "+") {
-					timerString = timerString.slice(0, timerString.length - 1);
-				}
-				const array = [timerString, name, deleteVal];
-
-				return array;
-			},
-
-			/**
-			 * Löschen eines Timers
-			 *
-			 * @param {number} sec Sekunden des zu löschenden Timers
-			 * @param {string} name Name des Timers
-			 * @param {number} deleteTimerIndex Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen
-			 */
-			deleteTimer(sec, name, deleteTimerIndex) {
-				for (const element in timerObject.timer)
-					// Sekunden müssen übereinstimmen, dürfen aber nicht 0 sein  und der Name muss überein stimmen, darf aber nicht leer sein
-					if ((timerObject.timer[element]["onlySec"] == sec && sec !== 0) || (timerObject.timer[element]["name"] == name && name !== "")) {
-						timerObject.timerActiv.timer[element] = false;
-						//this.log.info("Timer gefunden")
-					}
-				// Wenn Index 1 ist und wirklich nur ein Timer aktiv ist wird dieser dann auch gestoppt
-				// Oder wenn Index 2 ist werden alle gestoppt
-				if ((deleteTimerIndex == 1 && timerObject.timerActiv.timerCount == 1) || deleteTimerIndex == 2) {
-					for (const element in timerObject.timerActiv.timer) {
-						timerObject.timerActiv.timer[element] = false;
-					}
-				}
-			},
+			}
 		};
+		// Initialisierungsvariable
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
 			// @ts-ignore
 			if (state.val !== "" && init == false) {
-
-				//this.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
 
 				// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 				init = true;
@@ -318,16 +137,13 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// @ts-ignore
 				timerObject.timerActiv.data.value = state.val;
-
 				const value = timerObject.timerActiv.data.value;
 
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 				if (value.indexOf("timer") >= 0) {
 					this.log.info("Timer Befehl gefunden");
 
-
 					// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
-
 					let i = false;
 					for (const array in timerObject.timerActiv.condition) {
 						for (const element of timerObject.timerActiv.condition[array]) {
@@ -336,11 +152,11 @@ class AlexaTimerVis extends utils.Adapter {
 							if (value.indexOf(element) >= 0 && array == "deleteTimer") {
 								this.log.info("Timer soll gestoppt werden!");
 
-								// Input aus Alexas Spracheingabe zu Array machen
+								// Input aus Alexas Spracheingabe zu Array konvertieren
 								const timerArray = value.split(" ");
 
 								// RückgabeArray erfassen
-								const returnArray = timerObject.zeiterfassung(timerArray);
+								const returnArray = zeiterfassung(timerArray);
 
 								// Name
 								const name = returnArray[1];
@@ -352,38 +168,35 @@ class AlexaTimerVis extends utils.Adapter {
 								const deleteTimerIndex = returnArray[2];
 
 								// Timer anhalten
-								timerObject.deleteTimer(timerAbortsec, name, deleteTimerIndex);
+								deleteTimer(timerAbortsec, name, deleteTimerIndex);
 
 								i = true;
 								break;
 
 							} // Timer soll erstellt werden
-							// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein und es dürfen max 4 Timer aktiv sein
-							else if (value.indexOf(element) >= 0 && i === false) { //&& timerObject.timerActiv.timerCount <= 4){
-
+							// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
+							else if (value.indexOf(element) >= 0 && i === false) {
 								this.log.info("Timer soll hinzugefügt werden!");
+
 								// Input aus Alexas Spracheingabe zu Array machen
 								const timerArray = value.split(" ");
 
+								// Timer in Sekunden  und den Namen ausgeben lassen in einem Array
+								const returnArray = zeiterfassung(timerArray);
 
-
-								// Timer in Sekunden ausgeben lassen und den Namen
-								//this.log.info("Sekunden ermittelt: " + timerObject.zeiterfassung(timerArray))
-								const returnArray = timerObject.zeiterfassung(timerArray);
-								//this.log.info("" + returnArray);
+								// Rückgabewert Timer in Sekunden [0]
 								const timerSeconds = eval(returnArray[0]);
-								const name = returnArray[1];
-								//this.log.info("Timer erstellen mit " + timerSeconds + " Sekunden");
 
+								// Rückgabewert Name des Timers [1]
+								const name = returnArray[1];
 
 								// Anzahl Aktiver Timer um eins hochzählen
 								timerObject.timerActiv.timerCount++;
 
-								// States erstellen lassen
+								// States erstellen lassen, bei mehr als 4 Timern
 								createState(timerObject.timerActiv.timerCount);
 
 								// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
-								//this.log.info("" + timerObject.timerActiv.timerCount)
 								const timer = "timer" + timerObject.timerActiv.timerCount;
 
 								if (timerObject.timerActiv.timer[timer] == undefined) {
@@ -392,7 +205,7 @@ class AlexaTimerVis extends utils.Adapter {
 									timerObject.timer[timer] = {};
 								}
 								// Timer starten
-								timerObject.startTimer(timerSeconds, name);
+								startTimer(timerSeconds, name);
 
 								// States schreiben
 								writeState();
@@ -402,9 +215,8 @@ class AlexaTimerVis extends utils.Adapter {
 						}
 					}
 				}
-
-				// Code Ende
 			}
+			// Code Ende
 
 			// you can use the ack flag to detect if state is command(false) or status(true)
 			// @ts-ignore
@@ -423,17 +235,106 @@ class AlexaTimerVis extends utils.Adapter {
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/
 
+
+		// ---------------------Funktionen----------------------
 		/**
 		 * Ersetzt den ersten Buchstaben des eingegebenen Wortes durch den selbigen Großbuchstaben
-		 * @param {string} name
-		 * @return {string}
+		 * @param {string} name "w"ort wo der erste Buchstabe groß geschrieben werden soll
+		 * @return {string} Rückgabewert mit "W"ort
 		 */
 		const firstLetterToUpperCase = (name) => {
-			const firstLetter = name.slice(0, 1);
-			const leftoverLetters = name.slice(1);
-			name = firstLetter.toUpperCase() + leftoverLetters;
+			const firstLetter = name.slice(0, 1); // Ersten Buchstaben selektieren
+			const leftoverLetters = name.slice(1); // Restliche Buchstaben selektieren
+			name = firstLetter.toUpperCase() + leftoverLetters; // Erster Buchstabe in Groß + Rest
 
 			return name;
+		};
+
+		/**
+		 * Timer
+		 *
+		 * @param {number} sec Sekunden des neuen Timers
+		 * @param {string} name Name des Timers
+		 *
+		 *
+		 */
+
+		const startTimer = (sec, name)=> {
+			const startTimer = new Date().getTime(); // Startzeit Timer
+			const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
+			const endTime = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
+			let hour = 0;
+			let minutes = 0;
+			let seconds = 0;
+
+			// Index für Timer bestimmen
+			let index;
+
+			for (const i in timerObject.timerActiv.timer) {
+				if (timerObject.timerActiv.timer[i] === false) {
+					timerObject.timerActiv.timer[i] = true;
+					index = i;
+					break;
+				}
+			}
+
+			// Intervall erzeugen
+			const timerInterval = setInterval(() => {
+				const timeLeft = endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
+
+				// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
+				const timeLeftSec = Math.round(timeLeft / 1000);
+
+				// Wieviel Stunden sind enthalten
+				hour = timeLeftSec / (60 * 60);
+				hour = Math.floor(hour);
+				const hourInSec = hour * 60 * 60;
+
+				// Wieviele Minuten, timeLeft - Stunden in Millisekunden, Rest in Minuten
+				minutes = (timeLeftSec - hourInSec) / 60;
+				minutes = Math.floor(minutes);
+				const minutesInSec = minutes * 60;
+
+				// Sekunden
+				seconds = timeLeftSec - hourInSec - minutesInSec;
+				seconds = Math.round(seconds);
+
+				// String der Zeit erstellen
+				const time = hour + " : " + minutes + " : " + seconds + " Std";
+
+				// Timer Werte zum Objekt hinzufügen
+				timerObject.timer[index].hour = hour;
+				timerObject.timer[index].minute = minutes;
+				timerObject.timer[index].second = seconds;
+				timerObject.timer[index].string_Timer = time;
+				timerObject.timer[index].onlySec = sec;
+				timerObject.timer[index].index = index;
+
+				// Falls der Timername nicht definiert ist soll er einfach nur "Timer" heissen
+				if(name == ""|| name == null || name == undefined){
+					name = "Timer";
+				}
+				timerObject.timer[index].name = name;
+
+				// Timer anhalten
+				// Falls die Zeit abgelaufen ist, oder der Timer deaktiviert wurde
+				if (timeLeftSec <= 0 || timerObject.timerActiv.timer[index] == false) {
+
+					timerObject.timerActiv.timerCount--; // Aktive Timer minus 1
+					timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
+
+					// Werte des Timers zurücksetzen
+					timerObject.timer[index].hour = 0;
+					timerObject.timer[index].minute = 0;
+					timerObject.timer[index].second = 0;
+					timerObject.timer[index].string_Timer = "00 : 00 : 00 Std";
+					timerObject.timer[index].onlySec = 0;
+					timerObject.timer[index].index = 0;
+					timerObject.timer[index].name = "Timer";
+
+					clearInterval(timerInterval);
+				}
+			}, timerObject.timerActiv.data.interval); // Aktualisierungszeit
 		};
 
 		/**
@@ -536,6 +437,85 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 
 		/**
+			 * Funktion der Erfassung der gewünschten Zeit und des Namen
+			 * Erstellt einen String in einem Array [0], um Sekunden berechnen zu können
+			 * und den Namen im Array an Position [1]
+			 *
+			 * @param {[]} input Eingabe von Alexa, als Array
+			 * @return {{}}  mit einem String (Evaluieren), dem Namen und dem Index zum Löschen der Timer
+			*/
+		const zeiterfassung = (input)=> {
+			let timerString = "";
+			let name = "";
+			let deleteVal = 0; // Nummer zum bestimmen der Art Timer zu löschen
+
+			input.forEach(element => {
+				const data = timerObject.timerActiv.data;
+				// Elemente finden die nicht beachtet werden sollen
+				if (data.notNoted.indexOf(element) >= 0) {
+					return;
+				}
+				// Nach Elementen suchen die die Menge der zu löschenden Timer bestimmen
+				else if (data.stopTimer.indexOf(element) >= 0) {
+					deleteVal++; // Es wird auf 1 gesetzt, wenn nur ein Timer aktiv ist wird dieser gelöscht
+				}
+				else if (data.stopAll.indexOf(element) >= 0) {
+					deleteVal++;// Variable wird auf 2 gesetzt somit werden alle Timer gelöscht
+				}
+				// Nach Und suchen
+				else if (data.connecter.indexOf(element) >= 0) {
+					if (timerString.charAt(timerString.length - 1) !== "+") {
+						timerString += "+"; // Und bildet ein Verbindungsglied welches für die berechung ein "+" ist
+					}
+				}
+				// Nach Stunden suchen, um den Fakor einzufügen
+				else if (data.hour.indexOf(element) >= 0) {
+					timerString += "*3600+";
+				}
+				// Nach Minuten suchen, um den Fakor einzufügen
+				else if (data.minute.indexOf(element) >= 0) {
+					timerString += "*60+";
+				}
+				// Überprüfen ob es sich um Zahlen handelt
+				else if (timerObject.zahlen[element] > 0) {
+					timerString += timerObject.zahlen[element];
+				}
+				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
+					name = element;
+				}
+			});
+			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
+			if (timerString.charAt(timerString.length - 1) == "+") {
+				timerString = timerString.slice(0, timerString.length - 1);
+			}
+			const array = [timerString, name, deleteVal];
+			return array;
+		};
+
+		/**
+			 * Löschen eines Timers
+			 *
+			 * @param {number} sec Sekunden des zu löschenden Timers
+			 * @param {string} name Name des Timers
+			 * @param {number} deleteTimerIndex Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen
+			 */
+		const deleteTimer = (sec, name, deleteTimerIndex) => {
+			for (const element in timerObject.timer)
+				// Sekunden müssen übereinstimmen, dürfen aber nicht 0 sein und der Name muss überein stimmen, darf aber nicht leer sein
+				if ((timerObject.timer[element]["onlySec"] == sec && sec !== 0) || (timerObject.timer[element]["name"] == name && name !== "")) {
+					timerObject.timerActiv.timer[element] = false;
+				}
+			// Wenn Index 1 ist und wirklich nur ein Timer aktiv ist wird dieser dann auch gestoppt
+			// Oder wenn Index 2 ist werden alle gestoppt
+			if ((deleteTimerIndex == 1 && timerObject.timerActiv.timerCount == 1) || deleteTimerIndex == 2) {
+				for (const element in timerObject.timerActiv.timer) {
+					timerObject.timerActiv.timer[element] = false;
+				}
+			}
+		};
+
+
+		/**
 		 * States in Datenpunkten schreiben
 		 */
 		const writeState = () => {
@@ -559,7 +539,6 @@ class AlexaTimerVis extends utils.Adapter {
 								this.setStateChanged(element + ".name", firstLetterToUpperCase(name) + " Timer", true);
 							}
 						}
-
 					}
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0) {
