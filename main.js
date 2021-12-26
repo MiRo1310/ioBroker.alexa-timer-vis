@@ -84,7 +84,8 @@ class AlexaTimerVis extends utils.Adapter {
 					"string_Timer": "",
 					"onlySec": 0,
 					"index": 0,
-					"name": ""
+					"name": "",
+					"name_output":""
 				},
 			},
 			"zahlen": {
@@ -188,7 +189,10 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timer[index].string_Timer = time;
 					timerObject.timer[index].onlySec = sec;
 					timerObject.timer[index].index = index;
-					timerObject.timer[index].name = name + " Timer" ;
+					if(name != ""|| name != null || name != undefined){
+						name = "Timer";
+					}
+					timerObject.timer[index].name = name;
 
 					// Timer anhalten
 					//this.log.info(timeLeftSec)
@@ -261,10 +265,8 @@ class AlexaTimerVis extends utils.Adapter {
 						timerString += timerObject.zahlen[element];
 					}
 					else {
-						name = firstLetterToUpperCase(element);
+						name = element;
 					}
-
-
 				});
 				// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 				if (timerString.charAt(timerString.length - 1) == "+") {
@@ -553,8 +555,13 @@ class AlexaTimerVis extends utils.Adapter {
 							this.setState(element + ".minute", timerObject.timer[element].minute, true);
 							this.setState(element + ".second", timerObject.timer[element].second, true);
 							this.setState(element + ".string", timerObject.timer[element].string_Timer, true);
-							this.setState(element + ".name", timerObject.timer[element].name, true);
 							this.setState("all_Timer.alive", true, true);
+							const name = timerObject.timer[element].name;
+							if (name == "Timer"){
+								this.setState(element + ".name", name, true);
+							} else {
+								this.setState(element + ".name", firstLetterToUpperCase(name) + " Timer", true);
+							}
 						}
 
 					}
