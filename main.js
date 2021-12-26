@@ -39,7 +39,6 @@ class AlexaTimerVis extends utils.Adapter {
 
 	async onReady() {
 		// Initialize your adapter here
-		
 		this.setState("info.connection", false, true);
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 
@@ -51,6 +50,7 @@ class AlexaTimerVis extends utils.Adapter {
 				//timerObject.timerActiv.data.interval = parseInt(this.config.interval);
 				this.log.info("Alexa Datenpunkt wurde gefunden");
 				this.setState("info.connection", true, true);
+				createState(4);
 				//this.log.info("Interval: " + timerObject.timerActiv.data.interval + " ms")
 			}
 		});
@@ -188,17 +188,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timer[index].string_Timer = time;
 					timerObject.timer[index].onlySec = sec;
 					timerObject.timer[index].index = index;
-					if (name == null || name == undefined || name == "") {
-						name = "Timer";
-					}
-					timerObject.timer[index].name = name;
-
-					//timerObject.timer[index].stopTimer = timerInterval;
-
-					//this.log.info(timerObject.timer.timer1);
-					//this.log.info(timerObject.timerActiv.timer.timer1);
-					//this.log.info(timerObject.timerActiv.timer);
-
+					timerObject.timer[index].name = name + " Timer" ;
 
 					// Timer anhalten
 					//this.log.info(timeLeftSec)
@@ -308,8 +298,6 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 			},
 		};
-		
-
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
@@ -334,10 +322,7 @@ class AlexaTimerVis extends utils.Adapter {
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 				if (value.indexOf("timer") >= 0) {
 					this.log.info("Timer Befehl gefunden");
-					this.log.info(value);
 
-
-					//this.log.info("Spracheingabe: " + value);
 
 					// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 
@@ -393,7 +378,7 @@ class AlexaTimerVis extends utils.Adapter {
 								timerObject.timerActiv.timerCount++;
 
 								// States erstellen lassen
-								createState();
+								createState(timerObject.timerActiv.timerCount);
 
 								// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
 								//this.log.info("" + timerObject.timerActiv.timerCount)
@@ -451,82 +436,106 @@ class AlexaTimerVis extends utils.Adapter {
 
 		/**
 		 * States erstellen
+		 * @param {number} value
 		 */
-		const createState = () => {
-			const i = timerObject.timerActiv.timerCount;
+		const createState = (value) => {
+			this.log.info("value " + value);
+			this.log.info(typeof(value));
+			// for(let i = 1; i >= value; i++){
+			// 	this.log.info("Durchlauf " + i)
+			// };
 			try {
-				this.setObjectNotExistsAsync("timer" + i + ".alive", {
-					type: "state",
-					common: {
-						name: "Timer activ",
-						type: "boolean",
-						role: "indicator",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-				this.setObjectNotExistsAsync("timer" + i + ".hour", {
-					type: "state",
-					common: {
-						name: "Hours",
-						type: "number",
-						role: "value",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-				this.setObjectNotExistsAsync("timer" + i + ".minute", {
-					type: "state",
-					common: {
-						name: "Minutes",
-						type: "number",
-						role: "value",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-				this.setObjectNotExistsAsync("timer" + i + ".second", {
-					type: "state",
-					common: {
-						name: "Seconds",
-						type: "number",
-						role: "value",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-				this.setObjectNotExistsAsync("timer" + i + ".string", {
-					type: "state",
-					common: {
-						name: "String",
-						type: "string",
-						role: "value",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-				this.setObjectNotExistsAsync("timer" + i + ".name", {
-					type: "state",
-					common: {
-						name: "Name des Timers",
-						type: "string",
-						role: "value",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-
+				for(let i = 1; i <= value; i++){
+					// Datenpunkt für allgemeine Anzeige das ein Timer aktiv ist
+					this.setObjectNotExistsAsync("all_Timer.alive", {
+						type: "state",
+						common: {
+							name: "Ist ein Timer activ?",
+							type: "boolean",
+							role: "indicator",
+							read: true,
+							write: true,
+							def: false
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".alive", {
+						type: "state",
+						common: {
+							name: "Timer activ",
+							type: "boolean",
+							role: "indicator",
+							read: true,
+							write: true,
+							def: false
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".hour", {
+						type: "state",
+						common: {
+							name: "Hours",
+							type: "number",
+							role: "value",
+							read: true,
+							write: true,
+							def: 0,
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".minute", {
+						type: "state",
+						common: {
+							name: "Minutes",
+							type: "number",
+							role: "value",
+							read: true,
+							write: true,
+							def: 0,
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".second", {
+						type: "state",
+						common: {
+							name: "Seconds",
+							type: "number",
+							role: "value",
+							read: true,
+							write: true,
+							def: 0,
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".string", {
+						type: "state",
+						common: {
+							name: "String",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+							def: "00 : 00 : 00 Std",
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".name", {
+						type: "state",
+						common: {
+							name: "Name des Timers",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+							def: "Timer",
+						},
+						native: {},
+					});
+				}
 			} catch (e) {
 				this.log.error(e);
 
 			}
-
 		};
 
 		/**
@@ -545,11 +554,13 @@ class AlexaTimerVis extends utils.Adapter {
 							this.setState(element + ".second", timerObject.timer[element].second, true);
 							this.setState(element + ".string", timerObject.timer[element].string_Timer, true);
 							this.setState(element + ".name", timerObject.timer[element].name, true);
+							this.setState("all_Timer.alive", true, true);
 						}
 
 					}
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0) {
+						this.setState("all_Timer.alive", false, true);
 						clearInterval(setStates);
 					}
 				}

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.alexa-timer-vis",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Alexa Timer ausgeben um in der Vis anzuzeigen",
   "author": {
     "name": "Michael Roling",
@@ -10,7 +10,8 @@
   "license": "MIT",
   "keywords": [
     "ioBroker",
-    "template",
+    "Alexa",
+    "Vis",
     "Smart Home",
     "home automation"
   ],
