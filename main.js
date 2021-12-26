@@ -71,12 +71,13 @@ class AlexaTimerVis extends utils.Adapter {
 				},
 				"data": {
 					"interval": 1000,// Aktualisierungsinterval
-					"notNoted": ["sekunde", "sekunden", "timer", "auf", "setze", "setz"], // Wörter die nicht beachtet werden sollen
+					"notNoted": ["timer", "auf", "setze", "setz"], // Wörter die nicht beachtet werden sollen
 					"stopTimer": ["stoppe", "lösche", "lösch", "stopp"], // Wörter die ein stoppen defienieren
 					"stopAll": ["alle"], // Spezielle Definition zum löschen aller Timer
 					"connecter": ["und"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 					"hour": ["stunde", "stunden"], // Wörter für Stunden, dient als Multiplikator
 					"minute": ["minute", "minuten"], // Wörter für Minuten, dient als Multiplikator
+					"second":["sekunde", "sekunden",] // Wörter für Sekunden
 				},
 				"timer": { // Liste mit Timern, zeigt den aktuellen Zustand
 					"timer1": false,
@@ -121,10 +122,11 @@ class AlexaTimerVis extends utils.Adapter {
 				"fünfzig": 50,
 				"sechszig": 60,
 				"siebzig": 70,
-				"achtig": 80,
+				"achtzig": 80,
 				"neunzig": 90,
 				"hundert": 100,
-			}
+			},
+			"ziffern":["0", "1", "2", "3", "4", "5", "6","7", "8", "9"]
 		};
 		// Initialisierungsvariable
 		let init = false;
@@ -191,6 +193,7 @@ class AlexaTimerVis extends utils.Adapter {
 								const returnArray = zeiterfassung(timerArray);
 
 								// Rückgabewert Timer in Sekunden [0]
+								this.log.info("Eval: " + returnArray[0]);
 								const timerSeconds = eval(returnArray[0]);
 
 								// Rückgabewert Name des Timers [1]
@@ -477,19 +480,31 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				// Nach Stunden suchen, um den Fakor einzufügen
 				else if (data.hour.indexOf(element) >= 0) {
-					timerString += "*3600+";
+					timerString += ")*3600+";
 				}
 				// Nach Minuten suchen, um den Fakor einzufügen
 				else if (data.minute.indexOf(element) >= 0) {
-					timerString += "*60+";
+					timerString += ")*60+";
+				}
+				// Nach Sekunden suchen, um die Klammern zu schliessen( Wichtig für z.B. 120 Minuten)
+				else if (data.second.indexOf(element) >= 0){
+					timerString += ")";
 				}
 				// Überprüfen ob es sich um Zahlen handelt
 				else if (timerObject.zahlen[element] > 0) {
-					timerString += timerObject.zahlen[element];
+					// Wenn in der Variable als letztes keine Ziffer ist, darf eine neue zahl hinzugefügt werden
+					if (timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1){
+						timerString += "(" + timerObject.zahlen[element];
+						// Wenn das Element "Hundert" ist und das letzte Element eine Zahl war soll multipliziert werden( Zwei * hundert + vierzig)
+					}else if (element == "hundert"){
+						timerString +=("*" + timerObject.zahlen[element]);
+					}else { // Wenn nicht Hundert(eigentlich auch tausend usw.) dann nur addieren
+						timerString +=("+" + timerObject.zahlen[element]);
+					}
 				}
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name = element;
-				}
+				} this.log.info("TimerString: " + timerString);
 			});
 			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 			if (timerString.charAt(timerString.length - 1) == "+") {
