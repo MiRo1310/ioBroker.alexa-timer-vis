@@ -189,7 +189,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timer[index].string_Timer = time;
 					timerObject.timer[index].onlySec = sec;
 					timerObject.timer[index].index = index;
-					if(name != ""|| name != null || name != undefined){
+					if(name == ""|| name == null || name == undefined){
 						name = "Timer";
 					}
 					timerObject.timer[index].name = name;
