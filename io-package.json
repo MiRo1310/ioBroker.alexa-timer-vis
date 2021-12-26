@@ -4,7 +4,16 @@
         "version": "0.0.2",
         "news": {
             "0.0.2": {
-                "en": "Adjustment"              
+                "en": "Adjustment",
+                "de": "Einstellung",
+                "ru": "Корректирование",
+                "pt": "Ajustamento",
+                "nl": "Aanpassing",
+                "fr": "Ajustement",
+                "it": "Regolazione",
+                "es": "Ajustamiento",
+                "pl": "Dostosowanie",
+                "zh-cn": "调整"
             },
             "0.0.1": {
                 "en": "Initial Release",
@@ -78,8 +87,9 @@
         ]
     },
     "native": {
-        "option1": true,
-        "option2": "42"
+        "option5": true,
+        "interval": "1000",
+        "test": "test"
     },
     "objects": [],
     "instanceObjects": [

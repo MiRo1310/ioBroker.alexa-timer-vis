@@ -9,7 +9,6 @@
 // you need to create an adapter
 // Sie müssen einen Adapter erstellen
 const utils = require("@iobroker/adapter-core");
-
 // const { TIMEOUT } = require("dns");
 // const { exists } = require("fs");
 // const { start } = require("repl");
@@ -425,8 +424,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		//this.log.info("config option1: " + this.config.option1);
-		//this.log.info("config option2: " + this.config.option2);
+		//this.log.info("Intervall: " + this.config.interval);
+		//this.log.info("config option2: " + this.config.option5);
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"

@@ -1,6 +1,8 @@
 {
+    "Alexa Timer für die Vis": "Alexa Timer for the Vis",
+    "Interval": "Update interval",
     "alexa-timer-vis adapter settings": "Adapter settings for alexa-timer-vis",
-    "option1": "option1",
-    "option2": "option2"
-    
+    "option1": "",
+    "option2": "",
+    "test": ""
 }

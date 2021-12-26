@@ -21,6 +21,9 @@
 		// This will be called by the admin adapter when the settings page loads
 		function load(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
+			var getAdminDevices = []; // For table "getAdminDevices"
+			
+
 			if (!settings) return;
 			$('.value').each(function () {
 				var $key = $(this);
@@ -38,7 +41,9 @@
 						;
 				}
 			});
+			getAdminDevices = settings.getAdminDevices || []; // For table "getAdminDevices"
 			onChange(false);
+			values2table('getAdminDevices', getAdminDevices, onChange); // For table "getAdminDevices"
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
 		}
@@ -57,9 +62,12 @@
 					obj[$this.attr('id')] = $this.val();
 				}
 			});
+			obj.getAdminDevices = table2values('getAdminDevices');
 			callback(obj);
 		}
+		
 	</script>
+	
 
 </head>
 
@@ -76,18 +84,16 @@
 		<!-- Put your content here -->
 
 		<!-- For example columns with settings: -->
-		<!--
+		
 		<div class="row">
+			<h1>Alexa Timer für die Vis</h1>
+							
 			<div class="col s6 input-field">
-				<input type="checkbox" class="value" id="option1" />
-				<label for="option1" class="translate">option1</label>
+				
+				<input type="number" class="value" placeholder="1000" min="1000" value="1000" id="interval" /><span>ms</span>
+				<label for="interval" class="translate">Aktualisierungs Intervall</label>
 			</div>
-
-			<div class="col s6 input-field">
-				<input type="text" class="value" id="option2" />
-				<label for="option2" class="translate">option2</label>
-			</div>
-		</div>-->
+		</div>
 
 	</div>
 
