@@ -39,7 +39,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 	async onReady() {
 		// Initialize your adapter here
-
+		
 		this.setState("info.connection", false, true);
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 
@@ -48,11 +48,13 @@ class AlexaTimerVis extends utils.Adapter {
 				this.log.error(JSON.stringify(err));
 				this.log.error("Der Datenpunkt 'alexa2.0.History.summary' wurde nicht gefunden");
 			} else {
-
+				//timerObject.timerActiv.data.interval = parseInt(this.config.interval);
 				this.log.info("Alexa Datenpunkt wurde gefunden");
 				this.setState("info.connection", true, true);
+				//this.log.info("Interval: " + timerObject.timerActiv.data.interval + " ms")
 			}
 		});
+
 
 		const timerObject = {
 			"timerActiv": {
@@ -62,6 +64,7 @@ class AlexaTimerVis extends utils.Adapter {
 					"activateTimer": ["stunde", "minute", "sekunde"],
 				},
 				"data": {
+					"interval": 1000,
 					"notNoted": ["sekunde", "sekunden", "timer"],
 					"stopTimer": ["stoppe", "lösche", "lösch", "stopp"],
 					"stopAll": ["alle"],
@@ -219,7 +222,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 						clearInterval(timerInterval);
 					}
-				}, 1000);
+				}, timerObject.timerActiv.data.interval);
 			},
 
 			/**
@@ -305,6 +308,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 			},
 		};
+		
 
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
@@ -552,7 +556,7 @@ class AlexaTimerVis extends utils.Adapter {
 				catch (e) {
 					this.log.error(e);
 				}
-			}, 1000);
+			}, timerObject.timerActiv.data.interval);
 		};
 
 		// 		await this.setObjectNotExistsAsync(timer, {

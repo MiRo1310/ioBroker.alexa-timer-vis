@@ -21,7 +21,7 @@
 		// This will be called by the admin adapter when the settings page loads
 		function load(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
-			var getAdminDevices = []; // For table "getAdminDevices"
+			//var getAdminDevices = []; // For table "getAdminDevices"
 			
 
 			if (!settings) return;
@@ -41,9 +41,9 @@
 						;
 				}
 			});
-			getAdminDevices = settings.getAdminDevices || []; // For table "getAdminDevices"
+			//getAdminDevices = settings.getAdminDevices || []; // For table "getAdminDevices"
 			onChange(false);
-			values2table('getAdminDevices', getAdminDevices, onChange); // For table "getAdminDevices"
+			//values2table('getAdminDevices', getAdminDevices, onChange); // For table "getAdminDevices"
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
 		}
@@ -88,11 +88,11 @@
 		<div class="row">
 			<h1>Alexa Timer für die Vis</h1>
 							
-			<div class="col s6 input-field">
+			<!-- <div class="col s6 input-field">
 				
 				<input type="number" class="value" placeholder="1000" min="1000" value="1000" id="interval" /><span>ms</span>
 				<label for="interval" class="translate">Aktualisierungs Intervall</label>
-			</div>
+			</div> -->
 		</div>
 
 	</div>
