@@ -441,11 +441,6 @@ class AlexaTimerVis extends utils.Adapter {
 		 * @param {number} value
 		 */
 		const createState = (value) => {
-			this.log.info("value " + value);
-			this.log.info(typeof(value));
-			// for(let i = 1; i >= value; i++){
-			// 	this.log.info("Durchlauf " + i)
-			// };
 			try {
 				for(let i = 1; i <= value; i++){
 					// Datenpunkt für allgemeine Anzeige das ein Timer aktiv ist
@@ -550,17 +545,18 @@ class AlexaTimerVis extends utils.Adapter {
 					for (const element in timers) {
 						// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
 						if (timerObject.timer[element].hour !== undefined) {
-							this.setState(element + ".alive", timerObject.timerActiv.timer[element], true);
-							this.setState(element + ".hour", timerObject.timer[element].hour, true);
-							this.setState(element + ".minute", timerObject.timer[element].minute, true);
-							this.setState(element + ".second", timerObject.timer[element].second, true);
-							this.setState(element + ".string", timerObject.timer[element].string_Timer, true);
-							this.setState("all_Timer.alive", true, true);
+							this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
+							this.setStateChanged(element + ".hour", timerObject.timer[element].hour, true);
+							this.setStateChanged(element + ".minute", timerObject.timer[element].minute, true);
+							this.setStateChanged(element + ".second", timerObject.timer[element].second, true);
+							this.setStateChanged(element + ".string", timerObject.timer[element].string_Timer, true);
+							this.setStateChanged("all_Timer.alive", true, true);
+							// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
 							const name = timerObject.timer[element].name;
 							if (name == "Timer"){
-								this.setState(element + ".name", name, true);
-							} else {
-								this.setState(element + ".name", firstLetterToUpperCase(name) + " Timer", true);
+								this.setStateChanged(element + ".name", name, true);
+							} else { // Wenn der Name des Timers definiert ist soll der erste Buchstabe groß werden und es soll Timer angehängt werden
+								this.setStateChanged(element + ".name", firstLetterToUpperCase(name) + " Timer", true);
 							}
 						}
 
