@@ -16,6 +16,11 @@ const utils = require("@iobroker/adapter-core");
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
+// Variablen für Timeouts und Intervalle
+let setStates;
+let timerInterval;
+let timeout_1;
+
 class AlexaTimerVis extends utils.Adapter {
 
 	/**
@@ -36,6 +41,7 @@ class AlexaTimerVis extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
+
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
 
@@ -65,7 +71,7 @@ class AlexaTimerVis extends utils.Adapter {
 				},
 				"data": {
 					"interval": 1000,// Aktualisierungsinterval
-					"notNoted": ["sekunde", "sekunden", "timer"], // Wörter die nicht beachtet werden sollen
+					"notNoted": ["sekunde", "sekunden", "timer", "auf", "setze", "setz"], // Wörter die nicht beachtet werden sollen
 					"stopTimer": ["stoppe", "lösche", "lösch", "stopp"], // Wörter die ein stoppen defienieren
 					"stopAll": ["alle"], // Spezielle Definition zum löschen aller Timer
 					"connecter": ["und"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
@@ -129,7 +135,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 				init = true;
-				this.setTimeout(() => {
+				timeout_1 = this.setTimeout(() => {
 					init = false;
 				}, 5000);
 
@@ -141,7 +147,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 				if (value.indexOf("timer") >= 0) {
-					this.log.info("Timer Befehl gefunden");
+					this.log.info("Befehl zum steuern der Timerfunktion gefunden");
 
 					// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 					let i = false;
@@ -216,6 +222,7 @@ class AlexaTimerVis extends utils.Adapter {
 					}
 				}
 			}
+
 			// Code Ende
 
 			// you can use the ack flag to detect if state is command(false) or status(true)
@@ -279,7 +286,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 
 			// Intervall erzeugen
-			const timerInterval = setInterval(() => {
+			timerInterval = setInterval(() => {
 				const timeLeft = endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
 
 				// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
@@ -519,7 +526,7 @@ class AlexaTimerVis extends utils.Adapter {
 		 * States in Datenpunkten schreiben
 		 */
 		const writeState = () => {
-			const setStates = setInterval(() => {
+			setStates = setInterval(() => {
 				try {
 					const timers = timerObject.timerActiv.timer;
 					for (const element in timers) {
@@ -603,10 +610,11 @@ class AlexaTimerVis extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			// Here you must clear all timeouts or intervals that may still be active
-			//clearTimeout(timeout1);
-			// clearTimeout(timeout2);
-			// ...
-			//clearInterval(setStates);
+			// Timeouts
+			clearTimeout(timeout_1);
+			// Intervalls
+			clearInterval(setStates);
+			clearInterval(timerInterval);
 
 			callback();
 		} catch (e) {
