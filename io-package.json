@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "news": {
+            "0.0.4": {
+                "en": "Adjustments for voice input and fixes",
+                "de": "Anpassungen für die Spracheingabe und Korrekturen",
+                "ru": "Корректировки голосового ввода и исправления",
+                "pt": "Ajustes para entrada de voz e correções",
+                "nl": "Aanpassingen voor spraakinvoer en reparaties",
+                "fr": "Ajustements pour la saisie vocale et correctifs",
+                "it": "Regolazioni per l'input vocale e correzioni",
+                "es": "Ajustes para entrada de voz y correcciones.",
+                "pl": "Korekty wprowadzania głosowego i poprawki",
+                "zh-cn": "语音输入的调整和修复"
+            },
             "0.0.3": {
                 "en": "Adjustments for vis",
                 "de": "Anpassungen für vis",
@@ -96,8 +108,7 @@
             {
                 "js-controller": ">=2.0.0"
             }
-        ],
-        "installedFrom": "MiRo1310/ioBroker.alexa-timer-vis#4d6a09b47629a72ad6c6647070c7c5591da9aab8"
+        ]
     },
     "native": {
         "option5": true,
