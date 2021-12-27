@@ -43,6 +43,7 @@ Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexa erste
 * Alexa, lösche Pommes Timer
 * Alexa, lösche 5 Minuten Timer
 
+
 #### Wenn ihr Anregungen habt, um etwas besser zu machen, oder andere Funktionen hinzu zu fügen immer gerne melden
 
 
