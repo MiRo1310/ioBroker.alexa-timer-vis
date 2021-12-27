@@ -108,8 +108,7 @@
       {
         "js-controller": ">=2.0.0"
       }
-    ],
-    "installedFrom": "MiRo1310/ioBroker.alexa-timer-vis#9e2add03b5226833b99f64bf10f19de310b03f2d"
+    ]    
   },
   "native": {
     "option5": true,
