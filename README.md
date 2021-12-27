@@ -35,6 +35,7 @@ Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexa erste
 * Alexa, stelle einen Timer auf 1 Stunde und 30 Minuten,
 * Alexa, setzte Timer auf 2 Stunden
 * Alexa, Timer auf 120 Minuten
+* Alexa, Timer 9 Minuten Spaghetti
 
 ### Timer löschen ( Beispiele )
 
@@ -50,6 +51,8 @@ Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexa erste
 
 
 ## Changelog
+### 0.0.4 (27.12.2021)
+* Anpassung an verschiedener Möglichkeiten der Eingabe eines Timers
 ### 0.0.3 (26.12.2021)
 * (Michael Roling) Bugfix
 ### 0.0.2 (26.12.2021)
