@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.0.5",
+        "version": "0.1.0",
         "news": {
-            "0.0.5": {
+            "0.1.0": {
                 "en": "Error when deleting of intervals and timeouts after shutdown, fixed",
                 "de": "Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben",
                 "ru": "Исправлена ​​ошибка при удалении интервалов и таймаутов после выключения.",

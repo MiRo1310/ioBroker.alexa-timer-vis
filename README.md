@@ -23,9 +23,9 @@ Alexa Timer ausgeben um in der Vis anzuzeigen
 
 ## Funktionsweise
 
-Es können unbegrenzt Timer mit Alexa erstellt werden. Es werden Datenpunkte für jeden Timer erstellt, die man dann in der Vis sich anzeigen lassen kann.
+Es können unbegrenzt Timer mit Alexa per Sprachbefehl erstellt werden. 
 Bei Start des Adapters werden 4 Ordner erstellt, mit den ganzen States.
-Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexa erstellt werden. 
+Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexas Spracheingabe erstellt werden. 
 
 ### Timer hinzufügen ( Beispiele )
 
@@ -51,7 +51,7 @@ Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexa erste
 
 
 ## Changelog
-### 0.0.5 (28.12.021)
+### 0.1.0 (28.12.021)
 * Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben
 ### 0.0.4 (27.12.2021)
 * Anpassung an verschiedener Möglichkeiten der Eingabe eines Timers
