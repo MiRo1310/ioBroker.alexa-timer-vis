@@ -52,6 +52,8 @@ Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexa erste
 
 
 ## Changelog
+### 0.0.5 (28.12.021)
+* Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben
 ### 0.0.4 (27.12.2021)
 * Anpassung an verschiedener Möglichkeiten der Eingabe eines Timers
 ### 0.0.3 (26.12.2021)

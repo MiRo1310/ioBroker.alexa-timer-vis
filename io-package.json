@@ -1,142 +1,154 @@
 {
-  "common": {
-    "name": "alexa-timer-vis",
-    "version": "0.0.4",
-    "news": {
-      "0.0.4": {
-        "en": "Adjustments for voice input and fixes",
-        "de": "Anpassungen für die Spracheingabe und Korrekturen",
-        "ru": "Корректировки голосового ввода и исправления",
-        "pt": "Ajustes para entrada de voz e correções",
-        "nl": "Aanpassingen voor spraakinvoer en reparaties",
-        "fr": "Ajustements pour la saisie vocale et correctifs",
-        "it": "Regolazioni per l'input vocale e correzioni",
-        "es": "Ajustes para entrada de voz y correcciones.",
-        "pl": "Korekty wprowadzania głosowego i poprawki",
-        "zh-cn": "语音输入的调整和修复"
-      },
-      "0.0.3": {
-        "en": "Adjustments for vis",
-        "de": "Anpassungen für vis",
-        "ru": "Корректировки для vis",
-        "pt": "Ajustes para vis",
-        "nl": "Aanpassingen voor vis",
-        "fr": "Ajustements pour vis",
-        "it": "Adeguamenti per vis",
-        "es": "Ajustes para vis",
-        "pl": "Korekty vis",
-        "zh-cn": "可见性调整"
-      },
-      "0.0.2": {
-        "en": "Adjustment",
-        "de": "Einstellung",
-        "ru": "Корректирование",
-        "pt": "Ajustamento",
-        "nl": "Aanpassing",
-        "fr": "Ajustement",
-        "it": "Regolazione",
-        "es": "Ajustamiento",
-        "pl": "Dostosowanie",
-        "zh-cn": "调整"
-      },
-      "0.0.1": {
-        "en": "Initial Release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "zh-cn": "初始发行"
-      }
+    "common": {
+        "name": "alexa-timer-vis",
+        "version": "0.0.5",
+        "news": {
+            "0.0.5": {
+                "en": "Error when deleting of intervals and timeouts after shutdown, fixed",
+                "de": "Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben",
+                "ru": "Исправлена ​​ошибка при удалении интервалов и таймаутов после выключения.",
+                "pt": "Erro, ao excluir intervalos e tempos limite após desligamento, corrigido",
+                "nl": "Fout bij het verwijderen van intervallen en time-outs na afsluiten, opgelost",
+                "fr": "Erreur, lors de la suppression des intervalles et des délais d'attente après l'arrêt, corrigé",
+                "it": "Errore durante l'eliminazione di intervalli e timeout dopo l'arresto, risolto",
+                "es": "Error, al eliminar intervalos y tiempos de espera después del apagado, solucionado",
+                "pl": "Naprawiono błąd podczas usuwania interwałów i limitów czasu po wyłączeniu",
+                "zh-cn": "错误，在关机后删除间隔和超时时，已修复"
+            },
+            "0.0.4": {
+                "en": "Adjustments for voice input and fixes",
+                "de": "Anpassungen für die Spracheingabe und Korrekturen",
+                "ru": "Корректировки голосового ввода и исправления",
+                "pt": "Ajustes para entrada de voz e correções",
+                "nl": "Aanpassingen voor spraakinvoer en reparaties",
+                "fr": "Ajustements pour la saisie vocale et correctifs",
+                "it": "Regolazioni per l'input vocale e correzioni",
+                "es": "Ajustes para entrada de voz y correcciones.",
+                "pl": "Korekty wprowadzania głosowego i poprawki",
+                "zh-cn": "语音输入的调整和修复"
+            },
+            "0.0.3": {
+                "en": "Adjustments for vis",
+                "de": "Anpassungen für vis",
+                "ru": "Корректировки для vis",
+                "pt": "Ajustes para vis",
+                "nl": "Aanpassingen voor vis",
+                "fr": "Ajustements pour vis",
+                "it": "Adeguamenti per vis",
+                "es": "Ajustes para vis",
+                "pl": "Korekty vis",
+                "zh-cn": "可见性调整"
+            },
+            "0.0.2": {
+                "en": "Adjustment",
+                "de": "Einstellung",
+                "ru": "Корректирование",
+                "pt": "Ajustamento",
+                "nl": "Aanpassing",
+                "fr": "Ajustement",
+                "it": "Regolazione",
+                "es": "Ajustamiento",
+                "pl": "Dostosowanie",
+                "zh-cn": "调整"
+            },
+            "0.0.1": {
+                "en": "Initial Release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "初始发行"
+            }
+        },
+        "title": "Alexa Timer für Vis",
+        "titleLang": {
+            "en": "Alexa Timer für Vis",
+            "de": "Alexa Timer für Vis",
+            "ru": "Alexa Timer für Vis",
+            "pt": "Alexa Timer para Vis",
+            "nl": "Alexa Timer voor Vis",
+            "fr": "Alexa Timer pour Vis",
+            "it": "Alexa Timer per la visualizzazione",
+            "es": "Temporizador de Alexa für Vis",
+            "pl": "Alexa Timer dla wizy",
+            "zh-cn": "Alexa Timer für Vis"
+        },
+        "desc": {
+            "en": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "de": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "ru": "Алекса Таймер ausgeben um in der Vis anzuzeigen",
+            "pt": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "nl": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "fr": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "it": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "es": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "pl": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+            "zh-cn": "Alexa Timer ausgeben um in der Vis anzuzeigen"
+        },
+        "authors": [
+            "Michael Roling <michael.roling@gmx.de>"
+        ],
+        "keywords": [
+            "ioBroker",
+            "template",
+            "Smart Home",
+            "Alexa",
+            "Timer",
+            "VIS",
+            "home automation"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "alexa-timer-vis.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
+        "readme": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "logic",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "supportCustoms": true,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
     },
-    "title": "Alexa Timer für Vis",
-    "titleLang": {
-      "en": "Alexa Timer für Vis",
-      "de": "Alexa Timer für Vis",
-      "ru": "Alexa Timer für Vis",
-      "pt": "Alexa Timer para Vis",
-      "nl": "Alexa Timer voor Vis",
-      "fr": "Alexa Timer pour Vis",
-      "it": "Alexa Timer per la visualizzazione",
-      "es": "Temporizador de Alexa für Vis",
-      "pl": "Alexa Timer dla wizy",
-      "zh-cn": "Alexa Timer für Vis"
+    "native": {
+        "option5": true,
+        "interval": "1000",
+        "test": "test"
     },
-    "desc": {
-      "en": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "de": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "ru": "Алекса Таймер ausgeben um in der Vis anzuzeigen",
-      "pt": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "nl": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "fr": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "it": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "es": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "pl": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-      "zh-cn": "Alexa Timer ausgeben um in der Vis anzuzeigen"
-    },
-    "authors": [
-      "Michael Roling <michael.roling@gmx.de>"
-    ],
-    "keywords": [
-      "ioBroker",
-      "template",
-      "Smart Home",
-      "Alexa",
-      "Timer",
-      "VIS",
-      "home automation"
-    ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
-    "icon": "alexa-timer-vis.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
-    "readme": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "logic",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "materialize": true,
-    "supportCustoms": true,
-    "dependencies": [
-      {
-        "js-controller": ">=2.0.0"
-      }
-    ]    
-  },
-  "native": {
-    "option5": true,
-    "interval": "1000",
-    "test": "test"
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }
