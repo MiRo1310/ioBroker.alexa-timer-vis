@@ -20,6 +20,76 @@ const utils = require("@iobroker/adapter-core");
 let setStates;
 let timerInterval;
 let timeout_1;
+// Objekt mit Einstellungen und Daten
+const timerObject = {
+	"timerActiv": {
+		"timerCount": 0, // Anzahl aktiver Timer
+		"condition": {
+			"deleteTimer": ["stopp", "stoppe", "anhalten", "lösche", "lösch"], // Vorselektion stoppen oder löschen
+			"activateTimer": ["stunde", "minute", "sekunde"], // Vorselektion hinzufügen
+		},
+		"data": {
+			"interval": 1000,// Aktualisierungsinterval
+			"notNoted": ["timer", "auf", "setze", "setz"], // Wörter die nicht beachtet werden sollen
+			"stopTimer": ["stoppe", "lösche", "lösch", "stopp"], // Wörter die ein stoppen defienieren
+			"stopAll": ["alle"], // Spezielle Definition zum löschen aller Timer
+			"connecter": ["und"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
+			"hour": ["stunde", "stunden"], // Wörter für Stunden, dient als Multiplikator
+			"minute": ["minute", "minuten"], // Wörter für Minuten, dient als Multiplikator
+			"second":["sekunde", "sekunden",] // Wörter für Sekunden
+		},
+		"timer": { // Liste mit Timern, zeigt den aktuellen Zustand
+			"timer1": false,
+		},
+	},
+	"timer": { // Werte für Timer
+		"timer1": {
+			"hour": 0,
+			"minute": 0,
+			"second": 0,
+			"string_Timer": "",
+			"onlySec": 0,
+			"index": 0,
+			"name": "",
+			"name_output":""
+		},
+	},
+	"zahlen": { // Zahl als Wort zu Zahl nummerisch
+		"eins": 1,
+		"eine": 1,
+		"zwei": 2,
+		"drei": 3,
+		"vier": 4,
+		"fünf": 5,
+		"sechs": 6,
+		"sieben": 7,
+		"acht": 8,
+		"neun": 9,
+		"zehn": 10,
+		"elf": 11,
+		"zwölf": 12,
+		"dreizehn": 13,
+		"vierzehn": 14,
+		"fünfzehn": 15,
+		"sechszehn": 16,
+		"siebzehn": 17,
+		"achtzehn": 18,
+		"neunzehn": 19,
+		"zwanzig": 20,
+		"dreißig": 30,
+		"vierzig": 40,
+		"fünfzig": 50,
+		"sechszig": 60,
+		"siebzig": 70,
+		"achtzig": 80,
+		"neunzig": 90,
+		"hundert": 100,
+	},
+	"ziffern":["0", "1", "2", "3", "4", "5", "6","7", "8", "9"],
+	"interval":{
+		"1" : "leer",
+	}
+};
 
 class AlexaTimerVis extends utils.Adapter {
 
@@ -61,73 +131,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		});
 
-		// Objekt mit Einstellungen und Daten
-		const timerObject = {
-			"timerActiv": {
-				"timerCount": 0, // Anzahl aktiver Timer
-				"condition": {
-					"deleteTimer": ["stopp", "stoppe", "anhalten", "lösche", "lösch"], // Vorselektion stoppen oder löschen
-					"activateTimer": ["stunde", "minute", "sekunde"], // Vorselektion hinzufügen
-				},
-				"data": {
-					"interval": 1000,// Aktualisierungsinterval
-					"notNoted": ["timer", "auf", "setze", "setz"], // Wörter die nicht beachtet werden sollen
-					"stopTimer": ["stoppe", "lösche", "lösch", "stopp"], // Wörter die ein stoppen defienieren
-					"stopAll": ["alle"], // Spezielle Definition zum löschen aller Timer
-					"connecter": ["und"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
-					"hour": ["stunde", "stunden"], // Wörter für Stunden, dient als Multiplikator
-					"minute": ["minute", "minuten"], // Wörter für Minuten, dient als Multiplikator
-					"second":["sekunde", "sekunden",] // Wörter für Sekunden
-				},
-				"timer": { // Liste mit Timern, zeigt den aktuellen Zustand
-					"timer1": false,
-				},
-			},
-			"timer": { // Werte für Timer
-				"timer1": {
-					"hour": 0,
-					"minute": 0,
-					"second": 0,
-					"string_Timer": "",
-					"onlySec": 0,
-					"index": 0,
-					"name": "",
-					"name_output":""
-				},
-			},
-			"zahlen": { // Zahl als Wort zu Zahl nummerisch
-				"eins": 1,
-				"eine": 1,
-				"zwei": 2,
-				"drei": 3,
-				"vier": 4,
-				"fünf": 5,
-				"sechs": 6,
-				"sieben": 7,
-				"acht": 8,
-				"neun": 9,
-				"zehn": 10,
-				"elf": 11,
-				"zwölf": 12,
-				"dreizehn": 13,
-				"vierzehn": 14,
-				"fünfzehn": 15,
-				"sechszehn": 16,
-				"siebzehn": 17,
-				"achtzehn": 18,
-				"neunzehn": 19,
-				"zwanzig": 20,
-				"dreißig": 30,
-				"vierzig": 40,
-				"fünfzig": 50,
-				"sechszig": 60,
-				"siebzig": 70,
-				"achtzig": 80,
-				"neunzig": 90,
-				"hundert": 100,
-			},
-			"ziffern":["0", "1", "2", "3", "4", "5", "6","7", "8", "9"]
-		};
+		
 		// Initialisierungsvariable
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
@@ -193,10 +197,10 @@ class AlexaTimerVis extends utils.Adapter {
 								const returnArray = zeiterfassung(timerArray);
 
 								// Rückgabewert Timer in Sekunden [0]
-								this.log.info("Eval: " + returnArray[0]);
+								//this.log.info("Eval: " + returnArray[0]);
 								const timerSeconds = eval(returnArray[0]);
 
-								// Rückgabewert Name des Timers [1]
+								// Rückgabewert "Name" des Timers [1]
 								const name = returnArray[1];
 
 								// Anzahl Aktiver Timer um eins hochzählen
@@ -289,9 +293,10 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 
 			// Intervall erzeugen
-			timerInterval = setInterval(() => {
+			// @ts-ignore
+			timerObject.interval[index.slice(5)] = setInterval(() => {
 				const timeLeft = endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
-
+				
 				// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
 				const timeLeftSec = Math.round(timeLeft / 1000);
 
@@ -342,7 +347,8 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timer[index].index = 0;
 					timerObject.timer[index].name = "Timer";
 
-					clearInterval(timerInterval);
+					clearInterval(timerObject.interval[index.slice(5)]);
+					timerObject.interval[index.slice(5)] = "leer";
 				}
 			}, timerObject.timerActiv.data.interval); // Aktualisierungszeit
 		};
@@ -504,7 +510,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name = element;
-				} this.log.info("TimerString: " + timerString);
+				} //this.log.info("TimerString: " + timerString);
 			});
 			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 			if (timerString.charAt(timerString.length - 1) == "+") {
@@ -624,13 +630,22 @@ class AlexaTimerVis extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
+			this.log.info("Apdater shuts down");
 			// Here you must clear all timeouts or intervals that may still be active
 			// Timeouts
+			//this.log.info("Interval" + JSON.stringify(timerObject.interval));
 			clearTimeout(timeout_1);
 			// Intervalls
 			clearInterval(setStates);
-			clearInterval(timerInterval);
-
+			
+			for(const element in timerObject.interval){
+				//this.log.info("Elemente " + element);
+				if (timerObject.interval[element] != "leer"){
+					clearInterval(timerObject.interval[element]);
+					
+				}
+			};			
+			this.log.warn("Intervals and timeouts cleared!");
 			callback();
 		} catch (e) {
 			callback();
