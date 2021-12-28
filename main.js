@@ -18,7 +18,6 @@ const utils = require("@iobroker/adapter-core");
 
 // Variablen für Timeouts und Intervalle
 let setStates;
-let timerInterval;
 let timeout_1;
 // Objekt mit Einstellungen und Daten
 const timerObject = {
@@ -131,7 +130,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		});
 
-		
+
 		// Initialisierungsvariable
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
@@ -296,7 +295,7 @@ class AlexaTimerVis extends utils.Adapter {
 			// @ts-ignore
 			timerObject.interval[index.slice(5)] = setInterval(() => {
 				const timeLeft = endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
-				
+
 				// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
 				const timeLeftSec = Math.round(timeLeft / 1000);
 
@@ -637,14 +636,14 @@ class AlexaTimerVis extends utils.Adapter {
 			clearTimeout(timeout_1);
 			// Intervalls
 			clearInterval(setStates);
-			
+
 			for(const element in timerObject.interval){
 				//this.log.info("Elemente " + element);
 				if (timerObject.interval[element] != "leer"){
 					clearInterval(timerObject.interval[element]);
-					
+
 				}
-			};			
+			}
 			this.log.warn("Intervals and timeouts cleared!");
 			callback();
 		} catch (e) {
