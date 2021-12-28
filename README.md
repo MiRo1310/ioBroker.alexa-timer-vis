@@ -7,7 +7,6 @@
 [![Downloads](https://img.shields.io/npm/dm/iobroker.alexa-timer-vis.svg)](https://www.npmjs.com/package/iobroker.alexa-timer-vis)
 ![Number of Installations](https://iobroker.live/badges/alexa-timer-vis-installed.svg)
 ![Current version in stable repository](https://iobroker.live/badges/alexa-timer-vis-stable.svg)
-[![Dependency Status](https://img.shields.io/david/MiRo1310/iobroker.alexa-timer-vis.svg)](https://david-dm.org/MiRo1310/iobroker.alexa-timer-vis)
 
 [![NPM](https://nodei.co/npm/iobroker.alexa-timer-vis.png?downloads=true)](https://nodei.co/npm/iobroker.alexa-timer-vis/)
 
