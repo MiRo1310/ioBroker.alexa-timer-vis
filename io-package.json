@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "news": {
+            "0.1.1": {
+                "en": "Adaptation to the English language (experimental)",
+                "de": "Anpassung an die englische Sprache (experimentell)",
+                "ru": "Адаптация к английскому языку (экспериментальная)",
+                "pt": "Adaptação para o idioma inglês (experimental)",
+                "nl": "Aanpassing aan de Engelse taal (experimenteel)",
+                "fr": "Adaptation à la langue anglaise (expérimental)",
+                "it": "Adattamento alla lingua inglese (sperimentale)",
+                "es": "Adaptación al idioma inglés (experimental)",
+                "pl": "Adaptacja do języka angielskiego (eksperymentalna)",
+                "zh-cn": "适应英语（实验性）"
+            },
             "0.1.0": {
                 "en": "Error when deleting of intervals and timeouts after shutdown, fixed",
                 "de": "Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben",
