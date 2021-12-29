@@ -12,14 +12,48 @@
 
 **Tests:** ![Test and Release](https://github.com/MiRo1310/ioBroker.alexa-timer-vis/workflows/Test%20and%20Release/badge.svg)
 
-## alexa-timer-vis adapter für den ioBroker
+## alexa-timer-vis adapter for ioBroker
 
-Alexa Timer ausgeben um in der Vis anzuzeigen
+Output Alexa timer to display in the vis
 
-### Das ist ein Beispiel aus meiner Vis
+### This is an example of my vis
 
 ![](admin/timer.png)
 
+## Funktionsweise
+
+A timer or several by voice input, is created via Alexa, this is evaluated by the adapter and written in states in order to make them visible in the Vis. So you have a better overview if you have several timers active at the same time.
+
+* Unlimited timers can be created with Alexa by voice command. 
+* When the adapter is started, 4 folders are created with all of the states.
+* Additional folders will be created as soon as a 5th and more timers are created via Alexa's voice input.
+* It works with German input
+* configured for German voice input, English (experimental) 
+
+### Timer hinzufügen ( Beispiele )
+
+* Alexa, Timer 5 minutes
+* Alexa, fries Timer 9 minutes
+* Alexa, set a timer for 1 hour and 30 minutes
+* Alexa, set a Timer for 2 hours
+* Alexa, Timer for 120 minutes
+* Alexa, Timer 9 minutes Spaghetti
+
+### Timer löschen ( Beispiele )
+
+* Alexa, delete all Timers
+* Alexa, delete fries Timer
+* Alexa, delete 5 minutes Timer
+
+
+#### If you have any suggestions for improving something or adding other functions, feel free to contact us
+
+
+# ---- German ----
+
+## alexa-timer-vis adapter für den ioBroker
+
+Alexa Timer ausgeben um in der Vis anzuzeigen
 
 ## Funktionsweise
 
@@ -28,6 +62,8 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 * Es können unbegrenzt Timer mit Alexa per Sprachbefehl erstellt werden. 
 * Bei Start des Adapters werden 4 Ordner erstellt, mit den ganzen States.
 * Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexas Spracheingabe erstellt werden. 
+* konfiguriert für deutsche Spracheingabe, Englisch (experimentell)
+
 
 ### Timer hinzufügen ( Beispiele )
 
@@ -53,9 +89,14 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 
 ## Changelog
+### 0.1.1 (29.12.2021)
+* Adaptation to the English language
+* Anpassung an die Englische Sprache
 ### 0.1.0 (28.12.021)
+* Fixed bug when deleting intervals and timeouts after shutdown
 * Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben
 ### 0.0.4 (27.12.2021)
+* Adaptation to various options for entering a timer
 * Anpassung an verschiedener Möglichkeiten der Eingabe eines Timers
 ### 0.0.3 (26.12.2021)
 * (Michael Roling) Bugfix
