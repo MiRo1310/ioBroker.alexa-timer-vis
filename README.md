@@ -90,8 +90,8 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 ## Changelog
 ### 0.1.1 (29.12.2021)
-* Adaptation to the English language
-* Anpassung an die Englische Sprache
+* Adaptation to the English language (experimental)
+* Anpassung an die Englische Sprache (experimentell)
 ### 0.1.0 (28.12.021)
 * Fixed bug when deleting intervals and timeouts after shutdown
 * Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben
