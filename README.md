@@ -20,7 +20,7 @@ Output Alexa timer to display in the vis
 
 ![](admin/timer.png)
 
-## Funktionsweise
+## Functionality
 
 A timer or several by voice input, is created via Alexa, this is evaluated by the adapter and written in states in order to make them visible in the Vis. So you have a better overview if you have several timers active at the same time.
 
@@ -30,7 +30,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 * It works with German input
 * configured for German voice input, English (experimental) 
 
-### Timer hinzufügen ( Beispiele )
+### Timer add ( Examples )
 
 * Alexa, Timer 5 minutes
 * Alexa, fries Timer 9 minutes
@@ -39,7 +39,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 * Alexa, Timer for 120 minutes
 * Alexa, Timer 9 minutes Spaghetti
 
-### Timer löschen ( Beispiele )
+### Timer delete ( Examples )
 
 * Alexa, delete all Timers
 * Alexa, delete fries Timer
@@ -49,7 +49,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 #### If you have any suggestions for improving something or adding other functions, feel free to contact us
 
 
-# ---- German ----
+# ---- Deutsch ----
 
 ## alexa-timer-vis adapter für den ioBroker
 
