@@ -149,10 +149,10 @@ class AlexaTimerVis extends utils.Adapter {
 			if (err || obj == null) {
 				// Error
 				this.log.error(JSON.stringify(err));
-				this.log.error("Der Datenpunkt 'alexa2.0.History.summary' wurde nicht gefunden");
+				this.log.error("The State 'alexa2.0.History.summary' was not found");
 			} else {
 				// Datenpunkt wurde gefunden
-				this.log.info("Alexa Datenpunkt wurde gefunden");
+				this.log.info("Alexa State was found");
 				this.setState("info.connection", true, true);
 
 				// Datenpunkte erzeugen (Anzahl)
@@ -182,7 +182,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 				if (value.indexOf("timer") >= 0) {
-					this.log.info("Befehl zum steuern der Timerfunktion gefunden");
+					this.log.info("Command to control the timer function found");
 
 					// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 					let i = false;
@@ -191,8 +191,9 @@ class AlexaTimerVis extends utils.Adapter {
 
 							// Timer soll gestoppt werden
 							if (value.indexOf(element) >= 0 && array == "deleteTimer") {
-								this.log.info("Timer soll gestoppt werden!");
-
+								this.log.info("Timer is to be stopped!");
+								//Eingabe Text loggen
+								this.log.info("Voice input: " + value);
 								// Input aus Alexas Spracheingabe zu Array konvertieren
 								const timerArray = value.split(" ");
 
@@ -217,8 +218,9 @@ class AlexaTimerVis extends utils.Adapter {
 							} // Timer soll erstellt werden
 							// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
 							else if (value.indexOf(element) >= 0 && i === false) {
-								this.log.info("Timer soll hinzugefügt werden!");
-
+								this.log.info("Timer is to be added!");
+								//Eingabe Text loggen
+								this.log.info("Voice input: " + value);
 								// Input aus Alexas Spracheingabe zu Array machen
 								const timerArray = value.split(" ");
 
@@ -602,8 +604,8 @@ class AlexaTimerVis extends utils.Adapter {
 							}
 						}
 					}
-					this.log.info(JSON.stringify(timerObject.timerActiv.timer));
-					this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
+					//this.log.info(JSON.stringify(timerObject.timerActiv.timer));
+					//this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0) {
 						this.setState("all_Timer.alive", false, true);
