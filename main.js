@@ -19,6 +19,8 @@ const utils = require("@iobroker/adapter-core");
 // Variablen für Timeouts und Intervalle
 let setStates;
 let timeout_1;
+// Variable um Intervall zum schreiben von States nur einmal auszuführen
+let writeStateActiv = false;
 // Objekt mit Einstellungen und Daten
 const timerObject = {
 	"timerActiv": {
@@ -29,7 +31,7 @@ const timerObject = {
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
-			"notNoted": ["timer", "auf", "setze", "setz","einen","set","a","for"], // Wörter die nicht beachtet werden sollen
+			"notNoted": ["timer", "auf","auf,", "setze", "setz","einen","set","a","for"], // Wörter die nicht beachtet werden sollen
 			"stopTimer": ["stoppe", "lösche", "lösch", "stopp","stop","delete"], // Wörter die ein stoppen defienieren
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
@@ -246,9 +248,14 @@ class AlexaTimerVis extends utils.Adapter {
 								}
 								// Timer starten
 								startTimer(timerSeconds, name);
+								// Nur ausführen wenn noch nicht aktiv ist
+								if (!writeStateActiv){
+									// auf aktiv setzen
+									writeStateActiv = true;
+									// States schreiben, darf aber nur einmal ausgeführt werden
+									writeState();
+								}
 
-								// States schreiben
-								writeState();
 
 								break;
 							}
@@ -595,9 +602,13 @@ class AlexaTimerVis extends utils.Adapter {
 							}
 						}
 					}
+					this.log.info(JSON.stringify(timerObject.timerActiv.timer));
+					this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0) {
 						this.setState("all_Timer.alive", false, true);
+						this.log.info("Intervall stopped!");
+						writeStateActiv = false;
 						clearInterval(setStates);
 					}
 				}
