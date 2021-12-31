@@ -4,7 +4,16 @@
         "version": "0.1.2",
         "news": {
             "0.1.2": {
-                "en": "Bugfix (A double created Intervall, fixed)"
+                "en": "Bugfix (A double created Intervall, fixed)",
+                "de": "Bugfix (Ein doppelt erstelltes Intervall, behoben)",
+                "ru": "Исправление (двойной созданный интервал, исправлено)",
+                "pt": "Bugfix (um Intervall criado duplo, corrigido)",
+                "nl": "Bugfix (Een dubbel gemaakt Intervall, opgelost)",
+                "fr": "Correction de bug (Un intervalle créé en double, corrigé)",
+                "it": "Bugfix (un doppio intervallo creato, risolto)",
+                "es": "Corrección de errores (un intervalo de doble creación, corregido)",
+                "pl": "Bugfix (podwójnie utworzony interwał, naprawiony)",
+                "zh-cn": "错误修复（双重创建的间隔，已修复）"
             },
             "0.1.1": {
                 "en": "Adaptation to the English language (experimental)",
