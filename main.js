@@ -428,7 +428,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "indicator",
 							read: true,
 							write: true,
-							def: false
+							def: false,
 						},
 						native: {},
 					});
