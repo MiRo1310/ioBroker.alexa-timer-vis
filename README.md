@@ -61,7 +61,7 @@ Alexa Timer ausgeben um in der Vis anzuzeigen
 
 Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, dieser wird von dem Adapter ausgewertet und in States geschrieben, um diese dann in der Vis sichtbar zu machen. So behält man einen besseren Überblick wenn man mehrere Timer gleichzeitig aktiv hat.
 
-* ---- Alexa2 Adapter wird gebraucht ----
+* ---- Alexa2 Adapter wird gebraucht --
 * Das Vis Widget ist noch nicht eingebunden
 * Es können unbegrenzt Timer mit Alexa per Sprachbefehl erstellt werden. 
 * Bei Start des Adapters werden 4 Ordner erstellt, mit den ganzen States.
