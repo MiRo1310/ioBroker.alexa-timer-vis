@@ -21,6 +21,8 @@ let setStates;
 let timeout_1;
 // Variable um Intervall zum schreiben von States nur einmal auszuführen
 let writeStateActiv = false;
+// Variable mit ID auf welche reagiert werden soll
+let datapoint;
 // Objekt mit Einstellungen und Daten
 const timerObject = {
 	"timerActiv": {
@@ -143,13 +145,13 @@ class AlexaTimerVis extends utils.Adapter {
 
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
-
+		datapoint = this.config.state;
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
-		this.getForeignObject("alexa2.0.History.summary", (err, obj) => {
+		this.getForeignObject(datapoint, (err, obj) => {
 			if (err || obj == null) {
 				// Error
-				this.log.error(JSON.stringify(err));
-				this.log.error("The State 'alexa2.0.History.summary' was not found");
+				//this.log.error(JSON.stringify(err));
+				this.log.error("The State " + datapoint + " was not found!");
 			} else {
 				// Datenpunkt wurde gefunden
 				this.log.info("Alexa State was found");
@@ -635,7 +637,7 @@ class AlexaTimerVis extends utils.Adapter {
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
 		// Um Statusupdates zu erhalten, müssen Sie diese abonnieren. Die folgende Zeile fügt ein Abonnement für unsere oben erstellte Variable hinzu
 		//this.subscribeStates("testVariable");
-		this.subscribeForeignStates("alexa2.0.History.summary");
+		this.subscribeForeignStates(datapoint);
 
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates("lights.*");
