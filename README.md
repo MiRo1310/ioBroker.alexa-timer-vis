@@ -89,6 +89,8 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 
 ## Changelog
+### 0.1.3 (02.01.2022)
+* Start and EndTime added
 ### 0.1.2 (31.12.2021)
 * Bugfix (A double created Intervall, fixed)
 ### 0.1.1 (29.12.2021)
