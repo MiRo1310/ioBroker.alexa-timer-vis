@@ -24,6 +24,8 @@ Output Alexa timer to display in the vis
 
 A timer or several by voice input, is created via Alexa, this is evaluated by the adapter and written in states in order to make them visible in the Vis. So you have a better overview if you have several timers active at the same time.
 
+* ---- Alexa2 Adapter is needed ----
+* The Vis Widget isn´t yet integrated
 * Unlimited timers can be created with Alexa by voice command. 
 * When the adapter is started, 4 folders are created with all of the states.
 * Additional folders will be created as soon as a 5th and more timers are created via Alexa's voice input.
@@ -59,6 +61,8 @@ Alexa Timer ausgeben um in der Vis anzuzeigen
 
 Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, dieser wird von dem Adapter ausgewertet und in States geschrieben, um diese dann in der Vis sichtbar zu machen. So behält man einen besseren Überblick wenn man mehrere Timer gleichzeitig aktiv hat.
 
+* ---- Alexa2 Adapter wird gebraucht ----
+* Das Vis Widget ist noch nicht eingebunden
 * Es können unbegrenzt Timer mit Alexa per Sprachbefehl erstellt werden. 
 * Bei Start des Adapters werden 4 Ordner erstellt, mit den ganzen States.
 * Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexas Spracheingabe erstellt werden. 
