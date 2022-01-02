@@ -54,7 +54,9 @@ const timerObject = {
 			"onlySec": 0,
 			"index": 0,
 			"name": "",
-			"name_output":""
+			"name_output":"",
+			"time_start":"",
+			"time_end":""
 		},
 	},
 	"zahlen": { // Zahl als Wort zu Zahl nummerisch
@@ -303,6 +305,18 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 
 		/**
+		 * // Aus millisekunden nur die Zeit herausziehen
+		 * @param {number} i // Time in milliseconds
+		 * @return {string}
+		 */
+		const time =(i)=>{
+			// Zeit zu String
+			const date_string = new Date(i).toString();
+			// String zu Array, zeit herausschneiden und zurück zu String
+			const time = date_string.split(" ").slice(4,5).toString();
+			return time;
+		};
+		/**
 		 * Timer
 		 *
 		 * @param {number} sec Sekunden des neuen Timers
@@ -313,8 +327,10 @@ class AlexaTimerVis extends utils.Adapter {
 
 		const startTimer = (sec, name)=> {
 			const startTimer = new Date().getTime(); // Startzeit Timer
+			const start_Time = time(startTimer);
 			const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
 			const endTime = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
+			const end_Time = time(endTime);
 			let hour = 0;
 			let minutes = 0;
 			let seconds = 0;
@@ -355,13 +371,16 @@ class AlexaTimerVis extends utils.Adapter {
 				// String der Zeit erstellen
 				const time = hour + " : " + minutes + " : " + seconds + " Std";
 
+				const timer = timerObject.timer[index];
 				// Timer Werte zum Objekt hinzufügen
-				timerObject.timer[index].hour = hour;
-				timerObject.timer[index].minute = minutes;
-				timerObject.timer[index].second = seconds;
-				timerObject.timer[index].string_Timer = time;
-				timerObject.timer[index].onlySec = sec;
-				timerObject.timer[index].index = index;
+				timer.hour = hour;
+				timer.minute = minutes;
+				timer.second = seconds;
+				timer.string_Timer = time;
+				timer.onlySec = sec;
+				timer.index = index;
+				timer.time_start = start_Time;
+				timer.time_end = end_Time;
 
 				// Falls der Timername nicht definiert ist soll er einfach nur "Timer" heissen
 				if(name == ""|| name == null || name == undefined){
@@ -377,13 +396,15 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
 
 					// Werte des Timers zurücksetzen
-					timerObject.timer[index].hour = 0;
-					timerObject.timer[index].minute = 0;
-					timerObject.timer[index].second = 0;
-					timerObject.timer[index].string_Timer = "00 : 00 : 00 Std";
-					timerObject.timer[index].onlySec = 0;
-					timerObject.timer[index].index = 0;
-					timerObject.timer[index].name = "Timer";
+					timer.hour = 0;
+					timer.minute = 0;
+					timer.second = 0;
+					timer.string_Timer = "00 : 00 : 00 Std";
+					timer.onlySec = 0;
+					timer.index = 0;
+					timer.name = "Timer";
+					timer.time_start = "00:00:00";
+					timer.time_end = "00:00:00";
 
 					clearInterval(timerObject.interval[index.slice(5)]);
 					timerObject.interval[index.slice(5)] = "leer";
@@ -480,6 +501,30 @@ class AlexaTimerVis extends utils.Adapter {
 							read: true,
 							write: true,
 							def: "Timer",
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".TimeStart", {
+						type: "state",
+						common: {
+							name: "Start Time",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+							def: "00:00:00",
+						},
+						native: {},
+					});
+					this.setObjectNotExistsAsync("timer" + i + ".TimeEnd", {
+						type: "state",
+						common: {
+							name: "End Time",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+							def: "00:00:00",
 						},
 						native: {},
 					});
@@ -596,6 +641,8 @@ class AlexaTimerVis extends utils.Adapter {
 							this.setStateChanged(element + ".minute", timerObject.timer[element].minute, true);
 							this.setStateChanged(element + ".second", timerObject.timer[element].second, true);
 							this.setStateChanged(element + ".string", timerObject.timer[element].string_Timer, true);
+							this.setStateChanged(element + ".TimeStart", timerObject.timer[element].time_start, true);
+							this.setStateChanged(element + ".TimeEnd", timerObject.timer[element].time_end, true);
 							this.setStateChanged("all_Timer.alive", true, true);
 							// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
 							const name = timerObject.timer[element].name;
@@ -687,7 +734,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 				}
 			}
-			this.log.warn("Intervals and timeouts cleared!");
+			this.log.info("Intervals and timeouts cleared!");
 			callback();
 		} catch (e) {
 			callback();
