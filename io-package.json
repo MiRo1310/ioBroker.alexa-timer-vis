@@ -147,9 +147,7 @@
         ]
     },
     "native": {
-        "option5": true,
-        "interval": "1000",
-        "test": "test"
+        "state": "alexa2.0.History.summary"
     },
     "objects": [],
     "instanceObjects": [
