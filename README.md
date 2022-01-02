@@ -46,10 +46,10 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 * Alexa, delete 5 minutes Timer
 
 
-#### If you have any suggestions for improving something or adding other functions, feel free to contact us
+### If you have any suggestions for improving something or adding other functions, feel free to contact us
 
 
-# ---- Deutsch ----
+## ---- Deutsch ----
 
 ## alexa-timer-vis adapter für den ioBroker
 

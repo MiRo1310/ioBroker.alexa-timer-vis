@@ -28,5 +28,22 @@ label > i[title] {
 	/* Don't wrap text in dropdowns */
 	white-space: nowrap;
 }
+#headline {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-left: 10px;
+	text-decoration: underline;
+}
+.logo{
+	margin-top: 20px;
+	width: 150px !important;
+	height: auto;
+}
+.input{
+	font-size: 1.1rem !important;
+}
+.description{
+	font-size: 1.2rem;
+	font-weight: bold;
+}
 
-/* Add your styles here */
