@@ -153,7 +153,7 @@ class AlexaTimerVis extends utils.Adapter {
 			if (err || obj == null) {
 				// Error
 				//this.log.error(JSON.stringify(err));
-				this.log.error("The State " + datapoint + " was not found!");
+				this.log.error(`The State ${datapoint} was not found!`);
 			} else {
 				// Datenpunkt wurde gefunden
 				this.log.info("Alexa State was found");
@@ -224,7 +224,7 @@ class AlexaTimerVis extends utils.Adapter {
 							else if (value.indexOf(element) >= 0 && i === false) {
 								this.log.info("Timer is to be added!");
 								//Eingabe Text loggen
-								this.log.info("Voice input: " + value);
+								this.log.info(`Voice input: ${value}`);
 								// Input aus Alexas Spracheingabe zu Array machen
 								const timerArray = value.split(" ");
 
@@ -634,18 +634,19 @@ class AlexaTimerVis extends utils.Adapter {
 				try {
 					const timers = timerObject.timerActiv.timer;
 					for (const element in timers) {
+						const timer = timerObject.timer[element];
 						// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
-						if (timerObject.timer[element].hour !== undefined) {
+						if (timer.hour !== undefined) {
 							this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
-							this.setStateChanged(element + ".hour", timerObject.timer[element].hour, true);
-							this.setStateChanged(element + ".minute", timerObject.timer[element].minute, true);
-							this.setStateChanged(element + ".second", timerObject.timer[element].second, true);
-							this.setStateChanged(element + ".string", timerObject.timer[element].string_Timer, true);
-							this.setStateChanged(element + ".TimeStart", timerObject.timer[element].time_start, true);
-							this.setStateChanged(element + ".TimeEnd", timerObject.timer[element].time_end, true);
+							this.setStateChanged(element + ".hour", timer.hour, true);
+							this.setStateChanged(element + ".minute", timer.minute, true);
+							this.setStateChanged(element + ".second", timer.second, true);
+							this.setStateChanged(element + ".string", timer.string_Timer, true);
+							this.setStateChanged(element + ".TimeStart", timer.time_start, true);
+							this.setStateChanged(element + ".TimeEnd", timer.time_end, true);
 							this.setStateChanged("all_Timer.alive", true, true);
 							// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
-							const name = timerObject.timer[element].name;
+							const name = timer.name;
 							if (name == "Timer"){
 								this.setStateChanged(element + ".name", name, true);
 							} else { // Wenn der Name des Timers definiert ist soll der erste Buchstabe groß werden und es soll Timer angehängt werden
@@ -732,6 +733,8 @@ class AlexaTimerVis extends utils.Adapter {
 				if (timerObject.interval[element] != "leer"){
 					clearInterval(timerObject.interval[element]);
 
+				}else{
+					continue;
 				}
 			}
 			this.log.info("Intervals and timeouts cleared!");
