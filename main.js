@@ -23,6 +23,8 @@ let timeout_1;
 let writeStateActiv = false;
 // Variable mit ID auf welche reagiert werden soll
 let datapoint;
+// Variable Funktion
+let writeState;
 // Objekt mit Einstellungen und Daten
 const timerObject = {
 	"timerActiv": {
@@ -33,8 +35,8 @@ const timerObject = {
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
-			"notNoted": ["timer", "auf","auf,", "setze", "setz","einen","set","a","for"], // Wörter die nicht beachtet werden sollen
-			"stopTimer": ["stoppe", "lösche", "lösch", "stopp","stop","delete"], // Wörter die ein stoppen defienieren
+			"notNoted": ["timer","auf","auf,", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
+			"stopTimer": ["stoppe", "lösche", "lösch", "stopp","stop","delete"], // Wörter die ein stoppen definieren
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator
@@ -174,8 +176,9 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 				init = true;
-				timeout_1 = this.setTimeout(() => {
+				timeout_1 = setTimeout(() => {
 					init = false;
+					clearTimeout(timeout_1);
 				}, 5000);
 
 				// Code Anfang
@@ -259,7 +262,7 @@ class AlexaTimerVis extends utils.Adapter {
 									// auf aktiv setzen
 									writeStateActiv = true;
 									// States schreiben, darf aber nur einmal ausgeführt werden
-									writeState();
+									writeStateIntervall();
 								}
 
 
@@ -629,31 +632,10 @@ class AlexaTimerVis extends utils.Adapter {
 		/**
 		 * States in Datenpunkten schreiben
 		 */
-		const writeState = () => {
+		const writeStateIntervall = () => {
 			setStates = setInterval(() => {
 				try {
-					const timers = timerObject.timerActiv.timer;
-					for (const element in timers) {
-						const timer = timerObject.timer[element];
-						// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
-						if (timer.hour !== undefined) {
-							this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
-							this.setStateChanged(element + ".hour", timer.hour, true);
-							this.setStateChanged(element + ".minute", timer.minute, true);
-							this.setStateChanged(element + ".second", timer.second, true);
-							this.setStateChanged(element + ".string", timer.string_Timer, true);
-							this.setStateChanged(element + ".TimeStart", timer.time_start, true);
-							this.setStateChanged(element + ".TimeEnd", timer.time_end, true);
-							this.setStateChanged("all_Timer.alive", true, true);
-							// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
-							const name = timer.name;
-							if (name == "Timer"){
-								this.setStateChanged(element + ".name", name, true);
-							} else { // Wenn der Name des Timers definiert ist soll der erste Buchstabe groß werden und es soll Timer angehängt werden
-								this.setStateChanged(element + ".name", firstLetterToUpperCase(name) + " Timer", true);
-							}
-						}
-					}
+					writeState(false);
 					//this.log.info(JSON.stringify(timerObject.timerActiv.timer));
 					//this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
 					// Aktualisierungs Intervall stoppen
@@ -668,6 +650,52 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.error(e);
 				}
 			}, timerObject.timerActiv.data.interval);
+		};
+
+		/**
+		 * Werte setzen
+		 *
+		 * @param {boolean} unload Variable ist auf true wenn der Adapter gestoppt wird
+		 */
+		writeState = (unload)=> {
+			const timers = timerObject.timerActiv.timer;
+			for (const element in timers) {
+				// Wenn der Adapter gestoppt wird, sollen alle Werte zurück gesetzt werden
+				const timer = timerObject.timer[element];
+				// Wenn der Adapter gestoppt wird
+				let alive;
+				if (unload == true){
+					timerObject.timerActiv.timer[element] = false;
+					timer.hour = 0;
+					timer.minute = 0;
+					timer.second = 0;
+					timer.string_Timer = "00:00:00 Std";
+					timer.time_start = "00:00";
+					timer.time_end = "00:00";
+					timer.name = "Timer";
+					alive = false; // all_Timer.alive
+				}else {
+					alive = true;
+				}
+				// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
+				if (timer.hour !== undefined) {
+					this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
+					this.setStateChanged(element + ".hour", timer.hour, true);
+					this.setStateChanged(element + ".minute", timer.minute, true);
+					this.setStateChanged(element + ".second", timer.second, true);
+					this.setStateChanged(element + ".string", timer.string_Timer, true);
+					this.setStateChanged(element + ".TimeStart", timer.time_start, true);
+					this.setStateChanged(element + ".TimeEnd", timer.time_end, true);
+					this.setStateChanged("all_Timer.alive", alive, true);
+					// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
+					const name = timer.name;
+					if (name == "Timer"){
+						this.setStateChanged(element + ".name", name, true);
+					} else { // Wenn der Name des Timers definiert ist soll der erste Buchstabe groß werden und es soll Timer angehängt werden
+						this.setStateChanged(element + ".name", firstLetterToUpperCase(name) + " Timer", true);
+					}
+				}
+			}
 		};
 
 		// 		await this.setObjectNotExistsAsync(timer, {
@@ -721,6 +749,8 @@ class AlexaTimerVis extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			this.log.info("Apdater shuts down");
+			// Alle Werte zurück setzen
+			writeState(true);
 			// Here you must clear all timeouts or intervals that may still be active
 			// Timeouts
 			//this.log.info("Interval" + JSON.stringify(timerObject.interval));
@@ -729,16 +759,18 @@ class AlexaTimerVis extends utils.Adapter {
 			clearInterval(setStates);
 
 			for(const element in timerObject.interval){
-				//this.log.info("Elemente " + element);
-				if (timerObject.interval[element] != "leer"){
-					clearInterval(timerObject.interval[element]);
-
-				}else{
-					continue;
-				}
+				clearInterval(timerObject.interval[element]);
+				// if (timerObject.interval[element] != "leer"){
+				// }else{
+				// 	continue;
+				// }
 			}
 			this.log.info("Intervals and timeouts cleared!");
-			callback();
+			// 2 Sekunden Puffer um timeout und intervalle zu stoppen
+			const unload = setTimeout(() => {
+				callback();
+				clearTimeout(unload);
+			}, 2000);
 		} catch (e) {
 			callback();
 		}
