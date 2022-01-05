@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.3",
+        "version": "0.1.4",
         "news": {
+            "0.1.4": {
+                "en": "States will be reset on unload",
+                "de": "Zustände werden beim Entladen zurückgesetzt",
+                "ru": "Состояния будут сброшены при разгрузке",
+                "pt": "Os estados serão redefinidos ao descarregar",
+                "nl": "Statussen worden gereset bij het lossen",
+                "fr": "Les états seront réinitialisés au déchargement",
+                "it": "Gli stati verranno ripristinati allo scarico",
+                "es": "Los estados se restablecerán al descargar",
+                "pl": "Stany zostaną zresetowane podczas rozładowania",
+                "zh-cn": "状态将在卸载时重置"
+            },
             "0.1.3": {
                 "en": "Start and End Time added",
                 "de": "Start- und Endzeit hinzugefügt",
@@ -155,6 +167,11 @@
         "dependencies": [
             {
                 "js-controller": ">=2.0.0"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "alexa2": ">=3.11.2"
             }
         ]
     },

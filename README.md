@@ -93,6 +93,9 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 
 ## Changelog
+### 0.1.4 (05.01.2022)
+* States will be reset on adapter unload
+* Bugfix
 ### 0.1.3 (02.01.2022)
 * Start and EndTime added
 ### 0.1.2 (31.12.2021)
