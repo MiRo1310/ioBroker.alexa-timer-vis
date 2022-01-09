@@ -93,6 +93,8 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 
 ## Changelog
+### 0.1.5 (08.01.2022)
+* New keywords added
 ### 0.1.4 (05.01.2022)
 * States will be reset on adapter unload
 * Bugfix
@@ -119,7 +121,7 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 ## License
 MIT License
 
-Copyright (c) 2021 Michael Roling <michael.roling@gmx.de>
+Copyright (c) 2021-2022 Michael Roling <michael.roling@gmx.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

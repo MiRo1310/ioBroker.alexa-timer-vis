@@ -30,13 +30,13 @@ const timerObject = {
 	"timerActiv": {
 		"timerCount": 0, // Anzahl aktiver Timer
 		"condition": {
-			"deleteTimer": ["stopp", "stoppe", "anhalten", "lösche", "lösch","stop","delete"], // Vorselektion stoppen oder löschen
+			"deleteTimer": ["stopp", "stoppe", "anhalten","abbrechen","beenden","reset","resete","löschen", "lösche", "lösch","stop","delete"], // Vorselektion stoppen oder löschen
 			"activateTimer": ["stunde", "minute", "sekunde","hour","minute", "second"], // Vorselektion hinzufügen
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
 			"notNoted": ["timer","auf","auf,", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
-			"stopTimer": ["stoppe", "lösche", "lösch", "stopp","stop","delete"], // Wörter die ein stoppen definieren
+			"stopTimer": ["abbrechen","stoppe","lösche","lösch","beenden","löschen","anhalten","reset","resete","stopp","stop","delete"], // Wörter die ein stoppen definieren
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator

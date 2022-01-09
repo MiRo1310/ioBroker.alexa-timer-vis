@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.4",
+        "version": "0.1.5",
         "news": {
+            "0.1.5": {
+                "en": "New keywords added",
+                "de": "Neue Keywords hinzugefügt",
+                "ru": "Добавлены новые ключевые слова",
+                "pt": "Novas palavras-chave adicionadas",
+                "nl": "Nieuwe zoekwoorden toegevoegd",
+                "fr": "Nouveaux mots-clés ajoutés",
+                "it": "Nuove parole chiave aggiunte",
+                "es": "Nuevas palabras clave añadidas",
+                "pl": "Dodano nowe słowa kluczowe",
+                "zh-cn": "添加了新的关键字"
+            },
             "0.1.4": {
                 "en": "States will be reset on unload",
                 "de": "Zustände werden beim Entladen zurückgesetzt",
