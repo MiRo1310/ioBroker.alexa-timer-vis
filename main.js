@@ -36,7 +36,6 @@ const timerObject = {
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
 			"notNoted": ["timer","auf","auf,", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
-			"stopTimer": ["abbrechen","stoppe","lösche","lösch","beenden","löschen","anhalten","reset","resete","stopp","stop","delete"], // Wörter die ein stoppen definieren
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator
@@ -558,7 +557,7 @@ class AlexaTimerVis extends utils.Adapter {
 					return;
 				}
 				// Nach Elementen suchen die die Menge der zu löschenden Timer bestimmen
-				else if (data.stopTimer.indexOf(element) >= 0) {
+				else if (timerObject.timerActiv.condition.deleteTimer.indexOf(element) >= 0) {
 					deleteVal++; // Es wird auf 1 gesetzt, wenn nur ein Timer aktiv ist wird dieser gelöscht
 				}
 				else if (data.stopAll.indexOf(element) >= 0) {
