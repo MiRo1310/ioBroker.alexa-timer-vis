@@ -19,3 +19,7 @@ admin/i18n/*/flat.txt
 
 # Dev Server
 .dev-server
+
+iob_npm.done
+tsconfig.json
+test/
