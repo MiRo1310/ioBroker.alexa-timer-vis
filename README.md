@@ -93,6 +93,8 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 
 ## Changelog
+### 0.1.6 (17.01.2022)
+* numbers from 1-9 are always displayed as two digits, 1 => 01
 ### 0.1.5 (08.01.2022)
 * New keywords added
 ### 0.1.4 (05.01.2022)
