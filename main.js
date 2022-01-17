@@ -333,9 +333,9 @@ class AlexaTimerVis extends utils.Adapter {
 			const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
 			const endTime = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
 			const end_Time = time(endTime);
-			let hour = 0;
-			let minutes = 0;
-			let seconds = 0;
+			let hour;
+			let minutes;
+			let seconds;
 
 			// Index für Timer bestimmen
 			let index;
@@ -370,6 +370,11 @@ class AlexaTimerVis extends utils.Adapter {
 				seconds = timeLeftSec - hourInSec - minutesInSec;
 				seconds = Math.round(seconds);
 
+				// Stunden, Minuten und Sekunden umwandeln so das sie immer zweistellig sind bei > 10 ( 1 => 01 usw.)
+				hour = ("0" + hour ).slice(-2);
+				minutes = ("0" + minutes ).slice(-2);
+				seconds = ("0" + seconds ).slice(-2);
+
 				// String der Zeit erstellen
 				const time = hour + " : " + minutes + " : " + seconds + " Std";
 
@@ -398,9 +403,9 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
 
 					// Werte des Timers zurücksetzen
-					timer.hour = 0;
-					timer.minute = 0;
-					timer.second = 0;
+					timer.hour = "00";
+					timer.minute = "00";
+					timer.second = "00";
 					timer.string_Timer = "00 : 00 : 00 Std";
 					timer.onlySec = 0;
 					timer.index = 0;
