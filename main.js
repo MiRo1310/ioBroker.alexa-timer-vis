@@ -9,6 +9,7 @@
 // you need to create an adapter
 // Sie müssen einen Adapter erstellen
 const utils = require("@iobroker/adapter-core");
+
 // const { TIMEOUT } = require("dns");
 // const { exists } = require("fs");
 // const { start } = require("repl");
@@ -57,7 +58,8 @@ const timerObject = {
 			"name": "",
 			"name_output":"",
 			"time_start":"",
-			"time_end":""
+			"time_end":"",
+			"inputDevice":"",
 		},
 	},
 	"zahlen": { // Zahl als Wort zu Zahl nummerisch
@@ -159,6 +161,7 @@ class AlexaTimerVis extends utils.Adapter {
 				// Datenpunkt wurde gefunden
 				this.log.info("Alexa State was found");
 				this.setState("info.connection", true, true);
+
 
 				// Datenpunkte erzeugen (Anzahl)
 				createState(4);
@@ -327,7 +330,7 @@ class AlexaTimerVis extends utils.Adapter {
 		 *
 		 */
 
-		const startTimer = (sec, name)=> {
+		const startTimer = async (sec, name)=> {
 			const startTimer = new Date().getTime(); // Startzeit Timer
 			const start_Time = time(startTimer);
 			const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
@@ -347,6 +350,7 @@ class AlexaTimerVis extends utils.Adapter {
 					break;
 				}
 			}
+			getInputDevice(timerObject.timer[index]);
 
 			// Intervall erzeugen
 			// @ts-ignore
@@ -389,6 +393,7 @@ class AlexaTimerVis extends utils.Adapter {
 				timer.time_start = start_Time;
 				timer.time_end = end_Time;
 
+
 				// Falls der Timername nicht definiert ist soll er einfach nur "Timer" heissen
 				if(name == ""|| name == null || name == undefined){
 					name = "Timer";
@@ -412,6 +417,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.name = "Timer";
 					timer.time_start = "00:00:00";
 					timer.time_end = "00:00:00";
+					timer.inputDevice ="";
 
 					clearInterval(timerObject.interval[index.slice(5)]);
 					timerObject.interval[index.slice(5)] = "leer";
@@ -455,7 +461,7 @@ class AlexaTimerVis extends utils.Adapter {
 						type: "state",
 						common: {
 							name: "Hours",
-							type: "number",
+							type: "string",
 							role: "value",
 							read: true,
 							write: true,
@@ -467,7 +473,7 @@ class AlexaTimerVis extends utils.Adapter {
 						type: "state",
 						common: {
 							name: "Minutes",
-							type: "number",
+							type: "string",
 							role: "value",
 							read: true,
 							write: true,
@@ -479,7 +485,7 @@ class AlexaTimerVis extends utils.Adapter {
 						type: "state",
 						common: {
 							name: "Seconds",
-							type: "number",
+							type: "string",
 							role: "value",
 							read: true,
 							write: true,
@@ -535,6 +541,18 @@ class AlexaTimerVis extends utils.Adapter {
 						},
 						native: {},
 					});
+					this.setObjectNotExistsAsync("timer" + i + ".InputDeviceName", {
+						type: "state",
+						common: {
+							name: "Input of Device",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+							def: "",
+						},
+						native: {},
+					});
 				}
 			} catch (e) {
 				this.log.error(e);
@@ -542,6 +560,27 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		};
 
+		/**
+		 * Eingabegerät ermitteln
+		 *
+		 *
+		 */
+
+		const getInputDevice = (a)=>{
+			this.getForeignObject("alexa2.0.History.name", async (err, obj) => {
+				if (err || obj == null) {
+					// Error
+					this.log.error(`The State "name" of Alexa was not found!`);
+					a.inputDevice = "-";
+				} else {
+					const obj = await this.getForeignStateAsync("alexa2.0.History.name");
+					// @ts-ignore
+					a.inputDevice = obj.val;
+
+				}
+
+			});
+		};
 		/**
 			 * Funktion der Erfassung der gewünschten Zeit und des Namen
 			 * Erstellt einen String in einem Array [0], um Sekunden berechnen zu können
@@ -640,7 +679,7 @@ class AlexaTimerVis extends utils.Adapter {
 			setStates = setInterval(() => {
 				try {
 					writeState(false);
-					//this.log.info(JSON.stringify(timerObject.timerActiv.timer));
+					// this.log.info(JSON.stringify(timerObject.timer.timer1));
 					//this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0) {
@@ -677,6 +716,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.time_start = "00:00";
 					timer.time_end = "00:00";
 					timer.name = "Timer";
+					timer.inputDevice ="";
 					alive = false; // all_Timer.alive
 				}else {
 					alive = true;
@@ -690,6 +730,7 @@ class AlexaTimerVis extends utils.Adapter {
 					this.setStateChanged(element + ".string", timer.string_Timer, true);
 					this.setStateChanged(element + ".TimeStart", timer.time_start, true);
 					this.setStateChanged(element + ".TimeEnd", timer.time_end, true);
+					this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
 					this.setStateChanged("all_Timer.alive", alive, true);
 					// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
 					const name = timer.name;
@@ -719,10 +760,12 @@ class AlexaTimerVis extends utils.Adapter {
 		//this.subscribeStates("testVariable");
 		this.subscribeForeignStates(datapoint);
 
+
+
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates("lights.*");
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-		// this.subscribeStates("*");
+		//this.subscribeStates("*");
 
 		/*
 			setState examples
