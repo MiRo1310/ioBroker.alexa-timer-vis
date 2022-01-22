@@ -351,7 +351,6 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 			}
 			getInputDevice(timerObject.timer[index]);
-
 			// Intervall erzeugen
 			// @ts-ignore
 			timerObject.interval[index.slice(5)] = setInterval(() => {
@@ -465,7 +464,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: 0,
+							def: "0",
 						},
 						native: {},
 					});
@@ -477,7 +476,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: 0,
+							def: "0",
 						},
 						native: {},
 					});
@@ -489,7 +488,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: 0,
+							def: "0",
 						},
 						native: {},
 					});
@@ -562,21 +561,20 @@ class AlexaTimerVis extends utils.Adapter {
 
 		/**
 		 * Eingabegerät ermitteln
-		 *
+		 * @param  path Pfad zum Speicherort im Objekt
 		 *
 		 */
 
-		const getInputDevice = (a)=>{
+		const getInputDevice = (path)=>{
 			this.getForeignObject("alexa2.0.History.name", async (err, obj) => {
 				if (err || obj == null) {
 					// Error
 					this.log.error(`The State "name" of Alexa was not found!`);
-					a.inputDevice = "-";
+					path.inputDevice = "-";
 				} else {
 					const obj = await this.getForeignStateAsync("alexa2.0.History.name");
 					// @ts-ignore
-					a.inputDevice = obj.val;
-
+					path.inputDevice = obj.val;
 				}
 
 			});
