@@ -350,7 +350,10 @@ class AlexaTimerVis extends utils.Adapter {
 					break;
 				}
 			}
+
+			// Input Device ermitteln, und im Objekt speichern
 			getInputDevice(timerObject.timer[index]);
+
 			// Intervall erzeugen
 			// @ts-ignore
 			timerObject.interval[index.slice(5)] = setInterval(() => {
