@@ -83,6 +83,7 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 * Alexa, lösche alle Timer
 * Alexa, lösche Pommes Timer
 * Alexa, lösche 5 Minuten Timer
+* Alexa, Timer 5 Minuten beenden
 
 
 #### Wenn ihr Anregungen habt, um etwas besser zu machen, oder andere Funktionen hinzu zu fügen immer gerne melden
@@ -97,6 +98,7 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 * New State, "Input Device"
 ### 0.1.6 (17.01.2022)
 * numbers from 1-9 are always displayed as two digits, 1 => 01
+* When you update to this or a newer Version, please delete the timer folders or delete the whole adapter, otherwise errors will occur
 ### 0.1.5 (08.01.2022)
 * New keywords added
 ### 0.1.4 (05.01.2022)
