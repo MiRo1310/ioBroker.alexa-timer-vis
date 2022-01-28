@@ -26,6 +26,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 * ---- Alexa2 Adapter is needed ----
 * The Vis Widget isn´t yet integrated
+* Every Timer has a button, to stop it. Stops the Timer in Alexa and in the Adapter
 * Unlimited timers can be created with Alexa by voice command. 
 * When the adapter is started, 4 folders are created with all of the states.
 * Additional folders will be created as soon as a 5th and more timers are created via Alexa's voice input.
@@ -63,6 +64,7 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 * ---- Alexa2 Adapter wird gebraucht --
 * Das Vis Widget ist noch nicht eingebunden
+* Jeder einzelne Timer kann per Button gestoppt werden, stoppt den Timer in Alexa und im Adapter
 * Es können unbegrenzt Timer mit Alexa per Sprachbefehl erstellt werden. 
 * Bei Start des Adapters werden 4 Ordner erstellt, mit den ganzen States.
 * Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexas Spracheingabe erstellt werden. 
