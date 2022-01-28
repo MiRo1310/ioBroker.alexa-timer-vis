@@ -1,13 +1,43 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.7",
+        "version": "0.1.8",
         "news": {
-            "0.1.7":{
-                "en":"New state,'Input Device'"
+            "0.1.8": {
+                "en": "Bugfix, Button added to stop the selected Timer",
+                "de": "Bugfix, Schaltfläche hinzugefügt, um den ausgewählten Timer zu stoppen",
+                "ru": "Исправление, добавлена ​​кнопка для остановки выбранного таймера.",
+                "pt": "Bugfix, botão adicionado para parar o temporizador selecionado",
+                "nl": "Bugfix, knop toegevoegd om de geselecteerde timer te stoppen",
+                "fr": "Correction de bug, bouton ajouté pour arrêter la minuterie sélectionnée",
+                "it": "Bugfix, pulsante aggiunto per fermare il timer selezionato",
+                "es": "Corrección de errores, botón agregado para detener el temporizador seleccionado",
+                "pl": "Bugfix, przycisk dodany do zatrzymania wybranego timera",
+                "zh-cn": "错误修复，添加按钮以停止选定的计时器"
             },
-            "0.1.6":{
-                "en": "numbers from 1-9 are always displayed as two digits, 1 => 01"
+            "0.1.7": {
+                "en": "New state,'Input Device'",
+                "de": "Neuer Status „Eingabegerät“",
+                "ru": "Новое состояние \"Устройство ввода\"",
+                "pt": "Novo estado, 'Dispositivo de entrada'",
+                "nl": "Nieuwe staat, 'Invoerapparaat'",
+                "fr": "Nouvel état, 'Périphérique d'entrée'",
+                "it": "Nuovo stato, \"Dispositivo di input\"",
+                "es": "Nuevo estado, 'Dispositivo de entrada'",
+                "pl": "Nowy stan „Urządzenie wejściowe”",
+                "zh-cn": "新状态，'输入设备'"
+            },
+            "0.1.6": {
+                "en": "numbers from 1-9 are always displayed as two digits, 1 => 01",
+                "de": "Zahlen von 1-9 werden immer zweistellig angezeigt, 1 => 01",
+                "ru": "числа от 1 до 9 всегда отображаются как две цифры, 1 => 01",
+                "pt": "números de 1 a 9 são sempre exibidos como dois dígitos, 1 => 01",
+                "nl": "cijfers van 1-9 worden altijd weergegeven als twee cijfers, 1 => 01",
+                "fr": "les nombres de 1 à 9 sont toujours affichés sous forme de deux chiffres, 1 => 01",
+                "it": "i numeri da 1 a 9 vengono sempre visualizzati come due cifre, 1 => 01",
+                "es": "los números del 1 al 9 siempre se muestran como dos dígitos, 1 => 01",
+                "pl": "liczby od 1-9 są zawsze wyświetlane jako dwie cyfry, 1 => 01",
+                "zh-cn": "1-9 的数字始终显示为两位数，1 => 01"
             },
             "0.1.5": {
                 "en": "New keywords added",
