@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.8",
+        "version": "0.1.9",
         "news": {
+            "0.1.9":{
+                "en":"Bugfix"
+            },
             "0.1.8": {
                 "en": "Bugfix, Button added to stop the selected Timer",
                 "de": "Bugfix, Schaltfläche hinzugefügt, um den ausgewählten Timer zu stoppen",

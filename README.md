@@ -96,6 +96,8 @@ Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, die
 
 
 ## Changelog
+### 0.1.9 (30.1.2022)
+* Bugfix
 ### 0.1.8 (28.01.2022)
 * Bugfix
 * Button added to stop the Timer
