@@ -284,7 +284,8 @@ class AlexaTimerVis extends utils.Adapter {
 						}
 					}
 				}
-			}else if (id != "alexa-timer-vis.0.info.connection"){
+			// @ts-ignore
+			}else if (id != "alexa-timer-vis.0.info.connection" && state.val !== false){
 				// Akualisierung aus Reset Datenpunkten
 				this.log.info("ID Reset Button " + JSON.stringify(id));
 				// Aus ID den Timer erfassen
@@ -590,7 +591,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "button",
 							read: false,
 							write: true,
-							def: true,
+							def: false,
 						},
 						native: {},
 					});
@@ -764,9 +765,9 @@ class AlexaTimerVis extends utils.Adapter {
 				let alive;
 				if (unload == true){
 					timerObject.timerActiv.timer[element] = false;
-					timer.hour = 0;
-					timer.minute = 0;
-					timer.second = 0;
+					timer.hour = "0";
+					timer.minute = "0";
+					timer.second = "0";
 					timer.string_Timer = "00:00:00 Std";
 					timer.time_start = "00:00";
 					timer.time_end = "00:00";
