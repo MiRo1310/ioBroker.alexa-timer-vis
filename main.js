@@ -683,8 +683,8 @@ class AlexaTimerVis extends utils.Adapter {
 				else if (timerObject.zahlen[element] > 0) {
 					// Wenn in der Variable als letztes keine Ziffer ist, darf eine neue zahl hinzugefügt werden
 					if (timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1){
-						// Wenn als letztes ein + ist darf keine zusätzliche klammer eingefügt werden
-						if (timerString.charAt(timerString.length - 1) != "+"){
+						// Wenn als letztes ein "faktor für stunde oder minute und +"  ist darf keine zusätzliche klammer eingefügt werden
+						if (timerString.charAt(timerString.length - 1) != "*3600+" || timerString.charAt(timerString.length - 1) != "*60+"){
 							timerString += "(" + timerObject.zahlen[element];
 						}else {
 							timerString += timerObject.zahlen[element];
