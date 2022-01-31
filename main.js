@@ -683,7 +683,12 @@ class AlexaTimerVis extends utils.Adapter {
 				else if (timerObject.zahlen[element] > 0) {
 					// Wenn in der Variable als letztes keine Ziffer ist, darf eine neue zahl hinzugefügt werden
 					if (timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1){
-						timerString += "(" + timerObject.zahlen[element];
+						// Wenn als letztes ein + ist darf keine zusätzliche klammer eingefügt werden
+						if (timerString.charAt(timerString.length - 1) != "+"){
+							timerString += "(" + timerObject.zahlen[element];
+						}else {
+							timerString += timerObject.zahlen[element];
+						}
 						inputString += timerObject.zahlen[element] + " ";
 						// Wenn das Element "Hundert" ist und das letzte Element eine Zahl war soll multipliziert werden( Zwei * hundert + vierzig)
 					}else if (element == "hundert"){
@@ -696,7 +701,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name += element + " ";
-				} //this.log.info("TimerString: " + timerString);
+				} this.log.info("TimerString: " + timerString);
 			});
 			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 			if (timerString.charAt(timerString.length - 1) == "+") {
