@@ -69,6 +69,7 @@ const timerObject = {
 		"one":1,
 		"eine": 1,
 		"zwei": 2,
+		"zwo": 2,
 		"two": 2,
 		"drei": 3,
 		"three": 3,
@@ -96,7 +97,7 @@ const timerObject = {
 		"fourteen": 14,
 		"fünfzehn": 15,
 		"fifteen": 15,
-		"sechszehn": 16,
+		"sechzehn": 16,
 		"sixteen": 16,
 		"siebzehn": 17,
 		"seventeen": 17,
@@ -112,7 +113,7 @@ const timerObject = {
 		"fourty": 40,
 		"fünfzig": 50,
 		"fifty": 50,
-		"sechszig": 60,
+		"sechzig": 60,
 		"sixty": 60,
 		"siebzig": 70,
 		"seventy": 70,
@@ -188,7 +189,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timeout_1 = setTimeout(() => {
 						init = false;
 						clearTimeout(timeout_1);
-					}, 5000);
+					}, 4000);
 
 					// Code Anfang
 
