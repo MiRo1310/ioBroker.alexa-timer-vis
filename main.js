@@ -239,7 +239,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 								} // Timer soll erstellt werden
 								// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
-								else if (value.indexOf(element) >= 0 && i === false) {
+								else if (value.indexOf(element) >= 0 && i === false && value.indexOf(",") == -1) {  // Frage nach Benennung von doppeltem Timer, Erstellung von Timer unterbinden
 									this.log.info("Timer is to be added!");
 									//Eingabe Text loggen
 									this.log.info(`Voice input: ${value}`);
