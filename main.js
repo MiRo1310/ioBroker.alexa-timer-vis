@@ -31,12 +31,12 @@ const timerObject = {
 	"timerActiv": {
 		"timerCount": 0, // Anzahl aktiver Timer
 		"condition": {
-			"deleteTimer": ["stopp", "stoppe", "anhalten","abbrechen","beenden","reset","resete","löschen", "lösche", "lösch","stop","delete"], // Vorselektion stoppen oder löschen
+			"deleteTimer": ["stopp", "stoppe", "anhalten","abbrechen","beenden","beende","reset","resete","löschen", "lösche", "lösch","stop","delete"], // Vorselektion stoppen oder löschen
 			"activateTimer": ["stunde", "minute", "sekunde","hour","minute", "second"], // Vorselektion hinzufügen
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
-			"notNoted": ["timer","auf","auf,", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
+			"notNoted": ["timer","auf","auf,","erstelle","mit","ein", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator
@@ -199,7 +199,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
 					if (value.indexOf("timer") >= 0) {
-						this.log.info("Command to control the timer found");
+						this.log.info("Command to control the timer, found");
 
 						// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 						let i = false;
@@ -701,7 +701,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name += element + " ";
-				} this.log.info("TimerString: " + timerString);
+				} //this.log.info("TimerString: " + timerString);
 			});
 			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 			if (timerString.charAt(timerString.length - 1) == "+") {
