@@ -221,8 +221,13 @@ class AlexaTimerVis extends utils.Adapter {
 									const name = returnArray[1];
 
 									// Timer in Sekunden ausgeben lassen, damit der passende Timer abgebrochen werden kann
-									const timerAbortsec = eval(returnArray[0]);
-
+									let timerAbortsec;
+									try {
+										timerAbortsec = eval(returnArray[0]);
+									}
+									catch(e){
+										this.log.debug("Input is invalid. Call the Developer");
+									}
 									// Index Timer löschen
 									const deleteTimerIndex = returnArray[2];
 
@@ -246,8 +251,13 @@ class AlexaTimerVis extends utils.Adapter {
 
 									// Rückgabewert Timer in Sekunden [0]
 									//this.log.info("Eval: " + returnArray[0]);
-									const timerSeconds = eval(returnArray[0]);
-
+									let timerSeconds;
+									try {
+										timerSeconds = eval(returnArray[0]);
+									}
+									catch(e){
+										this.log.debug("Input is invalid. Call the Developer");
+									}
 									// Rückgabewert "Name" des Timers [1]
 									const name = returnArray[1];
 
