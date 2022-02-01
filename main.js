@@ -189,7 +189,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timeout_1 = setTimeout(() => {
 						init = false;
 						clearTimeout(timeout_1);
-					}, 4000);
+					}, 5000);
 
 					// Code Anfang
 
@@ -250,7 +250,7 @@ class AlexaTimerVis extends utils.Adapter {
 									const returnArray = zeiterfassung(timerArray);
 
 									// Rückgabewert Timer in Sekunden [0]
-									//this.log.info("Eval: " + returnArray[0]);
+									//this.log.info("Eval: " + returnArray[0]);// LogEval
 									let timerSeconds;
 									try {
 										timerSeconds = eval(returnArray[0]);
@@ -694,7 +694,8 @@ class AlexaTimerVis extends utils.Adapter {
 					// Wenn in der Variable als letztes keine Ziffer ist, darf eine neue zahl hinzugefügt werden
 					if (timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1){
 						// Wenn als letztes ein "faktor für stunde oder minute und +"  ist darf keine zusätzliche klammer eingefügt werden
-						if (timerString.charAt(timerString.length - 1) != "*3600+" || timerString.charAt(timerString.length - 1) != "*60+"){
+						if ((timerString.charAt(timerString.length - 1) != "*3600+" || timerString.charAt(timerString.length - 1) != "*60+") && timerString.charAt(timerString.length - 3) != "("){
+							//this.log.info(JSON.stringify(timerString.charAt(timerString.length - 3)));
 							timerString += "(" + timerObject.zahlen[element];
 						}else {
 							timerString += timerObject.zahlen[element];
