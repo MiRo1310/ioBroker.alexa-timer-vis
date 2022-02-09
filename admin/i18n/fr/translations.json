@@ -1,4 +1,6 @@
 {
     "Alexa Timer für die Vis": "Minuterie Alexa pour la Vis",
-    "Datenpunkt, Alexa": "Point de données, Alexa"
+    "Datenpunkt, Alexa": "Point de données, Alexa",
+    "Intervall, Zeit übrig mehr als 60 sek": "Intervalle, temps restant supérieur à 60 sec",
+    "Intervall, Zeit übrig weniger als 60 sek": "Intervalle, temps restant inférieur à 60 sec"
 }

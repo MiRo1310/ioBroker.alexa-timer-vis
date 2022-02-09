@@ -1,4 +1,6 @@
 {
     "Alexa Timer für die Vis": "Таймер Alexa для Vis",
-    "Datenpunkt, Alexa": "Точка данных, Alexa"
+    "Datenpunkt, Alexa": "Точка данных, Alexa",
+    "Intervall, Zeit übrig mehr als 60 sek": "Интервал, осталось более 60 сек.",
+    "Intervall, Zeit übrig weniger als 60 sek": "Интервал, осталось менее 60 сек."
 }

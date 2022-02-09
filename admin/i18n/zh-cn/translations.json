@@ -1,4 +1,6 @@
 {
     "Alexa Timer für die Vis": "用于 Vis 的 Alexa 计时器",
-    "Datenpunkt, Alexa": "数据点，Alexa"
+    "Datenpunkt, Alexa": "数据点，Alexa",
+    "Intervall, Zeit übrig mehr als 60 sek": "间隔，剩余时间超过60秒",
+    "Intervall, Zeit übrig weniger als 60 sek": "间隔，剩余时间少于 60 秒"
 }
