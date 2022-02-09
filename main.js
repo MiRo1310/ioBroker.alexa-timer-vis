@@ -24,6 +24,8 @@ let timeout_1;
 let writeStateActiv = false;
 // Variable mit ID auf welche reagiert werden soll
 let datapoint;
+let intervallMore60 = 0;
+let intervallLess60 = 0;
 // Variable Funktion
 let writeState;
 // Objekt mit Einstellungen und Daten
@@ -61,7 +63,8 @@ const timerObject = {
 			"time_end":"",
 			"inputDevice":"",
 			"serialNumber":"",
-			"timerInput":""
+			"timerInput":"",
+			"timerInterval":0
 		},
 	},
 	"zahlen": { // Zahl als Wort zu Zahl nummerisch
@@ -157,6 +160,8 @@ class AlexaTimerVis extends utils.Adapter {
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
 		datapoint = this.config.state;
+		intervallMore60 = this.config.intervall1;
+		intervallLess60 = this.config.intervall2;
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 		this.getForeignObject(datapoint, (err, obj) => {
 			if (err || obj == null) {
@@ -180,8 +185,7 @@ class AlexaTimerVis extends utils.Adapter {
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
-			if (id == datapoint){
-				// @ts-ignore
+			if (state && id == datapoint){
 				if (state.val !== "" && init == false) {
 
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
@@ -193,7 +197,6 @@ class AlexaTimerVis extends utils.Adapter {
 
 					// Code Anfang
 
-					// @ts-ignore
 					timerObject.timerActiv.data.value = state.val;
 					const value = timerObject.timerActiv.data.value;
 
@@ -374,9 +377,9 @@ class AlexaTimerVis extends utils.Adapter {
 			const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
 			const endTime = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
 			const end_Time = time(endTime);
-			let hour;
-			let minutes;
-			let seconds;
+
+
+
 
 			// Index für Timer bestimmen
 			let index;
@@ -391,10 +394,40 @@ class AlexaTimerVis extends utils.Adapter {
 
 			// Input Device ermitteln, und im Objekt speichern
 			getInputDevice(timerObject.timer[index]);
+			let int;
 
 			// Intervall erzeugen
-			// @ts-ignore
-			timerObject.interval[index.slice(5)] = setInterval(() => {
+			let onlyOneTimer;
+			const timer = timerObject.timer[index];
+			if (sec > 60){
+				int = intervallMore60 * 1000;
+				onlyOneTimer = false;
+			}else{
+				timerObject.timer.timer1.timerInterval = intervallLess60 *1000;
+				int = intervallLess60 * 1000;
+				onlyOneTimer = true;
+			}
+			interval(endTime, sec, index, start_Time, end_Time, inputString, name, timer,int,onlyOneTimer);
+
+		};
+		/**
+         *
+         * @param {number} endTime
+         * @param {*} sec
+         * @param {*} index
+         * @param {*} start_Time
+         * @param {*} end_Time
+         * @param {*} inputString
+         * @param {*} name
+         * @param {*} timer
+         * @param {*} int
+		 * @param {boolean} onlyOneTimer
+         */
+		const interval = (endTime, sec, index, start_Time, end_Time, inputString, name, timer,int,onlyOneTimer)=>{
+			const generateValues = () =>{
+				let hour;
+				let minutes;
+				let seconds;
 				const timeLeft = endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
 
 				// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
@@ -422,7 +455,6 @@ class AlexaTimerVis extends utils.Adapter {
 				// String der Zeit erstellen
 				const time = hour + " : " + minutes + " : " + seconds + " Std";
 
-				const timer = timerObject.timer[index];
 				// Timer Werte zum Objekt hinzufügen
 				timer.hour = hour;
 				timer.minute = minutes;
@@ -440,8 +472,18 @@ class AlexaTimerVis extends utils.Adapter {
 					name = "Timer";
 				}
 				timerObject.timer[index].name = name;
-
+				return timeLeftSec;
+			};
+			generateValues();
+			timerObject.interval[index.slice(5)] = setInterval(() => {
+				const timeLeftSec = generateValues();
 				// Timer anhalten
+				if (timeLeftSec <= 60 && onlyOneTimer == false){
+					onlyOneTimer = true;
+					clearTimeout(timerObject.interval[index.slice(5)]);
+					interval(endTime, sec, index, start_Time, end_Time, inputString, name, timer,timerObject.timer[index].timerInterval,true);
+				}
+
 				// Falls die Zeit abgelaufen ist, oder der Timer deaktiviert wurde
 				if (timeLeftSec <= 0 || timerObject.timerActiv.timer[index] == false) {
 
@@ -459,11 +501,14 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.time_start = "00:00:00";
 					timer.time_end = "00:00:00";
 					timer.inputDevice ="";
+					timer.timerInterval = 0;
+					this.log.info("timer stopped");
 
 					clearInterval(timerObject.interval[index.slice(5)]);
 					timerObject.interval[index.slice(5)] = "leer";
 				}
-			}, timerObject.timerActiv.data.interval); // Aktualisierungszeit
+			}, int); // Aktualisierungszeit
+
 		};
 
 		/**
@@ -796,15 +841,19 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
 				if (timer.hour !== undefined) {
-					this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
-					this.setStateChanged(element + ".hour", timer.hour, true);
-					this.setStateChanged(element + ".minute", timer.minute, true);
-					this.setStateChanged(element + ".second", timer.second, true);
-					this.setStateChanged(element + ".string", timer.string_Timer, true);
-					this.setStateChanged(element + ".TimeStart", timer.time_start, true);
-					this.setStateChanged(element + ".TimeEnd", timer.time_end, true);
-					this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
-					this.setStateChanged("all_Timer.alive", alive, true);
+					try{
+						this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
+						this.setStateChanged(element + ".hour", timer.hour, true);
+						this.setStateChanged(element + ".minute", timer.minute, true);
+						this.setStateChanged(element + ".second", timer.second, true);
+						this.setStateChanged(element + ".string", timer.string_Timer, true);
+						this.setStateChanged(element + ".TimeStart", timer.time_start, true);
+						this.setStateChanged(element + ".TimeEnd", timer.time_end, true);
+						this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
+						this.setStateChanged("all_Timer.alive", alive, true);
+					}catch(e){
+						this.log.info(e);
+					}
 					// Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
 					const name = timer.name;
 					if (name == "Timer"){
