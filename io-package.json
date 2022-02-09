@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.9",
+        "version": "0.1.10",
         "news": {
+            "0.1.10":{
+                "en": "Possibility to set intervals manually"
+            },
             "0.1.9": {
                 "en": "Bugfix",
                 "de": "Bug-Fix",
