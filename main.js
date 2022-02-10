@@ -17,6 +17,8 @@ const utils = require("@iobroker/adapter-core");
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
+let idInstanze;
+
 // Variablen für Timeouts und Intervalle
 let setStates;
 let timeout_1;
@@ -160,6 +162,13 @@ class AlexaTimerVis extends utils.Adapter {
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
 		datapoint = this.config.state;
+		const datapointArray = datapoint.split(".");
+		idInstanze = {
+			"adapter" : datapointArray[0],
+			"instanz": datapointArray[1],
+			"channel_history": datapointArray[2]
+		};
+		this.log.info(JSON.stringify(datapointArray));
 		intervallMore60 = this.config.intervall1;
 		intervallLess60 = this.config.intervall2;
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
@@ -299,7 +308,7 @@ class AlexaTimerVis extends utils.Adapter {
 					}
 				}
 			// @ts-ignore
-			}else if (id != "alexa-timer-vis.0.info.connection" && state.val !== false){
+			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state.val !== false){
 				// Akualisierung aus Reset Datenpunkten
 				this.log.info("ID Reset Button " + JSON.stringify(id));
 				// Aus ID den Timer erfassen
@@ -308,7 +317,7 @@ class AlexaTimerVis extends utils.Adapter {
 				// Alexa2 Adapter Timer
 				// alexa2.0.Echo-Devices.G090XG1210960L67.Commands.textCommand
 				const timerOb = timerObject.timer[timer];
-				const alexaCommandState = `alexa2.0.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
+				const alexaCommandState = `alexa2.${idInstanze.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
 				let name = "";
 				// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
 				if (timerOb.name != "Timer") name = timerOb.name;
@@ -652,7 +661,7 @@ class AlexaTimerVis extends utils.Adapter {
 						native: {},
 					});
 					// id zusammenbauen
-					const id = `alexa-timer-vis.0.timer${i}.Reset`;
+					const id = `alexa-timer-vis.${idInstanze.instanz}.timer${i}.Reset`;
 					// Subscribe Reset Button
 					subscribeForeignStates(id);
 				}
@@ -669,16 +678,16 @@ class AlexaTimerVis extends utils.Adapter {
 		 */
 
 		const getInputDevice = (path)=>{
-			this.getForeignObject("alexa2.0.History.name", async (err, obj) => {
+			this.getForeignObject(`alexa2.${idInstanze.instanz}.History.name`, async (err, obj) => {
 				if (err || obj == null) {
 					// Error
 					this.log.error(`The State "name" of Alexa was not found!`);
 					path.inputDevice = "-";
 				} else {
-					const obj = await this.getForeignStateAsync("alexa2.0.History.name");
+					const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
 					// @ts-ignore
 					path.inputDevice = obj.val;
-					const serial = await this.getForeignStateAsync("alexa2.0.History.serialNumber");
+					const serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
 					// @ts-ignore
 					path.serialNumber = serial.val;
 				}
