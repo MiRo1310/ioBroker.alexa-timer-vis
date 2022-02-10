@@ -661,7 +661,7 @@ class AlexaTimerVis extends utils.Adapter {
 						native: {},
 					});
 					// id zusammenbauen
-					const id = `alexa-timer-vis.${idInstanze.instanz}.timer${i}.Reset`;
+					const id = `alexa-timer-vis.${this.instance}.timer${i}.Reset`;
 					// Subscribe Reset Button
 					subscribeForeignStates(id);
 				}
