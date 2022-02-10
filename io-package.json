@@ -3,8 +3,17 @@
         "name": "alexa-timer-vis",
         "version": "0.1.10",
         "news": {
-            "0.1.10":{
-                "en": "Possibility to set intervals manually"
+            "0.1.10": {
+                "en": "Possibility to set intervals manually",
+                "de": "Möglichkeit, Intervalle manuell einzustellen",
+                "ru": "Возможность установить интервалы вручную",
+                "pt": "Possibilidade de definir intervalos manualmente",
+                "nl": "Mogelijkheid om intervallen handmatig in te stellen",
+                "fr": "Possibilité de définir des intervalles manuellement",
+                "it": "Possibilità di impostare manualmente gli intervalli",
+                "es": "Posibilidad de establecer intervalos manualmente",
+                "pl": "Możliwość ręcznego ustawienia interwałów",
+                "zh-cn": "可以手动设置间隔"
             },
             "0.1.9": {
                 "en": "Bugfix",
