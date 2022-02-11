@@ -326,25 +326,30 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 			// Code Ende
 
-			// you can use the ack flag to detect if state is command(false) or status(true)
-			// @ts-ignore
-			// if (!state.ack) {
-			// 	this.log.info("ack is not set!");
-			// }
+
 		});
 
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
-		//this.log.info("Intervall: " + this.config.interval);
-		//this.log.info("config option2: " + this.config.option5);
-		/*
-		For every state in the system there has to be also an object of type state
-		Here a simple template for a boolean variable named "testVariable"
-		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
 
+		// -------------------------------------------------------------------------------------------------------------------------------------------------
+		// Funktionen
+		/**
+		 * Überprüft ob gleich große Timer vorhanden sind, damit beim löschen der richtige gewählt wird
+		 *
+		 * @param {number} sec Eingegebene Zeit per Alexa in Sekunden
+		 */
+		const checkDuplicateTimers = (sec)=>{
+			let count = 0;
+			for(const element in timerObject.timer){
+				if (timerObject.timer[element] == sec){
+					count++;
+				}
 
-		// ---------------------Funktionen----------------------
+			}
+			return count;
+
+		};
+
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * Ersetzt den ersten Buchstaben des eingegebenen Wortes durch den selbigen Großbuchstaben
 		 * @param {string} name "w"ort wo der erste Buchstabe groß geschrieben werden soll
@@ -358,6 +363,7 @@ class AlexaTimerVis extends utils.Adapter {
 			return name;
 		};
 
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * // Aus millisekunden nur die Zeit herausziehen
 		 * @param {number} i // Time in milliseconds
@@ -370,6 +376,8 @@ class AlexaTimerVis extends utils.Adapter {
 			const time = date_string.split(" ").slice(4,5).toString();
 			return time;
 		};
+
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * Timer
 		 *
@@ -386,9 +394,6 @@ class AlexaTimerVis extends utils.Adapter {
 			const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
 			const endTime = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
 			const end_Time = time(endTime);
-
-
-
 
 			// Index für Timer bestimmen
 			let index;
@@ -408,31 +413,36 @@ class AlexaTimerVis extends utils.Adapter {
 			// Intervall erzeugen
 			let onlyOneTimer;
 			const timer = timerObject.timer[index];
+			// Wenn der eingegebene Timer unter 60 Sekunden ist, soll er direkt mit dem kleinen Intervall starten
 			if (sec > 60){
 				int = intervallMore60 * 1000;
 				onlyOneTimer = false;
-			}else{
+			}else{ // sonst mit dem großen Intervall
 				timerObject.timer.timer1.timerInterval = intervallLess60 *1000;
 				int = intervallLess60 * 1000;
 				onlyOneTimer = true;
 			}
+			// Funktion aufrufen, die das Intervall erzeugt
 			interval(endTime, sec, index, start_Time, end_Time, inputString, name, timer,int,onlyOneTimer);
 
 		};
+
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
-         *
+         * Funktion die ein Intervall erzeugt, und die Werte in einer seperaten Funktion
          * @param {number} endTime
-         * @param {*} sec
-         * @param {*} index
-         * @param {*} start_Time
-         * @param {*} end_Time
-         * @param {*} inputString
-         * @param {*} name
+         * @param {number} sec eingegebene Zeit in Sekunden
+         * @param {*} index Index, für den Ort wo gespeichert werden soll
+         * @param {string} start_Time Startzeit
+         * @param {string} end_Time berechnete Endzeit
+         * @param {string} inputString
+         * @param {string} name
          * @param {*} timer
          * @param {*} int
 		 * @param {boolean} onlyOneTimer
          */
 		const interval = (endTime, sec, index, start_Time, end_Time, inputString, name, timer,int,onlyOneTimer)=>{
+			// Funktion um die Werte zu erzeugen
 			const generateValues = () =>{
 				let hour;
 				let minutes;
@@ -483,9 +493,13 @@ class AlexaTimerVis extends utils.Adapter {
 				timerObject.timer[index].name = name;
 				return timeLeftSec;
 			};
+			// generate Values vor dem Intervall aufrufen, damit die Zahlen direkt erzeugt werden, und nicht erst nach z.b. 5 sek
 			generateValues();
+			// Intervall erzeugen
 			timerObject.interval[index.slice(5)] = setInterval(() => {
+				// Funktion im Intervall aufrufen
 				const timeLeftSec = generateValues();
+
 				// Timer anhalten
 				if (timeLeftSec <= 60 && onlyOneTimer == false){
 					onlyOneTimer = true;
@@ -517,9 +531,9 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.interval[index.slice(5)] = "leer";
 				}
 			}, int); // Aktualisierungszeit
-
 		};
 
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * States erstellen
 		 * @param {number} value
@@ -671,6 +685,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		};
 
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * Eingabegerät ermitteln
 		 * @param  path Pfad zum Speicherort im Objekt
@@ -694,6 +709,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 			});
 		};
+
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 			 * Funktion der Erfassung der gewünschten Zeit und des Namen
 			 * Erstellt einen String in einem Array [0], um Sekunden berechnen zu können
@@ -776,6 +793,7 @@ class AlexaTimerVis extends utils.Adapter {
 			return array;
 		};
 
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 			 * Löschen eines Timers
 			 *
@@ -798,7 +816,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		};
 
-
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * States in Datenpunkten schreiben
 		 */
@@ -822,6 +840,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}, timerObject.timerActiv.data.interval);
 		};
 
+		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * Werte setzen
 		 *
@@ -874,19 +893,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		};
 
-		// 		await this.setObjectNotExistsAsync(timer, {
-		// 			type: "state",
-		// 			common: {
-		// 				name: "Stunden",
-		// 				type: "number",
-		// 				role: "value",
-		// 				read: true,
-		// 				write: true,
-		// 			},
-		// 			native: {},
-		// 		});
 
-		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
 		// Um Statusupdates zu erhalten, müssen Sie diese abonnieren. Die folgende Zeile fügt ein Abonnement für unsere oben erstellte Variable hinzu
 		//this.subscribeStates("testVariable");
 		this.subscribeForeignStates(datapoint);
@@ -899,35 +906,9 @@ class AlexaTimerVis extends utils.Adapter {
 			this.subscribeForeignStates(id);
 		};
 
-
-
-		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-		// this.subscribeStates("lights.*");
-		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-		// this.subscribeStates("*");
-
-		/*
-			setState examples
-			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		// the variable testVariable is set to true as command (ack=false)
-		//await this.setStateAsync("testVariable", true);
-
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		//await this.setStateAsync("testVariable", { val: true, ack: true });
-
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		//await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-
-		// examples for the checkPassword/checkGroup functions
-		//let result = await this.checkPasswordAsync("admin", "iobroker");
-		//this.log.info("check user admin pw iobroker: " + result);
-
-		//result = await this.checkGroupAsync("admin", "admin");
-		//this.log.info("check group user admin group admin: " + result);
 	}
 
+	//----------------------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 * @param {() => void} callback
