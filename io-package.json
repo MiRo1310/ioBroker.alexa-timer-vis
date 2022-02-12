@@ -274,6 +274,149 @@
                 "def": false
             },
             "native": {}
+        },
+        {
+            "_id": "all_Timer.alive",
+            "type": "state",
+            "common": {
+                "name": "Ist ein Timer activ?",
+                "type": "boolean",
+                "role": "indicator",
+                "read": true,
+                "write": true,
+               " def": false
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.alive",
+            "type": "state",
+            "common": {
+                "name": "Timer activ",
+                "type": "boolean",
+                "role": "indicator",
+                "read": true,
+                "write": true,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.hour",
+            "type": "state",
+            "common": {
+                "name": "Hours",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "0"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.minute", 
+            "type": "state",
+            "common": {
+                "name": "Minutes",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "0"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.second", 
+            "type": "state",
+            "common": {
+                "name": "Seconds",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "0"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.string", 
+            "type": "state",
+            "common": {
+                "name": "String",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "00 : 00 : 00 Std"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.name", 
+            "type": "state",
+            "common": {
+                "name": "Name des Timers",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "Timer"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.TimeStart", 
+            "type": "state",
+            "common": {
+                "name": "Start Time",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "00:00:00"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.TimeEnd", 
+            "type": "state",
+            "common": {
+                "name": "End Time",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": "00:00:00"
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.InputDeviceName", 
+            "type": "state",
+            "common": {
+                "name": "Input of Device",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+        "_id":"timer1.Reset", 
+            "type": "state",
+            "common": {
+                "name": "Reset Timer",
+                "type": "boolean",
+                "role": "button",
+                "read": false,
+                "write": true,
+                "def": false
+            },
+            "native": {}
         }
     ]
 }

@@ -868,8 +868,6 @@ class AlexaTimerVis extends utils.Adapter {
 			setStates = setInterval(() => {
 				try {
 					writeState(false);
-					// this.log.info(JSON.stringify(timerObject.timer.timer1));
-					//this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
 					// Aktualisierungs Intervall stoppen
 					if (timerObject.timerActiv.timerCount == 0) {
 						this.setState("all_Timer.alive", false, true);
