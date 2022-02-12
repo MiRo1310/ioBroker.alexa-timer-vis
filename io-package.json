@@ -196,7 +196,7 @@
                 "js-controller": ">=2.0.0"
             }            
         ],
-        "globalDependency": [
+        "globalDependencies": [
             {
                 "alexa2": ">=3.11.2"
             }
