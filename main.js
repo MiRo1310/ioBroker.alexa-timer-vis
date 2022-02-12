@@ -231,31 +231,34 @@ class AlexaTimerVis extends utils.Adapter {
 
 								// Timer soll gestoppt werden
 								if (value.indexOf(element) >= 0 && array == "deleteTimer") {
+
+									this.log.info("Timer is to be stopped!");
+									//Eingabe Text loggen
+									this.log.info("Voice input: " + value);
+									// Input aus Alexas Spracheingabe zu Array konvertieren
+									let timerArray = value.split(",");
+									timerArray = timerArray[0].split(" ");
+
+									// RückgabeArray erfassen
+									const returnArray = zeiterfassung(timerArray);
+
+									// Name
+									const name = returnArray[1];
+
+									// Timer in Sekunden ausgeben lassen, damit der passende Timer abgebrochen werden kann
+									let timerAbortsec;
+									try {
+										timerAbortsec = eval(returnArray[0]);
+									}
+									catch(e){
+										this.log.debug("Input is invalid. Call the Developer");
+									}
+
 									if(value.indexOf(element) >= 0 && i === false && value.indexOf(",") != -1){
 										// Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
-										oneOfMultiTimerDelete(value);
+										oneOfMultiTimerDelete(value, timerAbortsec);
 										break;
 									}else {
-										this.log.info("Timer is to be stopped!");
-										//Eingabe Text loggen
-										this.log.info("Voice input: " + value);
-										// Input aus Alexas Spracheingabe zu Array konvertieren
-										const timerArray = value.split(" ");
-
-										// RückgabeArray erfassen
-										const returnArray = zeiterfassung(timerArray);
-
-										// Name
-										const name = returnArray[1];
-
-										// Timer in Sekunden ausgeben lassen, damit der passende Timer abgebrochen werden kann
-										let timerAbortsec;
-										try {
-											timerAbortsec = eval(returnArray[0]);
-										}
-										catch(e){
-											this.log.debug("Input is invalid. Call the Developer");
-										}
 										// Index Timer löschen
 										const deleteTimerIndex = returnArray[2];
 
@@ -264,8 +267,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 										i = true;
 										break;
-
 									}
+
 								}// Timer soll erstellt werden
 								// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
 								else if (value.indexOf(element) >= 0 && i === false && value.indexOf(",") == -1) {  // Frage nach Benennung von doppeltem Timer, Erstellung von Timer unterbinden
@@ -355,26 +358,37 @@ class AlexaTimerVis extends utils.Adapter {
 		 *
 		 * @param {string} input
 		 */
-		const oneOfMultiTimerDelete =(input)=>{
+		const oneOfMultiTimerDelete =(input, timerAbortsec)=>{
 			// Teil hinter dem Komma separieren
 			const seperateInput = input.slice(input.indexOf(",")+2, input.length);
 			// Falls mehrere Wörter hinter dem Komma stehen, soll eine Array erzeugt werden um ein bestimmtes Wort zu finden
 			const seperateInputArray = seperateInput.split(" ");
+			let timerNumber;
 			for (const element of seperateInputArray){
 				if (timerObject.zuweisung[element] > 0){
-					const timerNumber = timerObject.zuweisung[element];
-					this.log.info("Timer Number " + timerNumber);
+					timerNumber = timerObject.zuweisung[element];
+					// this.log.info("Timer Number " + timerNumber);
 				}
 			}
 			// Liste die sortierbar ist erstellen
 			const sortable = [];
 			for (const element in timerObject.timer){
-				sortable.push([element, timerObject.timer[element].onlySec]);
+				sortable.push([element, timerObject.timer[element].onlySec, timerObject.timer[element].timeLeftSec]);
 			}
 			// Das Array in dem die Timer sind nach der Größe sortieren und dann das entsprechende Element stoppen
 			sortable.sort(function(a,b){
-				return a[1] - b[1];
+				return a[2] - b[2];
 			});
+			let i = 1;
+
+			for(const element of sortable){
+				if (element[1] == timerAbortsec && timerNumber == i){
+					timerObject.timerActiv.timer[element[0]] = false;
+
+				}else{
+					i++;
+				}
+			}
 
 
 		};
@@ -508,6 +522,7 @@ class AlexaTimerVis extends utils.Adapter {
 				timer.second = seconds;
 				timer.string_Timer = time;
 				timer.onlySec = sec;
+				timer.timeLeftSec = timeLeftSec;
 				timer.index = index;
 				timer.time_start = start_Time;
 				timer.time_end = end_Time;
@@ -547,6 +562,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.second = "00";
 					timer.string_Timer = "00 : 00 : 00 Std";
 					timer.onlySec = 0;
+					timer.timeLeftSec = 0;
 					timer.index = 0;
 					timer.name = "Timer";
 					timer.time_start = "00:00:00";
@@ -835,8 +851,6 @@ class AlexaTimerVis extends utils.Adapter {
 			// Timer gemeint ist
 			for(const element in timerObject.timer){
 				if (timerObject.timer[element].onlySec == sec){
-					this.log.info("eingabe" + JSON.stringify(sec));
-					this.log.info("im object " + JSON.stringify(timerObject.timer[element].onlySec));
 					count++;
 				}
 			}
