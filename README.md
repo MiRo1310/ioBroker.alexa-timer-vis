@@ -52,48 +52,6 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 ### If you have any suggestions for improving something or adding other functions, feel free to contact us
 
 
-## ---- Deutsch ----
-
-## alexa-timer-vis adapter für den ioBroker
-
-Alexa Timer ausgeben um in der Vis anzuzeigen
-
-## Funktionsweise
-
-Hierbei wird über Alexa ein Timer, oder mehrere per Spracheingabe erstellt, dieser wird von dem Adapter ausgewertet und in States geschrieben, um diese dann in der Vis sichtbar zu machen. So behält man einen besseren Überblick wenn man mehrere Timer gleichzeitig aktiv hat.
-
-* ---- Alexa2 Adapter wird gebraucht --
-* Das Vis Widget ist noch nicht eingebunden
-* Jeder einzelne Timer kann per Button gestoppt werden, stoppt den Timer in Alexa und im Adapter
-* Es können unbegrenzt Timer mit Alexa per Sprachbefehl erstellt werden. 
-* Bei Start des Adapters werden 4 Ordner erstellt, mit den ganzen States.
-* Zusätzliche Ordner werden erstellt sobald ein 5. und mehr Timer per Alexas Spracheingabe erstellt werden. 
-* konfiguriert für deutsche Spracheingabe, Englisch (experimentell)
-
-
-### Timer hinzufügen ( Beispiele )
-
-* Alexa, Timer 5 Minuten
-* Alexa, Pommes Timer 9 Minuten
-* Alexa, stelle einen Timer auf 1 Stunde und 30 Minuten,
-* Alexa, setzte Timer auf 2 Stunden
-* Alexa, Timer auf 120 Minuten
-* Alexa, Timer 9 Minuten Spaghetti
-
-### Timer löschen ( Beispiele )
-
-* Alexa, lösche alle Timer
-* Alexa, lösche Pommes Timer
-* Alexa, lösche 5 Minuten Timer
-* Alexa, Timer 5 Minuten beenden
-
-
-#### Wenn ihr Anregungen habt, um etwas besser zu machen, oder andere Funktionen hinzu zu fügen immer gerne melden
-
-
-
-
-
 
 ## Changelog
 ### 0.1.9 (30.1.2022)

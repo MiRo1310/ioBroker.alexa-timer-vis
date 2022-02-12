@@ -186,28 +186,28 @@
         },
         "title": "Alexa Timer für Vis",
         "titleLang": {
-            "en": "Alexa Timer für Vis",
-            "de": "Alexa Timer für Vis",
-            "ru": "Alexa Timer für Vis",
+            "en": "Alexa Timer for Vis",
+            "de": "Alexa-Timer für Vis",
+            "ru": "Алекса Таймер для Вис",
             "pt": "Alexa Timer para Vis",
             "nl": "Alexa Timer voor Vis",
-            "fr": "Alexa Timer pour Vis",
-            "it": "Alexa Timer per la visualizzazione",
-            "es": "Temporizador de Alexa für Vis",
-            "pl": "Alexa Timer dla wizy",
-            "zh-cn": "Alexa Timer für Vis"
+            "fr": "Minuterie Alexa pour Vis",
+            "it": "Timer Alexa per Vis",
+            "es": "Temporizador de Alexa para Vis",
+            "pl": "Alexa Timer dla Vis",
+            "zh-cn": "用于 Vis 的 Alexa 计时器"
         },
         "desc": {
-            "en": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "de": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "ru": "Алекса Таймер ausgeben um in der Vis anzuzeigen",
-            "pt": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "nl": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "fr": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "it": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "es": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "pl": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-            "zh-cn": "Alexa Timer ausgeben um in der Vis anzuzeigen"
+            "en": "Output Alexa timer to display timers in the VIS",
+            "de": "Alexa-Timer ausgeben, um Timer im VIS anzuzeigen",
+            "ru": "Вывод таймера Alexa для отображения таймеров в VIS",
+            "pt": "Saída do temporizador Alexa para exibir temporizadores no VIS",
+            "nl": "Voer Alexa-timer uit om timers in het VIS . weer te geven",
+            "fr": "Sortir la minuterie Alexa pour afficher les minuteries dans le VIS",
+            "it": "Emetti il ​​timer di Alexa per visualizzare i timer nel VIS",
+            "es": "Salida del temporizador de Alexa para mostrar los temporizadores en el VIS",
+            "pl": "Wyjście zegara Alexa, aby wyświetlić zegary w VIS",
+            "zh-cn": "输出 Alexa 计时器以在 VIS 中显示计时器"
         },
         "authors": [
             "Michael Roling <michael.roling@gmx.de>"
@@ -239,7 +239,9 @@
         "dependencies": [
             {
                 "js-controller": ">=2.0.0"
-            },
+            }            
+        ],
+        "globalDependency": [
             {
                 "alexa2": ">=3.11.2"
             }
