@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.10",
+        "version": "0.1.11",
         "news": {
+            "0.1.11":{
+                "en": "Delete of Timer with same Inputvalue, fixed"
+            },
             "0.1.10": {
                 "en": "Possibility to set intervals manually",
                 "de": "Möglichkeit, Intervalle manuell einzustellen",
@@ -134,54 +137,6 @@
                 "es": "Error, al eliminar intervalos y tiempos de espera después del apagado, solucionado",
                 "pl": "Naprawiono błąd podczas usuwania interwałów i limitów czasu po wyłączeniu",
                 "zh-cn": "错误，在关机后删除间隔和超时时，已修复"
-            },
-            "0.0.4": {
-                "en": "Adjustments for voice input and fixes",
-                "de": "Anpassungen für die Spracheingabe und Korrekturen",
-                "ru": "Корректировки голосового ввода и исправления",
-                "pt": "Ajustes para entrada de voz e correções",
-                "nl": "Aanpassingen voor spraakinvoer en reparaties",
-                "fr": "Ajustements pour la saisie vocale et correctifs",
-                "it": "Regolazioni per l'input vocale e correzioni",
-                "es": "Ajustes para entrada de voz y correcciones.",
-                "pl": "Korekty wprowadzania głosowego i poprawki",
-                "zh-cn": "语音输入的调整和修复"
-            },
-            "0.0.3": {
-                "en": "Adjustments for vis",
-                "de": "Anpassungen für vis",
-                "ru": "Корректировки для vis",
-                "pt": "Ajustes para vis",
-                "nl": "Aanpassingen voor vis",
-                "fr": "Ajustements pour vis",
-                "it": "Adeguamenti per vis",
-                "es": "Ajustes para vis",
-                "pl": "Korekty vis",
-                "zh-cn": "可见性调整"
-            },
-            "0.0.2": {
-                "en": "Adjustment",
-                "de": "Einstellung",
-                "ru": "Корректирование",
-                "pt": "Ajustamento",
-                "nl": "Aanpassing",
-                "fr": "Ajustement",
-                "it": "Regolazione",
-                "es": "Ajustamiento",
-                "pl": "Dostosowanie",
-                "zh-cn": "调整"
-            },
-            "0.0.1": {
-                "en": "Initial Release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "初始发行"
             }
         },
         "title": "Alexa Timer für Vis",
