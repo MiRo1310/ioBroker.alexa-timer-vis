@@ -54,6 +54,8 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 
 ## Changelog
+### 0.1.12 (15.02.2022)
+* Delete of Timer fixed
 ### 0.1.11 (12.02.2022)
 * Delete of Timer with same Inputvalue, fixed
 * User can set the Intervall in admin
