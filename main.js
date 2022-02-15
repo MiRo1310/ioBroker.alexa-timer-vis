@@ -384,6 +384,7 @@ class AlexaTimerVis extends utils.Adapter {
 			for(const element of sortable){
 				if (element[1] == timerAbortsec && timerNumber == i){
 					timerObject.timerActiv.timer[element[0]] = false;
+					break;
 
 				}else{
 					i++;
@@ -850,13 +851,18 @@ class AlexaTimerVis extends utils.Adapter {
 			// Die Schleife ermittelt wie oft Timer mit dem eingegebenen Wert vorhanden sind, falls mehrmals darf nicht gelöscht werden, da nicht genau definiert ist welcher
 			// Timer gemeint ist
 			for(const element in timerObject.timer){
+				// this.log.info(JSON.stringify("Element " + element));
+				// this.log.info(JSON.stringify(sec));
+				// this.log.info(JSON.stringify(timerObject.timer[element].onlySec));
 				if (timerObject.timer[element].onlySec == sec){
+
 					count++;
 				}
 			}
 
+
 			// Wenn mehr als ein Timer die gleiche Eingabegröße hat darf nichts gemacht werden
-			if (count == 1 || deleteTimerIndex == 2){
+			if (count == 1 || deleteTimerIndex == 2 || name != ""){
 				for (const element in timerObject.timer)
 					// Sekunden müssen übereinstimmen, dürfen aber nicht 0 sein und der Name muss überein stimmen, darf aber nicht leer sein
 					if ((timerObject.timer[element]["onlySec"] == sec && sec !== 0) || (timerObject.timer[element]["name"] == name && name !== "")) {
