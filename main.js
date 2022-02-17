@@ -132,14 +132,19 @@ const timerObject = {
 	"ziffern":["0", "1", "2", "3", "4", "5", "6","7", "8", "9"],
 	"zuweisung":{
 		"erster" : 1,
+		"ersten": 1,
 		"eins": 1,
 		"zweiter" : 2,
+		"zweiten" : 2,
 		"zwei": 2,
 		"dritter": 3,
+		"dritten": 3,
 		"drei":3,
 		"vierter": 4,
+		"vierten" :4,
 		"vier":4,
 		"fünfter": 5,
+		"fünften" : 5,
 		"fünf": 5
 	},
 	"interval":{
