@@ -3,11 +3,29 @@
         "name": "alexa-timer-vis",
         "version": "0.1.12",
         "news": {
-            "0.1.12":{
-                "en": "Delete of timer fixed"
+            "0.1.12": {
+                "en": "Delete of timer fixed",
+                "de": "Löschen des Timers behoben",
+                "ru": "Исправлено удаление таймера",
+                "pt": "Exclusão do temporizador corrigida",
+                "nl": "Verwijderen van timer vast",
+                "fr": "Suppression de la minuterie corrigée",
+                "it": "Eliminazione del timer fissa",
+                "es": "Eliminación de temporizador arreglado",
+                "pl": "Naprawiono usuwanie timera",
+                "zh-cn": "修复定时器的删除"
             },
-            "0.1.11":{
-                "en": "Delete of Timer with same Inputvalue, fixed"
+            "0.1.11": {
+                "en": "Delete of Timer with same Inputvalue, fixed",
+                "de": "Löschen von Timern mit gleichem Inputwert, behoben",
+                "ru": "Удаление таймера с тем же входным значением, исправлено",
+                "pt": "Exclusão do temporizador com o mesmo valor de entrada, fixo",
+                "nl": "Verwijderen van timer met dezelfde invoerwaarde, vast",
+                "fr": "Suppression de la minuterie avec la même valeur d'entrée, fixe",
+                "it": "Eliminazione del timer con lo stesso valore di ingresso, fissa",
+                "es": "Eliminación del temporizador con el mismo valor de entrada, fijo",
+                "pl": "Usunięcie timera z tą samą wartością wejściową, ustalone",
+                "zh-cn": "删除具有相同 Inputvalue 的 Timer，已修复"
             },
             "0.1.10": {
                 "en": "Possibility to set intervals manually",
@@ -197,7 +215,7 @@
         "dependencies": [
             {
                 "js-controller": ">=2.0.0"
-            }            
+            }
         ],
         "globalDependencies": [
             {
@@ -242,12 +260,12 @@
                 "role": "indicator",
                 "read": true,
                 "write": true,
-               " def": false
+                " def": false
             },
             "native": {}
         },
         {
-        "_id":"timer1.alive",
+            "_id": "timer1.alive",
             "type": "state",
             "common": {
                 "name": "Timer activ",
@@ -260,7 +278,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.hour",
+            "_id": "timer1.hour",
             "type": "state",
             "common": {
                 "name": "Hours",
@@ -273,7 +291,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.minute", 
+            "_id": "timer1.minute",
             "type": "state",
             "common": {
                 "name": "Minutes",
@@ -286,7 +304,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.second", 
+            "_id": "timer1.second",
             "type": "state",
             "common": {
                 "name": "Seconds",
@@ -299,7 +317,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.string", 
+            "_id": "timer1.string",
             "type": "state",
             "common": {
                 "name": "String",
@@ -312,7 +330,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.name", 
+            "_id": "timer1.name",
             "type": "state",
             "common": {
                 "name": "Name des Timers",
@@ -325,7 +343,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.TimeStart", 
+            "_id": "timer1.TimeStart",
             "type": "state",
             "common": {
                 "name": "Start Time",
@@ -338,7 +356,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.TimeEnd", 
+            "_id": "timer1.TimeEnd",
             "type": "state",
             "common": {
                 "name": "End Time",
@@ -351,7 +369,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.InputDeviceName", 
+            "_id": "timer1.InputDeviceName",
             "type": "state",
             "common": {
                 "name": "Input of Device",
@@ -364,7 +382,7 @@
             "native": {}
         },
         {
-        "_id":"timer1.Reset", 
+            "_id": "timer1.Reset",
             "type": "state",
             "common": {
                 "name": "Reset Timer",
