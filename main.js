@@ -40,7 +40,7 @@ const timerObject = {
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
-			"notNoted": ["timer","auf","auf,","erstelle","mit","ein", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
+			"notNoted": ["timer","timer,","auf","auf,","erstelle","mit","ein", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator
@@ -262,7 +262,7 @@ class AlexaTimerVis extends utils.Adapter {
 									let deleteTimerIndex;
 									if(value.indexOf(element) >= 0 && i === false && value.indexOf(",") != -1){
 										// Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
-										this.log.info("Eine Antwort wurde empfangen");
+										this.log.info("Alexa send an Answer");
 										questionAlexa = true;
 										deleteTimerIndex = 1;
 										deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
@@ -280,10 +280,11 @@ class AlexaTimerVis extends utils.Adapter {
 
 								}// Timer soll erstellt werden
 								// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
-								else if (value.indexOf(element) >= 0 && i === false && value.indexOf(",") == -1) {  // Frage nach Benennung von doppeltem Timer, Erstellung von Timer unterbinden
+								else if (value.indexOf(element) >= 0 && i === false ) {
 									this.log.info("Timer is to be added!");
 									//Eingabe Text loggen
 									this.log.info(`Voice input: ${value}`);
+									// Wenn eine Antwort generiert wurde soll das Komma entfernt werden
 									// Input aus Alexas Spracheingabe zu Array machen
 									const timerArray = value.split(" ");
 
@@ -299,48 +300,51 @@ class AlexaTimerVis extends utils.Adapter {
 									catch(e){
 										this.log.debug("Input is invalid. Call the Developer");
 									}
+									// Prüfung falls man sagt Alexa Pommes Timer, und dann die Frage kommt für wie lange
+									if (timerSeconds && timerSeconds != 0 ){
 									// Rückgabewert "Name" des Timers [1]
-									const name = returnArray[1];
-									// Wenn der Name schon existert darf nichts gemacht werden, da nicht 2 Timer mit dem gleichen Namen erstellt werden können
-									let nameExist = false;
-									for (const element in timerObject.timer){
-										if (timerObject.timer[element].name == name && name != ""){
-											this.log.info("Name allready exists");
-											nameExist = true;
+										const name = returnArray[1];
+										// Wenn der Name schon existert darf nichts gemacht werden, da nicht 2 Timer mit dem gleichen Namen erstellt werden können
+										let nameExist = false;
+										for (const element in timerObject.timer){
+											if (timerObject.timer[element].name == name && name != ""){
+												this.log.info("Name allready exists");
+												nameExist = true;
+											}
+											break;
 										}
+										if(!nameExist){
+										// Rückgabewert "Input String" des Timers [3]
+											const inputString = returnArray[3];
+
+											// Anzahl Aktiver Timer um eins hochzählen
+											timerObject.timerActiv.timerCount++;
+
+											// States erstellen lassen, bei mehr als 4 Timern
+											createState(timerObject.timerActiv.timerCount);
+
+											// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
+											const timer = "timer" + timerObject.timerActiv.timerCount;
+
+											if (timerObject.timerActiv.timer[timer] == undefined) {
+
+												timerObject.timerActiv.timer[timer] = false;
+												timerObject.timer[timer] = {};
+											}
+											// Timer starten
+											startTimer(timerSeconds, name, inputString);
+											// Nur ausführen wenn noch nicht aktiv ist
+											if (!writeStateActiv){
+												// auf aktiv setzen
+												writeStateActiv = true;
+												// States schreiben, darf aber nur einmal ausgeführt werden
+												writeStateIntervall();
+											}
+										}
+
+
 										break;
 									}
-									if(!nameExist){
-										// Rückgabewert "Input String" des Timers [3]
-										const inputString = returnArray[3];
-
-										// Anzahl Aktiver Timer um eins hochzählen
-										timerObject.timerActiv.timerCount++;
-
-										// States erstellen lassen, bei mehr als 4 Timern
-										createState(timerObject.timerActiv.timerCount);
-
-										// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
-										const timer = "timer" + timerObject.timerActiv.timerCount;
-
-										if (timerObject.timerActiv.timer[timer] == undefined) {
-
-											timerObject.timerActiv.timer[timer] = false;
-											timerObject.timer[timer] = {};
-										}
-										// Timer starten
-										startTimer(timerSeconds, name, inputString);
-										// Nur ausführen wenn noch nicht aktiv ist
-										if (!writeStateActiv){
-										// auf aktiv setzen
-											writeStateActiv = true;
-											// States schreiben, darf aber nur einmal ausgeführt werden
-											writeStateIntervall();
-										}
-									}
-
-
-									break;
 								}
 
 							}
@@ -390,7 +394,7 @@ class AlexaTimerVis extends utils.Adapter {
 				if (timerObject.zuweisung[element] > 0){
 					// Es handelt sich um eine Zahl die im Array gefunden wurde
 					timerNumber = timerObject.zuweisung[element];
-					this.log.info("Timer Number " + timerNumber);
+					//this.log.info("Timer Number " + timerNumber);
 				}else{
 					name = seperateInput.replace("timer", "");
 					timerNumber = 0;
@@ -872,12 +876,14 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name += element + " ";
+
 				} //this.log.info("TimerString: " + timerString);
 			});
 			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 			if (timerString.charAt(timerString.length - 1) == "+") {
 				timerString = timerString.slice(0, timerString.length - 1);
 			}
+
 			const array = [timerString, name, deleteVal, inputString];
 			return array;
 		};
