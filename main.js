@@ -231,6 +231,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 						// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 						let i = false;
+						let questionAlexa = false;
 						for (const array in timerObject.timerActiv.condition) {
 							for (const element of timerObject.timerActiv.condition[array]) {
 
@@ -258,17 +259,20 @@ class AlexaTimerVis extends utils.Adapter {
 									catch(e){
 										this.log.debug("Input is invalid. Call the Developer");
 									}
-
+									let deleteTimerIndex;
 									if(value.indexOf(element) >= 0 && i === false && value.indexOf(",") != -1){
 										// Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
-										oneOfMultiTimerDelete(value, timerAbortsec);
+										this.log.info("Eine Antwort wurde empfangen");
+										questionAlexa = true;
+										deleteTimerIndex = 1;
+										deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
 										break;
 									}else {
 										// Index Timer löschen
-										const deleteTimerIndex = returnArray[2];
+										deleteTimerIndex = returnArray[2];
 
 										// Timer anhalten
-										deleteTimer(timerAbortsec, name, deleteTimerIndex);
+										deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
 
 										i = true;
 										break;
@@ -297,37 +301,47 @@ class AlexaTimerVis extends utils.Adapter {
 									}
 									// Rückgabewert "Name" des Timers [1]
 									const name = returnArray[1];
-
-									// Rückgabewert "Input String" des Timers [3]
-									const inputString = returnArray[3];
-
-									// Anzahl Aktiver Timer um eins hochzählen
-									timerObject.timerActiv.timerCount++;
-
-									// States erstellen lassen, bei mehr als 4 Timern
-									createState(timerObject.timerActiv.timerCount);
-
-									// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
-									const timer = "timer" + timerObject.timerActiv.timerCount;
-
-									if (timerObject.timerActiv.timer[timer] == undefined) {
-
-										timerObject.timerActiv.timer[timer] = false;
-										timerObject.timer[timer] = {};
+									// Wenn der Name schon existert darf nichts gemacht werden, da nicht 2 Timer mit dem gleichen Namen erstellt werden können
+									let nameExist = false;
+									for (const element in timerObject.timer){
+										if (timerObject.timer[element].name == name && name != ""){
+											this.log.info("Name allready exists");
+											nameExist = true;
+										}
+										break;
 									}
-									// Timer starten
-									startTimer(timerSeconds, name, inputString);
-									// Nur ausführen wenn noch nicht aktiv ist
-									if (!writeStateActiv){
+									if(!nameExist){
+										// Rückgabewert "Input String" des Timers [3]
+										const inputString = returnArray[3];
+
+										// Anzahl Aktiver Timer um eins hochzählen
+										timerObject.timerActiv.timerCount++;
+
+										// States erstellen lassen, bei mehr als 4 Timern
+										createState(timerObject.timerActiv.timerCount);
+
+										// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
+										const timer = "timer" + timerObject.timerActiv.timerCount;
+
+										if (timerObject.timerActiv.timer[timer] == undefined) {
+
+											timerObject.timerActiv.timer[timer] = false;
+											timerObject.timer[timer] = {};
+										}
+										// Timer starten
+										startTimer(timerSeconds, name, inputString);
+										// Nur ausführen wenn noch nicht aktiv ist
+										if (!writeStateActiv){
 										// auf aktiv setzen
-										writeStateActiv = true;
-										// States schreiben, darf aber nur einmal ausgeführt werden
-										writeStateIntervall();
+											writeStateActiv = true;
+											// States schreiben, darf aber nur einmal ausgeführt werden
+											writeStateIntervall();
+										}
 									}
 
 
 									break;
-								}// ein bestimmter Timer, von mehreren gleichen soll gelöscht werden
+								}
 
 							}
 						}
@@ -363,22 +377,29 @@ class AlexaTimerVis extends utils.Adapter {
 		 *
 		 * @param {string} input
 		 */
-		const oneOfMultiTimerDelete =(input, timerAbortsec)=>{
+		const oneOfMultiTimerDelete =(input, timerAbortsec, name, inputDevice)=>{
 			// Teil hinter dem Komma separieren
 			const seperateInput = input.slice(input.indexOf(",")+2, input.length);
 			// Falls mehrere Wörter hinter dem Komma stehen, soll eine Array erzeugt werden um ein bestimmtes Wort zu finden
 			const seperateInputArray = seperateInput.split(" ");
 			let timerNumber;
+
+			// Über prüfen ob die Antwort eine Zahl ist oder ein Name
+
 			for (const element of seperateInputArray){
 				if (timerObject.zuweisung[element] > 0){
+					// Es handelt sich um eine Zahl die im Array gefunden wurde
 					timerNumber = timerObject.zuweisung[element];
-					// this.log.info("Timer Number " + timerNumber);
+					this.log.info("Timer Number " + timerNumber);
+				}else{
+					name = seperateInput.replace("timer", "");
+					timerNumber = 0;
 				}
 			}
 			// Liste die sortierbar ist erstellen
 			const sortable = [];
 			for (const element in timerObject.timer){
-				sortable.push([element, timerObject.timer[element].onlySec, timerObject.timer[element].timeLeftSec]);
+				sortable.push([element, timerObject.timer[element].onlySec, timerObject.timer[element].timeLeftSec, timerObject.timer[element].name, timerObject.timer[element].inputDevice]);
 			}
 			// Das Array in dem die Timer sind nach der Größe sortieren und dann das entsprechende Element stoppen
 			sortable.sort(function(a,b){
@@ -387,11 +408,29 @@ class AlexaTimerVis extends utils.Adapter {
 			let i = 1;
 
 			for(const element of sortable){
+				// Auf Zeit überprüfen
 				if (element[1] == timerAbortsec && timerNumber == i){
 					timerObject.timerActiv.timer[element[0]] = false;
 					break;
 
-				}else{
+				} // Auf Name überprüfen
+				else if (element[3] == name && timerNumber == i){
+					timerObject.timerActiv.timer[element[0]] = false;
+					break;
+				} // Auf Name überprüfen, wenn der Name in der Antwort vor kam
+				else if (element[3] == name && timerNumber == 0){
+					timerObject.timerActiv.timer[element[0]] = false;
+					break;
+				}// Auf Device überprüfen
+				else if (element[4] == inputDevice && timerNumber == i){
+					timerObject.timerActiv.timer[element[0]] = false;
+					break;
+				}// Wenn kein Angaben vor liegen
+				else if (inputDevice == "" && timerAbortsec == 0 && name == "" && timerNumber == i){
+					timerObject.timerActiv.timer[element[0]] = false;
+					break;
+				}
+				else {
 					i++;
 				}
 			}
@@ -850,39 +889,132 @@ class AlexaTimerVis extends utils.Adapter {
 			 * @param {number} sec Sekunden des zu löschenden Timers
 			 * @param {string} name Name des Timers
 			 * @param {number} deleteTimerIndex Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen
+			 * @param {string} value Input Alexa
+			 * @param {boolean} questionAlexa Wenn true, muss auf eine Antwort reagiert werden
 			 */
-		const deleteTimer = async(sec, name, deleteTimerIndex) => {
-			let count = 0;
-			// Die Schleife ermittelt wie oft Timer mit dem eingegebenen Wert vorhanden sind, falls mehrmals darf nicht gelöscht werden, da nicht genau definiert ist welcher
+		const deleteTimer = async(sec, name, deleteTimerIndex, value, questionAlexa) => {
+			/**
+			 * Ausgewählter Timer löschen
+			 * @param {*} element
+			 */
+
+			this.log.info("Funktion löschen aufgerufen");
+			const delTimer = (element)=>{
+				timerObject.timerActiv.timer[element] = false;
+			};
+			let inputDevice;
+			// Device auslesen
+			const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
+			if (obj){inputDevice = obj.val;}
+
+			let countMatchingNumber = 0;
+			let countMatchingName = 0;
+			let countMatchingInputDevice = 0;
+			// Die Schleife ermittelt wie oft Timer mit dem eingegebenen Wert vorhanden sind, falls mehrmals darf evtl nicht gelöscht werden, da nicht genau definiert ist welcher
 			// Timer gemeint ist
+
+
 			for(const element in timerObject.timer){
-				// this.log.info(JSON.stringify("Element " + element));
-				// this.log.info(JSON.stringify(sec));
-				// this.log.info(JSON.stringify(timerObject.timer[element].onlySec));
+				// Aufzählen wieviele Timer mit den Sekunden vorkommt
 				if (timerObject.timer[element].onlySec == sec){
+					countMatchingNumber++;
+				// Aufzählen wieviele Timer mit dem gleichen Namen vorkommen
+				}else if (timerObject.timer[element].name == name){
+					countMatchingName++;
+				}
+				if (timerObject.timer[element].inputDevice == inputDevice){
+					countMatchingInputDevice++;
+				}
+			}
 
-					count++;
+			this.log.info(JSON.stringify(questionAlexa));
+			// Alexa fragt nach
+			if (questionAlexa){
+				this.log.info("Alexa fragt nach");
+				// Einer, mit genauem Namen, mehrmals vorhanden( wird eigentlich nicht ausgeführt, da man keine 2 Timer mit dem gleichen Namen anlegen kann)
+				if (countMatchingName > 1){
+					const value = "";
+					const sec = 0;
+					//const name = "";
+					this.log.info("Mit genauem Namen mehrmals vorhanden");
+					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+				}
+
+				// Einer, mit genauer Zeit, mehrmals vorhanden
+				else if (countMatchingNumber > 1){
+					const name = "";
+					const inputDevice = "";
+					this.log.info("Mit genauer Zeit mehrmals vorhanden");
+					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+				}
+				// Einer, mit genauer Zeit, mehrmals auf verschiedenen Geräten
+				else if (countMatchingInputDevice != timerObject.timerActiv.timerCount){
+					const name = "";
+					const inputDevice = "";
+					this.log.info("genaue zeit, verschiedene Geräte");
+					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+				}else {
+					const sec = 0;
+					const name = "";
+					const inputDevice = "";
+					this.log.info("genaue zeit, verschiedene Geräte");
+					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+				}
+			}
+
+			for (const element in timerObject.timer){
+			// Soll einer oder mehrere Timer gelöscht werden?
+				if (deleteTimerIndex == 1){
+				// Einer, mit genauer Zeit, nur einmal vorhanden
+				// Einer, und einer ist auch nur gestellt
+					if (!questionAlexa){
+						if (countMatchingInputDevice == timerObject.timerActiv.timerCount ||countMatchingInputDevice == 0){
+							this.log.info(JSON.stringify(timerObject.timerActiv.timerCount));
+							if (timerObject.timerActiv.timerCount == 1 && (countMatchingNumber == 1 && timerObject.timer[element]["onlySec"] == sec && sec !== 0 || (!sec && name ==""))){
+								delTimer(element);
+								this.log.info("Einer wenn genau einer gestellt ist");
+							}
+							// Einer, mit genauem Namen
+							else if (timerObject.timer[element]["name"] == name && name !== "" && countMatchingName == 1){
+								delTimer(element);
+								this.log.info("Mit genauem Namen");
+							}// Entweder alle auf diesem Gerät, oder keins auf diesem Gerät
+						}
+					}
+				}
+				else if (deleteTimerIndex == 2){
+				// Alle, alle sind auf einem Gerät
+					if(!questionAlexa){
+						if (countMatchingInputDevice == timerObject.timerActiv.timerCount || countMatchingInputDevice == 0){
+							delTimer(element);
+							this.log.info("Alle auf diesem Gerät löschen, sind alle hier");
+						}
+					}else {
+					// Alle, nur die vom eingabe Gerät
+						if (countMatchingInputDevice != timerObject.timerActiv.timerCount && value.indexOf("nein")!= -1){
+							if (timerObject.timer[element].inputDevice == inputDevice){
+								delTimer(element);
+								this.log.info("Nur auf diesem Gerät löschen");
+							}
+						}
+						// Alle, von allen Geräten
+						else if (countMatchingInputDevice != timerObject.timerActiv.timerCount && value.indexOf("ja")!= -1){
+							for (const element in timerObject.timerActiv.timer){
+								delTimer(element);
+								this.log.info("Alles löschen");
+							}
+						}
+					}
+
+
 				}
 			}
 
 
-			// Wenn mehr als ein Timer die gleiche Eingabegröße hat darf nichts gemacht werden
-			if (count == 1 || deleteTimerIndex == 2 || name != ""){
-				for (const element in timerObject.timer)
-					// Sekunden müssen übereinstimmen, dürfen aber nicht 0 sein und der Name muss überein stimmen, darf aber nicht leer sein
-					if ((timerObject.timer[element]["onlySec"] == sec && sec !== 0) || (timerObject.timer[element]["name"] == name && name !== "")) {
-						timerObject.timerActiv.timer[element] = false;
-					}
-				// Wenn Index 1 ist und wirklich nur ein Timer aktiv ist wird dieser dann auch gestoppt
-				// Oder wenn Index 2 ist werden alle gestoppt
-				if ((deleteTimerIndex == 1 && timerObject.timerActiv.timerCount == 1) || deleteTimerIndex == 2) {
-					for (const element in timerObject.timerActiv.timer) {
-						timerObject.timerActiv.timer[element] = false;
-					}
-				}
-			}else {
-				this.log.info("More than one timer with the same value found");
-			}
+
+
+
+
 		};
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
