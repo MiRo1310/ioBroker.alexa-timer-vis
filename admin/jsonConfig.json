@@ -1,0 +1,67 @@
+{
+    "i18n": true,
+    "type": "tabs",
+    "items": {
+        "_options": {
+            "type": "panel",
+            "label": {
+                "en": "Alexa Timer Vis",
+                "de": "Alexa Timer Vis"
+            },
+            "items": {
+                "status": {
+                    "type":"alive",                                                            
+                    "newLine": true,                    
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,                    
+                    "textNotAlive": {
+                        "en" : "You have to start the Adapter before you can configure!",
+                        "de" : "Du musst erst den Adapter starten bevor du ihn konfigurieren kannst"},
+                    "textAlive":""    
+                },
+                "alexa": {
+                    "newLine": true,
+                    "type": "instance",                     
+                    "adapter": "alexa2",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
+                    "hidden":"",
+                    "label": {
+                        "en" : "Alexa2 Instance",
+                        "de" : "Alexa2 Instanz"
+                    },                    
+                    "disabled": "!_alive"
+                },
+                "intervall1" : {
+                    "newLine": true,
+                    "type" : "number",
+                    "min": 1,
+                    "step": 1,
+                    "label": "Intervall" ,
+                    "disabled": "",
+                    "help":{
+                        "en": "Intervall, time left more than 60 sec",
+                        "de": "Intervall, verbleibende Zeit mehr als 60 Sek"
+                    }
+
+                },
+                "intervall2" : {
+                    "newLine": true,
+                    "type" : "number",
+                    "min": 1,
+                    "step": 1,
+                    "label": "Intervall",
+                    "disabled": "",
+                    "help": {
+                        "en": "Intervall, time left less than 60 sec",
+                        "de": "Intervall, verbleibende Zeit weniger als 60 Sek"
+                    }
+
+                }
+                
+            }
+        }
+    }
+}

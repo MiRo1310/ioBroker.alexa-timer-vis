@@ -212,6 +212,9 @@
         "dataSource": "poll",
         "materialize": true,
         "supportCustoms": false,
+        "adminUI": {
+            "config": "json"
+        },
         "dependencies": [
             {
                 "js-controller": ">=2.0.0"
@@ -224,7 +227,7 @@
         ]
     },
     "native": {
-        "state": "alexa2.0.History.summary",
+        "alexa": "alexa2.0",
         "intervall1": 1,
         "intervall2": 1
     },

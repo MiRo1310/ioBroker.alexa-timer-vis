@@ -178,7 +178,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
-		datapoint = this.config.state;
+		datapoint = `${this.config.alexa}.History.summary`;
 		const datapointArray = datapoint.split(".");
 		idInstanze = {
 			"adapter" : datapointArray[0],
