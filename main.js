@@ -937,8 +937,8 @@ class AlexaTimerVis extends utils.Adapter {
 			// Alexa fragt nach
 			if (questionAlexa){
 				this.log.info("Alexa fragt nach");
-				// Einer, mit genauem Namen, mehrmals vorhanden( wird eigentlich nicht ausgeführt, da man keine 2 Timer mit dem gleichen Namen anlegen kann)
-				if (countMatchingName > 1){
+				// Einer, mit genauem Namen
+				if (countMatchingName == 1){
 					const value = "";
 					const sec = 0;
 					//const name = "";
@@ -960,6 +960,7 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.info("genaue zeit, verschiedene Geräte");
 					oneOfMultiTimerDelete(value, sec, name, inputDevice);
 				}else {
+					this.log.info("Else ausgeführt");
 					const sec = 0;
 					const name = "";
 					const inputDevice = "";
