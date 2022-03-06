@@ -287,7 +287,7 @@ class AlexaTimerVis extends utils.Adapter {
 									this.log.info("Timer is to be added!");
 									//Eingabe Text loggen
 									this.log.info(`Voice input: ${value}`);
-									// Wenn eine Antwort generiert wurde soll das Komma entfernt werden
+
 									// Input aus Alexas Spracheingabe zu Array machen
 									const timerArray = value.split(" ");
 
@@ -354,7 +354,7 @@ class AlexaTimerVis extends utils.Adapter {
 						}
 					}
 				}
-
+				// Auf Button reagieren
 			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false){
 				// Akualisierung aus Reset Datenpunkten
 				this.log.info("ID Reset Button " + JSON.stringify(id));
@@ -910,7 +910,7 @@ class AlexaTimerVis extends utils.Adapter {
 			 * @param {*} element
 			 */
 			this.log.debug("Sec: " + JSON.stringify(sec));
-			this.log.info(JSON.stringify("Name zum löschen: " + name));
+			this.log.info("Name zum löschen: " + JSON.stringify( name));
 			this.log.debug("DeleteTimerIndex: " + JSON.stringify(deleteTimerIndex));
 			this.log.debug("Value: " + JSON.stringify(value));
 
@@ -950,12 +950,14 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 
 
-			// Alexa fragt nach
+			// Alexa hatte nachgefragt
 			if (questionAlexa){
 				this.log.debug("Alexa hatte nachgefragt");
-				// Einer, mit genauem Namen
-				this.log.info(JSON.stringify("vorkommen name " + countMatchingName));
+				// CountMatchingName darf eigentlich nur einmal vorkommen, da nicht 2 Timer mit dem gleichen Namen erstellt werden kann
+				this.log.debug(JSON.stringify("Vorkommen des Namen " + countMatchingName));
 				this.log.debug("Countmatching == 1 " + JSON.stringify(countMatchingName == 1));
+
+				// Einer, mit genauem Namen
 				if (countMatchingName == 1){
 					const value = "";
 					const sec = 0;
@@ -1169,22 +1171,6 @@ class AlexaTimerVis extends utils.Adapter {
 		}
 	}
 
-	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-	// /**
-	//  * Is called if a subscribed object changes
-	//  * @param {string} id
-	//  * @param {ioBroker.Object | null | undefined} obj
-	//  */
-	// onObjectChange(id, obj) {
-	// 	if (obj) {
-	// 		// The object was changed
-	// 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-	// 	} else {
-	// 		// The object was deleted
-	// 		this.log.info(`object ${id} deleted`);
-	// 	}
-	// }
 
 	/**
 	 * Is called if a subscribed state changes
@@ -1203,24 +1189,6 @@ class AlexaTimerVis extends utils.Adapter {
 		}
 	}
 
-
-	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-	// /**
-	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	//  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-	//  * @param {ioBroker.Message} obj
-	//  */
-	// onMessage(obj) {
-	// 	if (typeof obj === "object" && obj.message) {
-	// 		if (obj.command === "send") {
-	// 			// e.g. send email or pushover or whatever
-	// 			this.log.info("send command");
-
-	// 			// Send response in callback if required
-	// 			if (obj.callback) this.sendTo(obj.from, obj.command, "Message received", obj.callback);
-	// 		}
-	// 	}
-	// }
 
 }
 
