@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.12",
+        "version": "0.1.13",
         "news": {
+            "0.1.13": {
+                "en": "Delete of Timers with the same value, fixed",
+                "de": "Löschen von Timern mit gleichem Wert, behoben",
+                "ru": "Исправлено удаление Таймеров с одинаковым значением",
+                "pt": "Exclusão de temporizadores com o mesmo valor, fixo",
+                "nl": "Verwijderen van timers met dezelfde waarde, vast",
+                "fr": "Suppression des minuteries avec la même valeur, fixe",
+                "it": "Eliminazione dei timer con lo stesso valore, fissa",
+                "es": "Eliminación de Timers con el mismo valor, fijo",
+                "pl": "Usuwanie timerów o tej samej wartości, naprawione",
+                "zh-cn": "删除具有相同值的计时器，已修复"
+            },
             "0.1.12": {
                 "en": "Delete of timer fixed",
                 "de": "Löschen des Timers behoben",
