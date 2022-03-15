@@ -69,6 +69,13 @@ const timerObject = {
 			"timerInterval":0
 		},
 	},
+	"brueche1":{
+		"halbe": 0.5
+	},
+	"brueche2":{
+		"viertelstunde": 0.25,
+		"dreiviertelstunde": 0.75
+	},
 	"zahlen": { // Zahl als Wort zu Zahl nummerisch
 		"eins": 1,
 		"one":1,
@@ -858,6 +865,21 @@ class AlexaTimerVis extends utils.Adapter {
 					timerString += ")";
 					inputString += "Sekunden ";
 				}
+				else if (timerObject.brueche1[element] > 0){
+					// Wenn als letztes vor dem Bruch nichts war, soll die eins hinzugefügt werden
+					if (timerString.charAt(timerString.length - 1) == ""){
+						timerString += "(1";
+					}
+					timerString += "*" + timerObject.brueche1[element];
+				}
+				else if (timerObject.brueche2[element] > 0){
+					// Wenn als letztes vor dem Bruch nichts war, soll die eins hinzugefügt werden
+					if (timerString.charAt(timerString.length - 1) == ""){
+						timerString += "(1";
+					}
+					timerString += "*" + timerObject.brueche2[element] + ")*3600";
+				}
+
 				// Überprüfen ob es sich um Zahlen handelt
 				else if (timerObject.zahlen[element] > 0) {
 					// Wenn in der Variable als letztes keine Ziffer ist, darf eine neue zahl hinzugefügt werden
@@ -884,10 +906,40 @@ class AlexaTimerVis extends utils.Adapter {
 
 				} //this.log.info("TimerString: " + timerString);
 			});
+			// Wenn der Fall ist das gesagt wird z.B. "1 Stunde 30" ohne Einheit Minuten, oder "1 Minute 30" ohne Einheit Sekunden
+
+
+
 			// Wenn das letzte Zeichen ein + ist soll es entfernt werden
 			if (timerString.charAt(timerString.length - 1) == "+") {
 				timerString = timerString.slice(0, timerString.length - 1);
 			}
+			if (input.length){
+				// const lastValue = input[input.length];
+				// Den Eingabewert überprüfen, ist als letztes eine Einheit vorhanden, Minuten oder Sekunden?
+				// Ist als letztes Minuten vorhanden?
+				// Sind Stunden vorhanden
+				if (timerString.includes("*3600")) {
+					this.log.debug("Contains Hours");
+					// Wenn Minuten nicht vorhanden sind und zum schluss nicht Einheit der Stunden "*3600" steht
+					this.log.debug(timerString.slice(timerString.length-5, timerString.length));
+					if (!timerString.includes("*60") && timerString.slice(timerString.length-5, timerString.length) != "*3600"){
+						timerString += ")*60";
+					}
+
+				}
+				// Sind Minuten vorhanden
+				if (timerString.includes("*60")) {
+					this.log.debug("Contains Minutes");
+					// Wenn zum schluss nicht die Einheit der Minuten "*60" steht
+					this.log.debug(timerString.slice(timerString.length-3, timerString.length));
+					if (timerString.slice(timerString.length-5, timerString.length) != "*60"){
+						timerString += ")";
+					}
+
+				}
+			}
+
 			// Leerzeichen von beiden Seiten entfernen
 			name = name.trim();
 			const array = [timerString, name, deleteVal, inputString];
