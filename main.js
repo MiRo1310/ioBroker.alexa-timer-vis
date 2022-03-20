@@ -933,10 +933,15 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.debug("Contains Minutes");
 					// Wenn zum schluss nicht die Einheit der Minuten "*60" steht
 					this.log.debug(timerString.slice(timerString.length-3, timerString.length));
-					if (timerString.slice(timerString.length-5, timerString.length) != "*60"){
-						timerString += ")";
-					}
+					// if (timerString.slice(timerString.length-5, timerString.length) != "*60"){
+					// 	timerString += ")";
+					// }
 
+				}
+				this.log.debug("" + JSON.stringify(timerString.charAt(0)));
+				if (timerString.charAt(0) == ")"){
+					this.log.debug("Klammer vorhanden");
+					timerString = timerString.slice(2,timerString.length);
 				}
 			}
 
