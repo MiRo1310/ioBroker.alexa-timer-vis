@@ -31,6 +31,7 @@ let intervallLess60 = 0;
 // Variable Funktion
 let writeState;
 // Objekt mit Einstellungen und Daten
+// ANCHOR timerObject
 const timerObject = {
 	"timerActiv": {
 		"timerCount": 0, // Anzahl aktiver Timer
@@ -175,6 +176,7 @@ class AlexaTimerVis extends utils.Adapter {
 	/**
 	 * Is called when databases are connected and adapter received configuration.
 	 */
+	// ANCHOR onReady
 	async onReady() {
 
 
@@ -227,8 +229,8 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timerActiv.data.value = state.val;
 					const value = timerObject.timerActiv.data.value;
 
-					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde
-					if (value.indexOf("timer") >= 0) {
+					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in #10 ohne das Wort Timer ein Timer erstellt wird
+					if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
 						this.log.info("Command to control the timer, found");
 
 						// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
