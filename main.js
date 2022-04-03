@@ -229,7 +229,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timerActiv.data.value = state.val;
 					const value = timerObject.timerActiv.data.value;
 
-					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in #10 ohne das Wort Timer ein Timer erstellt wird
+					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort Timer ein Timer erstellt wird
 					if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
 						this.log.info("Command to control the timer, found");
 
@@ -391,6 +391,7 @@ class AlexaTimerVis extends utils.Adapter {
 		 *
 		 * @param {string} input
 		 */
+		// ANCHOR oneOfMultiTimerDelete
 		const oneOfMultiTimerDelete =(input, timerAbortsec, name, inputDevice)=>{
 			// Teil hinter dem Komma separieren
 			const seperateInput = input.slice(input.indexOf(",")+2, input.length);
@@ -455,6 +456,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 		};
+
+		// ANCHOR firstLetterToUpperCase
 		/**
 		 * Ersetzt den ersten Buchstaben des eingegebenen Wortes durch den selbigen Großbuchstaben
 		 * @param {string} name "w"ort wo der erste Buchstabe groß geschrieben werden soll
@@ -576,8 +579,17 @@ class AlexaTimerVis extends utils.Adapter {
 				minutes = ("0" + minutes ).slice(-2);
 				seconds = ("0" + seconds ).slice(-2);
 
-				// String der Zeit erstellen
-				const time = hour + " : " + minutes + " : " + seconds + " Std";
+				// String der Zeit erstellen mit dynamischer Einheit
+				let unit = "";
+				if (timeLeftSec >= 3600){
+					unit = " h";
+				} else if (timeLeftSec >= 60){
+					unit = " min";
+				} else {
+					unit = " s";
+				}
+				const time = hour + ":" + minutes + ":" + seconds + unit;
+
 
 				// Timer Werte zum Objekt hinzufügen
 				timer.hour = hour;
@@ -862,8 +874,8 @@ class AlexaTimerVis extends utils.Adapter {
 					timerString += ")*60+";
 					inputString += "Minuten ";
 				}
-				// Nach Sekunden suchen, um die Klammern zu schliessen( Wichtig für z.B. 120 Minuten)
-				else if (data.second.indexOf(element) >= 0){
+				// Nach Sekunden suchen, um die Klammern zu schliessen( Wichtig für z.B. 120 Minuten), aber nur wenn als letztes nicht schon eine Klammer ist
+				else if (data.second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ")"){
 					timerString += ")";
 					inputString += "Sekunden ";
 				}
@@ -906,7 +918,7 @@ class AlexaTimerVis extends utils.Adapter {
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name += element + " ";
 
-				} //this.log.info("TimerString: " + timerString);
+				} this.log.debug("TimerString: " + timerString);
 			});
 			// Wenn der Fall ist das gesagt wird z.B. "1 Stunde 30" ohne Einheit Minuten, oder "1 Minute 30" ohne Einheit Sekunden
 
@@ -923,9 +935,10 @@ class AlexaTimerVis extends utils.Adapter {
 				// Sind Stunden vorhanden
 				if (timerString.includes("*3600")) {
 					this.log.debug("Contains Hours");
-					// Wenn Minuten nicht vorhanden sind und zum schluss nicht Einheit der Stunden "*3600" steht
+					this.log.debug("TimerString (A): " + timerString);
+					// Wenn Minuten nicht vorhanden sind und zum schluss nicht Einheit der Stunden "*3600" steht, und die Klammer nicht geschlossen ist
 					this.log.debug(timerString.slice(timerString.length-5, timerString.length));
-					if (!timerString.includes("*60") && timerString.slice(timerString.length-5, timerString.length) != "*3600"){
+					if (!timerString.includes("*60") && timerString.slice(timerString.length-5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")"){
 						timerString += ")*60";
 					}
 
@@ -933,6 +946,7 @@ class AlexaTimerVis extends utils.Adapter {
 				// Sind Minuten vorhanden
 				if (timerString.includes("*60")) {
 					this.log.debug("Contains Minutes");
+					this.log.debug("TimerString (B): " + timerString);
 					// Wenn zum schluss nicht die Einheit der Minuten "*60" steht
 					this.log.debug(timerString.slice(timerString.length-3, timerString.length));
 					// if (timerString.slice(timerString.length-5, timerString.length) != "*60"){
