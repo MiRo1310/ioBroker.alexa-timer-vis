@@ -41,7 +41,7 @@ const timerObject = {
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
-			"notNoted": ["timer","timer,","auf","auf,","erstelle","mit","ein", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
+			"notNoted": ["timer","timer,","auf","auf,","erstelle","mit","ein", "schalte", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator
@@ -213,16 +213,17 @@ class AlexaTimerVis extends utils.Adapter {
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
+			let oldState;
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
 			if (state && id == datapoint){
-				if (state.val !== "" && init == false) {
-
+				if (state.val !== "" && state.val != oldState || init == false) {
+					oldState = state.val;
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 					init = true;
 					timeout_1 = setTimeout(() => {
 						init = false;
 						clearTimeout(timeout_1);
-					}, 5000);
+					}, 7000);
 
 					// Code Anfang
 
