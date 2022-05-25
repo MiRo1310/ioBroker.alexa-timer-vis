@@ -54,9 +54,9 @@ const timerObject = {
 	},
 	"timer": { // Werte für Timer
 		"timer1": {
-			"hour": "0",
-			"minute": "0",
-			"second": "0",
+			"hour": "00",
+			"minute": "00",
+			"second": "00",
 			"string_Timer": "",
 			"onlySec": 0,
 			"index": 0,
@@ -213,17 +213,19 @@ class AlexaTimerVis extends utils.Adapter {
 		let init = false;
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
-			let oldState;
+
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
 			if (state && id == datapoint){
-				if (state.val !== "" && state.val != oldState || init == false) {
-					oldState = state.val;
+				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
+				if (state.val !== "" && state.val != timerObject.timerActiv.data.value  || init == false) {
+
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 					init = true;
 					timeout_1 = setTimeout(() => {
 						init = false;
 						clearTimeout(timeout_1);
-					}, 7000);
+					}, 5000);
+
 
 					// Code Anfang
 
@@ -694,7 +696,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: "0",
+							def: "00",
 						},
 						native: {},
 					});
@@ -706,7 +708,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: "0",
+							def: "00",
 						},
 						native: {},
 					});
@@ -718,7 +720,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: "0",
+							def: "00",
 						},
 						native: {},
 					});
@@ -1162,9 +1164,9 @@ class AlexaTimerVis extends utils.Adapter {
 				let alive;
 				if (unload == true){
 					timerObject.timerActiv.timer[element] = false;
-					timer.hour = "0";
-					timer.minute = "0";
-					timer.second = "0";
+					timer.hour = "00";
+					timer.minute = "00";
+					timer.second = "00";
 					timer.string_Timer = "00:00:00 Std";
 					timer.time_start = "00:00";
 					timer.time_end = "00:00";
