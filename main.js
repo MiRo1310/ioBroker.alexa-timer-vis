@@ -10,6 +10,7 @@
 // Sie müssen einen Adapter erstellen
 const utils = require("@iobroker/adapter-core");
 
+
 // const { TIMEOUT } = require("dns");
 // const { exists } = require("fs");
 // const { start } = require("repl");
@@ -210,20 +211,22 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 		// Initialisierungsvariable
-		let init = false;
+		let timeout_1;
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
 
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
 			if (state && id == datapoint){
 				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
-				if (state.val !== "" && state.val != timerObject.timerActiv.data.value  || init == false) {
-
+				if (state.val !== "" && state.val != timerObject.timerActiv.data.value  || timeout_1 == null) {
+					console.debug("State.val: "  + state.val);
+					console.debug("timerobject Val: " + timerObject.timerActiv.data.value);
+					console.debug("Input ist gleich: "+ state.val != timerObject.timerActiv.data.value);
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
-					init = true;
 					timeout_1 = setTimeout(() => {
-						init = false;
 						clearTimeout(timeout_1);
+						timeout_1 = null;
+						console.debug("Timeout ended");
 					}, 5000);
 
 
