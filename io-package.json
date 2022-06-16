@@ -301,7 +301,7 @@
                 "role": "value",
                 "read": true,
                 "write": true,
-                "def": "0"
+                "def": "00"
             },
             "native": {}
         },
@@ -314,7 +314,7 @@
                 "role": "value",
                 "read": true,
                 "write": true,
-                "def": "0"
+                "def": "00"
             },
             "native": {}
         },
@@ -327,7 +327,7 @@
                 "role": "value",
                 "read": true,
                 "write": true,
-                "def": "0"
+                "def": "00"
             },
             "native": {}
         },
@@ -366,7 +366,7 @@
                 "role": "value",
                 "read": true,
                 "write": true,
-                "def": "00:00:00"
+                "def": "00 : 00 : 00"
             },
             "native": {}
         },
