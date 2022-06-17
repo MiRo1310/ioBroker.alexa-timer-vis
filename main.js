@@ -641,7 +641,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.hour = "00";
 					timer.minute = "00";
 					timer.second = "00";
-					timer.string_Timer = "00:00:00 Std";
+					timer.string_Timer = "00:00:00 h";
 					timer.onlySec = 0;
 					timer.timeLeftSec = 0;
 					timer.index = 0;
@@ -1170,7 +1170,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.hour = "00";
 					timer.minute = "00";
 					timer.second = "00";
-					timer.string_Timer = "00:00:00 Std";
+					timer.string_Timer = "00:00:00 h";
 					timer.time_start = "00:00";
 					timer.time_end = "00:00";
 					timer.name = "Timer";

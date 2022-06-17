@@ -340,7 +340,7 @@
                 "role": "value",
                 "read": true,
                 "write": true,
-                "def": "00:00:00 Std"
+                "def": "00:00:00 h"
             },
             "native": {}
         },
