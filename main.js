@@ -641,7 +641,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.hour = "00";
 					timer.minute = "00";
 					timer.second = "00";
-					timer.string_Timer = "00 : 00 : 00 Std";
+					timer.string_Timer = "00:00:00 Std";
 					timer.onlySec = 0;
 					timer.timeLeftSec = 0;
 					timer.index = 0;
@@ -735,7 +735,7 @@ class AlexaTimerVis extends utils.Adapter {
 							role: "value",
 							read: true,
 							write: true,
-							def: "00 : 00 : 00 Std",
+							def: "00:00:00 Std",
 						},
 						native: {},
 					});
