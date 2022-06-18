@@ -224,10 +224,11 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
-			if (state && id == datapoint){
+			if (state && typeof state.val ==="string" && id == datapoint){
 				timerObject.timerActiv.data.value = state.val;
-				// const value = timerObject.timerActiv.data.value;
+
 				const value = timerObject.timerActiv.data.value;
+				// value = state.val;
 				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
 				if (state.val !== "" && state.val != timerObject.timerActiv.data.value  || timeout_1 == null) {
 
