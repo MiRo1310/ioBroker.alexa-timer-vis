@@ -232,7 +232,7 @@ class AlexaTimerVis extends utils.Adapter {
 				this.log.debug("Beide Werte sind gleich " + JSON.stringify(value === valueOld));
 				this.log.debug("Value:" + JSON.stringify(value));
 				this.log.debug("Val Old1:" + JSON.stringify(valueOld));
-				this.log.debug("timeout: " + JSON.stringify(timeout_1));
+				this.log.debug(timeout_1);
 
 				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
 				if (state.val !== "" && value !== valueOld  || timeout_1 == null) {
