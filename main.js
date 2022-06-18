@@ -229,22 +229,23 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// const value = timerObject.timerActiv.data.value;
 				value = state.val;
-
+				this.log.debug("Beide Werte sind gleich " + JSON.stringify(value === valueOld));
+				console.debug("Value: "  + value);
+				console.debug("Val Old1: " + valueOld);
+				console.debug(timeout_1);
 				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
-				if (state.val !== "" && state.val != valueOld  || timeout_1 == null) {
-
+				if (state.val !== "" && value !== valueOld  || timeout_1 == null) {
+					console.debug( "------------------------------Timer------------------------ ");
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 					timeout_1 = setTimeout(() => {
 						clearTimeout(timeout_1);
 						timeout_1 = null;
 						console.debug("Timeout ended");
 					}, 10000);
-					console.debug("State.val: "  + state.val);
 
 					// Code Anfang
-					valueOld = state.val;
-					console.debug("Val Old1: " + valueOld);
 
+					valueOld = state.val;
 
 					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort Timer ein Timer erstellt wird
 					if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
