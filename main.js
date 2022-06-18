@@ -11,6 +11,7 @@
 const utils = require("@iobroker/adapter-core");
 
 
+
 // const { TIMEOUT } = require("dns");
 // const { exists } = require("fs");
 // const { start } = require("repl");
@@ -31,6 +32,8 @@ let intervallMore60 = 0;
 let intervallLess60 = 0;
 // Variable Funktion
 let writeState;
+// let adapter;
+
 // Objekt mit Einstellungen und Daten
 // ANCHOR timerObject
 const timerObject = {
@@ -41,6 +44,7 @@ const timerObject = {
 			"activateTimer": ["stunde", "minute", "sekunde","hour","minute", "second"], // Vorselektion hinzufügen
 		},
 		"data": {
+
 			"interval": 1000,// Aktualisierungsinterval
 			"notNoted": ["timer","timer,","auf","auf,","erstelle","mit","ein", "schalte", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
@@ -180,7 +184,6 @@ class AlexaTimerVis extends utils.Adapter {
 	// ANCHOR onReady
 	async onReady() {
 
-
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
 		datapoint = `${this.config.alexa}.History.summary`;
@@ -209,31 +212,39 @@ class AlexaTimerVis extends utils.Adapter {
 			}
 		});
 
-
 		// Initialisierungsvariable
-		let timeout_1;
+		let timeout_1 = null;
+
+		let valueOld;
+		valueOld ="";
+
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
 
+
+
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
 			if (state && id == datapoint){
+				timerObject.timerActiv.data.value = state.val;
+				// const value = timerObject.timerActiv.data.value;
+				const value = timerObject.timerActiv.data.value;
 				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
 				if (state.val !== "" && state.val != timerObject.timerActiv.data.value  || timeout_1 == null) {
-					console.debug("State.val: "  + state.val);
-					console.debug("timerobject Val: " + timerObject.timerActiv.data.value);
-					console.debug("Input ist gleich: "+ state.val != timerObject.timerActiv.data.value);
+
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
 					timeout_1 = setTimeout(() => {
 						clearTimeout(timeout_1);
 						timeout_1 = null;
 						console.debug("Timeout ended");
-					}, 5000);
-
+					}, 10000);
+					console.debug("State.val: "  + state.val);
+					console.debug(typeof state.val);
+					console.debug("Val Old2: " + valueOld);
 
 					// Code Anfang
+					valueOld = state.val;
+					console.debug("Val Old1: " + valueOld);
 
-					timerObject.timerActiv.data.value = state.val;
-					const value = timerObject.timerActiv.data.value;
 
 					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort Timer ein Timer erstellt wird
 					if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
