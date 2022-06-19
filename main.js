@@ -226,7 +226,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
-			if (state && typeof state.val ==="string" && id == datapoint && lock == false){
+			if (state && typeof state.val ==="string" && state.val != "" && id == datapoint && lock == false){
 				lock = true;
 
 				value = state.val;
@@ -401,19 +401,24 @@ class AlexaTimerVis extends utils.Adapter {
 					}
 				}
 				// Auf Button reagieren
-			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false){
+			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && state.val !="alexa2.0.History.summary"){
 				// Akualisierung aus Reset Datenpunkten
 				this.log.info("ID Reset Button " + JSON.stringify(id));
 				// Aus ID den Timer erfassen
 				const timerArray = id.split(".");
 				const timer = timerArray[2];
 				const timerOb = timerObject.timer[timer];
-				const alexaCommandState = `alexa2.${idInstanze.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
-				let name = "";
-				// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
-				if (timerOb.name != "Timer") name = timerOb.name;
-				const alexaTextToCommand = `stoppe ${name} ${timerOb.inputString} Timer`;
-				this.setForeignState(alexaCommandState, alexaTextToCommand,false);
+				let alexaCommandState;
+				if(timerOb.serialNumber != undefined){
+					alexaCommandState = `alexa2.${idInstanze.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
+					let name = "";
+					// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
+					if (timerOb.name != "Timer") name = timerOb.name;
+					const alexaTextToCommand = `stoppe ${name} ${timerOb.inputString} Timer`;
+					this.setForeignState(alexaCommandState, alexaTextToCommand,false);
+				}
+
+
 			}
 			// Code Ende
 
