@@ -217,6 +217,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 		let valueOld ="";
 		let value;
+		// Zusätzliche Verriegelung da sonst immer mal wieder Probleme auftreten
+		let lock = false;
 
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
@@ -224,10 +226,9 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
-			if (state && typeof state.val ==="string" && id == datapoint){
-				// timerObject.timerActiv.data.value = state.val;
+			if (state && typeof state.val ==="string" && id == datapoint && lock == false){
+				lock = true;
 
-				// const value = timerObject.timerActiv.data.value;
 				value = state.val;
 				this.log.debug("Beide Werte sind gleich " + JSON.stringify(value === valueOld));
 				this.log.debug("Value:" + JSON.stringify(value));
@@ -245,7 +246,7 @@ class AlexaTimerVis extends utils.Adapter {
 					}, 10000);
 
 					// Code Anfang
-
+					lock = false;
 					valueOld = state.val;
 
 					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort Timer ein Timer erstellt wird
@@ -854,12 +855,19 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.error(`The State "name" of Alexa was not found!`);
 					path.inputDevice = "-";
 				} else {
-					const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
-					// @ts-ignore
-					path.inputDevice = obj.val;
-					const serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
-					// @ts-ignore
-					path.serialNumber = serial.val;
+					try{
+						const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
+						// @ts-ignore
+						path.inputDevice = obj.val;
+						const serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
+						// @ts-ignore
+						path.serialNumber = serial.val;
+					}catch(e){
+						this.log.error("Cannot get Serial: " + JSON.stringify(e));
+
+					}
+
+
 				}
 
 			});
