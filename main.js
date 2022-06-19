@@ -241,6 +241,8 @@ class AlexaTimerVis extends utils.Adapter {
 				if (state.val !== "" && value !== valueOld  || timeout_1 == null) {
 					console.debug( "------------------------------Timer------------------------ ");
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
+					this.clearTimeout(timeout_1);
+					timeout_1 = null;
 					timeout_1 = setTimeout(() => {
 						clearTimeout(timeout_1);
 						timeout_1 = null;
