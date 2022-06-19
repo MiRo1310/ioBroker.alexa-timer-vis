@@ -224,7 +224,9 @@ class AlexaTimerVis extends utils.Adapter {
 		this.on("stateChange", (id, state) => {
 
 
-
+			this.log.debug("Lock: " + JSON.stringify(lock));
+			// @ts-ignore
+			this.log.debug("Val: " + JSON.stringify(state.val));
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
 			if (state && typeof state.val ==="string" && state.val != "" && id == datapoint && lock == false){
 				lock = true;
@@ -399,9 +401,11 @@ class AlexaTimerVis extends utils.Adapter {
 							}
 						}
 					}
+				}else{
+					lock = false;
 				}
 				// Auf Button reagieren
-			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && state.val !="alexa2.0.History.summary"){
+			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && id !="alexa2.0.History.summary"){
 
 				try{// Akualisierung aus Reset Datenpunkten
 					this.log.info("ID Reset Button " + JSON.stringify(id));
