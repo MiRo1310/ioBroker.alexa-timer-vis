@@ -402,20 +402,24 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				// Auf Button reagieren
 			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && state.val !="alexa2.0.History.summary"){
-				// Akualisierung aus Reset Datenpunkten
-				this.log.info("ID Reset Button " + JSON.stringify(id));
-				// Aus ID den Timer erfassen
-				const timerArray = id.split(".");
-				const timer = timerArray[2];
-				const timerOb = timerObject.timer[timer];
-				let alexaCommandState;
-				if(timerOb.serialNumber != undefined){
-					alexaCommandState = `alexa2.${idInstanze.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
-					let name = "";
-					// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
-					if (timerOb.name != "Timer") name = timerOb.name;
-					const alexaTextToCommand = `stoppe ${name} ${timerOb.inputString} Timer`;
-					this.setForeignState(alexaCommandState, alexaTextToCommand,false);
+
+				try{// Akualisierung aus Reset Datenpunkten
+					this.log.info("ID Reset Button " + JSON.stringify(id));
+					// Aus ID den Timer erfassen
+					const timerArray = id.split(".");
+					const timer = timerArray[2];
+					const timerOb = timerObject.timer[timer];
+					let alexaCommandState;
+					if(timerOb.serialNumber != undefined){
+						alexaCommandState = `alexa2.${idInstanze.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
+						let name = "";
+						// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
+						if (timerOb.name != "Timer") name = timerOb.name;
+						const alexaTextToCommand = `stoppe ${name} ${timerOb.inputString} Timer`;
+						this.setForeignState(alexaCommandState, alexaTextToCommand,false);
+					}}
+				catch(e){
+					this.log.error("Serial Error: " + JSON.stringify(e));
 				}
 
 
@@ -862,11 +866,17 @@ class AlexaTimerVis extends utils.Adapter {
 				} else {
 					try{
 						const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
-						// @ts-ignore
-						path.inputDevice = obj.val;
-						const serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
-						// @ts-ignore
-						path.serialNumber = serial.val;
+						let serial;
+						if (obj && obj.val){
+							path.inputDevice = obj.val;
+							serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
+						}
+						if (serial && serial.val){
+							path.serialNumber = serial.val;
+							this.log.debug("SerialNumber: " + JSON.stringify(serial.val));
+						}
+
+
 					}catch(e){
 						this.log.error("Cannot get Serial: " + JSON.stringify(e));
 
