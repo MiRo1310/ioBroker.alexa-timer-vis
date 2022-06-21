@@ -184,6 +184,7 @@ class AlexaTimerVis extends utils.Adapter {
 	// ANCHOR onReady
 	async onReady() {
 
+
 		// Initialize your adapter here
 		this.setState("info.connection", false, true);
 		datapoint = `${this.config.alexa}.History.summary`;
@@ -217,64 +218,66 @@ class AlexaTimerVis extends utils.Adapter {
 
 		let valueOld ="";
 		let value;
-		// Zusätzliche Verriegelung da sonst immer mal wieder Probleme auftreten
-		let lock = false;
 
 		// Auf Änderung des Datenpunkts reagieren
 		this.on("stateChange", (id, state) => {
 
-
-			this.log.debug("Lock: " + JSON.stringify(lock));
-			// @ts-ignore
-			this.log.debug("Val: " + JSON.stringify(state.val));
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
-			if (state && typeof state.val ==="string" && state.val != "" && id == datapoint && lock == false){
-				lock = true;
-
+			if (state && typeof state.val ==="string" && state.val != "" && id == datapoint){
 				value = state.val;
-				this.log.debug("Beide Werte sind gleich " + JSON.stringify(value === valueOld));
-				this.log.debug("Value:" + JSON.stringify(value));
-				this.log.debug("Val Old1:" + JSON.stringify(valueOld));
-				this.log.debug(timeout_1);
+
+				this.log.debug("Aktuelle Eingabe ist gleich der vorherigen: " + JSON.stringify(value === valueOld));
+				if (timeout_1){
+					this.log.debug("Timeout ist gesetzt");
+				}else{
+					this.log.debug("Timeout ist nicht gesetzt");
+				}
+
 
 				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
 				if (state.val !== "" && value !== valueOld  || timeout_1 == null) {
-					console.debug( "------------------------------Timer------------------------ ");
+					this.log.debug( "Timer wird erstellt, gelöscht oder geändert");
+					this.log.debug("Aktuelle Eingabe: " + JSON.stringify(value));
+					this.log.debug("Vorherige Eingabe: " + JSON.stringify(valueOld));
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
-					this.clearTimeout(timeout_1);
+					clearTimeout(timeout_1);
 					timeout_1 = null;
 					timeout_1 = setTimeout(() => {
+						this.log.debug("Timeout beendet");
 						clearTimeout(timeout_1);
 						timeout_1 = null;
-						console.debug("Timeout ended");
-					}, 10000);
+					}, 20000);
 
 					// Code Anfang
-					lock = false;
+
+					// Wert als Alten Wert speichern
 					valueOld = state.val;
 
-					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort Timer ein Timer erstellt wird
+					// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
 					if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
-						this.log.info("Command to control the timer, found");
+						this.log.info("Kommando gefunden um Timer zu steuern!");
 
 						// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 						let i = false; // Verhindert das Timer add aufgerufen wird wenn delete aktiv ist
 						let questionAlexa = false;
+
 						for (const array in timerObject.timerActiv.condition) {
+							// Jedes Element in activateTimer und deleteTimer durchgehen
 							for (const element of timerObject.timerActiv.condition[array]) {
 
 								// Timer soll gestoppt werden
 								if (value.indexOf(element) >= 0 && array == "deleteTimer") {
 
-									this.log.info("Timer is to be stopped!");
+									this.log.info("Timer soll gestoppt werden!");
 									//Eingabe Text loggen
 									this.log.info("Voice input: " + value);
+
 									// Input aus Alexas Spracheingabe zu Array konvertieren
-
 									let timerArray = value.split(",");
-
-
+									this.log.debug("1 " + JSON.stringify(timerArray));
+									// Ersten Teil des Arrays aufteilen, im zweiten Teil steht die Antwort wenn Alexa nachfragt
 									timerArray = timerArray[0].split(" ");
+									this.log.debug("2 " + JSON.stringify(timerArray));
 
 									// RückgabeArray erfassen
 									const returnArray = zeiterfassung(timerArray);
@@ -292,11 +295,14 @@ class AlexaTimerVis extends utils.Adapter {
 										}
 									}
 									catch(e){
-										this.log.debug("Input is invalid. Call the Developer");
+										this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
 									}
+
 									let deleteTimerIndex = 0;
-									this.log.debug("Ist ein Komma vorhanden " + JSON.stringify(value.indexOf(",") > -1));
-									//this.log.debug("Variable i " + JSON.stringify(i));
+									// Hat Alexa eine Frage gestellt, ergibt sich durch getrennte Antwort mit einem Komma
+									this.log.debug("Hat Alexa eine Frage gestellt? " + JSON.stringify(value.indexOf(",") > -1));
+
+									// Wenn eine Frage gestellt wurde, und die Antwort übergeben wurde
 									if(value.indexOf(",") != -1){
 										// Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
 										this.log.debug("Alexa send an Answer");
@@ -313,7 +319,7 @@ class AlexaTimerVis extends utils.Adapter {
 											deleteTimerIndex = returnArray[2];
 										}
 
-										this.log.debug("Else wurde aufgerufen");
+										this.log.debug("Es kann direkt gelöscht werden!");
 										// Timer anhalten
 
 										deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
@@ -325,7 +331,7 @@ class AlexaTimerVis extends utils.Adapter {
 								}// Timer soll erstellt werden
 								// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
 								else if (i == false && value.indexOf(element) >= 0 ) {
-									this.log.info("Timer is to be added!");
+									this.log.info("Timer soll hinzugefügt werden!");
 									//Eingabe Text loggen
 									this.log.info(`Voice input: ${value}`);
 
@@ -345,7 +351,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 									}
 									catch(e){
-										this.log.debug("Input is invalid. Call the Developer");
+										this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
 									}
 									// Prüfung falls man sagt Alexa Pommes Timer, und dann die Frage kommt für wie lange
 									if (timerSeconds && timerSeconds != 0 ){
@@ -403,8 +409,6 @@ class AlexaTimerVis extends utils.Adapter {
 							}
 						}
 					}
-				}else{
-					lock = false;
 				}
 				// Auf Button reagieren
 			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && id !="alexa2.0.History.summary"){
@@ -422,6 +426,7 @@ class AlexaTimerVis extends utils.Adapter {
 						// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
 						if (timerOb.name != "Timer") name = timerOb.name;
 						const alexaTextToCommand = `stoppe ${name} ${timerOb.inputString} Timer`;
+						// Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
 						this.setForeignState(alexaCommandState, alexaTextToCommand,false);
 					}}
 				catch(e){
@@ -441,10 +446,13 @@ class AlexaTimerVis extends utils.Adapter {
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 *
-		 * @param {string} input
+		 * @param {string} input // Die Spracheingabe auf die reagiert wurde
+		 * @param {number} timerAbortsec // Sekunden des erstellten Timers
+		 * @param {string} name // Name des Timers
+		 * @param {string} inputDevice // Name des EchoDots der Eingabe
 		 */
 		// ANCHOR oneOfMultiTimerDelete
-		const oneOfMultiTimerDelete =(input, timerAbortsec, name, inputDevice)=>{
+		const oneOfMultiTimerDelete =  (input, timerAbortsec, name, inputDevice) =>{
 			// Teil hinter dem Komma separieren
 			const seperateInput = input.slice(input.indexOf(",")+2, input.length);
 			// Falls mehrere Wörter hinter dem Komma stehen, soll eine Array erzeugt werden um ein bestimmtes Wort zu finden
@@ -515,13 +523,13 @@ class AlexaTimerVis extends utils.Adapter {
 		 * @param {string} name "w"ort wo der erste Buchstabe groß geschrieben werden soll
 		 * @return {string} Rückgabewert mit "W"ort
 		 */
-		const firstLetterToUpperCase = (name) => {
+		function firstLetterToUpperCase(name) {
 			const firstLetter = name.slice(0, 1); // Ersten Buchstaben selektieren
 			const leftoverLetters = name.slice(1); // Restliche Buchstaben selektieren
 			name = firstLetter.toUpperCase() + leftoverLetters; // Erster Buchstabe in Groß + Rest
 
 			return name;
-		};
+		}
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
@@ -529,13 +537,13 @@ class AlexaTimerVis extends utils.Adapter {
 		 * @param {number} i // Time in milliseconds
 		 * @return {string}
 		 */
-		const time =(i)=>{
+		function time(i){
 			// Zeit zu String
 			const date_string = new Date(i).toString();
 			// String zu Array, zeit herausschneiden und zurück zu String
 			const time = date_string.split(" ").slice(4,5).toString();
 			return time;
-		};
+		}
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
@@ -1059,10 +1067,12 @@ class AlexaTimerVis extends utils.Adapter {
 			const delTimer = (element)=>{
 				timerObject.timerActiv.timer[element] = false;
 			};
-			let inputDevice;
+			let inputDevice="";
 			// Device auslesen
 			const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
-			if (obj){inputDevice = obj.val;}
+			if (obj && obj.val && typeof obj.val == "string"){
+				inputDevice = obj.val;
+			}
 
 			let countMatchingNumber = 0;
 			let countMatchingName = 0;
@@ -1106,7 +1116,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// Einer, mit genauer Zeit, mehrmals vorhanden
 				else if (countMatchingNumber > 1){
-					const name = "";
+					/** @type{string} Name */const name = "";
 					const inputDevice = "";
 					this.log.debug("Mit genauer Zeit mehrmals vorhanden");
 					oneOfMultiTimerDelete(value, sec, name, inputDevice);
