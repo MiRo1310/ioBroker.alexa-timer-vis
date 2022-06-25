@@ -262,12 +262,14 @@ class AlexaTimerVis extends utils.Adapter {
 						this.log.info("Kommando gefunden um Timer zu steuern!");
 
 						// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
-						/**@type{boolean} Verhindert das Timer add aufgerufen wird wenn delete aktiv ist*/
-						let i = false;
+						/**@type{boolean} Sobald auf die Variable auf true gesetzt wird, wird die schleife abgebrochen*/
+						let abortLoop = false;
 						/**@type{boolean} Wird auf "true" gesetzt wenn Alexa eine Rückfrage gestellt hat*/
 						let questionAlexa = false;
 
 						for (const array in timerObject.timerActiv.condition) {
+							// Solbald in einem Schleifendurchlauf was gefunden wird, soll die erste Schleife abgebrochen werden
+							if (abortLoop) break;
 							// Jedes Element in activateTimer und deleteTimer durchgehen
 							for (const element of timerObject.timerActiv.condition[array]) {
 
@@ -304,7 +306,9 @@ class AlexaTimerVis extends utils.Adapter {
 										this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
 									}
 
+									/**@type{number} Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen*/
 									let deleteTimerIndex = 0;
+
 									// Hat Alexa eine Frage gestellt, ergibt sich durch getrennte Antwort mit einem Komma
 									this.log.debug("Hat Alexa eine Frage gestellt? " + JSON.stringify(value.indexOf(",") > -1));
 
@@ -317,7 +321,7 @@ class AlexaTimerVis extends utils.Adapter {
 										// bearbeiten , es muss zwischen zeit und name unterschieden werden
 										name = "";
 										deleteTimer(timerAbortsec, name , deleteTimerIndex, value, questionAlexa);
-										i = true;
+										abortLoop = true;
 										break;
 									}else {
 										// Index Timer löschen
@@ -330,13 +334,13 @@ class AlexaTimerVis extends utils.Adapter {
 
 										deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
 
-										i = true;
+										abortLoop = true;
 										break;
 									}
 
 								}// Timer soll erstellt werden
 								// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
-								else if (i == false && value.indexOf(element) >= 0 ) {
+								else if (value.indexOf(element) >= 0 ) {
 									this.log.info("Timer soll hinzugefügt werden!");
 									//Eingabe Text loggen
 									this.log.info(`Voice input: ${value}`);
@@ -407,7 +411,7 @@ class AlexaTimerVis extends utils.Adapter {
 											}
 										}
 
-
+										abortLoop = true;
 										break;
 									}
 								}
