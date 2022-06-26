@@ -422,10 +422,26 @@ class AlexaTimerVis extends utils.Adapter {
 									this.log.debug("Timer soll verlängert werden");
 									// Version 1 geht nur wenn ein Timer aktiv ist
 									if (timerObject.timerActiv.timerCount == 1){
+										// Input aus Alexas Spracheingabe zu Array machen
+										const timerArray = value.split(" ");
+
+										// Timer in Sekunden  und den Namen ausgeben lassen in einem Array
+										const returnArray = zeiterfassung(timerArray);
+										this.log.debug("ReturnArray " + JSON.stringify(returnArray));
+										let timerSeconds;
+										try {
+											if (typeof returnArray[0] == "string") {
+												timerSeconds = eval(returnArray[0]);
+											}
+
+										}
+										catch(e){
+											this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
+										}
 										for(const timer in timerObject.timerActiv.timer){
 											if (timerObject.timerActiv.timer[timer] == true){
 
-												timerObject.timer[timer].endTime += 120000;
+												timerObject.timer[timer].endTime += (timerSeconds*1000);
 												timerObject.timer[timer].end_Time = time(timerObject.timer[timer].endTime);
 												this.log.debug("Time_End " + JSON.stringify(time(timerObject.timer[timer].endTime)));
 												this.log.debug("Object " + JSON.stringify(timerObject.timer.timer1));
