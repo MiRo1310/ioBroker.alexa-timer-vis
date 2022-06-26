@@ -413,7 +413,6 @@ class AlexaTimerVis extends utils.Adapter {
 											}
 										}
 
-
 									}
 									abortLoop = true;
 									break;
