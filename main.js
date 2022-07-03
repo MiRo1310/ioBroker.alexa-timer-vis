@@ -233,7 +233,7 @@ class AlexaTimerVis extends utils.Adapter {
 				value = state.val;
 
 				this.log.debug("Aktuelle Eingabe ist gleich der vorherigen: " + JSON.stringify(value === valueOld));
-				if (timeout_1){
+				if (timeout_1 != null){
 					this.log.debug("Timeout ist gesetzt");
 				}else{
 					this.log.debug("Timeout ist nicht gesetzt");
@@ -262,6 +262,7 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.debug("Entprellzeit " + JSON.stringify(debounceTime*1000) + " ms");
 					timeout_1 = setTimeout(() => {
 						this.log.debug("Timeout beendet");
+						timeout_1 = null;
 
 					}, (debounceTime * 1000));
 
