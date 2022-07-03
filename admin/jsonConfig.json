@@ -37,6 +37,9 @@
                     "type" : "number",
                     "min": 1,
                     "step": 1,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
                     "label": "Intervall" ,
                     "disabled": "!_alive",
                     "help":{
@@ -50,6 +53,9 @@
                     "type" : "number",
                     "min": 1,
                     "step": 1,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
                     "label": "Intervall",
                     "disabled": "!_alive",
                     "help": {
@@ -57,7 +63,13 @@
                         "de": "Intervall, verbleibende Zeit weniger als 60 Sek"
                     }
 
-                },
+                }
+            }
+        },
+        "_settings": {
+            "type":"panel",
+            "label": "Settings",
+            "items":{
                 "entprellen" : {
                     "newLine": true,
                     "type" : "checkbox",                    
@@ -65,6 +77,9 @@
                         "de": "Alle Eingaben Entprellen",
                         "en": "Debounce all Input"
                     },
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,
                     "help": {
                         "en": "Debounce",
                         "de": "Alle Eingaben sollen entprellt werden"
@@ -74,7 +89,10 @@
                     "type" : "number",
                     "newLine" :true,
                     "min": 1,
-                    "step": 1,                    
+                    "step": 1, 
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6,                   
                     "label": "Entprellzeit in Sekunden",                    
                     "help": {
                         "en": "",
@@ -82,8 +100,11 @@
                     }
 
                 }
-                
             }
         }
+                
+                
+            
+        
     }
 }
