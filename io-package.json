@@ -241,7 +241,9 @@
     "native": {
         "alexa": "alexa2.0",
         "intervall1": 1,
-        "intervall2": 1
+        "intervall2": 1,
+        "entprellZeit": 10,
+        "entprellen": false
     },
     "objects": [],
     "instanceObjects": [

@@ -46,7 +46,7 @@
 
                 },
                 "intervall2" : {
-                    "newLine": true,
+                    "newLine": false,
                     "type" : "number",
                     "min": 1,
                     "step": 1,
@@ -55,6 +55,30 @@
                     "help": {
                         "en": "Intervall, time left less than 60 sec",
                         "de": "Intervall, verbleibende Zeit weniger als 60 Sek"
+                    }
+
+                },
+                "entprellen" : {
+                    "newLine": true,
+                    "type" : "checkbox",                    
+                    "label": {
+                        "de": "Alle Eingaben Entprellen",
+                        "en": "Debounce all Input"
+                    },
+                    "help": {
+                        "en": "Debounce",
+                        "de": "Alle Eingaben sollen entprellt werden"
+                    }
+                },
+                "entprellZeit" : {
+                    "type" : "number",
+                    "newLine" :true,
+                    "min": 1,
+                    "step": 1,                    
+                    "label": "Entprellzeit in Sekunden",                    
+                    "help": {
+                        "en": "",
+                        "de": "Entprellzeit"
                     }
 
                 }
