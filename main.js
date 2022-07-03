@@ -28,6 +28,8 @@ let writeStateActiv = false;
 let datapoint;
 let intervallMore60 = 0;
 let intervallLess60 = 0;
+let debounce;
+let debounceTime = 0;
 // Variable Funktion
 let writeState;
 // let adapter;
@@ -43,9 +45,9 @@ const timerObject = {
 			"extendTimer":["verlängere", "verlänger"]// Timer verlängern
 		},
 		"data": {
-
 			"interval": 1000,// Aktualisierungsinterval
 			"notNoted": ["timer","timer,","auf","auf,","erstelle","mit","ein", "schalte", "setze","setz","stell","stelle","den","einen","set","the","a","for"], // Wörter die nicht beachtet werden sollen
+			"notNotedSentence":["stell ein timer", "stelle einen timer", "stelle ein timer", "stell einen timer"],
 			"stopAll": ["alle","all"], // Spezielle Definition zum löschen aller Timer
 			"connecter": ["und","and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
 			"hour": ["stunde", "stunden","hour", "hours"], // Wörter für Stunden, dient als Multiplikator
@@ -197,6 +199,8 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 		intervallMore60 = this.config.intervall1;
 		intervallLess60 = this.config.intervall2;
+		debounce = this.config.entprellen;
+		debounceTime = this.config.entprellZeit;
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 		this.getForeignObject(datapoint, (err, obj) => {
 			if (err || obj == null) {
@@ -234,11 +238,17 @@ class AlexaTimerVis extends utils.Adapter {
 				}else{
 					this.log.debug("Timeout ist nicht gesetzt");
 				}
-
-
-				if (state.val == "" || value === valueOld && timeout_1 != null){
+				let doNothing = false;
+				// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
+				for(const sentence of timerObject.timerActiv.data.notNotedSentence){
+					if(value == sentence){
+						this.log.debug("Eingabe soll nicht beachtet werden!");
+						doNothing = true;
+					}
+				}
+				if (state.val == "" || ((value === valueOld || debounce) && timeout_1 != null) || doNothing){
 					this.log.debug("Es wird keine Aktion durchgeführt!");
-				// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
+					// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
 				} else {
 					clearTimeout(timeout_1);
 					timeout_1 = null;
@@ -252,7 +262,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timeout_1 = setTimeout(() => {
 						this.log.debug("Timeout beendet");
 
-					}, 10000);
+					}, debounceTime);
 
 					// Code Anfang
 
@@ -367,7 +377,7 @@ class AlexaTimerVis extends utils.Adapter {
 									}
 									// Prüfung falls man sagt Alexa Pommes Timer, und dann die Frage kommt für wie lange
 									if (timerSeconds && timerSeconds != 0 ){
-									// Rückgabewert "Name" des Timers [1]
+										// Rückgabewert "Name" des Timers [1]
 										let name = "";
 										if (typeof returnArray[1] == "string"){
 											name = returnArray[1];
@@ -382,7 +392,7 @@ class AlexaTimerVis extends utils.Adapter {
 											break;
 										}
 										if(!nameExist){
-										// Rückgabewert "Input String" des Timers [3]
+											// Rückgabewert "Input String" des Timers [3]
 											let inputString ="";
 											if (typeof returnArray[3] == "string"){
 												inputString = returnArray[3];
@@ -421,6 +431,8 @@ class AlexaTimerVis extends utils.Adapter {
 									this.log.debug("Timer soll verlängert werden");
 									// Version 1 geht nur wenn ein Timer aktiv ist
 									if (timerObject.timerActiv.timerCount == 1){
+
+										this.log.info("Voice input: " + value);
 										// Input aus Alexas Spracheingabe zu Array machen
 										const timerArray = value.split(" ");
 
@@ -455,6 +467,7 @@ class AlexaTimerVis extends utils.Adapter {
 						}
 					}
 				}
+
 				// Auf Button reagieren
 			}else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && id !="alexa2.0.History.summary"){
 
