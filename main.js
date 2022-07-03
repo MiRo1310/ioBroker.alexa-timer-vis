@@ -246,6 +246,7 @@ class AlexaTimerVis extends utils.Adapter {
 						doNothing = true;
 					}
 				}
+				this.log.debug("Alles Entprellen aktiv " + JSON.stringify(debounce));
 				if (state.val == "" || ((value === valueOld || debounce) && timeout_1 != null) || doNothing){
 					this.log.debug("Es wird keine Aktion durchgeführt!");
 					// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
@@ -258,11 +259,11 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.debug("Vorherige Eingabe: " + JSON.stringify(valueOld));
 
 					// Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
-
+					this.log.debug("Entprellzeit " + JSON.stringify(debounceTime*1000) + " ms");
 					timeout_1 = setTimeout(() => {
 						this.log.debug("Timeout beendet");
 
-					}, debounceTime);
+					}, (debounceTime * 1000));
 
 					// Code Anfang
 
