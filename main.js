@@ -42,7 +42,8 @@ const timerObject = {
 		"condition": {
 			"deleteTimer": ["stopp", "stoppe", "anhalten","abbrechen","beenden","beende","reset","resete","löschen", "lösche", "lösch","stop","delete"], // Vorselektion stoppen oder löschen
 			"activateTimer": ["stunde", "minute", "sekunde","hour","minute", "second"], // Vorselektion hinzufügen
-			"extendTimer":["verlängere", "verlänger"]// Timer verlängern
+			"extendTimer":["verlängere", "verlänger"],// Timer verlängern
+			"shortenTimer":["verkürze", "verkürzen"]// Timer verkürzen
 		},
 		"data": {
 			"interval": 1000,// Aktualisierungsinterval
@@ -173,10 +174,11 @@ class AlexaTimerVis extends utils.Adapter {
 			name: "alexa-timer-vis",
 		});
 		this.on("ready", this.onReady.bind(this));
-		this.on("stateChange", this.onStateChange.bind(this));
+		// this.on("stateChange", this.onStateChange.bind(this));
 		// this.on("objectChange", this.onObjectChange.bind(this));
 		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
+
 
 
 	}
@@ -239,6 +241,7 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.debug("Timeout ist nicht gesetzt");
 				}
 				let doNothing = false;
+
 				// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
 				for(const sentence of timerObject.timerActiv.data.notNotedSentence){
 					if(value == sentence){
@@ -247,6 +250,7 @@ class AlexaTimerVis extends utils.Adapter {
 					}
 				}
 				this.log.debug("Alles Entprellen aktiv " + JSON.stringify(debounce));
+
 				if (state.val == "" || ((value === valueOld || debounce) && timeout_1 != null) || doNothing){
 					this.log.debug("Es wird keine Aktion durchgeführt!");
 					// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
@@ -262,6 +266,7 @@ class AlexaTimerVis extends utils.Adapter {
 					this.log.debug("Entprellzeit " + JSON.stringify(debounceTime*1000) + " ms");
 					timeout_1 = setTimeout(() => {
 						this.log.debug("Timeout beendet");
+						clearTimeout(timeout_1);
 						timeout_1 = null;
 
 					}, (debounceTime * 1000));
@@ -463,8 +468,10 @@ class AlexaTimerVis extends utils.Adapter {
 									}
 									abortLoop = true;
 									break;
+								}else if (value.indexOf(element) >= 0 && array == "shortenTimer" ){
+									this.log.debug("Timer soll verkürzt werden");
+									// Version 1 geht nur wenn ein Timer aktiv ist
 								}
-
 							}
 						}
 					}
@@ -1382,22 +1389,22 @@ class AlexaTimerVis extends utils.Adapter {
 	}
 
 
-	/**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
-	onStateChange(id, state) {
-		if (state) {
+	// /**
+	//  * Is called if a subscribed state changes
+	//  * @param {string} id
+	//  * @param {ioBroker.State | null | undefined} state
+	//  */
+	// onStateChange(id, state) {
+	// 	if (state) {
 
-			// The state was changed
-			//this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+	// 		// The state was changed
+	// 		//this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
-		}
-	}
+	// 	} else {
+	// 		// The state was deleted
+	// 		this.log.info(`state ${id} deleted`);
+	// 	}
+	// }
 
 
 }
