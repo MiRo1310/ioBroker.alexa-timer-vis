@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "alexa-timer-vis",
-        "version": "0.1.14",
+        "version": "0.1.15",
         "news": {
+            "0.1.15":{
+                "en": "Include creation time to avoid creating duplicate timers"
+            },
             "0.1.14":{
                 "en": "Added debouncing in the adapter configuration"
             },
