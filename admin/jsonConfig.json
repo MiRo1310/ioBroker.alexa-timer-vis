@@ -74,7 +74,7 @@
                     "newLine": true,
                     "type" : "checkbox",                    
                     "label": {
-                        "de": "Alle Eingaben Entprellen",
+                        "de": "Alle Eingaben Entprellen (Ohne Funktion)",
                         "en": "Debounce all Input"
                     },
                     "sm": 12,
@@ -96,7 +96,7 @@
                     "label": "Entprellzeit in Sekunden",                    
                     "help": {
                         "en": "",
-                        "de": "Entprellzeit"
+                        "de": "Entprellzeit (Ohne Funktion)"
                     }
 
                 }
