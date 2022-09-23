@@ -69,22 +69,7 @@
         "_settings": {
             "type":"panel",
             "label": "Settings",
-            "items":{
-                "entprellen" : {
-                    "newLine": true,
-                    "type" : "checkbox",                    
-                    "label": {
-                        "de": "Alle Eingaben Entprellen (Ohne Funktion)",
-                        "en": "Debounce all Input"
-                    },
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 6,
-                    "help": {
-                        "en": "Debounce",
-                        "de": "Alle Eingaben sollen entprellt werden"
-                    }
-                },
+            "items":{                
                 "entprellZeit" : {
                     "type" : "number",
                     "newLine" :true,
@@ -96,7 +81,7 @@
                     "label": "Entprellzeit in Sekunden",                    
                     "help": {
                         "en": "",
-                        "de": "Entprellzeit (Ohne Funktion)"
+                        "de": "Entprellzeit"
                     }
 
                 }
