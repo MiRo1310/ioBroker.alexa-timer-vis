@@ -253,7 +253,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// ANCHOR compareCreationTimeAndSerial
 				compareCreationTimeAndSerial().then((val) => {
-					if (!val[0] && !(value == valueOld)) {
+					if (!val[0] && !(value == valueOld) && (value != "")) {
+
 						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
 						if (typeof (state.val) == "string") {
 							valueOld = state.val;
