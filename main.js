@@ -18,11 +18,11 @@ const utils = require("@iobroker/adapter-core");
 // const fs = require("fs");
 
 let idInstanze;
-let oldCreationTime;
 
 // Variablen für Timeouts und Intervalle
 let setStates;
 let timeout_1;
+let timeout_2;
 // Variable um Intervall zum schreiben von States nur einmal auszuführen
 let writeStateActiv = false;
 // Variable mit ID auf welche reagiert werden soll
@@ -226,7 +226,7 @@ class AlexaTimerVis extends utils.Adapter {
 		// Initialisierungsvariable
 		// let timeout_1 = null;
 
-		// let valueOld = "";
+		let valueOld = null;
 		let value;
 
 
@@ -251,9 +251,20 @@ class AlexaTimerVis extends utils.Adapter {
 				// Wert für CreationTime holen
 
 
-				// ANCHOR Aufruf get Creation Time
-				getCreationTime().then((val) => {
-					if (!val) {
+				// ANCHOR compareCreationTimeAndSerial
+				compareCreationTimeAndSerial().then((val) => {
+					if (!val[0] && !(value == valueOld)) {
+						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
+						if (typeof (state.val) == "string") {
+							valueOld = state.val;
+						}
+
+						// valueOld zurück setzen nach bestimmter Zeit
+						this.clearTimeout(timeout_2);
+						timeout_2 = setTimeout(() => {
+							valueOld = null;
+						}, debounceTime);
+
 						// this.log.debug("Aktuelle Eingabe ist gleich der vorherigen: " + JSON.stringify(value === valueOld));
 						// if (timeout_1 != null) {
 						// 	this.log.debug("Timeout ist gesetzt");
@@ -294,10 +305,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 							// Code Anfang
 
-							// Wert als Alten Wert speichern um beim Trigger zu vergleichen
-							// if (typeof (state.val) == "string") {
-							// 	valueOld = state.val;
-							// }
+
 
 
 							// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
@@ -548,27 +556,43 @@ class AlexaTimerVis extends utils.Adapter {
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-		// ANCHOR Get CreationTime
+		// ANCHOR Vergleicht Zeit und Serialnumber
+		let oldCreationTime;
+		let oldSerial;
 		/**
 		 * Gibt die Zeit der Erstellung des Timers zurück
-		 * @returns boolean
+		 * @returns [] Wert 1 sind CreationTimes gleich, Wert 2 sind die Serials gleich
 		 */
-		const getCreationTime = async () => {
+		const compareCreationTimeAndSerial = async () => {
 			const creationTime = await this.getForeignStateAsync("alexa2.0.History.creationTime");
+			const serial = await this.getForeignStateAsync("alexa2.0.History.serialNumber");
 			let sameTime = false;
+			let sameSerial = false;
 			if (creationTime && creationTime.val) {
-				this.log.info(JSON.stringify(creationTime.val));
-				this.log.info(JSON.stringify(oldCreationTime));
+				this.log.debug("CreationTime: " + JSON.stringify(creationTime.val));
+				this.log.debug("OldCreationTime: " + JSON.stringify(oldCreationTime));
 
 				if (oldCreationTime == creationTime.val) {
 					sameTime = true;
 				}
 				oldCreationTime = creationTime.val;
-				return sameTime;
 			}
+			if (serial && serial.val) {
+				this.log.debug("Serial: " + JSON.stringify(serial.val));
+				this.log.debug("OldSerial: " + JSON.stringify(oldSerial));
+				if (oldSerial == serial.val) {
+					sameSerial = true;
+				}
+				oldSerial = serial.val;
+			}
+			return [sameTime, sameSerial];
 		};
 
-
+		/**
+		 *
+		 * @param {string} value
+		 * @returns []
+		 */
 		const decomposeInputValue = (value) => {
 			//Eingabe Text loggen
 			this.log.info("Voice input: " + value);
@@ -1460,7 +1484,8 @@ class AlexaTimerVis extends utils.Adapter {
 			// Here you must clear all timeouts or intervals that may still be active
 			// Timeouts
 			//this.log.info("Interval" + JSON.stringify(timerObject.interval));
-			clearTimeout(timeout_1);
+			this.clearTimeout(timeout_1);
+			this.clearTimeout(timeout_2);
 			// Intervalls
 			clearInterval(setStates);
 
