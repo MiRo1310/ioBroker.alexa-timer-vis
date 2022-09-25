@@ -248,7 +248,7 @@ class AlexaTimerVis extends utils.Adapter {
 						this.clearTimeout(timeout_2);
 						timeout_2 = setTimeout(() => {
 							valueOld = null;
-						}, debounceTime);
+						}, debounceTime * 1000);
 
 						let doNothing = false;
 
