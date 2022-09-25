@@ -181,9 +181,6 @@ class AlexaTimerVis extends utils.Adapter {
 		// this.on("objectChange", this.onObjectChange.bind(this));
 		// this.on("message", this.onMessage.bind(this));
 		this.on("unload", this.onUnload.bind(this));
-
-
-
 	}
 
 	/**
@@ -217,14 +214,10 @@ class AlexaTimerVis extends utils.Adapter {
 				this.log.info("Alexa State was found");
 				this.setState("info.connection", true, true);
 
-
 				// Datenpunkte erzeugen (Anzahl)
 				createState(4);
 			}
 		});
-
-		// Initialisierungsvariable
-		// let timeout_1 = null;
 
 		let valueOld = null;
 		let value;
@@ -237,20 +230,11 @@ class AlexaTimerVis extends utils.Adapter {
 			if (state && typeof state.val === "string" && state.val != "" && id == datapoint) {
 
 				value = state.val;
+				this.log.debug("value: " + JSON.stringify(value));
+				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
+				this.log.debug("DebounceTime: " + JSON.stringify(debounceTime));
 
-				// this.getForeignObjects("alexa2.0.History.summary", (err, obj) => {
-				// 	if (err) {
-				// 		this.log.error(JSON.stringify(err));
-				// 	} else {
-				// 		this.log.info(JSON.stringify(obj));
-				// 		if (obj && obj.common) { this.log.info(JSON.stringify(obj.common.type)); }
-
-				// 	}
-				// });
-
-				// Wert für CreationTime holen
-
-
+				// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
 				// ANCHOR compareCreationTimeAndSerial
 				compareCreationTimeAndSerial().then((val) => {
 					if (!val[0] && !(value == valueOld) && (value != "")) {
@@ -266,13 +250,6 @@ class AlexaTimerVis extends utils.Adapter {
 							valueOld = null;
 						}, debounceTime);
 
-						// this.log.debug("Aktuelle Eingabe ist gleich der vorherigen: " + JSON.stringify(value === valueOld));
-						// if (timeout_1 != null) {
-						// 	this.log.debug("Timeout ist gesetzt");
-						// } else {
-						// 	this.log.debug("Timeout ist nicht gesetzt");
-						// }
-
 						let doNothing = false;
 
 						// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
@@ -282,32 +259,11 @@ class AlexaTimerVis extends utils.Adapter {
 								doNothing = true;
 							}
 						}
-						// this.log.debug("Alles Entprellen aktiv " + JSON.stringify(debounce));
 
-						// if (state.val == "" || ((value === valueOld || debounce) && timeout_1 != null) || doNothing) {
 						if (state.val == "" || (debounce && timeout_1 != null) || doNothing) {
 							this.log.debug("Es wird keine Aktion durchgeführt!");
 							// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
 						} else {
-							// clearTimeout(timeout_1);
-							// timeout_1 = null;
-
-							// this.log.debug("Aktuelle Eingabe: " + JSON.stringify(value));
-							// this.log.debug("Vorherige Eingabe: " + JSON.stringify(valueOld));
-
-							// // Die Init Variable soll verhindern das innerhalb von der eingestellten Zeit nur ein Befehl verarbeitet wird, Alexa Datenpunkt wird zweimal aktualisiert
-							// this.log.debug("Entprellzeit " + JSON.stringify(debounceTime * 1000) + " ms");
-							// timeout_1 = setTimeout(() => {
-							// 	this.log.debug("Timeout beendet");
-							// 	clearTimeout(timeout_1);
-							// 	timeout_1 = null;
-
-							// }, (debounceTime * 1000));
-
-							// Code Anfang
-
-
-
 
 							// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
 							if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
