@@ -229,6 +229,14 @@ class AlexaTimerVis extends utils.Adapter {
 			// Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
 			if (state && typeof state.val === "string" && state.val != "" && id == datapoint) {
 
+				// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
+				let doNothing = false;
+				for (const sentence of timerObject.timerActiv.data.notNotedSentence) {
+					if (value == sentence) {
+						this.log.debug("Eingabe soll nicht beachtet werden!");
+						doNothing = true;
+					}
+				}
 				value = state.val;
 				this.log.debug("value: " + JSON.stringify(value));
 				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
@@ -250,15 +258,9 @@ class AlexaTimerVis extends utils.Adapter {
 							valueOld = null;
 						}, debounceTime * 1000);
 
-						let doNothing = false;
 
-						// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
-						for (const sentence of timerObject.timerActiv.data.notNotedSentence) {
-							if (value == sentence) {
-								this.log.debug("Eingabe soll nicht beachtet werden!");
-								doNothing = true;
-							}
-						}
+
+
 
 						if (state.val == "" || (debounce && timeout_1 != null) || doNothing) {
 							this.log.debug("Es wird keine Aktion durchgeführt!");
