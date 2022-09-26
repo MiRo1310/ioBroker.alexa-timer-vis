@@ -246,8 +246,13 @@ class AlexaTimerVis extends utils.Adapter {
 				// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
 				// ANCHOR compareCreationTimeAndSerial
 				compareCreationTimeAndSerial().then((val) => {
-					if (!val[0] && !(value == valueOld) && (value != "") || !doNothing) {
+					if (!val[0] && !(value == valueOld) && (value != "") && !doNothing) {
 
+						this.log.debug("Eingaben haben die gleiche Zeit: "+JSON.stringify(val[0]));
+						this.log.debug("Value und ValueOld sind gleich: " + JSON.stringify(value == valueOld));
+						this.log.debug("value ist nicht leer:  " + JSON.stringify(value != ""));
+						this.log.debug("Eingabe soll beachtet werden: " + JSON.stringify(!doNothing));
+						this.log.debug("Abfrage check");
 						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
 						if (typeof (state.val) == "string") {
 							valueOld = state.val;
@@ -257,6 +262,7 @@ class AlexaTimerVis extends utils.Adapter {
 						this.clearTimeout(timeout_2);
 						timeout_2 = setTimeout(() => {
 							valueOld = null;
+							this.log.debug("ValueOld wird zurück gesetzt");
 						}, debounceTime * 1000);
 
 
@@ -545,6 +551,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				oldSerial = serial.val;
 			}
+			// this.log.info("Eingaben haben die gleiche Zeit: " + JSON.stringify(sameTime));
 			return [sameTime, sameSerial];
 		};
 
