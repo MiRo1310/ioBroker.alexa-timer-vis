@@ -29,7 +29,7 @@ let writeStateActiv = false;
 let datapoint;
 let intervallMore60 = 0;
 let intervallLess60 = 0;
-let debounce;
+// let debounce;
 // eslint-disable-next-line no-unused-vars
 let debounceTime = 0;
 // Variable Funktion
@@ -201,7 +201,7 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 		intervallMore60 = this.config.intervall1;
 		intervallLess60 = this.config.intervall2;
-		debounce = this.config.entprellen;
+		// debounce = this.config.entprellen;
 		debounceTime = this.config.entprellZeit;
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
 		this.getForeignObject(datapoint, (err, obj) => {
@@ -237,6 +237,7 @@ class AlexaTimerVis extends utils.Adapter {
 						doNothing = true;
 					}
 				}
+
 				value = state.val;
 				this.log.debug("value: " + JSON.stringify(value));
 				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
@@ -245,7 +246,7 @@ class AlexaTimerVis extends utils.Adapter {
 				// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
 				// ANCHOR compareCreationTimeAndSerial
 				compareCreationTimeAndSerial().then((val) => {
-					if (!val[0] && !(value == valueOld) && (value != "")) {
+					if (!val[0] && !(value == valueOld) && (value != "") || !doNothing) {
 
 						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
 						if (typeof (state.val) == "string") {
@@ -262,110 +263,184 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 
-						if (state.val == "" || (debounce && timeout_1 != null) || doNothing) {
-							this.log.debug("Es wird keine Aktion durchgeführt!");
-							// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
-						} else {
+						// if (state.val == "" || (debounce && timeout_1 != null) || doNothing) {
+						// 	this.log.debug("Es wird keine Aktion durchgeführt!");
+						// 	// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
+						// } else {
 
-							// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
-							if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
-								this.log.debug("Timer wird erstellt, gelöscht oder geändert");
-								this.log.info("Kommando gefunden um Timer zu steuern!");
+						// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
+						if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
+							this.log.debug("Timer wird erstellt, gelöscht oder geändert");
+							this.log.info("Kommando gefunden um Timer zu steuern!");
 
-								// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
-								/**@type{boolean} Sobald auf die Variable auf true gesetzt wird, wird die schleife abgebrochen*/
-								let abortLoop = false;
-								/**@type{boolean} Wird auf "true" gesetzt wenn Alexa eine Rückfrage gestellt hat*/
-								let questionAlexa = false;
+							// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
+							/**@type{boolean} Sobald auf die Variable auf true gesetzt wird, wird die schleife abgebrochen*/
+							let abortLoop = false;
+							/**@type{boolean} Wird auf "true" gesetzt wenn Alexa eine Rückfrage gestellt hat*/
+							let questionAlexa = false;
 
-								for (const array in timerObject.timerActiv.condition) {
-									// Solbald in einem Schleifendurchlauf was gefunden wird, soll die erste Schleife abgebrochen werden
-									if (abortLoop) break;
-									// Jedes Element in activateTimer und deleteTimer durchgehen
-									for (const element of timerObject.timerActiv.condition[array]) {
+							for (const array in timerObject.timerActiv.condition) {
+								// Solbald in einem Schleifendurchlauf was gefunden wird, soll die erste Schleife abgebrochen werden
+								if (abortLoop) break;
+								// Jedes Element in activateTimer und deleteTimer durchgehen
+								for (const element of timerObject.timerActiv.condition[array]) {
 
-										// Timer soll gestoppt werden
-										if (value.indexOf(element) >= 0 && array == "deleteTimer") {
+									// Timer soll gestoppt werden
+									if (value.indexOf(element) >= 0 && array == "deleteTimer") {
 
-											this.log.info("Timer soll gestoppt werden!");
-											const array = decomposeInputValue(value);
-											//Eingabe Text loggen
-											// this.log.info("Voice input: " + value);
+										this.log.info("Timer soll gestoppt werden!");
+										const array = decomposeInputValue(value);
+										//Eingabe Text loggen
+										// this.log.info("Voice input: " + value);
 
-											// // Input aus Alexas Spracheingabe zu Array konvertieren
-											// let timerArray = value.split(",");
-											// this.log.debug("1 " + JSON.stringify(timerArray));
-											// // Ersten Teil des Arrays aufteilen, im zweiten Teil steht die Antwort wenn Alexa nachfragt
-											// timerArray = timerArray[0].split(" ");
-											// this.log.debug("2 " + JSON.stringify(timerArray));
+										// // Input aus Alexas Spracheingabe zu Array konvertieren
+										// let timerArray = value.split(",");
+										// this.log.debug("1 " + JSON.stringify(timerArray));
+										// // Ersten Teil des Arrays aufteilen, im zweiten Teil steht die Antwort wenn Alexa nachfragt
+										// timerArray = timerArray[0].split(" ");
+										// this.log.debug("2 " + JSON.stringify(timerArray));
 
-											// // RückgabeArray erfassen
-											// const returnArray = zeiterfassung(timerArray);
+										// // RückgabeArray erfassen
+										// const returnArray = zeiterfassung(timerArray);
 
-											// // Name
-											// let name = "";
-											// if (typeof returnArray[1] == "string"){
-											// 	name = returnArray[1];
-											// }
-											// // Timer in Sekunden ausgeben lassen, damit der passende Timer abgebrochen werden kann
-											// try {
-											// 	if (typeof returnArray[0] == "string"){
-											// 		timerAbortsec = eval(returnArray[0]);
-											// 	}
-											// }
-											// catch(e){
-											// 	this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
-											// }
-											let name = array[0];
-											const timerAbortsec = array[1];
+										// // Name
+										// let name = "";
+										// if (typeof returnArray[1] == "string"){
+										// 	name = returnArray[1];
+										// }
+										// // Timer in Sekunden ausgeben lassen, damit der passende Timer abgebrochen werden kann
+										// try {
+										// 	if (typeof returnArray[0] == "string"){
+										// 		timerAbortsec = eval(returnArray[0]);
+										// 	}
+										// }
+										// catch(e){
+										// 	this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
+										// }
+										let name = array[0];
+										const timerAbortsec = array[1];
 
-											/**@type{number} Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen*/
-											let deleteTimerIndex = 0;
+										/**@type{number} Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen*/
+										let deleteTimerIndex = 0;
 
-											// Hat Alexa eine Frage gestellt, ergibt sich durch getrennte Antwort mit einem Komma
-											this.log.debug("Hat Alexa eine Frage gestellt? " + JSON.stringify(value.indexOf(",") > -1));
+										// Hat Alexa eine Frage gestellt, ergibt sich durch getrennte Antwort mit einem Komma
+										this.log.debug("Hat Alexa eine Frage gestellt? " + JSON.stringify(value.indexOf(",") > -1));
 
-											// Wenn eine Frage gestellt wurde, und die Antwort übergeben wurde
-											if (value.indexOf(",") != -1) {
-												// Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
-												this.log.debug("Alexa send an Answer");
-												questionAlexa = true;
-												deleteTimerIndex = 1;
-												// bearbeiten , es muss zwischen zeit und name unterschieden werden
-												name = "";
-												deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
-												abortLoop = true;
-												break;
-											} else {
-												// Index Timer löschen
-												if (typeof array[2] == "number") {
-													deleteTimerIndex = array[2];
-												}
-
-												this.log.debug("Es kann direkt gelöscht werden!");
-												// Timer anhalten
-
-												deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
-
-												abortLoop = true;
-												break;
+										// Wenn eine Frage gestellt wurde, und die Antwort übergeben wurde
+										if (value.indexOf(",") != -1) {
+											// Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
+											this.log.debug("Alexa send an Answer");
+											questionAlexa = true;
+											deleteTimerIndex = 1;
+											// bearbeiten , es muss zwischen zeit und name unterschieden werden
+											name = "";
+											deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
+											abortLoop = true;
+											break;
+										} else {
+											// Index Timer löschen
+											if (typeof array[2] == "number") {
+												deleteTimerIndex = array[2];
 											}
 
-										}// Timer soll erstellt werden
-										// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
-										else if (value.indexOf(element) >= 0 && array == "activateTimer" && value.indexOf("verlänger") == -1) {
-											this.log.info("Timer soll hinzugefügt werden!");
-											//Eingabe Text loggen
-											this.log.info(`Voice input: ${value}`);
+											this.log.debug("Es kann direkt gelöscht werden!");
+											// Timer anhalten
 
+											deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
+
+											abortLoop = true;
+											break;
+										}
+
+									}// Timer soll erstellt werden
+									// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
+									else if (value.indexOf(element) >= 0 && array == "activateTimer" && value.indexOf("verlänger") == -1) {
+										this.log.info("Timer soll hinzugefügt werden!");
+										//Eingabe Text loggen
+										this.log.info(`Voice input: ${value}`);
+
+										// Input aus Alexas Spracheingabe zu Array machen
+										const timerArray = value.split(" ");
+
+										// Timer in Sekunden  und den Namen ausgeben lassen in einem Array
+										const returnArray = zeiterfassung(timerArray);
+
+										// Rückgabewert Timer in Sekunden [0]
+										this.log.debug("Eval: " + returnArray[0]);// LogEval
+										let timerSeconds;
+										try {
+											if (typeof returnArray[0] == "string") {
+												timerSeconds = eval(returnArray[0]);
+											}
+
+										}
+										catch (e) {
+											this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
+										}
+										// Prüfung falls man sagt Alexa Pommes Timer, und dann die Frage kommt für wie lange
+										if (timerSeconds && timerSeconds != 0) {
+											// Rückgabewert "Name" des Timers [1]
+											let name = "";
+											if (typeof returnArray[1] == "string") {
+												name = returnArray[1];
+											}
+											// Wenn der Name schon existert darf nichts gemacht werden, da nicht 2 Timer mit dem gleichen Namen erstellt werden können
+											let nameExist = false;
+											for (const element in timerObject.timer) {
+												if (timerObject.timer[element].name == name && name != "") {
+													this.log.debug("Name allready exists");
+													nameExist = true;
+												}
+												break;
+											}
+											if (!nameExist) {
+												// Rückgabewert "Input String" des Timers [3]
+												let inputString = "";
+												if (typeof returnArray[3] == "string") {
+													inputString = returnArray[3];
+												}
+
+												// Anzahl Aktiver Timer um eins hochzählen
+												timerObject.timerActiv.timerCount++;
+
+												// States erstellen lassen, bei mehr als 4 Timern
+												createState(timerObject.timerActiv.timerCount);
+
+												// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
+												const timer = "timer" + timerObject.timerActiv.timerCount;
+
+												if (timerObject.timerActiv.timer[timer] == undefined) {
+
+													timerObject.timerActiv.timer[timer] = false;
+													timerObject.timer[timer] = {};
+												}
+												// Timer starten
+												startTimer(timerSeconds, name, inputString);
+												// Nur ausführen wenn noch nicht aktiv ist
+												if (!writeStateActiv) {
+													// auf aktiv setzen
+													writeStateActiv = true;
+													// States schreiben, darf aber nur einmal ausgeführt werden
+													writeStateIntervall();
+												}
+											}
+
+										}
+										abortLoop = true;
+										break;
+									}// Timer soll verlängert werden
+									else if (value.indexOf(element) >= 0 && array == "extendTimer") {
+										this.log.debug("Timer soll verlängert werden");
+										// Version 1 geht nur wenn ein Timer aktiv ist
+										if (timerObject.timerActiv.timerCount == 1) {
+
+											this.log.info("Voice input: " + value);
 											// Input aus Alexas Spracheingabe zu Array machen
 											const timerArray = value.split(" ");
 
 											// Timer in Sekunden  und den Namen ausgeben lassen in einem Array
 											const returnArray = zeiterfassung(timerArray);
-
-											// Rückgabewert Timer in Sekunden [0]
-											this.log.debug("Eval: " + returnArray[0]);// LogEval
+											this.log.debug("ReturnArray " + JSON.stringify(returnArray));
 											let timerSeconds;
 											try {
 												if (typeof returnArray[0] == "string") {
@@ -376,100 +451,26 @@ class AlexaTimerVis extends utils.Adapter {
 											catch (e) {
 												this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
 											}
-											// Prüfung falls man sagt Alexa Pommes Timer, und dann die Frage kommt für wie lange
-											if (timerSeconds && timerSeconds != 0) {
-												// Rückgabewert "Name" des Timers [1]
-												let name = "";
-												if (typeof returnArray[1] == "string") {
-													name = returnArray[1];
-												}
-												// Wenn der Name schon existert darf nichts gemacht werden, da nicht 2 Timer mit dem gleichen Namen erstellt werden können
-												let nameExist = false;
-												for (const element in timerObject.timer) {
-													if (timerObject.timer[element].name == name && name != "") {
-														this.log.debug("Name allready exists");
-														nameExist = true;
-													}
-													break;
-												}
-												if (!nameExist) {
-													// Rückgabewert "Input String" des Timers [3]
-													let inputString = "";
-													if (typeof returnArray[3] == "string") {
-														inputString = returnArray[3];
-													}
+											for (const timer in timerObject.timerActiv.timer) {
+												if (timerObject.timerActiv.timer[timer] == true) {
 
-													// Anzahl Aktiver Timer um eins hochzählen
-													timerObject.timerActiv.timerCount++;
-
-													// States erstellen lassen, bei mehr als 4 Timern
-													createState(timerObject.timerActiv.timerCount);
-
-													// Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
-													const timer = "timer" + timerObject.timerActiv.timerCount;
-
-													if (timerObject.timerActiv.timer[timer] == undefined) {
-
-														timerObject.timerActiv.timer[timer] = false;
-														timerObject.timer[timer] = {};
-													}
-													// Timer starten
-													startTimer(timerSeconds, name, inputString);
-													// Nur ausführen wenn noch nicht aktiv ist
-													if (!writeStateActiv) {
-														// auf aktiv setzen
-														writeStateActiv = true;
-														// States schreiben, darf aber nur einmal ausgeführt werden
-														writeStateIntervall();
-													}
-												}
-
-											}
-											abortLoop = true;
-											break;
-										}// Timer soll verlängert werden
-										else if (value.indexOf(element) >= 0 && array == "extendTimer") {
-											this.log.debug("Timer soll verlängert werden");
-											// Version 1 geht nur wenn ein Timer aktiv ist
-											if (timerObject.timerActiv.timerCount == 1) {
-
-												this.log.info("Voice input: " + value);
-												// Input aus Alexas Spracheingabe zu Array machen
-												const timerArray = value.split(" ");
-
-												// Timer in Sekunden  und den Namen ausgeben lassen in einem Array
-												const returnArray = zeiterfassung(timerArray);
-												this.log.debug("ReturnArray " + JSON.stringify(returnArray));
-												let timerSeconds;
-												try {
-													if (typeof returnArray[0] == "string") {
-														timerSeconds = eval(returnArray[0]);
-													}
-
-												}
-												catch (e) {
-													this.log.error("Die Eingabe ist ungültig. Bitte Issue erstellen");
-												}
-												for (const timer in timerObject.timerActiv.timer) {
-													if (timerObject.timerActiv.timer[timer] == true) {
-
-														timerObject.timer[timer].endTime += (timerSeconds * 1000);
-														timerObject.timer[timer].end_Time = time(timerObject.timer[timer].endTime);
-														this.log.debug("Time_End " + JSON.stringify(time(timerObject.timer[timer].endTime)));
-														this.log.debug("Object " + JSON.stringify(timerObject.timer.timer1));
-													}
+													timerObject.timer[timer].endTime += (timerSeconds * 1000);
+													timerObject.timer[timer].end_Time = time(timerObject.timer[timer].endTime);
+													this.log.debug("Time_End " + JSON.stringify(time(timerObject.timer[timer].endTime)));
+													this.log.debug("Object " + JSON.stringify(timerObject.timer.timer1));
 												}
 											}
-											abortLoop = true;
-											break;
-										} else if (value.indexOf(element) >= 0 && array == "shortenTimer") {
-											this.log.debug("Timer soll verkürzt werden");
-											// Version 1 geht nur wenn ein Timer aktiv ist
 										}
+										abortLoop = true;
+										break;
+									} else if (value.indexOf(element) >= 0 && array == "shortenTimer") {
+										this.log.debug("Timer soll verkürzt werden");
+										// Version 1 geht nur wenn ein Timer aktiv ist
 									}
 								}
 							}
 						}
+						// }
 					}
 				});
 
