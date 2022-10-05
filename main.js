@@ -221,6 +221,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 		let valueOld = null;
 		let value;
+		let valueTimeOld = null;
 
 
 		// Auf Änderung des Datenpunkts reagieren
@@ -239,29 +240,33 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 
 				value = state.val;
-				this.log.debug("value: " + JSON.stringify(value));
+				this.log.debug("---------------------Start------------------------------");
+				this.log.debug("Start value: " + JSON.stringify(value));
 				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
-				this.log.debug("DebounceTime: " + JSON.stringify(debounceTime));
+				// Timer länge ermitteln und vergleichen
+				const array = decomposeInputValue(value);
 
 				// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
 				// ANCHOR compareCreationTimeAndSerial
 				compareCreationTimeAndSerial().then((val) => {
-					if (!val[0] && !(value == valueOld) && (value != "") && !doNothing) {
+					if (!val[0] && !(value == valueOld) && (value != "") && !doNothing && (valueTimeOld != array[1])) {
+						this.log.debug("DebounceTime: " + JSON.stringify(debounceTime));
+						if (val[0]) this.log.debug("Eingaben haben die gleiche Zeit!");
+						if (value == "") this.log.debug("Value ist nicht leer!");
+						if (doNothing) this.log.debug("Eingabe soll nicht beachtet werden");
 
-						this.log.debug("Eingaben haben die gleiche Zeit: "+JSON.stringify(val[0]));
-						this.log.debug("Value und ValueOld sind gleich: " + JSON.stringify(value == valueOld));
-						this.log.debug("value ist nicht leer:  " + JSON.stringify(value != ""));
-						this.log.debug("Eingabe soll beachtet werden: " + JSON.stringify(!doNothing));
-						this.log.debug("Abfrage check");
+
+						// this.log.debug("Abfrage check");
 						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
 						if (typeof (state.val) == "string") {
 							valueOld = state.val;
 						}
-
+						valueTimeOld = array[1];
 						// valueOld zurück setzen nach bestimmter Zeit
 						this.clearTimeout(timeout_2);
 						timeout_2 = setTimeout(() => {
 							valueOld = null;
+							valueTimeOld = null;
 							this.log.debug("ValueOld wird zurück gesetzt");
 						}, debounceTime * 1000);
 
@@ -276,8 +281,8 @@ class AlexaTimerVis extends utils.Adapter {
 
 						// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
 						if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
-							this.log.debug("Timer wird erstellt, gelöscht oder geändert");
-							this.log.info("Kommando gefunden um Timer zu steuern!");
+							// this.log.debug("Timer wird erstellt, gelöscht oder geändert");
+							// this.log.info("Kommando gefunden um Timer zu steuern!");
 
 							// Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
 							/**@type{boolean} Sobald auf die Variable auf true gesetzt wird, wird die schleife abgebrochen*/
@@ -534,9 +539,10 @@ class AlexaTimerVis extends utils.Adapter {
 			const serial = await this.getForeignStateAsync("alexa2.0.History.serialNumber");
 			let sameTime = false;
 			let sameSerial = false;
+			const values = [];
 			if (creationTime && creationTime.val) {
-				this.log.debug("CreationTime: " + JSON.stringify(creationTime.val));
-				this.log.debug("OldCreationTime: " + JSON.stringify(oldCreationTime));
+
+				values.push({ "CreationTime": creationTime.val }, { "OldCreationTime": oldCreationTime || "" });
 
 				if (oldCreationTime == creationTime.val) {
 					sameTime = true;
@@ -544,14 +550,15 @@ class AlexaTimerVis extends utils.Adapter {
 				oldCreationTime = creationTime.val;
 			}
 			if (serial && serial.val) {
-				this.log.debug("Serial: " + JSON.stringify(serial.val));
-				this.log.debug("OldSerial: " + JSON.stringify(oldSerial));
+				values.push({ "Serial": serial.val }, { "OldSerial": oldSerial || "" });
 				if (oldSerial == serial.val) {
 					sameSerial = true;
 				}
 				oldSerial = serial.val;
 			}
+
 			// this.log.info("Eingaben haben die gleiche Zeit: " + JSON.stringify(sameTime));
+			this.log.debug(JSON.stringify(values));
 			return [sameTime, sameSerial];
 		};
 
@@ -562,7 +569,7 @@ class AlexaTimerVis extends utils.Adapter {
 		 */
 		const decomposeInputValue = (value) => {
 			//Eingabe Text loggen
-			this.log.info("Voice input: " + value);
+			// this.log.info("Voice input: " + value);
 
 			// Input aus Alexas Spracheingabe zu Array konvertieren
 			let timerArray = value.split(",");
@@ -1036,7 +1043,7 @@ class AlexaTimerVis extends utils.Adapter {
 						}
 						if (serial && serial.val) {
 							path.serialNumber = serial.val;
-							this.log.debug("SerialNumber: " + JSON.stringify(serial.val));
+							// this.log.debug("SerialNumber: " + JSON.stringify(serial.val));
 						}
 
 
