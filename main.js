@@ -244,6 +244,7 @@ class AlexaTimerVis extends utils.Adapter {
 				this.log.debug("Start value: " + JSON.stringify(value));
 				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
 				let varDelete = false;
+
 				// Schleife um zu ermitteln ob gelöscht werden soll, damit die nächste Abfrage durchläuft
 				for (const element of timerObject.timerActiv.condition.deleteTimer) {
 					if (value.includes(element)) {
@@ -307,7 +308,7 @@ class AlexaTimerVis extends utils.Adapter {
 									if (value.indexOf(element) >= 0 && array == "deleteTimer") {
 
 										this.log.info("Timer soll gestoppt werden!");
-										const array = decomposeInputValue(value);
+										const array = decomposeInputValue(value, true);
 										//Eingabe Text loggen
 										// this.log.info("Voice input: " + value);
 
@@ -379,7 +380,7 @@ class AlexaTimerVis extends utils.Adapter {
 										const timerArray = value.split(" ");
 
 										// Timer in Sekunden  und den Namen ausgeben lassen in einem Array
-										const returnArray = zeiterfassung(timerArray);
+										const returnArray = zeiterfassung(timerArray, true);
 
 										// Rückgabewert Timer in Sekunden [0]
 										this.log.debug("Eval: " + returnArray[0]);// LogEval
@@ -566,25 +567,26 @@ class AlexaTimerVis extends utils.Adapter {
 			this.log.debug(JSON.stringify(values));
 			return [sameTime, sameSerial];
 		};
-
+		// ANCHOR Decompose Value
 		/**
 		 *
 		 * @param {string} value
+		 * @param {boolean} log Soll das Log ausgegeben werden?
 		 * @returns []
 		 */
-		const decomposeInputValue = (value) => {
+		const decomposeInputValue = (value, log = false) => {
 			//Eingabe Text loggen
 			// this.log.info("Voice input: " + value);
 
 			// Input aus Alexas Spracheingabe zu Array konvertieren
 			let timerArray = value.split(",");
-			this.log.debug("1 " + JSON.stringify(timerArray));
+			if (log) this.log.debug("1 " + JSON.stringify(timerArray));
 			// Ersten Teil des Arrays aufteilen, im zweiten Teil steht die Antwort wenn Alexa nachfragt
 			timerArray = timerArray[0].split(" ");
-			this.log.debug("2 " + JSON.stringify(timerArray));
+			if (log) this.log.debug("2 " + JSON.stringify(timerArray));
 
 			// RückgabeArray erfassen
-			const returnArray = zeiterfassung(timerArray);
+			const returnArray = zeiterfassung(timerArray, log);
 			// Name
 			let name = "";
 			if (typeof returnArray[1] == "string") {
@@ -1064,15 +1066,17 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
+		//ANCHOR Zeiterfassung
 		/**
 			 * Funktion der Erfassung der gewünschten Zeit und des Namen
 			 * Erstellt einen String in einem Array [0], um Sekunden berechnen zu können
 			 * und den Namen im Array an Position [1]
 			 *
 			 * @param {String[]} input Eingabe von Alexa, als Array
+			 * @param {boolean} log
 			 * @return { (string | number)[]}  mit einem String (Evaluieren), dem Namen und dem Index zum Löschen der Timer
 			*/
-		const zeiterfassung = (input) => {
+		const zeiterfassung = (input, log = false) => {
 			let timerString = "";
 			let inputString = "";
 			let name = "";
@@ -1152,7 +1156,8 @@ class AlexaTimerVis extends utils.Adapter {
 				else { // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
 					name += element + " ";
 
-				} this.log.debug("TimerString: " + timerString);
+				}
+				if (log) this.log.debug("TimerString: " + timerString);
 			});
 			// Wenn der Fall ist das gesagt wird z.B. "1 Stunde 30" ohne Einheit Minuten, oder "1 Minute 30" ohne Einheit Sekunden
 
@@ -1168,10 +1173,10 @@ class AlexaTimerVis extends utils.Adapter {
 				// Ist als letztes Minuten vorhanden?
 				// Sind Stunden vorhanden
 				if (timerString.includes("*3600")) {
-					this.log.debug("Contains Hours");
-					this.log.debug("TimerString (A): " + timerString);
+					if (log) this.log.debug("Contains Hours");
+					if (log) this.log.debug("TimerString (A): " + timerString);
 					// Wenn Minuten nicht vorhanden sind und zum schluss nicht Einheit der Stunden "*3600" steht, und die Klammer nicht geschlossen ist
-					this.log.debug(timerString.slice(timerString.length - 5, timerString.length));
+					if(log) this.log.debug(timerString.slice(timerString.length - 5, timerString.length));
 					if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
 						timerString += ")*60";
 					}
@@ -1179,18 +1184,18 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				// Sind Minuten vorhanden
 				if (timerString.includes("*60")) {
-					this.log.debug("Contains Minutes");
-					this.log.debug("TimerString (B): " + timerString);
+					if (log) this.log.debug("Contains Minutes");
+					if (log) this.log.debug("TimerString (B): " + timerString);
 					// Wenn zum schluss nicht die Einheit der Minuten "*60" steht
-					this.log.debug(timerString.slice(timerString.length - 3, timerString.length));
+					if (log) this.log.debug(timerString.slice(timerString.length - 3, timerString.length));
 					// if (timerString.slice(timerString.length-5, timerString.length) != "*60"){
 					// 	timerString += ")";
 					// }
 
 				}
-				this.log.debug("" + JSON.stringify(timerString.charAt(0)));
+				// this.log.debug("" + JSON.stringify(timerString.charAt(0)));
 				if (timerString.charAt(0) == ")") {
-					this.log.debug("Klammer vorhanden");
+					if (log) this.log.debug("Klammer vorhanden");
 					timerString = timerString.slice(2, timerString.length);
 				}
 			}
