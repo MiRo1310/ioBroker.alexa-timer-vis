@@ -243,17 +243,24 @@ class AlexaTimerVis extends utils.Adapter {
 				this.log.debug("---------------------Start------------------------------");
 				this.log.debug("Start value: " + JSON.stringify(value));
 				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
+				let varDelete = false;
+				// Schleife um zu ermitteln ob gelöscht werden soll, damit die nächste Abfrage durchläuft
+				for (const element of timerObject.timerActiv.condition.deleteTimer) {
+					if (value.includes(element)) {
+						varDelete = true;
+						break;
+					}
+				}
+
 				// Timer länge ermitteln und vergleichen
 				const array = decomposeInputValue(value);
 
 				// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
 				// ANCHOR compareCreationTimeAndSerial
 				compareCreationTimeAndSerial().then((val) => {
-					if (!val[0] && !(value == valueOld) && (value != "") && !doNothing && (valueTimeOld != array[1])) {
+					if ((!val[0] && !(value == valueOld) && (value != "") && !doNothing && (valueTimeOld != array[1])) || varDelete) {
 						this.log.debug("DebounceTime: " + JSON.stringify(debounceTime));
-						if (val[0]) this.log.debug("Eingaben haben die gleiche Zeit!");
-						if (value == "") this.log.debug("Value ist nicht leer!");
-						if (doNothing) this.log.debug("Eingabe soll nicht beachtet werden");
+
 
 
 						// this.log.debug("Abfrage check");
@@ -305,8 +312,6 @@ class AlexaTimerVis extends utils.Adapter {
 										// this.log.info("Voice input: " + value);
 
 										// // Input aus Alexas Spracheingabe zu Array konvertieren
-										// let timerArray = value.split(",");
-										// this.log.debug("1 " + JSON.stringify(timerArray));
 										// // Ersten Teil des Arrays aufteilen, im zweiten Teil steht die Antwort wenn Alexa nachfragt
 										// timerArray = timerArray[0].split(" ");
 										// this.log.debug("2 " + JSON.stringify(timerArray));
