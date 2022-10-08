@@ -365,7 +365,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 											this.log.debug("Es kann direkt gelöscht werden!");
 											// Timer anhalten
-
+											this.log.debug("Test" + JSON.stringify(array));
 											deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
 
 											abortLoop = true;
@@ -575,7 +575,7 @@ class AlexaTimerVis extends utils.Adapter {
 		 *
 		 * @param {string} value
 		 * @param {boolean} log Soll das Log ausgegeben werden?
-		 * @returns []
+		 * @returns [] Name, Timer Zeit, Index zum Löschen des Timer
 		 */
 		const decomposeInputValue = (value, log = false) => {
 			//Eingabe Text loggen
@@ -583,10 +583,10 @@ class AlexaTimerVis extends utils.Adapter {
 
 			// Input aus Alexas Spracheingabe zu Array konvertieren
 			let timerArray = value.split(",");
-			if (log) this.log.debug("1 " + JSON.stringify(timerArray));
+			// if (log) this.log.debug("1 " + JSON.stringify(timerArray));
 			// Ersten Teil des Arrays aufteilen, im zweiten Teil steht die Antwort wenn Alexa nachfragt
 			timerArray = timerArray[0].split(" ");
-			if (log) this.log.debug("2 " + JSON.stringify(timerArray));
+			// if (log) this.log.debug("2 " + JSON.stringify(timerArray));
 
 			// RückgabeArray erfassen
 			const returnArray = zeiterfassung(timerArray, log);
@@ -1093,7 +1093,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 				// Nach Elementen suchen die die Menge der zu löschenden Timer bestimmen
 				else if (timerObject.timerActiv.condition.deleteTimer.indexOf(element) >= 0) {
-					deleteVal++; // Es wird auf 1 gesetzt, wenn nur ein Timer aktiv ist wird dieser gelöscht
+					deleteVal++; // Es wird auf 1 gesetzt, wenn nur ein Timer aktiv ist, wird dieser gelöscht
 				}
 				else if (data.stopAll.indexOf(element) >= 0) {
 					deleteVal++;// Variable wird auf 2 gesetzt somit werden alle Timer gelöscht
@@ -1210,6 +1210,7 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
+		//ANCHOR DeleteTimer
 		/**
 			 * Löschen eines Timers
 			 *
@@ -1233,9 +1234,9 @@ class AlexaTimerVis extends utils.Adapter {
 				name = name.trim();
 			}
 			this.log.info("Funktion löschen aufgerufen");
-			const delTimer = (element) => {
-				timerObject.timerActiv.timer[element] = false;
-			};
+
+
+
 			let inputDevice = "";
 			// Device auslesen
 			const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
@@ -1254,9 +1255,10 @@ class AlexaTimerVis extends utils.Adapter {
 				// Aufzählen wieviele Timer mit den Sekunden vorkommt
 				if (timerObject.timer[element].onlySec == sec) {
 					countMatchingNumber++;
-					// Aufzählen wieviele Timer mit dem gleichen Namen vorkommen
+
 				}
 				this.log.debug("Name im Object " + JSON.stringify(timerObject.timer[element].name));
+				// Aufzählen wieviele Timer mit dem gleichen Namen vorkommen
 				if (timerObject.timer[element].name.trim() == name) {
 					countMatchingName++;
 
@@ -1336,10 +1338,10 @@ class AlexaTimerVis extends utils.Adapter {
 				else if (deleteTimerIndex == 2) {
 					// Alle, alle sind auf einem Gerät
 					if (!questionAlexa) {
-						if (countMatchingInputDevice == timerObject.timerActiv.timerCount || countMatchingInputDevice == 0) {
-							delTimer(element);
-							this.log.debug("Alle auf diesem Gerät löschen, sind alle hier");
-						}
+						// if (countMatchingInputDevice == timerObject.timerActiv.timerCount || countMatchingInputDevice == 0) {
+						delTimer(element);
+						this.log.debug("Alle auf diesem Gerät löschen, sind alle hier");
+						// }
 					} else {
 						// Alle, nur die vom eingabe Gerät
 						if (countMatchingInputDevice != timerObject.timerActiv.timerCount && value.indexOf("nein") != -1) {
@@ -1366,6 +1368,13 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 
+		};
+		/**
+		 * Funktion setzt im Objekt den Timer auf false
+		 * @param {*} timer Timer der gestoppt werden soll
+		 */
+		const delTimer = (timer) => {
+			timerObject.timerActiv.timer[timer] = false;
 		};
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
