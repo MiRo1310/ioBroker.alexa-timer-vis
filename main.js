@@ -240,55 +240,58 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 
 				value = state.val;
-				this.log.debug("---------------------Start------------------------------");
-				this.log.debug("Start value: " + JSON.stringify(value));
-				this.log.debug("ValueOld: " + JSON.stringify(valueOld));
-				let varDelete = false;
-
-				// Schleife um zu ermitteln ob gelöscht werden soll, damit die nächste Abfrage durchläuft
-				for (const element of timerObject.timerActiv.condition.deleteTimer) {
-					if (value.includes(element)) {
-						varDelete = true;
-						break;
-					}
-				}
-
-				// Timer länge ermitteln und vergleichen
-				const array = decomposeInputValue(value);
-
-				// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
-				// ANCHOR compareCreationTimeAndSerial
-				compareCreationTimeAndSerial().then((val) => {
-					if ((!val[0] && !(value == valueOld) && (value != "") && !doNothing && (valueTimeOld != array[1])) || varDelete) {
-						this.log.debug("DebounceTime: " + JSON.stringify(debounceTime));
 
 
+				// Folgende Begriffe müssen enthalten, bzw. dürfen nicht enthalten sein
+				if ((value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) && value.indexOf("wecker") == -1) {
 
+					this.log.debug("---------------------Start------------------------------");
+					this.log.debug("Start value: " + JSON.stringify(value));
+					this.log.debug("ValueOld: " + JSON.stringify(valueOld));
+					let varDelete = false;
 
-						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
-						if (typeof (state.val) == "string") {
-							valueOld = state.val;
+					// Schleife um zu ermitteln ob gelöscht werden soll, damit die nächste Abfrage durchläuft
+					for (const element of timerObject.timerActiv.condition.deleteTimer) {
+						if (value.includes(element)) {
+							varDelete = true;
+							break;
 						}
-						valueTimeOld = array[1];
-						// valueOld zurück setzen nach bestimmter Zeit
-						this.clearTimeout(timeout_2);
-						timeout_2 = setTimeout(() => {
-							valueOld = null;
-							valueTimeOld = null;
-							this.log.debug("ValueOld wird zurück gesetzt");
-						}, debounceTime * 1000);
+					}
+
+					// Timer länge ermitteln und vergleichen
+					const array = decomposeInputValue(value);
+
+					// Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
+					// ANCHOR compareCreationTimeAndSerial
+					compareCreationTimeAndSerial().then((val) => {
+						if ((!val[0] && !(value == valueOld) && (value != "") && !doNothing && (valueTimeOld != array[1])) || varDelete) {
+							this.log.debug("DebounceTime: " + JSON.stringify(debounceTime));
+
+
+							// Wert als Alten Wert speichern um beim Trigger zu vergleichen
+							if (typeof (state.val) == "string") {
+								valueOld = state.val;
+							}
+							valueTimeOld = array[1];
+							// valueOld zurück setzen nach bestimmter Zeit
+							this.clearTimeout(timeout_2);
+							timeout_2 = setTimeout(() => {
+								valueOld = null;
+								valueTimeOld = null;
+								this.log.debug("ValueOld wird zurück gesetzt");
+							}, debounceTime * 1000);
 
 
 
 
 
-						// if (state.val == "" || (debounce && timeout_1 != null) || doNothing) {
-						// 	this.log.debug("Es wird keine Aktion durchgeführt!");
-						// 	// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
-						// } else {
+							// if (state.val == "" || (debounce && timeout_1 != null) || doNothing) {
+							// 	this.log.debug("Es wird keine Aktion durchgeführt!");
+							// 	// Wenn der State existiert und der neue Wert nicht mit dem Alten Wert überein stimmt, wird aufgehoben durch den TimeOut, damit auch mehrere gleiche Timer gestellt werden dürfen
+							// } else {
 
-						// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
-						if ((value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) && value.indexOf("wecker")== -1) {
+							// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
+
 							// this.log.debug("Timer wird erstellt, gelöscht oder geändert");
 							// this.log.info("Kommando gefunden um Timer zu steuern!");
 
@@ -486,11 +489,11 @@ class AlexaTimerVis extends utils.Adapter {
 									}
 								}
 							}
-						}
-						// }
-					}
-				});
 
+							// }
+						}
+					});
+				}
 
 
 
