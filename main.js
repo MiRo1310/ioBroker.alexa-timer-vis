@@ -264,7 +264,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 
 
-						// this.log.debug("Abfrage check");
+
 						// Wert als Alten Wert speichern um beim Trigger zu vergleichen
 						if (typeof (state.val) == "string") {
 							valueOld = state.val;
@@ -288,7 +288,7 @@ class AlexaTimerVis extends utils.Adapter {
 						// } else {
 
 						// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird
-						if (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) {
+						if ((value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) && value.indexOf("wecker")== -1) {
 							// this.log.debug("Timer wird erstellt, gelöscht oder geändert");
 							// this.log.info("Kommando gefunden um Timer zu steuern!");
 
@@ -1176,7 +1176,7 @@ class AlexaTimerVis extends utils.Adapter {
 					if (log) this.log.debug("Contains Hours");
 					if (log) this.log.debug("TimerString (A): " + timerString);
 					// Wenn Minuten nicht vorhanden sind und zum schluss nicht Einheit der Stunden "*3600" steht, und die Klammer nicht geschlossen ist
-					if(log) this.log.debug(timerString.slice(timerString.length - 5, timerString.length));
+					if (log) this.log.debug(timerString.slice(timerString.length - 5, timerString.length));
 					if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
 						timerString += ")*60";
 					}
