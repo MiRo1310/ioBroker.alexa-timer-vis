@@ -224,12 +224,19 @@ class AlexaTimerVis extends utils.Adapter {
 
 				// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
 				let doNothing = false;
-				for (const sentence of timerObject.timerActiv.data.notNotedSentence) {
-					if (value == sentence) {
-						this.log.debug("Eingabe soll nicht beachtet werden!");
-						doNothing = true;
-					}
+				//TODO
+				if (timerObject.timerActiv.data.notNotedSentence.find((element) => element === value)) {
+					this.log.debug("Eingabe soll nicht beachtet werden!");
+					doNothing = true;
 				}
+
+				// Versuch zu ersetzen
+				// for (const sentence of timerObject.timerActiv.data.notNotedSentence) {
+				// 	if (value == sentence) {
+				// 		this.log.debug("Eingabe soll nicht beachtet werden!");
+				// 		doNothing = true;
+				// 	}
+				// }
 
 				value = state.val;
 				// Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird und
@@ -262,6 +269,7 @@ class AlexaTimerVis extends utils.Adapter {
 							if (typeof (state.val) == "string") {
 								valueOld = state.val;
 							}
+							this.log.debug("Array: " + JSON.stringify(array));
 							valueTimeOld = array[1];
 							// valueOld zurück setzen nach bestimmter Zeit
 							this.clearTimeout(timeout_2);
@@ -277,14 +285,14 @@ class AlexaTimerVis extends utils.Adapter {
 							/**@type{boolean} Wird auf "true" gesetzt wenn Alexa eine Rückfrage gestellt hat*/
 							let questionAlexa = false;
 
-							for (const array in timerObject.timerActiv.condition) {
+							for (const newArray in timerObject.timerActiv.condition) {
 								// Solbald in einem Schleifendurchlauf was gefunden wird, soll die erste Schleife abgebrochen werden
 								if (abortLoop) break;
 								// Jedes Element in activateTimer und deleteTimer durchgehen
-								for (const element of timerObject.timerActiv.condition[array]) {
+								for (const element of timerObject.timerActiv.condition[newArray]) {
 
 									// Timer soll gestoppt werden
-									if (value.indexOf(element) >= 0 && array == "deleteTimer") {
+									if (value.indexOf(element) >= 0 && newArray == "deleteTimer") {
 
 										this.log.info("Timer soll gestoppt werden!");
 										// const array = decomposeInputValue(value, true);
@@ -328,7 +336,7 @@ class AlexaTimerVis extends utils.Adapter {
 
 									}// Timer soll erstellt werden
 									// Das gesuchte Element muss vorhanden sein, TimerStop darf nicht aktiv sein
-									else if (value.indexOf(element) >= 0 && array == "activateTimer" && value.indexOf("verlänger") == -1) {
+									else if (value.indexOf(element) >= 0 && newArray == "activateTimer" && value.indexOf("verlänger") == -1) {
 										this.log.info("Timer soll hinzugefügt werden!");
 										// const array = decomposeInputValue(value, true);
 										const name = array[0];
@@ -380,7 +388,7 @@ class AlexaTimerVis extends utils.Adapter {
 										abortLoop = true;
 										break;
 									}// Timer soll verlängert werden
-									else if (value.indexOf(element) >= 0 && array == "extendTimer") {
+									else if (value.indexOf(element) >= 0 && newArray == "extendTimer") {
 										this.log.debug("Timer soll verlängert werden");
 										// Version 1 geht nur wenn ein Timer aktiv ist
 										if (timerObject.timerActiv.timerCount == 1) {
@@ -400,7 +408,7 @@ class AlexaTimerVis extends utils.Adapter {
 										}
 										abortLoop = true;
 										break;
-									} else if (value.indexOf(element) >= 0 && array == "shortenTimer") {
+									} else if (value.indexOf(element) >= 0 && newArray == "shortenTimer") {
 										this.log.debug("Timer soll verkürzt werden");
 										// Version 1 geht nur wenn ein Timer aktiv ist
 									}
@@ -1070,7 +1078,7 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 			});
 			// Timer umgewandelt in Zahlen
-			if (log) this.log.debug("Timer in Zahlen umgewandelt: " + timerString);
+			this.log.debug("Timer in Zahlen umgewandelt: " + timerString);
 			// Wenn der Fall ist das gesagt wird z.B. "1 Stunde 30" ohne Einheit Minuten, oder "1 Minute 30" ohne Einheit Sekunden
 
 
