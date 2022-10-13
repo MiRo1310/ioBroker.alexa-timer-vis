@@ -416,6 +416,19 @@
                 "def": false
             },
             "native": {}
+        },
+        {
+            "_id": "timer1.lengthTimer",
+            "type": "state",
+            "common": {
+                "name": "Gestellter Timer",
+                "type": "string",
+                "role": "value",
+                "read": true,
+                "write": true,
+                "def": ""
+            },
+            "native": {}
         }
     ]
 }
