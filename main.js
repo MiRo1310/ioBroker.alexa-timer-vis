@@ -71,7 +71,8 @@ const timerObject = {
 			"serialNumber": "",
 			"timerInput": "",
 			"timerInterval": 0,
-			"endTime": 0
+			"endTime": 0,
+			"lengthTimer": ""
 		},
 	},
 	"brueche1": {
@@ -686,32 +687,16 @@ class AlexaTimerVis extends utils.Adapter {
 		 */
 		// Funktion um die Werte zu erzeugen
 		const generateValues = (timer, sec, index, inputString, name) => {
-			let hour;
-			let minutes;
-			let seconds;
+
 			const timeLeft = timerObject.timer[index].endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
 
 			// Aus timeLeft(Millisekunden) glatte Sekunden erstellen
 			const timeLeftSec = Math.round(timeLeft / 1000);
+			const arrayTime = secToHourMinSec(timeLeftSec, true);
 
-			// Wieviel Stunden sind enthalten
-			hour = timeLeftSec / (60 * 60);
-			hour = Math.floor(hour);
-			const hourInSec = hour * 60 * 60;
-
-			// Wieviele Minuten, timeLeft - Stunden in Millisekunden, Rest in Minuten
-			minutes = (timeLeftSec - hourInSec) / 60;
-			minutes = Math.floor(minutes);
-			const minutesInSec = minutes * 60;
-
-			// Sekunden
-			seconds = timeLeftSec - hourInSec - minutesInSec;
-			seconds = Math.round(seconds);
-
-			// Stunden, Minuten und Sekunden umwandeln so das sie immer zweistellig sind bei > 10 ( 1 => 01 usw.)
-			hour = ("0" + hour).slice(-2);
-			minutes = ("0" + minutes).slice(-2);
-			seconds = ("0" + seconds).slice(-2);
+			const hour = arrayTime[0];
+			const minutes = arrayTime[1];
+			const seconds = arrayTime[2];
 
 			// String der Zeit erstellen mit dynamischer Einheit
 			let unit = "";
@@ -723,7 +708,6 @@ class AlexaTimerVis extends utils.Adapter {
 				unit = " s";
 			}
 			const time = hour + ":" + minutes + ":" + seconds + unit;
-
 
 			// Timer Werte zum Objekt hinzufügen
 			timer.hour = hour;
@@ -744,39 +728,113 @@ class AlexaTimerVis extends utils.Adapter {
 			return timeLeftSec;
 		};
 
+		// ANCHOR Gesamt-Sekunden in Stunden Minuten und Sekunden teilen
+		/**
+		 *
+		 * @param {number} valSec Eingabe Sekunden um sie zu Stunden Minuten und Sekunden aufzuteilen
+		 * @param {boolean} doubleInt Sollen die Werte immer zweistellig sein? 1 > 01
+		 * @return Returns Hours, Minutes, Seconds, String mit den Werten und Einheiten
+		 */
+		const secToHourMinSec = (valSec, doubleInt) => {
+
+			let hour;
+			let minutes;
+			let seconds;
+
+			// Wieviel Stunden sind enthalten
+			hour = valSec / (60 * 60);
+			hour = Math.floor(hour);
+			const hourInSec = hour * 60 * 60;
+
+			// Wieviele Minuten, timeLeft - Stunden in Millisekunden, Rest in Minuten
+			minutes = (valSec - hourInSec) / 60;
+			minutes = Math.floor(minutes);
+			const minutesInSec = minutes * 60;
+
+			// Sekunden
+			seconds = valSec - hourInSec - minutesInSec;
+			seconds = Math.round(seconds);
+
+			// Stunden, Minuten und Sekunden umwandeln so das sie immer zweistellig sind bei > 10 ( 1 => 01 usw.)
+			if (doubleInt) {
+				hour = ("0" + hour).slice(-2);
+				minutes = ("0" + minutes).slice(-2);
+				seconds = ("0" + seconds).slice(-2);
+			}
+			let hourUnit = "";
+			if (hour) {
+				if (hour > 1) {
+					hourUnit = "Stunden";
+				} else {
+					hourUnit = "Stunde";
+				}
+			} else {
+				hour = "";
+			}
+			let minuteUnit = "";
+			if (minutes) {
+				if (minutes > 1) {
+					minuteUnit = "Minuten";
+				} else {
+					minuteUnit = "Minute";
+				}
+			} else {
+				minutes = "";
+			}
+
+			let secUnit = "";
+			if (seconds) {
+				if (seconds > 1) {
+					secUnit = "Sekunden";
+				} else {
+					secUnit = "Sekunde";
+				}
+
+			} else {
+				seconds = "";
+			}
+
+			let string = `${hour} ${hourUnit} ${minutes} ${minuteUnit} ${seconds} ${secUnit}`;
+			string = string.trim().trimRight();
+			return [hour, minutes, seconds, string];
+		};
+
 		//ANCHOR Interval
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * Funktion die ein Intervall erzeugt, und die Werte in einer seperaten Funktion
 		 * @param {number} sec eingegebene Zeit in Sekunden
-		 * @param {*} timerBlock Index, für den Ort wo gespeichert werden soll
+		 * @param {*} index Index, für den Ort wo gespeichert werden soll
 		 * @param {string} inputString
-		 * @param {string} name Name
-		 * @param {*} timer
+		 * @param {string} name Name des Timers
+		 * @param {*} timer Das komplette Objekt des Timers
 		 * @param {number} int Intervallzeit
 		 * @param {boolean} onlyOneTimer
 		 */
-		const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) => {
+		const interval = (sec, index, inputString, name, timer, int, onlyOneTimer) => {
 
 			// generate Values vor dem Intervall aufrufen, damit die Zahlen direkt erzeugt werden, und nicht erst nach z.b. 5 sek
-			generateValues(timer, sec, timerBlock, inputString, name);
+			generateValues(timer, sec, index, inputString, name);
+			const arrayTime = secToHourMinSec(sec, false);
+			timer.lengthTimer = arrayTime[3];
+
 			// Intervall erzeugen und im Object speichern
-			timerObject.interval[timerBlock.slice(5)] = setInterval(() => {
+			timerObject.interval[index.slice(5)] = setInterval(() => {
 				// Funktion im Intervall aufrufen
-				const timeLeftSec = generateValues(timer, sec, timerBlock, inputString, name);
+				const timeLeftSec = generateValues(timer, sec, index, inputString, name);
 
 				// Timer anhalten
 				if (timeLeftSec <= 60 && onlyOneTimer == false) {
 					onlyOneTimer = true;
-					this.clearInterval(timerObject.interval[timerBlock.slice(5)]);
-					interval(sec, timerBlock, inputString, name, timer, timerObject.timer[timerBlock].timerInterval, true);
+					this.clearInterval(timerObject.interval[index.slice(5)]);
+					interval(sec, index, inputString, name, timer, timerObject.timer[index].timerInterval, true);
 				}
 
 				// Falls die Zeit abgelaufen ist, oder der Timer deaktiviert wurde
-				if (timeLeftSec <= 0 || timerObject.timerActiv.timer[timerBlock] == false) {
+				if (timeLeftSec <= 0 || timerObject.timerActiv.timer[index] == false) {
 
 					timerObject.timerActiv.timerCount--; // Aktive Timer minus 1
-					timerObject.timerActiv.timer[timerBlock] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
+					timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
 
 					// Werte des Timers zurücksetzen
 					timer.hour = "00";
@@ -791,10 +849,11 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.end_Time = "00:00:00";
 					timer.inputDevice = "";
 					timer.timerInterval = 0;
+					timer.lengthTimer = "";
 					this.log.info("Timer stopped");
 
-					clearInterval(timerObject.interval[timerBlock.slice(5)]);
-					timerObject.interval[timerBlock.slice(5)] = "leer";
+					clearInterval(timerObject.interval[index.slice(5)]);
+					timerObject.interval[index.slice(5)] = "leer";
 				}
 			}, int); // Aktualisierungszeit
 		};
@@ -938,6 +997,18 @@ class AlexaTimerVis extends utils.Adapter {
 							read: false,
 							write: true,
 							def: false,
+						},
+						native: {},
+					});
+					await this.setObjectNotExistsAsync("timer" + i + ".lengthTimer", {
+						type: "state",
+						common: {
+							name: "Gestellter Timer",
+							type: "string",
+							role: "value",
+							read: true,
+							write: true,
+							def: "",
 						},
 						native: {},
 					});
@@ -1248,7 +1319,7 @@ class AlexaTimerVis extends utils.Adapter {
 					if (!questionAlexa) {
 						// if (countMatchingInputDevice == timerObject.timerActiv.timerCount || countMatchingInputDevice == 0) {
 						delTimer(element);
-						this.log.debug("Alle Timer löschenr");
+						this.log.debug("Alle Timer löschen");
 						// }
 					} else {
 						// Alle, nur die vom eingabe Gerät
@@ -1326,6 +1397,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.end_Time = "00:00:00";
 					timer.name = "Timer";
 					timer.inputDevice = "";
+					timer.lengthTimer = "";
 					alive = false; // all_Timer.alive
 				} else {
 					alive = true;
@@ -1333,6 +1405,7 @@ class AlexaTimerVis extends utils.Adapter {
 				// Wenn der Wert undefined ist, da der Datenpunkt noch nicht erstellt wurde soll nicht gemacht werden
 				if (timer.hour !== undefined) {
 					try {
+						// TODO Werte schreiben
 						this.setStateChanged(element + ".alive", timerObject.timerActiv.timer[element], true);
 						this.setStateChanged(element + ".hour", timer.hour, true);
 						this.setStateChanged(element + ".minute", timer.minute, true);
@@ -1341,6 +1414,7 @@ class AlexaTimerVis extends utils.Adapter {
 						this.setStateChanged(element + ".TimeStart", timer.start_Time, true);
 						this.setStateChanged(element + ".TimeEnd", timer.end_Time, true);
 						this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
+						this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
 						this.setStateChanged("all_Timer.alive", alive, true);
 					} catch (e) {
 						this.log.debug(e);
