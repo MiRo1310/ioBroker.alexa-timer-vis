@@ -249,7 +249,16 @@
         "intervall1": 1,
         "intervall2": 1,
         "entprellZeit": 2,
-        "entprellen": false
+        "entprellen": false,
+        "unitHour1": "Stunde",
+        "unitHour2": "Stunden",
+        "unitHour3": "h",
+        "unitMinute1": "Minute",
+        "unitMinute2": "Minuten",
+        "unitMinute3": "min",
+        "unitSecond1": "Sekunde",
+        "unitSecond2": "Sekunden",
+        "unitSecond3": "sec"
     },
     "objects": [],
     "instanceObjects": [

@@ -80,7 +80,7 @@ const timerObject = {
 	},
 	"brueche2": {
 		"viertelstunde": 0.25,
-		"dreiviertelstunde": 0.75
+		"dreiviertelstunde": 0.75,
 	},
 	"zahlen": { // Zahl als Wort zu Zahl nummerisch
 		"eins": 1,
@@ -195,6 +195,17 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 		intervallMore60 = this.config.intervall1;
 		intervallLess60 = this.config.intervall2;
+		// Einheiten
+		const unitHour1 = this.config.unitHour1;
+		const unitHour2 = this.config.unitHour2;
+		const unitHour3 = this.config.unitHour3;
+		const unitMinute1 = this.config.unitMinute1;
+		const unitMinute2 = this.config.unitMinute2;
+		const unitMinute3 = this.config.unitMinute3;
+		const unitSecond1 = this.config.unitSecond1;
+		const unitSecond2 = this.config.unitSecond2;
+		const unitSecond3 = this.config.unitSecond3;
+
 		// debounce = this.config.entprellen;
 		debounceTime = this.config.entprellZeit;
 		// Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
@@ -699,13 +710,14 @@ class AlexaTimerVis extends utils.Adapter {
 			const seconds = arrayTime[2];
 
 			// String der Zeit erstellen mit dynamischer Einheit
+			//ANCHOR Einheiten Datenpunkt string
 			let unit = "";
 			if (timeLeftSec >= 3600) {
-				unit = " h";
+				unit = ` ${unitHour3}`;
 			} else if (timeLeftSec >= 60) {
-				unit = " min";
+				unit = ` ${unitMinute3}`;
 			} else {
-				unit = " s";
+				unit = ` ${unitSecond3}`;
 			}
 			const time = hour + ":" + minutes + ":" + seconds + unit;
 
@@ -762,11 +774,12 @@ class AlexaTimerVis extends utils.Adapter {
 				seconds = ("0" + seconds).slice(-2);
 			}
 			let hourUnit = "";
+			// ANCHOR Einheiten lengthTimer
 			if (hour) {
 				if (hour > 1) {
-					hourUnit = "Stunden";
+					hourUnit = unitHour2;
 				} else {
-					hourUnit = "Stunde";
+					hourUnit = unitHour1;
 				}
 			} else {
 				hour = "";
@@ -774,9 +787,9 @@ class AlexaTimerVis extends utils.Adapter {
 			let minuteUnit = "";
 			if (minutes) {
 				if (minutes > 1) {
-					minuteUnit = "Minuten";
+					minuteUnit = unitMinute2;
 				} else {
-					minuteUnit = "Minute";
+					minuteUnit = unitMinute1;
 				}
 			} else {
 				minutes = "";
@@ -785,9 +798,9 @@ class AlexaTimerVis extends utils.Adapter {
 			let secUnit = "";
 			if (seconds) {
 				if (seconds > 1) {
-					secUnit = "Sekunden";
+					secUnit = unitSecond2;
 				} else {
-					secUnit = "Sekunde";
+					secUnit = unitSecond1;
 				}
 
 			} else {
@@ -836,6 +849,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timerObject.timerActiv.timerCount--; // Aktive Timer minus 1
 					timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
 
+					// ANCHOR Timer Werte zurück setzen
 					// Werte des Timers zurücksetzen
 					timer.hour = "00";
 					timer.minute = "00";
@@ -858,7 +872,7 @@ class AlexaTimerVis extends utils.Adapter {
 			}, int); // Aktualisierungszeit
 		};
 
-		//ANCHOR createState
+		//ANCHOR FUNk createState
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
 		/**
 		 * States erstellen

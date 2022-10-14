@@ -5,8 +5,8 @@
         "_options": {
             "type": "panel",
             "label": {
-                "en": "Alexa Timer Vis",
-                "de": "Alexa Timer Vis"
+                "en": "Options",
+                "de": "Optionen"
             },
             "items": {
                 "status": {
@@ -39,8 +39,8 @@
                     "step": 1,
                     "sm": 12,
                     "md": 6,
-                    "lg": 6,
-                    "label": "Intervall" ,
+                    "lg": 2,
+                    "label": "Intervall (sec)" ,
                     "disabled": "!_alive",
                     "help":{
                         "en": "Intervall, time left more than 60 sec",
@@ -49,20 +49,156 @@
 
                 },
                 "intervall2" : {
-                    "newLine": true,
+                    "newLine": false,
                     "type" : "number",
                     "min": 1,
                     "step": 1,
-                    "sm": 12,
+                    "sm": 6,
                     "md": 6,
-                    "lg": 6,
-                    "label": "Intervall",
+                    "lg": 2,
+                    "label": "Intervall (sec)",
                     "disabled": "!_alive",
                     "help": {
                         "en": "Intervall, time left less than 60 sec",
                         "de": "Intervall, verbleibende Zeit weniger als 60 Sek"
                     }
 
+                },
+                "headline":{
+                    "newLine":true,
+                    "type": "header",
+                    "text": "Einheiten für Datenpunkt lengthTimer",
+                    "size": 2                    
+                },
+                "unitHour1" : {
+                    "newLine": true,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit hours",
+                        "de": "Einheit Stunden"
+                    },
+                    "help": {
+                        "en": "For one hour",
+                        "de": "Für eine Stunde"
+                    }
+                },
+                "unitHour2" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit hours",
+                        "de": "Einheit Stunden"
+                    },
+                    "help": {
+                        "en": "For more than one hour",
+                        "de": "Für mehr als eine Stunde"
+                    }
+                },
+                "unitMinute1" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit minute",
+                        "de": "Einheit Minuten"
+                    },                    
+                    "help": {
+                        "en": "For one minute",
+                        "de": "Für eine Minute"
+                    }
+                },
+                "unitMinute2" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit minute",
+                        "de": "Einheit Minuten"
+                    },                    
+                    "help": {
+                        "en": "For more than one minute",
+                        "de": "Für mehr als eine Minute"
+                    }
+                },
+                "unitSecond1" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit second",
+                        "de": "Einheit Sekunden"
+                    },                    
+                    "help": {
+                        "en": "For one second",
+                        "de": "Für eine Sekunde"
+                    }
+                },
+                "unitSecond2" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit second",
+                        "de": "Einheit Sekunden"
+                    },                    
+                    "help": {
+                        "en": "For more than one second",
+                        "de": "Für mehr als eine Sekunde"
+                    }
+                },
+                "headline2":{
+                    "newLine":true,
+                    "type": "header",
+                    "text": "Einheiten für den Datenpunkt string",
+                    "size": 2                    
+                },
+                "unitHour3" : {
+                    "newLine": true,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit hours",
+                        "de": "Einheit Stunden"
+                    }                   
+                },
+                "unitMinute3" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit Minute",
+                        "de": "Einheit Minuten"
+                    }
+                },
+                "unitSecond3" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Unit Second",
+                        "de": "Einheit Sekunden"
+                    }
+                    
                 }
             }
         },
