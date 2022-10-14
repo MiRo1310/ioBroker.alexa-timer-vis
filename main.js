@@ -76,7 +76,8 @@ const timerObject = {
 		},
 	},
 	"brueche1": {
-		"halbe": 0.5
+		"halbe": 0.5,
+		"halb": "1+0.5"
 	},
 	"brueche2": {
 		"viertelstunde": 0.25,
@@ -84,6 +85,7 @@ const timerObject = {
 	},
 	"zahlen": { // Zahl als Wort zu Zahl nummerisch
 		"eins": 1,
+		"ein": 1,
 		"one": 1,
 		"eine": 1,
 		"zwei": 2,
@@ -1085,7 +1087,7 @@ class AlexaTimerVis extends utils.Adapter {
 			let inputString = "";
 			let name = "";
 			let deleteVal = 0; // Nummer zum bestimmen der Art Timer zu löschen
-
+			// this.log.debug("Array: " + JSON.stringify(input));
 			input.forEach(element => {
 				const data = timerObject.timerActiv.data;
 				// Elemente finden die nicht beachtet werden sollen
@@ -1121,7 +1123,8 @@ class AlexaTimerVis extends utils.Adapter {
 					timerString += ")";
 					inputString += "Sekunden ";
 				}
-				else if (timerObject.brueche1[element] > 0) {
+				else if (timerObject.brueche1[element]) {
+
 					// Wenn als letztes vor dem Bruch nichts war, soll die eins hinzugefügt werden
 					if (timerString.charAt(timerString.length - 1) == "") {
 						timerString += "(1";
@@ -1161,6 +1164,8 @@ class AlexaTimerVis extends utils.Adapter {
 					name += element + " ";
 
 				}
+
+				// this.log.debug("Berechnung: " + timerString);
 			});
 			// Timer umgewandelt in Zahlen
 			this.log.debug("Timer in Zahlen umgewandelt: " + timerString);
