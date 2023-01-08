@@ -959,7 +959,7 @@ class AlexaTimerVis extends utils.Adapter {
 					await this.setObjectNotExistsAsync("timer" + i + ".percent", {
 						type: "state",
 						common: {
-							name: "Percent",
+							name: "Prozent",
 							type: "number",
 							role: "indicator",
 							read: true,
@@ -1326,13 +1326,11 @@ class AlexaTimerVis extends utils.Adapter {
 				// Aufzählen wieviele Timer mit den Sekunden vorkommt
 				if (timerObject.timer[element].onlySec == sec) {
 					countMatchingNumber++;
-
 				}
 				this.log.debug("Name im Object " + JSON.stringify(timerObject.timer[element].name));
 				// Aufzählen wieviele Timer mit dem gleichen Namen vorkommen
 				if (timerObject.timer[element].name.trim() == name) {
 					countMatchingName++;
-
 				}
 				if (timerObject.timer[element].inputDevice == inputDevice) {
 					countMatchingInputDevice++;
