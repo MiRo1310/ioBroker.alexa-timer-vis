@@ -72,7 +72,8 @@ const timerObject = {
 			"timerInput": "",
 			"timerInterval": 0,
 			"endTime": 0,
-			"lengthTimer": ""
+			"lengthTimer": "",
+			"percent":0
 		},
 	},
 	"brueche1": {
@@ -789,6 +790,7 @@ class AlexaTimerVis extends utils.Adapter {
 			timer.timeLeftSec = timeLeftSec;
 			timer.index = index;
 			timer.inputString = inputString;
+			timer.percent = Math.round(timeLeftSec/sec *100)  
 
 
 			// Falls der Timername nicht definiert ist soll er einfach nur "Timer" heissen
@@ -923,6 +925,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.inputDevice = "";
 					timer.timerInterval = 0;
 					timer.lengthTimer = "";
+					timer.percent = 0;
 					this.log.info("Timer stopped");
 
 					clearInterval(timerObject.interval[index.slice(5)]);
@@ -953,6 +956,19 @@ class AlexaTimerVis extends utils.Adapter {
 						},
 						native: {},
 					});
+					await this.setObjectNotExistsAsync("timer" + i + ".percent", {
+						type: "state",
+						common: {
+							name: "Percent",
+							type: "number",
+							role: "indicator",
+							read: true,
+							write: true,
+							def: 0
+						},
+						native: {},
+					});
+
 					await this.setObjectNotExistsAsync("timer" + i + ".alive", {
 						type: "state",
 						common: {
@@ -1486,6 +1502,7 @@ class AlexaTimerVis extends utils.Adapter {
 					timer.name = "Timer";
 					timer.inputDevice = "";
 					timer.lengthTimer = "";
+					timer.percent =0;
 					alive = false; // all_Timer.alive
 				} else {
 					alive = true;
@@ -1503,6 +1520,7 @@ class AlexaTimerVis extends utils.Adapter {
 						this.setStateChanged(element + ".TimeEnd", timer.end_Time, true);
 						this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
 						this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
+						this.setStateChanged(element + ".percent", timer.percent, true);
 						this.setStateChanged("all_Timer.alive", alive, true);
 					} catch (e) {
 						this.log.debug(e);
