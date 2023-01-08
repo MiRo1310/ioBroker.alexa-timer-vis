@@ -323,7 +323,7 @@ class AlexaTimerVis extends utils.Adapter {
 									deleteTimerIndex = 1;
 									// bearbeiten , es muss zwischen zeit und name unterschieden werden
 									name = "";
-									deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
+									// foundedTimer = findTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
 
 								} else {
 									// Index Timer löschen
@@ -334,8 +334,20 @@ class AlexaTimerVis extends utils.Adapter {
 									this.log.debug("Alexa kann den Timer direkt löschen!");
 									// Timer anhalten
 									this.log.debug("Output (Name, Sec, DeleteTimerIndex): " + JSON.stringify(array));
-									deleteTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
+
 								}
+								findTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa).then((timers) => {
+									if (timers.timer) {
+										timers.timer.forEach((element) => {
+											delTimer(element);
+										});
+									} else if (timers.oneOfMultiTimer) {
+										const a = timers.oneOfMultiTimer;
+										if (typeof (a[0]) == "string" && typeof (a[1]) == "number" && typeof (a[2]) == "string" && typeof (a[3]) == "string")
+											oneOfMultiTimerDelete(a[0], a[1], a[2], a[3]);
+									}
+								});
+
 							}
 							// Timer soll erstellt werden
 							else if (toDo == "activateTimer") {
@@ -391,6 +403,22 @@ class AlexaTimerVis extends utils.Adapter {
 							}// Timer soll verlängert werden
 							else if (toDo == "extendTimer") {
 								this.log.debug("Timer soll verlängert werden");
+								//TODO
+								// this.log.debug("Array: " + JSON.stringify(array));
+								// findTimer(array[1], array[0], 1, value, questionAlexa).then((timers) => {
+								// 	this.log.debug("test");
+								// 	this.log.debug("Timers: " + JSON.stringify(timers));
+								// 	if (timers.timer) {
+								// 		timers.timer.forEach((element) => {
+								// 			this.log.debug("Element zum verlängern: " + JSON.stringify(element));
+								// 		});
+								// 	} else if (timers.oneOfMultiTimer) {
+								// 		this.log.debug("OneOfMultiTimer verlängern: " + JSON.stringify(timers.oneOfMultiTimer));
+								// 		// const a = timers.oneOfMultiTimer;
+								// 		// if (typeof (a[0]) == "string" && typeof (a[1]) == "number" && typeof (a[2]) == "string" && typeof (a[3]) == "string")
+								// 		// oneOfMultiTimerDelete(a[0], a[1], a[2], a[3]);
+								// 	}
+								// });
 								// Version 1 geht nur wenn ein Timer aktiv ist
 								if (timerObject.timerActiv.timerCount == 1) {
 
@@ -1240,17 +1268,17 @@ class AlexaTimerVis extends utils.Adapter {
 		};
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------
-		//ANCHOR DeleteTimer
+		//ANCHOR FUNKTION FindTimer
 		/**
-			 * Löschen eines Timers
+			 * Timer Identifizieren
 			 *
-			 * @param {number} sec Sekunden des zu löschenden Timers
+			 * @param {number} sec Sekunden des zu suchenden Timers
 			 * @param {string} name Name des Timers
 			 * @param {number} deleteTimerIndex Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen
 			 * @param {string} value Input Alexa
 			 * @param {boolean} questionAlexa Wenn true, muss auf eine Antwort reagiert werden
 			 */
-		const deleteTimer = async (sec, name, deleteTimerIndex, value, questionAlexa) => {
+		const findTimer = async (sec, name, deleteTimerIndex, value, questionAlexa) => {
 			/**
 			 * Ausgewählter Timer löschen
 			 * @param {*} element
@@ -1295,7 +1323,8 @@ class AlexaTimerVis extends utils.Adapter {
 				}
 			}
 
-
+			const timerFound = {};
+			timerFound.timer = [];
 			// Alexa hatte nachgefragt
 			if (questionAlexa) {
 				this.log.debug("Alexa hatte nachgefragt");
@@ -1309,7 +1338,8 @@ class AlexaTimerVis extends utils.Adapter {
 					const sec = 0;
 					//const name = "";
 					this.log.debug("Mit genauem Namen vorhanden");
-					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+					timerFound.oneOfMultiTimer = [value, sec, name, inputDevice];
+					// oneOfMultiTimerDelete(value, sec, name, inputDevice);
 				}
 
 				// Einer, mit genauer Zeit, mehrmals vorhanden
@@ -1317,14 +1347,16 @@ class AlexaTimerVis extends utils.Adapter {
 					/** @type{string} Name */const name = "";
 					const inputDevice = "";
 					this.log.debug("Mit genauer Zeit mehrmals vorhanden");
-					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+					timerFound.oneOfMultiTimer = [value, sec, name, inputDevice];
+					// oneOfMultiTimerDelete(value, sec, name, inputDevice);
 				}
 				// Einer, mit genauer Zeit, mehrmals auf verschiedenen Geräten
 				else if (countMatchingInputDevice != timerObject.timerActiv.timerCount) {
 					const name = "";
 					const inputDevice = "";
 					this.log.debug("genaue zeit, verschiedene Geräte");
-					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+					timerFound.oneOfMultiTimer = [value, sec, name, inputDevice];
+					// oneOfMultiTimerDelete(value, sec, name, inputDevice);
 				} else {
 
 					const sec = 0;
@@ -1332,7 +1364,8 @@ class AlexaTimerVis extends utils.Adapter {
 					const inputDevice = "";
 					this.log.debug("Nur Value wird übergeben");
 					this.log.debug("Value " + JSON.stringify(value));
-					oneOfMultiTimerDelete(value, sec, name, inputDevice);
+					timerFound.oneOfMultiTimer = [value, sec, name, inputDevice];
+					// oneOfMultiTimerDelete(value, sec, name, inputDevice);
 				}
 			}
 
@@ -1346,17 +1379,20 @@ class AlexaTimerVis extends utils.Adapter {
 						// if (countMatchingInputDevice == timerObject.timerActiv.timerCount || countMatchingInputDevice == 0) {
 
 						if (timerObject.timerActiv.timerCount == 1 && (countMatchingNumber == 1 && timerObject.timer[element]["onlySec"] == sec && sec !== 0 || (!sec && name == ""))) {
-							delTimer(element);
+							timerFound.timer.push(element);
+							// delTimer(element);
 							this.log.debug("Einer wenn genau einer gestellt ist");
 						}
 						else if (countMatchingNumber == 1 && timerObject.timer[element]["onlySec"] == sec) {
-							delTimer(element);
+							timerFound.timer.push(element);
+							// delTimer(element);
 							this.log.debug("Einer ist gestellt mit genau diesem Wert");
 
 						}
 						// Einer, mit genauem Namen
 						else if (timerObject.timer[element]["name"] == name && name !== "" && countMatchingName == 1) {
-							delTimer(element);
+							timerFound.timer.push(element);
+							// delTimer(element);
 							this.log.debug("Mit genauem Namen");
 						}// Entweder alle auf diesem Gerät, oder keins auf diesem Gerät
 						// }
@@ -1366,30 +1402,34 @@ class AlexaTimerVis extends utils.Adapter {
 					// Alle, alle sind auf einem Gerät
 					if (!questionAlexa) {
 						// if (countMatchingInputDevice == timerObject.timerActiv.timerCount || countMatchingInputDevice == 0) {
-						delTimer(element);
+						timerFound.timer.push(element);
+						// delTimer(element);
 						this.log.debug("Alle Timer löschen");
 						// }
 					} else {
 						// Alle, nur die vom eingabe Gerät
 						if (countMatchingInputDevice != timerObject.timerActiv.timerCount && value.indexOf("nein") != -1) {
 							if (timerObject.timer[element].inputDevice == inputDevice) {
-								delTimer(element);
+								timerFound.timer.push(element);
+								// delTimer(element);
 								this.log.debug("Nur auf diesem Gerät löschen");
 							}
 						}
 						// Alle, von allen Geräten
 						else if (countMatchingInputDevice != timerObject.timerActiv.timerCount && value.indexOf("ja") != -1) {
 							for (const element in timerObject.timerActiv.timer) {
-								delTimer(element);
+								timerFound.timer.push(element);
+								// delTimer(element);
 								this.log.debug("Alles löschen");
 							}
 						}
 					}
 				}
 			}
+			return timerFound;
 		};
 
-		//ANCHOR Del Timer
+		//ANCHOR FUNKTION Delete Timer
 		/**
 		 * Funktion setzt im Objekt den Timer auf false
 		 * @param {*} timer Timer der gestoppt werden soll
