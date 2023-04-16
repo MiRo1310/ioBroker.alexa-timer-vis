@@ -35,7 +35,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [ 16.x, 18.x]
+        node-version: [16.x, 18.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -76,7 +76,7 @@ jobs:
 #          # Enter this token as a GitHub secret (with name SENTRY_AUTH_TOKEN) in the repository options
 #          # Then uncomment and customize the following block:
 #          sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-#          sentry-project: "iobroker-alexa-timer-vis"
-#          sentry-version-prefix: "iobroker.alexa-timer-vis"
+#          sentry-project: "iobroker-alexa-shoppinglist"
+#          sentry-version-prefix: "iobroker.alexa-shoppinglist"
 #          # If your sentry project is linked to a GitHub repository, you can enable the following option
 #          # sentry-github-integration: true
