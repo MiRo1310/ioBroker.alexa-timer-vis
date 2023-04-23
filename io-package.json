@@ -3,11 +3,31 @@
         "name": "alexa-timer-vis",
         "version": "0.1.15",
         "news": {
-            "0.1.15":{
-                "en": "Include creation time to avoid creating duplicate timers"
+            "0.1.15": {
+                "en": "Include creation time to avoid creating duplicate timers",
+                "de": "Fügen Sie die Erstellungszeit hinzu, um die Erstellung doppelter Timer zu vermeiden",
+                "ru": "Включите время создания, чтобы избежать создания повторяющихся таймеров",
+                "pt": "Inclua o tempo de criação para evitar a criação de cronômetros duplicados",
+                "nl": "Voeg aanmaaktijd toe om dubbele timers te voorkomen",
+                "fr": "Inclure l'heure de création pour éviter de créer des minuteries en double",
+                "it": "Includi l'ora di creazione per evitare di creare timer duplicati",
+                "es": "Incluya el tiempo de creación para evitar la creación de temporizadores duplicados",
+                "pl": "Uwzględnij czas utworzenia, aby uniknąć tworzenia zduplikowanych liczników czasu",
+                "uk": "Включіть час створення, щоб уникнути дублювання таймерів",
+                "zh-cn": "包括创建时间以避免创建重复的计时器"
             },
-            "0.1.14":{
-                "en": "Added debouncing in the adapter configuration"
+            "0.1.14": {
+                "en": "Added debouncing in the adapter configuration",
+                "de": "Entprellung in der Adapterkonfiguration hinzugefügt",
+                "ru": "Добавлен дебаунс в конфигурации адаптера",
+                "pt": "Adicionado debouncing na configuração do adaptador",
+                "nl": "Debouncing toegevoegd in de adapterconfiguratie",
+                "fr": "Ajout de l'anti-rebond dans la configuration de l'adaptateur",
+                "it": "Aggiunto antirimbalzo nella configurazione dell'adattatore",
+                "es": "Se agregó antirrebote en la configuración del adaptador.",
+                "pl": "Dodano debouncing w konfiguracji adaptera",
+                "uk": "Додано усунення стрибків у конфігурацію адаптера",
+                "zh-cn": "在适配器配置中添加了去抖动"
             },
             "0.1.13": {
                 "en": "Delete of Timers with the same value, fixed",
@@ -19,7 +39,8 @@
                 "it": "Eliminazione dei timer con lo stesso valore, fissa",
                 "es": "Eliminación de Timers con el mismo valor, fijo",
                 "pl": "Usuwanie timerów o tej samej wartości, naprawione",
-                "zh-cn": "删除具有相同值的计时器，已修复"
+                "zh-cn": "删除具有相同值的计时器，已修复",
+                "uk": "Видалення таймерів з однаковим значенням, виправлено"
             },
             "0.1.12": {
                 "en": "Delete of timer fixed",
@@ -31,7 +52,8 @@
                 "it": "Eliminazione del timer fissa",
                 "es": "Eliminación de temporizador arreglado",
                 "pl": "Naprawiono usuwanie timera",
-                "zh-cn": "修复定时器的删除"
+                "zh-cn": "修复定时器的删除",
+                "uk": "Виправлено видалення таймера"
             },
             "0.1.11": {
                 "en": "Delete of Timer with same Inputvalue, fixed",
@@ -43,7 +65,8 @@
                 "it": "Eliminazione del timer con lo stesso valore di ingresso, fissa",
                 "es": "Eliminación del temporizador con el mismo valor de entrada, fijo",
                 "pl": "Usunięcie timera z tą samą wartością wejściową, ustalone",
-                "zh-cn": "删除具有相同 Inputvalue 的 Timer，已修复"
+                "zh-cn": "删除具有相同 Inputvalue 的 Timer，已修复",
+                "uk": "Видалення таймера з тим же вхідним значенням, виправлено"
             },
             "0.1.10": {
                 "en": "Possibility to set intervals manually",
@@ -55,7 +78,8 @@
                 "it": "Possibilità di impostare manualmente gli intervalli",
                 "es": "Posibilidad de establecer intervalos manualmente",
                 "pl": "Możliwość ręcznego ustawienia interwałów",
-                "zh-cn": "可以手动设置间隔"
+                "zh-cn": "可以手动设置间隔",
+                "uk": "Можливість встановити інтервали вручну"
             },
             "0.1.9": {
                 "en": "Bugfix",
@@ -67,7 +91,8 @@
                 "it": "Risoluzione del problema",
                 "es": "Arreglo del fallo",
                 "pl": "Naprawa błędów",
-                "zh-cn": "错误修复"
+                "zh-cn": "错误修复",
+                "uk": "Виправлення помилок"
             },
             "0.1.8": {
                 "en": "Bugfix, Button added to stop the selected Timer",
@@ -79,7 +104,8 @@
                 "it": "Bugfix, pulsante aggiunto per fermare il timer selezionato",
                 "es": "Corrección de errores, botón agregado para detener el temporizador seleccionado",
                 "pl": "Bugfix, przycisk dodany do zatrzymania wybranego timera",
-                "zh-cn": "错误修复，添加按钮以停止选定的计时器"
+                "zh-cn": "错误修复，添加按钮以停止选定的计时器",
+                "uk": "Виправлено помилку, додано кнопку для зупинки вибраного таймера"
             },
             "0.1.7": {
                 "en": "New state,'Input Device'",
@@ -91,7 +117,8 @@
                 "it": "Nuovo stato, \"Dispositivo di input\"",
                 "es": "Nuevo estado, 'Dispositivo de entrada'",
                 "pl": "Nowy stan „Urządzenie wejściowe”",
-                "zh-cn": "新状态，'输入设备'"
+                "zh-cn": "新状态，'输入设备'",
+                "uk": "Новий стан «Пристрій введення»"
             },
             "0.1.6": {
                 "en": "numbers from 1-9 are always displayed as two digits, 1 => 01",
@@ -103,7 +130,8 @@
                 "it": "i numeri da 1 a 9 vengono sempre visualizzati come due cifre, 1 => 01",
                 "es": "los números del 1 al 9 siempre se muestran como dos dígitos, 1 => 01",
                 "pl": "liczby od 1-9 są zawsze wyświetlane jako dwie cyfry, 1 => 01",
-                "zh-cn": "1-9 的数字始终显示为两位数，1 => 01"
+                "zh-cn": "1-9 的数字始终显示为两位数，1 => 01",
+                "uk": "числа від 1 до 9 завжди відображаються двома цифрами, 1 => 01"
             },
             "0.1.5": {
                 "en": "New keywords added",
@@ -115,7 +143,8 @@
                 "it": "Nuove parole chiave aggiunte",
                 "es": "Nuevas palabras clave añadidas",
                 "pl": "Dodano nowe słowa kluczowe",
-                "zh-cn": "添加了新的关键字"
+                "zh-cn": "添加了新的关键字",
+                "uk": "Додано нові ключові слова"
             },
             "0.1.4": {
                 "en": "States will be reset on unload",
@@ -127,7 +156,8 @@
                 "it": "Gli stati verranno ripristinati allo scarico",
                 "es": "Los estados se restablecerán al descargar",
                 "pl": "Stany zostaną zresetowane podczas rozładowania",
-                "zh-cn": "状态将在卸载时重置"
+                "zh-cn": "状态将在卸载时重置",
+                "uk": "Стани буде скинуто під час вивантаження"
             },
             "0.1.3": {
                 "en": "Start and End Time added",
@@ -139,7 +169,8 @@
                 "it": "Ora di inizio e di fine aggiunta",
                 "es": "Hora de inicio y finalización agregada",
                 "pl": "Dodano czas rozpoczęcia i zakończenia",
-                "zh-cn": "添加了开始和结束时间"
+                "zh-cn": "添加了开始和结束时间",
+                "uk": "Додано час початку та закінчення"
             },
             "0.1.2": {
                 "en": "Bugfix (A double created Intervall, fixed)",
@@ -151,7 +182,8 @@
                 "it": "Bugfix (un doppio intervallo creato, risolto)",
                 "es": "Corrección de errores (un intervalo de doble creación, corregido)",
                 "pl": "Bugfix (podwójnie utworzony interwał, naprawiony)",
-                "zh-cn": "错误修复（双重创建的间隔，已修复）"
+                "zh-cn": "错误修复（双重创建的间隔，已修复）",
+                "uk": "Виправлення (виправлено подвійне створення Intervall)"
             },
             "0.1.1": {
                 "en": "Adaptation to the English language (experimental)",
@@ -163,7 +195,8 @@
                 "it": "Adattamento alla lingua inglese (sperimentale)",
                 "es": "Adaptación al idioma inglés (experimental)",
                 "pl": "Adaptacja do języka angielskiego (eksperymentalna)",
-                "zh-cn": "适应英语（实验性）"
+                "zh-cn": "适应英语（实验性）",
+                "uk": "Адаптація до англійської мови (експериментально)"
             },
             "0.1.0": {
                 "en": "Error when deleting of intervals and timeouts after shutdown, fixed",
@@ -175,22 +208,23 @@
                 "it": "Errore durante l'eliminazione di intervalli e timeout dopo l'arresto, risolto",
                 "es": "Error, al eliminar intervalos y tiempos de espera después del apagado, solucionado",
                 "pl": "Naprawiono błąd podczas usuwania interwałów i limitów czasu po wyłączeniu",
-                "zh-cn": "错误，在关机后删除间隔和超时时，已修复"
+                "zh-cn": "错误，在关机后删除间隔和超时时，已修复",
+                "uk": "Виправлена ​​помилка при видаленні інтервалів і тайм-аутів після завершення роботи"
             }
-        },       
-        "titleLang": {            
-                "en": "Alexa Timer for Vis",
-                "de": "Alexa Timer für Vis",
-                "ru": "Alexa Таймер для Vis",
-                "pt": "Alexa Timer para Vis",
-                "nl": "Alexa Timer voor Vis",
-                "fr": "Alexa Timer pour Vis",
-                "it": "Alexa Timer per Vis",
-                "es": "Alexa Timer for Vis",
-                "pl": "Alexa Timer, właśc",
-                "uk": "Alexa Таймер для Ві",
-                "zh-cn": "Alexa Timer of Vis"
-            },
+        },
+        "titleLang": {
+            "en": "Alexa Timer for Vis",
+            "de": "Alexa Timer für Vis",
+            "ru": "Alexa Таймер для Vis",
+            "pt": "Alexa Timer para Vis",
+            "nl": "Alexa Timer voor Vis",
+            "fr": "Alexa Timer pour Vis",
+            "it": "Alexa Timer per Vis",
+            "es": "Alexa Timer for Vis",
+            "pl": "Alexa Timer, właśc",
+            "uk": "Alexa Таймер для Ві",
+            "zh-cn": "Alexa Timer of Vis"
+        },
         "desc": {
             "en": "Output Alexa timer to display timers in the VIS",
             "de": "Ausgabe Alexa Timer, um Timer in der VIS anzuzeigen",
@@ -203,12 +237,11 @@
             "pl": "Z kolei Alexa zmierza do wyświetlania timerów w VIS",
             "uk": "Вихідний таймер Alexa для відображення таймерів у VIS",
             "zh-cn": "产出"
-          },
+        },
         "authors": [
             "Michael Roling <michael.roling@gmx.de>"
         ],
-        "keywords": [              
-            
+        "keywords": [
             "Alexa",
             "Timer",
             "VIS",
