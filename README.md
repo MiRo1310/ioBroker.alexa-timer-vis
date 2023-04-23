@@ -135,9 +135,9 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 ## License
 
-MIT License
-
 Copyright (c) 2021-2023 Michael Roling <michael.roling@gmx.de>
+
+MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
