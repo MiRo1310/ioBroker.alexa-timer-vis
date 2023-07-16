@@ -75,6 +75,7 @@ const timerObject = {
         "the",
         "a",
         "for",
+        "um",
       ], // Wörter die nicht beachtet werden sollen
       notNotedSentence: ["stell ein timer", "stelle einen timer", "stelle ein timer", "stell einen timer"],
       stopAll: ["alle", "all"], // Spezielle Definition zum löschen aller Timer
@@ -266,6 +267,7 @@ class AlexaTimerVis extends utils.Adapter {
 
     // Auf Änderung des Datenpunkts reagieren
     this.on("stateChange", async (id, state) => {
+      // this.log.debug("Ack " + JSON.stringify(state?.ack));
       // Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
       if (state && typeof state.val === "string" && state.val != "" && id == datapoint) {
         // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
@@ -274,14 +276,6 @@ class AlexaTimerVis extends utils.Adapter {
           this.log.debug("Eingabe soll nicht beachtet werden!");
           doNothing = true;
         }
-
-        // Versuch zu ersetzen
-        // for (const sentence of timerObject.timerActiv.data.notNotedSentence) {
-        // 	if (value == sentence) {
-        // 		this.log.debug("Eingabe soll nicht beachtet werden!");
-        // 		doNothing = true;
-        // 	}
-        // }
 
         value = state.val;
         // Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird und
@@ -304,22 +298,22 @@ class AlexaTimerVis extends utils.Adapter {
             }
           }
 
-          // Timer länge ermitteln und vergleichen
-          const array = decomposeInputValue(value);
+          // Input zerlegen
+          const decomposedValues = decomposeInputValue(value);
 
           // Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
           // ANCHOR compareCreationTimeAndSerial
           compareCreationTimeAndSerial(debounceTime).then((val) => {
             if (
-              (!val[0] && !(value == valueOld) && value != "" && !doNothing && valueTimeOld != array[1]) ||
+              (!val[0] && !(value == valueOld) && value != "" && !doNothing && valueTimeOld != decomposedValues[1]) ||
               varInputContainsDelete
             ) {
               // Wert als Alten Wert speichern um beim Trigger zu vergleichen
               if (typeof state.val == "string") {
                 valueOld = state.val;
               }
-              this.log.debug("Array: " + JSON.stringify(array));
-              valueTimeOld = array[1];
+              this.log.debug("Array: " + JSON.stringify(decomposedValues));
+              valueTimeOld = decomposedValues[1];
               // valueOld zurück setzen nach bestimmter Zeit
               this.clearTimeout(timeout_2);
               timeout_2 = setTimeout(() => {
@@ -331,16 +325,16 @@ class AlexaTimerVis extends utils.Adapter {
               // Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
               /**@type{boolean} Wird auf "true" gesetzt wenn Alexa eine Rückfrage gestellt hat*/
               let questionAlexa = false;
+              this.log.debug("value neu" + JSON.stringify(value));
               const toDo = getToDo(value);
 
               // Timer soll gestoppt werden
               if (toDo == "deleteTimer") {
                 this.log.info("Timer soll gestoppt werden!");
-                // const array = decomposeInputValue(value, true);
-                let name = array[0];
+                let name = decomposedValues[0];
                 let timerAbortsec = 0;
-                if (typeof array[1] == "number") {
-                  timerAbortsec = array[1];
+                if (typeof decomposedValues[1] == "number") {
+                  timerAbortsec = decomposedValues[1];
                 }
 
                 /**@type{number} Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen*/
@@ -357,17 +351,17 @@ class AlexaTimerVis extends utils.Adapter {
                   deleteTimerIndex = 1;
                   // bearbeiten , es muss zwischen zeit und name unterschieden werden
                   name = "";
-                  // foundedTimer = findTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa);
                 } else {
                   // Index Timer löschen
-                  if (typeof array[2] == "number") {
-                    deleteTimerIndex = array[2];
+                  if (typeof decomposedValues[2] == "number") {
+                    deleteTimerIndex = decomposedValues[2];
                   }
 
                   this.log.debug("Alexa kann den Timer direkt löschen!");
                   // Timer anhalten
-                  this.log.debug("Output (Name, Sec, DeleteTimerIndex): " + JSON.stringify(array));
+                  this.log.debug("Output (Name, Sec, DeleteTimerIndex): " + JSON.stringify(decomposedValues));
                 }
+
                 findTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa).then((timers) => {
                   if (timers.timer) {
                     timers.timer.forEach((element) => {
@@ -383,13 +377,12 @@ class AlexaTimerVis extends utils.Adapter {
               // Timer soll erstellt werden
               else if (toDo == "activateTimer") {
                 this.log.info("Timer soll hinzugefügt werden!");
-                // const array = decomposeInputValue(value, true);
-                const name = array[0];
+                const name = decomposedValues[0];
                 let timerSeconds = 0;
-                if (typeof array[1] == "number") {
-                  timerSeconds = array[1];
+                if (typeof decomposedValues[1] == "number") {
+                  timerSeconds = decomposedValues[1];
                 }
-                const inputString = array[3];
+                const inputString = decomposedValues[3];
 
                 // Prüfung falls man sagt Alexa Pommes Timer, und dann die Frage kommt für wie lange
                 if (timerSeconds && timerSeconds != 0) {
@@ -431,17 +424,29 @@ class AlexaTimerVis extends utils.Adapter {
               else if (toDo == "extendTimer" || toDo == "shortenTimer") {
                 let addOrSub = 0;
                 toDo == "shortenTimer" ? (addOrSub = -1) : (addOrSub = 1);
-                this.log.debug("Timer soll verlängert werden");
-                //TODO
-                this.log.debug("Array: " + JSON.stringify(array));
+                this.log.debug("Timer soll verlängert oder verkürzt werden");
+
+                this.log.debug("Array: " + JSON.stringify(decomposedValues));
                 this.log.debug("Value: " + JSON.stringify(value));
-                findTimer(array[1], array[0], 1, value, questionAlexa).then((timers) => {
+                let valuePart1, valueExtend, extendString, extendString2, extendTime, extendTime2;
+
+                if (value.includes("um")) {
+                  valuePart1 = value.slice(0, value.indexOf("um")).split(" ");
+                  valueExtend = value.slice(value.indexOf("um") + 2).split(" ");
+                  extendString = filterInfo(valuePart1, false)[0];
+                  if (typeof extendString == "string") extendTime = eval(extendString);
+
+                  extendString2 = filterInfo(valueExtend, false)[0];
+                  if (typeof extendString2 == "string") extendTime2 = eval(extendString2);
+                }
+                //TODO
+                findTimer(extendTime, decomposedValues[0], 1, value, questionAlexa).then((timers) => {
                   this.log.debug("Timers: " + JSON.stringify(timers));
                   if (timers.timer) {
-                    extendTimer(this, timers.timer, array[1], addOrSub);
+                    extendTimer(this, timers.timer, extendTime2, addOrSub);
                   } else if (timers.oneOfMultiTimer) {
                     this.log.debug("OneOfMultiTimer verlängern: " + JSON.stringify(timers.oneOfMultiTimer));
-                    if (timers.oneOfMultiTimer) extendTimer(this, timers.oneOfMultiTimer, array[1], addOrSub);
+                    if (timers.oneOfMultiTimer) extendTimer(this, timers.oneOfMultiTimer, extendTime2, addOrSub);
                   }
                 });
               }
@@ -479,6 +484,15 @@ class AlexaTimerVis extends utils.Adapter {
       }
     });
 
+    //ANCHOR - ExtendTimer
+
+    /**
+     *
+     * @param {*} _this
+     * @param {*} timer Timer to calc
+     * @param {number} sec Time to add or sub
+     * @param {number} addOrSub Multiplikator 1 or -1
+     */
     function extendTimer(_this, timer, sec, addOrSub) {
       timer.forEach((timer) => {
         _this.log.debug("Element zum verlängern: " + JSON.stringify(timer));
@@ -490,10 +504,8 @@ class AlexaTimerVis extends utils.Adapter {
             timerObject.timer[timer].changeValue = true;
             timerObject.timer[timer].endTime += timerSeconds * 1000 * addOrSub;
             timerObject.timer[timer].end_Time = time(timerObject.timer[timer].endTime);
-            _this.log.debug("only " + JSON.stringify(timerObject.timer[timer].onlySec));
             timerObject.timer[timer].onlySec += timerSeconds * addOrSub;
-
-            _this.log.debug("only sec " + JSON.stringify(timerObject.timer[timer].onlySec));
+            _this.log.debug("Pure sec " + JSON.stringify(timerObject.timer[timer].onlySec));
             _this.log.debug("Time_End " + JSON.stringify(time(timerObject.timer[timer].endTime)));
             _this.log.debug("Object " + JSON.stringify(timerObject.timer.timer1));
           }
@@ -504,13 +516,14 @@ class AlexaTimerVis extends utils.Adapter {
     // -------------------------------------------------------------------------------------------------------------------------------------------------
     // Funktionen
     //----------------------------------------------------------------------------------------------------------------------------------------------------
-    //ANCHOR FUNKTION getToDo
+    //ANCHOR getToDo
     /**
      *
-     * @param {string} value Spracheingabeert
+     * @param {string} value Spracheingabewert
      * @returns was soll ausgeführt werden
      */
     const getToDo = (value) => {
+      this.log.debug("Get todo from : " + JSON.stringify(value));
       const valueArray = value.split(" ");
       const arraysTodo = timerObject.timerActiv.condition;
       let foundValue;
@@ -569,7 +582,7 @@ class AlexaTimerVis extends utils.Adapter {
       return [sameTime, sameSerial];
     };
 
-    // ANCHOR Eingabe Wert zerlegen
+    // ANCHOR DecomposeValue Eingabe Wert zerlegen
     /**
      *
      * @param {string} value Sprach-Eingabewert
@@ -583,7 +596,7 @@ class AlexaTimerVis extends utils.Adapter {
       inputDecomposed = inputDecomposed[0].split(" ");
 
       // RückgabeArray erfassen
-      const returnArray = zeiterfassung(inputDecomposed, log);
+      const returnArray = filterInfo(inputDecomposed, log);
       // Name
       let name = "";
       if (typeof returnArray[1] == "string") {
@@ -800,6 +813,7 @@ class AlexaTimerVis extends utils.Adapter {
       timer.index = index;
       timer.inputString = inputString;
       timer.percent = Math.round((timeLeftSec / timer.onlySec) * 100);
+      timer.lengthTimer = arrayTime[3];
 
       // Falls der Timername nicht definiert ist soll er einfach nur "Timer" heissen
       if (name == "" || name == null || name == undefined) {
@@ -875,7 +889,7 @@ class AlexaTimerVis extends utils.Adapter {
       }
 
       let string = `${hour} ${hourUnit} ${minutes} ${minuteUnit} ${seconds} ${secUnit}`;
-      string = string.trim().trimRight();
+      string = string.trim();
       return [hour, minutes, seconds, string];
     };
 
@@ -1149,7 +1163,7 @@ class AlexaTimerVis extends utils.Adapter {
     };
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------
-    //ANCHOR Zeiterfassung
+    //ANCHOR Filter Info
     /**
      * Funktion der Erfassung der gewünschten Zeit und des Namen
      * Erstellt einen String in einem Array [0], um Sekunden berechnen zu können
@@ -1159,12 +1173,13 @@ class AlexaTimerVis extends utils.Adapter {
      * @param {boolean} log Soll ein Log ausgegeben werden
      * @return { (string | number)[]}  Timerstring,Name, Index zum Löschen der Timer, Inputstring
      */
-    const zeiterfassung = (input, log = false) => {
+    const filterInfo = (input, log = false) => {
       let timerString = "";
       let inputString = "";
       let name = "";
       let deleteVal = 0; // Nummer zum bestimmen der Art Timer zu löschen
-      // this.log.debug("Array: " + JSON.stringify(input));
+      this.log.debug("Input filterInfo: " + JSON.stringify(input));
+
       input.forEach((element) => {
         const data = timerObject.timerActiv.data;
         // Elemente finden die nicht beachtet werden sollen
@@ -1235,8 +1250,13 @@ class AlexaTimerVis extends utils.Adapter {
             timerString += "+" + timerObject.zahlen[element];
             inputString += timerObject.zahlen[element] + " ";
           }
-        } else {
-          // Wenn nichts zutrifft kann es sich nur noch um den Namen des Timers handeln
+        } else if (
+          !(
+            timerObject.timerActiv.condition.extendTimer.includes(element) ||
+            timerObject.timerActiv.condition.shortenTimer.includes(element)
+          )
+        ) {
+          // Wenn nichts zutrifft, und der Wert auch nicht in extend und shorten gefunden wird,  kann es sich nur noch um den Namen des Timers handeln
           name += element + " ";
         }
 
@@ -1280,12 +1300,11 @@ class AlexaTimerVis extends utils.Adapter {
 
       // Leerzeichen von beiden Seiten entfernen
       name = name.trim();
-      const array = [timerString, name, deleteVal, inputString];
-      return array;
+      return [timerString, name, deleteVal, inputString];
     };
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------
-    //ANCHOR FUNKTION FindTimer
+    //ANCHOR FindTimer
     /**
      * Timer Identifizieren
      *
@@ -1301,7 +1320,7 @@ class AlexaTimerVis extends utils.Adapter {
        * @param {*} element
        */
       this.log.debug("Sec: " + JSON.stringify(sec));
-      this.log.debug("Name zum löschen: " + JSON.stringify(name));
+      this.log.debug("Name: " + JSON.stringify(name));
       this.log.debug("DeleteTimerIndex: " + JSON.stringify(deleteTimerIndex));
       this.log.debug("Value: " + JSON.stringify(value));
       this.log.debug("Question Alexa: " + JSON.stringify(questionAlexa));
@@ -1317,7 +1336,7 @@ class AlexaTimerVis extends utils.Adapter {
         inputDevice = obj.val;
       }
 
-      let countMatchingNumber = 0;
+      let countMatchingTime = 0;
       let countMatchingName = 0;
       let countMatchingInputDevice = 0;
 
@@ -1326,9 +1345,9 @@ class AlexaTimerVis extends utils.Adapter {
       for (const element in timerObject.timer) {
         // Aufzählen wieviele Timer mit den Sekunden vorkommt
         if (timerObject.timer[element].onlySec == sec) {
-          countMatchingNumber++;
+          countMatchingTime++;
         }
-        this.log.debug("Name im Object " + JSON.stringify(timerObject.timer[element].name));
+        // this.log.debug("Name im Object " + JSON.stringify(timerObject.timer[element].name));
         // Aufzählen wieviele Timer mit dem gleichen Namen vorkommen
         if (timerObject.timer[element].name.trim() == name) {
           countMatchingName++;
@@ -1358,7 +1377,7 @@ class AlexaTimerVis extends utils.Adapter {
         }
 
         // Einer, mit genauer Zeit, mehrmals vorhanden
-        else if (countMatchingNumber > 1) {
+        else if (countMatchingTime > 1) {
           /** @type{string} Name */ const name = "";
           const inputDevice = "";
           this.log.debug("Mit genauer Zeit mehrmals vorhanden");
@@ -1390,28 +1409,18 @@ class AlexaTimerVis extends utils.Adapter {
           // Einer, mit genauer Zeit, nur einmal vorhanden
           // Einer, und einer ist auch nur gestellt
           if (!questionAlexa) {
-            this.log.debug("timerc " + JSON.stringify(timerObject.timerActiv.timerCount == 1));
-            this.log.debug("elem " + JSON.stringify(timerObject.timerActiv.timer[element] === true));
-            if (
-              timerObject.timerActiv.timerCount == 1 &&
-              timerObject.timerActiv.timer[element] === true
-              //  &&
-              // ((countMatchingNumber == 1 &&
-              //   timerObject.timer[element]["onlySec"] == sec &&
-              //   sec !== 0) ||
-              //   (!sec && name == ""))
-            ) {
+            this.log.debug("Timer Count = 1 " + JSON.stringify(timerObject.timerActiv.timerCount == 1));
+            this.log.debug("countmatchingTime " + JSON.stringify(countMatchingTime));
+            this.log.debug("v sec " + JSON.stringify(timerObject.timer[element]["onlySec"] == sec));
+            this.log.debug("sec " + JSON.stringify(sec));
+            if (timerObject.timerActiv.timerCount == 1 && timerObject.timerActiv.timer[element] === true) {
+              timerFound.timer.push(element);
+              this.log.debug("Einer, wenn genau einer gestellt ist");
+            } else if (countMatchingTime == 1 && timerObject.timer[element]["onlySec"] == sec && sec !== 0) {
               timerFound.timer.push(element);
 
-              this.log.debug("Einer wenn genau einer gestellt ist");
-            } else if (
-              timerObject.timerActiv.timerCount == 1 &&
-              ((countMatchingNumber == 1 && timerObject.timer[element]["onlySec"] == sec && sec !== 0) || (!sec && name == ""))
-            ) {
-              timerFound.timer.push(element);
-
-              this.log.debug("Einer wenn genau einer gestellt ist");
-            } else if (countMatchingNumber == 1 && timerObject.timer[element]["onlySec"] == sec) {
+              this.log.debug("Wenn nur einer gestellt ist mit der der gewünschten Zeit");
+            } else if (countMatchingTime == 1 && timerObject.timer[element]["onlySec"] == sec) {
               timerFound.timer.push(element);
               // delTimer(element);
               this.log.debug("Einer ist gestellt mit genau diesem Wert");
