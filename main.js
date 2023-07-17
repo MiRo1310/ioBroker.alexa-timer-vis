@@ -15,7 +15,7 @@ let idInstanze;
 // Variablen für Timeouts und Intervalle
 let setStates;
 let timeout_1;
-let timeout_2;
+let debounceTimeout;
 // Variable um Intervall zum schreiben von States nur einmal auszuführen
 let writeStateActiv = false;
 // Variable mit ID auf welche reagiert werden soll
@@ -210,18 +210,10 @@ class AlexaTimerVis extends utils.Adapter {
       name: "alexa-timer-vis",
     });
     this.on("ready", this.onReady.bind(this));
-    // this.on("stateChange", this.onStateChange.bind(this));
-    // this.on("objectChange", this.onObjectChange.bind(this));
-    // this.on("message", this.onMessage.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
-
-  /**
-   * Is called when databases are connected and adapter received configuration.
-   */
   // ANCHOR onReady
   async onReady() {
-    // Initialize your adapter here
     this.setState("info.connection", false, true);
     datapoint = `${this.config.alexa}.History.summary`;
     const datapointArray = datapoint.split(".");
@@ -232,6 +224,7 @@ class AlexaTimerVis extends utils.Adapter {
     };
     intervallMore60 = this.config.intervall1;
     intervallLess60 = this.config.intervall2;
+
     // Einheiten
     const unitHour1 = this.config.unitHour1;
     const unitHour2 = this.config.unitHour2;
@@ -242,14 +235,11 @@ class AlexaTimerVis extends utils.Adapter {
     const unitSecond1 = this.config.unitSecond1;
     const unitSecond2 = this.config.unitSecond2;
     const unitSecond3 = this.config.unitSecond3;
-
-    // debounce = this.config.entprellen;
     debounceTime = this.config.entprellZeit;
+
     // Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
     this.getForeignObject(datapoint, (err, obj) => {
       if (err || obj == null) {
-        // Error
-        //this.log.error(JSON.stringify(err));
         this.log.error(`The State ${datapoint} was not found!`);
       } else {
         // Datenpunkt wurde gefunden
@@ -261,63 +251,63 @@ class AlexaTimerVis extends utils.Adapter {
       }
     });
 
-    let valueOld = null;
-    let value;
+    let voiceInputOld = null;
+    let voiceInput;
     let valueTimeOld = null;
 
     // Auf Änderung des Datenpunkts reagieren
     this.on("stateChange", async (id, state) => {
-      // this.log.debug("Ack " + JSON.stringify(state?.ack));
       // Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
       if (state && typeof state.val === "string" && state.val != "" && id == datapoint) {
         // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
         let doNothing = false;
-        if (timerObject.timerActiv.data.notNotedSentence.find((element) => element === value)) {
+        if (timerObject.timerActiv.data.notNotedSentence.find((element) => element === voiceInput)) {
           this.log.debug("Eingabe soll nicht beachtet werden!");
           doNothing = true;
         }
 
-        value = state.val;
+        voiceInput = state.val;
         // Überprüfen ob ein Timer Befehl per Sprache an Alexa übergeben wurde, oder wenn wie in Issue #10 ohne das Wort "Timer" ein Timer erstellt wird und
         // "Wecker" darf nicht enthalten sein #15
         // Folgende Begriffe müssen enthalten, bzw. dürfen nicht enthalten sein
         if (
-          (value.indexOf("timer") >= 0 || value.indexOf("stelle") >= 0 || value.indexOf("stell") >= 0) &&
-          value.indexOf("wecker") == -1
+          (voiceInput.indexOf("timer") >= 0 || voiceInput.indexOf("stelle") >= 0 || voiceInput.indexOf("stell") >= 0) &&
+          voiceInput.indexOf("wecker") == -1
         ) {
           this.log.debug("---------------------Start------------------------------");
-          this.log.debug("Start value: " + JSON.stringify(value));
-          this.log.debug("ValueOld: " + JSON.stringify(valueOld));
+          this.log.debug("Start value: " + JSON.stringify(voiceInput));
+          this.log.debug("ValueOld: " + JSON.stringify(voiceInputOld));
           let varInputContainsDelete = false;
 
           // Schleife um zu ermitteln ob gelöscht werden soll, damit die nächste Abfrage durchläuft
           for (const element of timerObject.timerActiv.condition.deleteTimer) {
-            if (value.includes(element)) {
+            if (voiceInput.includes(element)) {
               varInputContainsDelete = true;
               break;
             }
           }
 
           // Input zerlegen
-          const decomposedValues = decomposeInputValue(value);
+          const decomposedValues = decomposeInputValue(voiceInput);
 
           // Wert für CreationTime und Serial holen, Serial wird noch nicht verwerdet
           // ANCHOR compareCreationTimeAndSerial
           compareCreationTimeAndSerial(debounceTime).then((val) => {
             if (
-              (!val[0] && !(value == valueOld) && value != "" && !doNothing && valueTimeOld != decomposedValues[1]) ||
+              (!val[0] && voiceInput != voiceInputOld && voiceInput != "" && !doNothing && valueTimeOld != decomposedValues[1]) ||
               varInputContainsDelete
             ) {
               // Wert als Alten Wert speichern um beim Trigger zu vergleichen
-              if (typeof state.val == "string") {
-                valueOld = state.val;
+              if (typeof voiceInput == "string") {
+                voiceInputOld = voiceInput;
               }
-              this.log.debug("Array: " + JSON.stringify(decomposedValues));
+              this.log.debug("Decomposed Voice Input: " + JSON.stringify(decomposedValues));
               valueTimeOld = decomposedValues[1];
+
               // valueOld zurück setzen nach bestimmter Zeit
-              this.clearTimeout(timeout_2);
-              timeout_2 = setTimeout(() => {
-                valueOld = null;
+              this.clearTimeout(debounceTimeout);
+              debounceTimeout = setTimeout(() => {
+                voiceInputOld = null;
                 valueTimeOld = null;
                 this.log.debug("ValueOld wird zurück gesetzt");
               }, debounceTime * 1000);
@@ -325,8 +315,8 @@ class AlexaTimerVis extends utils.Adapter {
               // Überprüfen ob ein Timer hinzugefügt wird oder gestoppt wird
               /**@type{boolean} Wird auf "true" gesetzt wenn Alexa eine Rückfrage gestellt hat*/
               let questionAlexa = false;
-              this.log.debug("value neu" + JSON.stringify(value));
-              const toDo = getToDo(value);
+
+              const toDo = getToDo(voiceInput);
 
               // Timer soll gestoppt werden
               if (toDo == "deleteTimer") {
@@ -340,11 +330,8 @@ class AlexaTimerVis extends utils.Adapter {
                 /**@type{number} Index zum Löschen der Timer, Index 1 nur ein Timer, Index 2 alle Timer löschen*/
                 let deleteTimerIndex = 0;
 
-                // Hat Alexa eine Frage gestellt, ergibt sich durch getrennte Antwort mit einem Komma
-                this.log.debug("Hat Alexa eine Frage gestellt? " + JSON.stringify(value.indexOf(",") > -1));
-
                 // Wenn eine Frage gestellt wurde, und die Antwort übergeben wurde
-                if (value.indexOf(",") != -1) {
+                if (voiceInput.indexOf(",") != -1) {
                   // Funktion die den bestimmten Timer herausfiltert und löscht, aufrufen
                   this.log.debug("Alexa send an Answer");
                   questionAlexa = true;
@@ -359,10 +346,10 @@ class AlexaTimerVis extends utils.Adapter {
 
                   this.log.debug("Alexa kann den Timer direkt löschen!");
                   // Timer anhalten
-                  this.log.debug("Output (Name, Sec, DeleteTimerIndex): " + JSON.stringify(decomposedValues));
+                  this.log.debug("Name, Sec, DeleteTimerIndex: " + JSON.stringify(decomposedValues));
                 }
 
-                findTimer(timerAbortsec, name, deleteTimerIndex, value, questionAlexa).then((timers) => {
+                findTimer(timerAbortsec, name, deleteTimerIndex, voiceInput, questionAlexa).then((timers) => {
                   if (timers.timer) {
                     timers.timer.forEach((element) => {
                       delTimer(element);
@@ -422,25 +409,24 @@ class AlexaTimerVis extends utils.Adapter {
                 }
               } // Timer soll verlängert werden
               else if (toDo == "extendTimer" || toDo == "shortenTimer") {
-                let addOrSub = 0;
-                toDo == "shortenTimer" ? (addOrSub = -1) : (addOrSub = 1);
                 this.log.debug("Timer soll verlängert oder verkürzt werden");
+                let addOrSub = 0;
+                // Den Faktor bestimmen, wenn verkürzt wird mit -1 multiplizieren
+                toDo == "shortenTimer" ? (addOrSub = -1) : (addOrSub = 1);
 
-                this.log.debug("Array: " + JSON.stringify(decomposedValues));
-                this.log.debug("Value: " + JSON.stringify(value));
-                let valuePart1, valueExtend, extendString, extendString2, extendTime, extendTime2;
+                let firstPartOfValue, valueExtend, extendString, extendString2, extendTime, extendTime2;
 
-                if (value.includes("um")) {
-                  valuePart1 = value.slice(0, value.indexOf("um")).split(" ");
-                  valueExtend = value.slice(value.indexOf("um") + 2).split(" ");
-                  extendString = filterInfo(valuePart1, false)[0];
+                if (voiceInput.includes("um")) {
+                  firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf("um")).split(" ");
+                  valueExtend = voiceInput.slice(voiceInput.indexOf("um") + 2).split(" ");
+
+                  extendString = filterInfo(firstPartOfValue, false)[0];
                   if (typeof extendString == "string") extendTime = eval(extendString);
-
                   extendString2 = filterInfo(valueExtend, false)[0];
                   if (typeof extendString2 == "string") extendTime2 = eval(extendString2);
                 }
-                //TODO
-                findTimer(extendTime, decomposedValues[0], 1, value, questionAlexa).then((timers) => {
+
+                findTimer(extendTime, decomposedValues[0], 1, voiceInput, questionAlexa).then((timers) => {
                   this.log.debug("Timers: " + JSON.stringify(timers));
                   if (timers.timer) {
                     extendTimer(this, timers.timer, extendTime2, addOrSub);
@@ -487,24 +473,25 @@ class AlexaTimerVis extends utils.Adapter {
     //ANCHOR - ExtendTimer
 
     /**
-     *
+     * Verlängert oder verkürzt den Timer
      * @param {*} _this
-     * @param {*} timer Timer to calc
+     * @param {*} timers Timer to calc
      * @param {number} sec Time to add or sub
      * @param {number} addOrSub Multiplikator 1 or -1
      */
-    function extendTimer(_this, timer, sec, addOrSub) {
-      timer.forEach((timer) => {
-        _this.log.debug("Element zum verlängern: " + JSON.stringify(timer));
+    function extendTimer(_this, timers, sec, addOrSub) {
+      timers.forEach((timer) => {
+        _this.log.debug("Timer zum verlängern: " + JSON.stringify(timer));
         let timerSeconds = 0;
         if (typeof sec == "number") {
           timerSeconds = sec;
           if (timerObject.timerActiv.timer[timer] == true) {
-            _this.log.debug("Zeit dazu  " + JSON.stringify(timerSeconds * addOrSub));
             timerObject.timer[timer].changeValue = true;
             timerObject.timer[timer].endTime += timerSeconds * 1000 * addOrSub;
             timerObject.timer[timer].end_Time = time(timerObject.timer[timer].endTime);
             timerObject.timer[timer].onlySec += timerSeconds * addOrSub;
+
+            _this.log.debug("Zeit hinzufügen oder abziehen  " + JSON.stringify(timerSeconds * addOrSub));
             _this.log.debug("Pure sec " + JSON.stringify(timerObject.timer[timer].onlySec));
             _this.log.debug("Time_End " + JSON.stringify(time(timerObject.timer[timer].endTime)));
             _this.log.debug("Object " + JSON.stringify(timerObject.timer.timer1));
@@ -513,9 +500,6 @@ class AlexaTimerVis extends utils.Adapter {
       });
     }
 
-    // -------------------------------------------------------------------------------------------------------------------------------------------------
-    // Funktionen
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
     //ANCHOR getToDo
     /**
      *
@@ -531,7 +515,6 @@ class AlexaTimerVis extends utils.Adapter {
       // Arrays der Condition durchgehen
       for (const array in arraysTodo) {
         if (abortLoop) break;
-        // this.log.debug("array " + JSON.stringify(arraysTodo[array]));
         // 	// Das Array des Values durchgehen
         for (const element of valueArray) {
           // 		// Wenn es gefunden wird soll die Schleife abgebrochen werden
@@ -702,13 +685,13 @@ class AlexaTimerVis extends utils.Adapter {
     // ANCHOR Time
     //----------------------------------------------------------------------------------------------------------------------------------------------------
     /**
-     * // Aus millisekunden nur die Zeit herausziehen
-     * @param {number} i // Time in milliseconds
+     * // Aus millisekunden nur die Zeit als String zurück geben lassen
+     * @param {number} milliseconds // Time in milliseconds
      * @return {string} Zeit
      */
-    function time(i) {
+    function time(milliseconds) {
       // Zeit zu String
-      const date_string = new Date(i).toString();
+      const date_string = new Date(milliseconds).toString();
       // String zu Array, zeit herausschneiden und zurück zu String
       const time = date_string.split(" ").slice(4, 5).toString();
       return time;
@@ -727,8 +710,8 @@ class AlexaTimerVis extends utils.Adapter {
       const startTimer = new Date().getTime(); // Startzeit Timer
       const start_Time = time(startTimer);
       const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
-      const endTime = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
-      const end_Time = time(endTime);
+      const endTimeNumber = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
+      const endTimeString = time(endTimeNumber);
 
       // Index für Timer bestimmen z.B. .timer1
       let timerBlock;
@@ -741,8 +724,8 @@ class AlexaTimerVis extends utils.Adapter {
         }
       }
       // Werte speichern im Object
-      timerObject.timer[timerBlock].endTime = endTime;
-      timerObject.timer[timerBlock].end_Time = end_Time;
+      timerObject.timer[timerBlock].endTime = endTimeNumber;
+      timerObject.timer[timerBlock].end_Time = endTimeString;
       timerObject.timer[timerBlock].start_Time = start_Time;
       this.log.debug("Werte schreiben");
 
@@ -926,34 +909,40 @@ class AlexaTimerVis extends utils.Adapter {
         // Falls die Zeit abgelaufen ist, oder der Timer deaktiviert wurde
         if (timeLeftSec <= 0 || timerObject.timerActiv.timer[index] == false) {
           timerObject.timerActiv.timerCount--; // Aktive Timer minus 1
-          timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
 
           // ANCHOR Timer Werte zurück setzen
-          // Werte des Timers zurücksetzen
-          timer.hour = "00";
-          timer.minute = "00";
-          timer.second = "00";
-          timer.string_Timer = "00:00:00 h";
-          timer.onlySec = 0;
-          timer.timeLeftSec = 0;
-          timer.index = 0;
-          timer.name = "Timer";
-          timer.start_Time = "00:00:00";
-          timer.end_Time = "00:00:00";
-          timer.inputDevice = "";
-          timer.timerInterval = 0;
-          timer.lengthTimer = "";
-          timer.percent = 0;
-          timer.changeValue = false;
+          resetValues(timer, index);
           this.log.info("Timer stopped");
-
           clearInterval(timerObject.interval[index.slice(5)]);
           timerObject.interval[index.slice(5)] = "leer";
         }
       }, int); // Aktualisierungszeit
     };
+    /**
+     *
+     * @param {*} timer
+     * @param {string} index
+     */
+    const resetValues = (timer, index) => {
+      timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
+      timer.hour = "00";
+      timer.minute = "00";
+      timer.second = "00";
+      timer.string_Timer = "00:00:00 h";
+      timer.onlySec = 0;
+      timer.timeLeftSec = 0;
+      timer.index = 0;
+      timer.name = "Timer";
+      timer.start_Time = "00:00:00";
+      timer.end_Time = "00:00:00";
+      timer.inputDevice = "";
+      timer.timerInterval = 0;
+      timer.lengthTimer = "";
+      timer.percent = 0;
+      timer.changeValue = false;
+    };
 
-    //ANCHOR FUNk createState
+    //ANCHOR createStates
     //----------------------------------------------------------------------------------------------------------------------------------------------------
     /**
      * States erstellen
@@ -1510,18 +1499,20 @@ class AlexaTimerVis extends utils.Adapter {
         // Wenn der Adapter gestoppt wird
         let alive;
         if (unload) {
-          timerObject.timerActiv.timer[element] = false;
-          timer.hour = "00";
-          timer.minute = "00";
-          timer.second = "00";
-          timer.string_Timer = "00:00:00 h";
-          timer.start_Time = "00:00:00";
-          timer.end_Time = "00:00:00";
-          timer.name = "Timer";
-          timer.inputDevice = "";
-          timer.lengthTimer = "";
-          timer.percent = 0;
-          timer.changeValue = false;
+          //FIXME - Werte zurücksetzen
+          resetValues(timer, element);
+          // timerObject.timerActiv.timer[element] = false;
+          // timer.hour = "00";
+          // timer.minute = "00";
+          // timer.second = "00";
+          // timer.string_Timer = "00:00:00 h";
+          // timer.start_Time = "00:00:00";
+          // timer.end_Time = "00:00:00";
+          // timer.name = "Timer";
+          // timer.inputDevice = "";
+          // timer.lengthTimer = "";
+          // timer.percent = 0;
+          // timer.changeValue = false;
           alive = false; // all_Timer.alive
         } else {
           alive = true;
@@ -1585,7 +1576,7 @@ class AlexaTimerVis extends utils.Adapter {
       // Timeouts
       //this.log.info("Interval" + JSON.stringify(timerObject.interval));
       this.clearTimeout(timeout_1);
-      this.clearTimeout(timeout_2);
+      this.clearTimeout(debounceTimeout);
       // Intervalls
       clearInterval(setStates);
 
