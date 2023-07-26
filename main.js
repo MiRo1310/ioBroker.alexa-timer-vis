@@ -9,6 +9,11 @@
 // you need to create an adapter
 // Sie müssen einen Adapter erstellen
 const utils = require("@iobroker/adapter-core");
+const secToHourMinSec = require("./lib/js/global").secToHourMinSec;
+const firstLetterToUpperCase = require("./lib/js/global").firstLetterToUpperCase;
+const time = require("./lib/js/global").time;
+const createState = require("./lib/js/createState").createState;
+const timerObject = require("./lib/js/timerData").timerObject;
 
 let idInstanze;
 
@@ -28,177 +33,6 @@ let debounceTime = 0;
 // Variable Funktion
 let writeState;
 // let adapter;
-
-// Objekt mit Einstellungen und Daten
-// ANCHOR Objekt mit Daten
-const timerObject = {
-  timerActiv: {
-    timerCount: 0, // Anzahl aktiver Timer
-    condition: {
-      deleteTimer: [
-        "stopp",
-        "stoppe",
-        "anhalten",
-        "abbrechen",
-        "beenden",
-        "beende",
-        "reset",
-        "resete",
-        "löschen",
-        "lösche",
-        "lösch",
-        "stop",
-        "delete",
-      ], // Vorselektion stoppen oder löschen
-      extendTimer: ["verlängere", "verlänger"], // Timer verlängern
-      shortenTimer: ["verkürze", "verkürzen"], // Timer verkürzen
-      activateTimer: ["stunde", "stunden", "minute", "minuten", "sekunde", "sekunden", "hour", "minute", "second"], // Vorselektion hinzufügen
-    },
-    data: {
-      interval: 1000, // Aktualisierungsinterval
-      notNoted: [
-        "timer",
-        "timer,",
-        "auf",
-        "auf,",
-        "erstelle",
-        "mit",
-        "ein",
-        "schalte",
-        "setze",
-        "setz",
-        "stell",
-        "stelle",
-        "den",
-        "einen",
-        "set",
-        "the",
-        "a",
-        "for",
-        "um",
-      ], // Wörter die nicht beachtet werden sollen
-      notNotedSentence: ["stell ein timer", "stelle einen timer", "stelle ein timer", "stell einen timer"],
-      stopAll: ["alle", "all"], // Spezielle Definition zum löschen aller Timer
-      connecter: ["und", "and"], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
-      hour: ["stunde", "stunden", "hour", "hours"], // Wörter für Stunden, dient als Multiplikator
-      minute: ["minute", "minuten", "minute", "minutes"], // Wörter für Minuten, dient als Multiplikator
-      second: ["sekunde", "sekunden", "second", "seconds"], // Wörter für Sekunden
-    },
-    timer: {
-      // Liste mit Timern, zeigt den aktuellen Zustand
-      timer1: false,
-    },
-  },
-  timer: {
-    // Werte für Timer
-    timer1: {
-      hour: "00",
-      minute: "00",
-      second: "00",
-      string_Timer: "",
-      onlySec: 0,
-      index: 0,
-      name: "",
-      name_output: "",
-      start_Time: "",
-      end_Time: "",
-      inputDevice: "",
-      serialNumber: "",
-      timerInput: "",
-      timerInterval: 0,
-      endTime: 0,
-      lengthTimer: "",
-      percent: 0,
-      changeValue: false,
-    },
-  },
-  brueche1: {
-    halbe: 0.5,
-    halb: "1+0.5",
-  },
-  brueche2: {
-    viertelstunde: 0.25,
-    dreiviertelstunde: 0.75,
-  },
-  zahlen: {
-    // Zahl als Wort zu Zahl nummerisch
-    eins: 1,
-    ein: 1,
-    one: 1,
-    eine: 1,
-    zwei: 2,
-    zwo: 2,
-    two: 2,
-    drei: 3,
-    three: 3,
-    vier: 4,
-    four: 4,
-    fünf: 5,
-    five: 5,
-    sechs: 6,
-    six: 6,
-    sieben: 7,
-    seven: 7,
-    acht: 8,
-    eight: 8,
-    neun: 9,
-    nine: 9,
-    zehn: 10,
-    ten: 10,
-    elf: 11,
-    eleven: 11,
-    zwölf: 12,
-    twelve: 12,
-    dreizehn: 13,
-    thirteen: 13,
-    vierzehn: 14,
-    fourteen: 14,
-    fünfzehn: 15,
-    fifteen: 15,
-    sechzehn: 16,
-    sixteen: 16,
-    siebzehn: 17,
-    seventeen: 17,
-    achtzehn: 18,
-    eighteen: 18,
-    neunzehn: 19,
-    nineteen: 19,
-    zwanzig: 20,
-    twenty: 20,
-    dreißig: 30,
-    thirty: 30,
-    vierzig: 40,
-    fourty: 40,
-    fünfzig: 50,
-    fifty: 50,
-    sechzig: 60,
-    sixty: 60,
-    siebzig: 70,
-    seventy: 70,
-    achtzig: 80,
-    eighty: 80,
-    neunzig: 90,
-    ninety: 90,
-    hundert: 100,
-    hundred: 100,
-  },
-  ziffern: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-  zuweisung: {
-    erster: 1,
-    eins: 1,
-    zweiter: 2,
-    zwei: 2,
-    dritter: 3,
-    drei: 3,
-    vierter: 4,
-    vier: 4,
-    fünfter: 5,
-    fünf: 5,
-  },
-  interval: {
-    1: "leer",
-  },
-};
 
 class AlexaTimerVis extends utils.Adapter {
   /**
@@ -247,7 +81,7 @@ class AlexaTimerVis extends utils.Adapter {
         this.setState("info.connection", true, true);
 
         // Datenpunkte erzeugen (Anzahl)
-        createState(4);
+        createState(4, this);
       }
     });
 
@@ -387,7 +221,7 @@ class AlexaTimerVis extends utils.Adapter {
                     timerObject.timerActiv.timerCount++;
 
                     // States erstellen lassen, bei mehr als 4 Timern
-                    createState(timerObject.timerActiv.timerCount);
+                    createState(timerObject.timerActiv.timerCount, this);
 
                     // Ein weiteren Eintrag im Object erzeugen, falls nicht vorhanden
                     const timer = "timer" + timerObject.timerActiv.timerCount;
@@ -672,31 +506,6 @@ class AlexaTimerVis extends utils.Adapter {
       }
     };
 
-    // ANCHOR firstLetterToUpperCase
-    /**
-     * Ersetzt den ersten Buchstaben des eingegebenen Wortes durch den selbigen Großbuchstaben
-     * @param {string} name "w"ort wo der erste Buchstabe groß geschrieben werden soll
-     * @return {string} Rückgabewert mit "W"ort
-     */
-    function firstLetterToUpperCase(name) {
-      return name.slice(0, 1).toUpperCase() + name.slice(1); // Erster Buchstabe in Groß + ReststartTimer
-    }
-
-    // ANCHOR Time
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
-    /**
-     * // Aus millisekunden nur die Zeit als String zurück geben lassen
-     * @param {number} milliseconds // Time in milliseconds
-     * @return {string} Zeit
-     */
-    function time(milliseconds) {
-      // Zeit zu String
-      const date_string = new Date(milliseconds).toString();
-      // String zu Array, zeit herausschneiden und zurück zu String
-      const time = date_string.split(" ").slice(4, 5).toString();
-      return time;
-    }
-
     // ANCHOR startTimer
     //----------------------------------------------------------------------------------------------------------------------------------------------------
     /**
@@ -765,7 +574,16 @@ class AlexaTimerVis extends utils.Adapter {
 
       // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
       const timeLeftSec = Math.round(timeLeft / 1000);
-      const arrayTime = secToHourMinSec(timeLeftSec, true);
+      const arrayTime = secToHourMinSec(
+        timeLeftSec,
+        true,
+        unitHour1,
+        unitHour2,
+        unitMinute1,
+        unitMinute2,
+        unitSecond1,
+        unitSecond2
+      );
 
       const hour = arrayTime[0];
       const minutes = arrayTime[1];
@@ -806,76 +624,6 @@ class AlexaTimerVis extends utils.Adapter {
       return timeLeftSec;
     };
 
-    // ANCHOR Gesamt-Sekunden in Stunden Minuten und Sekunden teilen
-    /**
-     *
-     * @param {number} valSec Eingabe Sekunden um sie zu Stunden Minuten und Sekunden aufzuteilen
-     * @param {boolean} doubleInt Sollen die Werte immer zweistellig sein? 1 > 01
-     * @return Returns Hours, Minutes, Seconds, String mit den Werten und Einheiten
-     */
-    const secToHourMinSec = (valSec, doubleInt) => {
-      let hour;
-      let minutes;
-      let seconds;
-
-      // Wieviel Stunden sind enthalten
-      hour = valSec / (60 * 60);
-      hour = Math.floor(hour);
-      const hourInSec = hour * 60 * 60;
-
-      // Wieviele Minuten, timeLeft - Stunden in Millisekunden, Rest in Minuten
-      minutes = (valSec - hourInSec) / 60;
-      minutes = Math.floor(minutes);
-      const minutesInSec = minutes * 60;
-
-      // Sekunden
-      seconds = valSec - hourInSec - minutesInSec;
-      seconds = Math.round(seconds);
-
-      // Stunden, Minuten und Sekunden umwandeln so das sie immer zweistellig sind bei > 10 ( 1 => 01 usw.)
-      if (doubleInt) {
-        hour = ("0" + hour).slice(-2);
-        minutes = ("0" + minutes).slice(-2);
-        seconds = ("0" + seconds).slice(-2);
-      }
-      let hourUnit = "";
-      // ANCHOR Einheiten lengthTimer
-      if (hour && typeof hour == "string") {
-        if (parseInt(hour) > 1) {
-          hourUnit = unitHour2;
-        } else {
-          hourUnit = unitHour1;
-        }
-      } else {
-        hour = "";
-      }
-      let minuteUnit = "";
-      if (minutes && typeof minutes == "string") {
-        if (parseInt(minutes) > 1) {
-          minuteUnit = unitMinute2;
-        } else {
-          minuteUnit = unitMinute1;
-        }
-      } else {
-        minutes = "";
-      }
-
-      let secUnit = "";
-      if (seconds && typeof seconds == "string") {
-        if (parseInt(seconds) > 1) {
-          secUnit = unitSecond2;
-        } else {
-          secUnit = unitSecond1;
-        }
-      } else {
-        seconds = "";
-      }
-
-      let string = `${hour} ${hourUnit} ${minutes} ${minuteUnit} ${seconds} ${secUnit}`;
-      string = string.trim();
-      return [hour, minutes, seconds, string];
-    };
-
     //ANCHOR Interval
     //----------------------------------------------------------------------------------------------------------------------------------------------------
     /**
@@ -891,7 +639,7 @@ class AlexaTimerVis extends utils.Adapter {
     const interval = (sec, index, inputString, name, timer, int, onlyOneTimer) => {
       // generate Values vor dem Intervall aufrufen, damit die Zahlen direkt erzeugt werden, und nicht erst nach z.b. 5 sek
       generateValues(timer, sec, index, inputString, name);
-      const arrayTime = secToHourMinSec(sec, false);
+      const arrayTime = secToHourMinSec(sec, false, unitHour1, unitHour2, unitMinute1, unitMinute2, unitSecond1, unitSecond2);
       timer.lengthTimer = arrayTime[3];
 
       // Intervall erzeugen und im Object speichern
@@ -940,183 +688,6 @@ class AlexaTimerVis extends utils.Adapter {
       timer.lengthTimer = "";
       timer.percent = 0;
       timer.changeValue = false;
-    };
-
-    //ANCHOR createStates
-    //----------------------------------------------------------------------------------------------------------------------------------------------------
-    /**
-     * States erstellen
-     * @param {number} value Wieviele Elemente sollen erstellt werden
-     */
-    const createState = async (value) => {
-      try {
-        for (let i = 1; i <= value; i++) {
-          // Datenpunkt für allgemeine Anzeige das ein Timer aktiv ist
-          await this.setObjectNotExistsAsync("all_Timer.alive", {
-            type: "state",
-            common: {
-              name: "Ist ein Timer activ?",
-              type: "boolean",
-              role: "indicator",
-              read: true,
-              write: true,
-              def: false,
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".percent", {
-            type: "state",
-            common: {
-              name: "Percent",
-              type: "number",
-              role: "indicator",
-              read: true,
-              write: true,
-              def: 0,
-            },
-            native: {},
-          });
-
-          await this.setObjectNotExistsAsync("timer" + i + ".alive", {
-            type: "state",
-            common: {
-              name: "Timer activ",
-              type: "boolean",
-              role: "indicator",
-              read: true,
-              write: true,
-              def: false,
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".hour", {
-            type: "state",
-            common: {
-              name: "Hours",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "00",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".minute", {
-            type: "state",
-            common: {
-              name: "Minutes",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "00",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".second", {
-            type: "state",
-            common: {
-              name: "Seconds",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "00",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".string", {
-            type: "state",
-            common: {
-              name: "String",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "00:00:00 Std",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".name", {
-            type: "state",
-            common: {
-              name: "Name des Timers",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "Timer",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".TimeStart", {
-            type: "state",
-            common: {
-              name: "Start Time",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "00:00:00",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".TimeEnd", {
-            type: "state",
-            common: {
-              name: "End Time",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "00:00:00",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".InputDeviceName", {
-            type: "state",
-            common: {
-              name: "Input of Device",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "",
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".Reset", {
-            type: "state",
-            common: {
-              name: "Reset Timer",
-              type: "boolean",
-              role: "button",
-              read: false,
-              write: true,
-              def: false,
-            },
-            native: {},
-          });
-          await this.setObjectNotExistsAsync("timer" + i + ".lengthTimer", {
-            type: "state",
-            common: {
-              name: "Gestellter Timer",
-              type: "string",
-              role: "value",
-              read: true,
-              write: true,
-              def: "",
-            },
-            native: {},
-          });
-          // id zusammenbauen
-          const id = `alexa-timer-vis.${this.instance}.timer${i}.Reset`;
-          // Subscribe Reset Button
-          subscribeForeignStates(id);
-        }
-      } catch (e) {
-        this.log.error(e);
-      }
     };
 
     // ANCHOR Get Input Device
@@ -1453,7 +1024,7 @@ class AlexaTimerVis extends utils.Adapter {
       return timerFound;
     };
 
-    //ANCHOR FUNKTION Delete Timer
+    //ANCHOR Delete Timer
     /**
      * Funktion setzt im Objekt den Timer auf false
      * @param {*} timer Timer der gestoppt werden soll
@@ -1462,7 +1033,7 @@ class AlexaTimerVis extends utils.Adapter {
       timerObject.timerActiv.timer[timer] = false;
     };
 
-    //ANCHOR WriteStete Interval
+    //ANCHOR WriteState Interval
     //----------------------------------------------------------------------------------------------------------------------------------------------------
     /**
      * States in Datenpunkten schreiben
@@ -1499,20 +1070,7 @@ class AlexaTimerVis extends utils.Adapter {
         // Wenn der Adapter gestoppt wird
         let alive;
         if (unload) {
-          //FIXME - Werte zurücksetzen
           resetValues(timer, element);
-          // timerObject.timerActiv.timer[element] = false;
-          // timer.hour = "00";
-          // timer.minute = "00";
-          // timer.second = "00";
-          // timer.string_Timer = "00:00:00 h";
-          // timer.start_Time = "00:00:00";
-          // timer.end_Time = "00:00:00";
-          // timer.name = "Timer";
-          // timer.inputDevice = "";
-          // timer.lengthTimer = "";
-          // timer.percent = 0;
-          // timer.changeValue = false;
           alive = false; // all_Timer.alive
         } else {
           alive = true;
@@ -1574,7 +1132,6 @@ class AlexaTimerVis extends utils.Adapter {
       writeState(true);
       // Here you must clear all timeouts or intervals that may still be active
       // Timeouts
-      //this.log.info("Interval" + JSON.stringify(timerObject.interval));
       this.clearTimeout(timeout_1);
       this.clearTimeout(debounceTimeout);
       // Intervalls
@@ -1590,23 +1147,6 @@ class AlexaTimerVis extends utils.Adapter {
       callback();
     }
   }
-
-  // /**
-  //  * Is called if a subscribed state changes
-  //  * @param {string} id
-  //  * @param {ioBroker.State | null | undefined} state
-  //  */
-  // onStateChange(id, state) {
-  // 	if (state) {
-
-  // 		// The state was changed
-  // 		//this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-
-  // 	} else {
-  // 		// The state was deleted
-  // 		this.log.info(`state ${id} deleted`);
-  // 	}
-  // }
 }
 
 if (require.main !== module) {
@@ -1619,7 +1159,3 @@ if (require.main !== module) {
   // otherwise start the instance directly
   new AlexaTimerVis();
 }
-
-// function setObjectNotExistsAsync(timer, arg1) {
-// 	throw new Error("Function not implemented.");
-// }
