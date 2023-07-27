@@ -1,488 +1,371 @@
 {
-    "common": {
-        "name": "alexa-timer-vis",
-        "version": "0.1.15",
-        "news": {
-            "0.1.15": {
-                "en": "Include creation time to avoid creating duplicate timers",
-                "de": "Fügen Sie die Erstellungszeit hinzu, um die Erstellung doppelter Timer zu vermeiden",
-                "ru": "Включите время создания, чтобы избежать создания повторяющихся таймеров",
-                "pt": "Inclua o tempo de criação para evitar a criação de cronômetros duplicados",
-                "nl": "Voeg aanmaaktijd toe om dubbele timers te voorkomen",
-                "fr": "Inclure l'heure de création pour éviter de créer des minuteries en double",
-                "it": "Includi l'ora di creazione per evitare di creare timer duplicati",
-                "es": "Incluya el tiempo de creación para evitar la creación de temporizadores duplicados",
-                "pl": "Uwzględnij czas utworzenia, aby uniknąć tworzenia zduplikowanych liczników czasu",
-                "uk": "Включіть час створення, щоб уникнути дублювання таймерів",
-                "zh-cn": "包括创建时间以避免创建重复的计时器"
-            },
-            "0.1.14": {
-                "en": "Added debouncing in the adapter configuration",
-                "de": "Entprellung in der Adapterkonfiguration hinzugefügt",
-                "ru": "Добавлен дебаунс в конфигурации адаптера",
-                "pt": "Adicionado debouncing na configuração do adaptador",
-                "nl": "Debouncing toegevoegd in de adapterconfiguratie",
-                "fr": "Ajout de l'anti-rebond dans la configuration de l'adaptateur",
-                "it": "Aggiunto antirimbalzo nella configurazione dell'adattatore",
-                "es": "Se agregó antirrebote en la configuración del adaptador.",
-                "pl": "Dodano debouncing w konfiguracji adaptera",
-                "uk": "Додано усунення стрибків у конфігурацію адаптера",
-                "zh-cn": "在适配器配置中添加了去抖动"
-            },
-            "0.1.13": {
-                "en": "Delete of Timers with the same value, fixed",
-                "de": "Löschen von Timern mit gleichem Wert, behoben",
-                "ru": "Исправлено удаление Таймеров с одинаковым значением",
-                "pt": "Exclusão de temporizadores com o mesmo valor, fixo",
-                "nl": "Verwijderen van timers met dezelfde waarde, vast",
-                "fr": "Suppression des minuteries avec la même valeur, fixe",
-                "it": "Eliminazione dei timer con lo stesso valore, fissa",
-                "es": "Eliminación de Timers con el mismo valor, fijo",
-                "pl": "Usuwanie timerów o tej samej wartości, naprawione",
-                "zh-cn": "删除具有相同值的计时器，已修复",
-                "uk": "Видалення таймерів з однаковим значенням, виправлено"
-            },
-            "0.1.12": {
-                "en": "Delete of timer fixed",
-                "de": "Löschen des Timers behoben",
-                "ru": "Исправлено удаление таймера",
-                "pt": "Exclusão do temporizador corrigida",
-                "nl": "Verwijderen van timer vast",
-                "fr": "Suppression de la minuterie corrigée",
-                "it": "Eliminazione del timer fissa",
-                "es": "Eliminación de temporizador arreglado",
-                "pl": "Naprawiono usuwanie timera",
-                "zh-cn": "修复定时器的删除",
-                "uk": "Виправлено видалення таймера"
-            },
-            "0.1.11": {
-                "en": "Delete of Timer with same Inputvalue, fixed",
-                "de": "Löschen von Timern mit gleichem Inputwert, behoben",
-                "ru": "Удаление таймера с тем же входным значением, исправлено",
-                "pt": "Exclusão do temporizador com o mesmo valor de entrada, fixo",
-                "nl": "Verwijderen van timer met dezelfde invoerwaarde, vast",
-                "fr": "Suppression de la minuterie avec la même valeur d'entrée, fixe",
-                "it": "Eliminazione del timer con lo stesso valore di ingresso, fissa",
-                "es": "Eliminación del temporizador con el mismo valor de entrada, fijo",
-                "pl": "Usunięcie timera z tą samą wartością wejściową, ustalone",
-                "zh-cn": "删除具有相同 Inputvalue 的 Timer，已修复",
-                "uk": "Видалення таймера з тим же вхідним значенням, виправлено"
-            },
-            "0.1.10": {
-                "en": "Possibility to set intervals manually",
-                "de": "Möglichkeit, Intervalle manuell einzustellen",
-                "ru": "Возможность установить интервалы вручную",
-                "pt": "Possibilidade de definir intervalos manualmente",
-                "nl": "Mogelijkheid om intervallen handmatig in te stellen",
-                "fr": "Possibilité de définir des intervalles manuellement",
-                "it": "Possibilità di impostare manualmente gli intervalli",
-                "es": "Posibilidad de establecer intervalos manualmente",
-                "pl": "Możliwość ręcznego ustawienia interwałów",
-                "zh-cn": "可以手动设置间隔",
-                "uk": "Можливість встановити інтервали вручну"
-            },
-            "0.1.9": {
-                "en": "Bugfix",
-                "de": "Bug-Fix",
-                "ru": "Исправлена ​​ошибка",
-                "pt": "Correção de bug",
-                "nl": "Bugfix",
-                "fr": "Correction d'un bug",
-                "it": "Risoluzione del problema",
-                "es": "Arreglo del fallo",
-                "pl": "Naprawa błędów",
-                "zh-cn": "错误修复",
-                "uk": "Виправлення помилок"
-            },
-            "0.1.8": {
-                "en": "Bugfix, Button added to stop the selected Timer",
-                "de": "Bugfix, Schaltfläche hinzugefügt, um den ausgewählten Timer zu stoppen",
-                "ru": "Исправление, добавлена ​​кнопка для остановки выбранного таймера.",
-                "pt": "Bugfix, botão adicionado para parar o temporizador selecionado",
-                "nl": "Bugfix, knop toegevoegd om de geselecteerde timer te stoppen",
-                "fr": "Correction de bug, bouton ajouté pour arrêter la minuterie sélectionnée",
-                "it": "Bugfix, pulsante aggiunto per fermare il timer selezionato",
-                "es": "Corrección de errores, botón agregado para detener el temporizador seleccionado",
-                "pl": "Bugfix, przycisk dodany do zatrzymania wybranego timera",
-                "zh-cn": "错误修复，添加按钮以停止选定的计时器",
-                "uk": "Виправлено помилку, додано кнопку для зупинки вибраного таймера"
-            },
-            "0.1.7": {
-                "en": "New state,'Input Device'",
-                "de": "Neuer Status „Eingabegerät“",
-                "ru": "Новое состояние \"Устройство ввода\"",
-                "pt": "Novo estado, 'Dispositivo de entrada'",
-                "nl": "Nieuwe staat, 'Invoerapparaat'",
-                "fr": "Nouvel état, 'Périphérique d'entrée'",
-                "it": "Nuovo stato, \"Dispositivo di input\"",
-                "es": "Nuevo estado, 'Dispositivo de entrada'",
-                "pl": "Nowy stan „Urządzenie wejściowe”",
-                "zh-cn": "新状态，'输入设备'",
-                "uk": "Новий стан «Пристрій введення»"
-            },
-            "0.1.6": {
-                "en": "numbers from 1-9 are always displayed as two digits, 1 => 01",
-                "de": "Zahlen von 1-9 werden immer zweistellig angezeigt, 1 => 01",
-                "ru": "числа от 1 до 9 всегда отображаются как две цифры, 1 => 01",
-                "pt": "números de 1 a 9 são sempre exibidos como dois dígitos, 1 => 01",
-                "nl": "cijfers van 1-9 worden altijd weergegeven als twee cijfers, 1 => 01",
-                "fr": "les nombres de 1 à 9 sont toujours affichés sous forme de deux chiffres, 1 => 01",
-                "it": "i numeri da 1 a 9 vengono sempre visualizzati come due cifre, 1 => 01",
-                "es": "los números del 1 al 9 siempre se muestran como dos dígitos, 1 => 01",
-                "pl": "liczby od 1-9 są zawsze wyświetlane jako dwie cyfry, 1 => 01",
-                "zh-cn": "1-9 的数字始终显示为两位数，1 => 01",
-                "uk": "числа від 1 до 9 завжди відображаються двома цифрами, 1 => 01"
-            },
-            "0.1.5": {
-                "en": "New keywords added",
-                "de": "Neue Keywords hinzugefügt",
-                "ru": "Добавлены новые ключевые слова",
-                "pt": "Novas palavras-chave adicionadas",
-                "nl": "Nieuwe zoekwoorden toegevoegd",
-                "fr": "Nouveaux mots-clés ajoutés",
-                "it": "Nuove parole chiave aggiunte",
-                "es": "Nuevas palabras clave añadidas",
-                "pl": "Dodano nowe słowa kluczowe",
-                "zh-cn": "添加了新的关键字",
-                "uk": "Додано нові ключові слова"
-            },
-            "0.1.4": {
-                "en": "States will be reset on unload",
-                "de": "Zustände werden beim Entladen zurückgesetzt",
-                "ru": "Состояния будут сброшены при разгрузке",
-                "pt": "Os estados serão redefinidos ao descarregar",
-                "nl": "Statussen worden gereset bij het lossen",
-                "fr": "Les états seront réinitialisés au déchargement",
-                "it": "Gli stati verranno ripristinati allo scarico",
-                "es": "Los estados se restablecerán al descargar",
-                "pl": "Stany zostaną zresetowane podczas rozładowania",
-                "zh-cn": "状态将在卸载时重置",
-                "uk": "Стани буде скинуто під час вивантаження"
-            },
-            "0.1.3": {
-                "en": "Start and End Time added",
-                "de": "Start- und Endzeit hinzugefügt",
-                "ru": "Добавлено время начала и окончания",
-                "pt": "Horários de início e término adicionados",
-                "nl": "Begin- en eindtijd toegevoegd",
-                "fr": "Heure de début et de fin ajoutées",
-                "it": "Ora di inizio e di fine aggiunta",
-                "es": "Hora de inicio y finalización agregada",
-                "pl": "Dodano czas rozpoczęcia i zakończenia",
-                "zh-cn": "添加了开始和结束时间",
-                "uk": "Додано час початку та закінчення"
-            },
-            "0.1.2": {
-                "en": "Bugfix (A double created Intervall, fixed)",
-                "de": "Bugfix (Ein doppelt erstelltes Intervall, behoben)",
-                "ru": "Исправление (двойной созданный интервал, исправлено)",
-                "pt": "Bugfix (um Intervall criado duplo, corrigido)",
-                "nl": "Bugfix (Een dubbel gemaakt Intervall, opgelost)",
-                "fr": "Correction de bug (Un intervalle créé en double, corrigé)",
-                "it": "Bugfix (un doppio intervallo creato, risolto)",
-                "es": "Corrección de errores (un intervalo de doble creación, corregido)",
-                "pl": "Bugfix (podwójnie utworzony interwał, naprawiony)",
-                "zh-cn": "错误修复（双重创建的间隔，已修复）",
-                "uk": "Виправлення (виправлено подвійне створення Intervall)"
-            },
-            "0.1.1": {
-                "en": "Adaptation to the English language (experimental)",
-                "de": "Anpassung an die englische Sprache (experimentell)",
-                "ru": "Адаптация к английскому языку (экспериментальная)",
-                "pt": "Adaptação para o idioma inglês (experimental)",
-                "nl": "Aanpassing aan de Engelse taal (experimenteel)",
-                "fr": "Adaptation à la langue anglaise (expérimental)",
-                "it": "Adattamento alla lingua inglese (sperimentale)",
-                "es": "Adaptación al idioma inglés (experimental)",
-                "pl": "Adaptacja do języka angielskiego (eksperymentalna)",
-                "zh-cn": "适应英语（实验性）",
-                "uk": "Адаптація до англійської мови (експериментально)"
-            },
-            "0.1.0": {
-                "en": "Error when deleting of intervals and timeouts after shutdown, fixed",
-                "de": "Fehler beim Löschen von Intervallen und Timeouts nach dem Shutdown, behoben",
-                "ru": "Исправлена ​​ошибка при удалении интервалов и таймаутов после выключения.",
-                "pt": "Erro, ao excluir intervalos e tempos limite após desligamento, corrigido",
-                "nl": "Fout bij het verwijderen van intervallen en time-outs na afsluiten, opgelost",
-                "fr": "Erreur, lors de la suppression des intervalles et des délais d'attente après l'arrêt, corrigé",
-                "it": "Errore durante l'eliminazione di intervalli e timeout dopo l'arresto, risolto",
-                "es": "Error, al eliminar intervalos y tiempos de espera después del apagado, solucionado",
-                "pl": "Naprawiono błąd podczas usuwania interwałów i limitów czasu po wyłączeniu",
-                "zh-cn": "错误，在关机后删除间隔和超时时，已修复",
-                "uk": "Виправлена ​​помилка при видаленні інтервалів і тайм-аутів після завершення роботи"
-            }
-        },
-        "titleLang": {
-            "en": "Alexa Timer for Vis",
-            "de": "Alexa Timer für Vis",
-            "ru": "Alexa Таймер для Vis",
-            "pt": "Alexa Timer para Vis",
-            "nl": "Alexa Timer voor Vis",
-            "fr": "Alexa Timer pour Vis",
-            "it": "Alexa Timer per Vis",
-            "es": "Alexa Timer for Vis",
-            "pl": "Alexa Timer, właśc",
-            "uk": "Alexa Таймер для Ві",
-            "zh-cn": "Alexa Timer of Vis"
-        },
-        "desc": {
-            "en": "Output Alexa timer to display timers in the VIS",
-            "de": "Ausgabe Alexa Timer, um Timer in der VIS anzuzeigen",
-            "ru": "Вывод Alexa таймер для отображения таймеров в VIS",
-            "pt": "Saída Alexa temporizador para exibir temporizadores no VIS",
-            "nl": "Alexa timer tonen in de VIS",
-            "fr": "Sortie Alexa timer pour afficher les minuteurs dans le VIS",
-            "it": "Uscita Alexa timer per visualizzare timer nel VIS",
-            "es": "Salida Alexa timer para mostrar temporizadores en el VIS",
-            "pl": "Z kolei Alexa zmierza do wyświetlania timerów w VIS",
-            "uk": "Вихідний таймер Alexa для відображення таймерів у VIS",
-            "zh-cn": "产出"
-        },
-        "authors": [
-            "Michael Roling <michael.roling@gmx.de>"
-        ],
-        "keywords": [
-            "Alexa",
-            "Timer",
-            "VIS",
-            "home automation"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "alexa-timer-vis.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
-        "readme": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "logic",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "materialize": true,
-        "supportCustoms": false,
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=2.0.0"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "alexa2": ">=3.11.2"
-            }
-        ]
+  "common": {
+    "name": "alexa-timer-vis",
+    "version": "0.2.0",
+    "news": {
+      "0.2.0": {
+        "en": "create Timer with Alexa2 TextCommand, fixed\nlengthen and shorten timers",
+        "de": "timer mit Alexa2 TextCommand erstellen, behoben\nverlängern und verkürzen von timer",
+        "ru": "создать Таймер с Alexa2 TextCommand, фиксированный\nудлиненные и сокращенные таймеры",
+        "pt": "criar Temporizador com Alexa2 TextCommand, corrigido\nalongar e encurtar temporizadores",
+        "nl": "maak Timer met Alexa2 TextCommand\nverleng en kortere timers",
+        "fr": "créer Timer avec Alexa2 TextCommand, fixe\nlongueur et raccourcis",
+        "it": "creare Timer con Alexa2 TextCommand, fisso\nallungare e accorciare i timer",
+        "es": "crear Timer con Alexa2 TextCommand, fijo\ntemporizadores largos y cortos",
+        "pl": "tworzy Timer z Alexa2 TextCommand\nwydłużony i krótkotrwały czas",
+        "uk": "створити таймер з Alexa2 TextCommand, фіксований\nтривалі і скорочені таймери",
+        "zh-cn": "alexa2案文Command的时间限制\n时间长短"
+      },
+      "0.1.15": {
+        "en": "Include creation time to avoid creating duplicate timers",
+        "de": "Fügen Sie die Erstellungszeit hinzu, um die Erstellung doppelter Timer zu vermeiden",
+        "ru": "Включите время создания, чтобы избежать создания повторяющихся таймеров",
+        "pt": "Inclua o tempo de criação para evitar a criação de cronômetros duplicados",
+        "nl": "Voeg aanmaaktijd toe om dubbele timers te voorkomen",
+        "fr": "Inclure l'heure de création pour éviter de créer des minuteries en double",
+        "it": "Includi l'ora di creazione per evitare di creare timer duplicati",
+        "es": "Incluya el tiempo de creación para evitar la creación de temporizadores duplicados",
+        "pl": "Uwzględnij czas utworzenia, aby uniknąć tworzenia zduplikowanych liczników czasu",
+        "uk": "Включіть час створення, щоб уникнути дублювання таймерів",
+        "zh-cn": "包括创建时间以避免创建重复的计时器"
+      },
+      "0.1.14": {
+        "en": "Added debouncing in the adapter configuration",
+        "de": "Entprellung in der Adapterkonfiguration hinzugefügt",
+        "ru": "Добавлен дебаунс в конфигурации адаптера",
+        "pt": "Adicionado debouncing na configuração do adaptador",
+        "nl": "Debouncing toegevoegd in de adapterconfiguratie",
+        "fr": "Ajout de l'anti-rebond dans la configuration de l'adaptateur",
+        "it": "Aggiunto antirimbalzo nella configurazione dell'adattatore",
+        "es": "Se agregó antirrebote en la configuración del adaptador.",
+        "pl": "Dodano debouncing w konfiguracji adaptera",
+        "uk": "Додано усунення стрибків у конфігурацію адаптера",
+        "zh-cn": "在适配器配置中添加了去抖动"
+      },
+      "0.1.13": {
+        "en": "Delete of Timers with the same value, fixed",
+        "de": "Löschen von Timern mit gleichem Wert, behoben",
+        "ru": "Исправлено удаление Таймеров с одинаковым значением",
+        "pt": "Exclusão de temporizadores com o mesmo valor, fixo",
+        "nl": "Verwijderen van timers met dezelfde waarde, vast",
+        "fr": "Suppression des minuteries avec la même valeur, fixe",
+        "it": "Eliminazione dei timer con lo stesso valore, fissa",
+        "es": "Eliminación de Timers con el mismo valor, fijo",
+        "pl": "Usuwanie timerów o tej samej wartości, naprawione",
+        "zh-cn": "删除具有相同值的计时器，已修复",
+        "uk": "Видалення таймерів з однаковим значенням, виправлено"
+      },
+      "0.1.12": {
+        "en": "Delete of timer fixed",
+        "de": "Löschen des Timers behoben",
+        "ru": "Исправлено удаление таймера",
+        "pt": "Exclusão do temporizador corrigida",
+        "nl": "Verwijderen van timer vast",
+        "fr": "Suppression de la minuterie corrigée",
+        "it": "Eliminazione del timer fissa",
+        "es": "Eliminación de temporizador arreglado",
+        "pl": "Naprawiono usuwanie timera",
+        "zh-cn": "修复定时器的删除",
+        "uk": "Виправлено видалення таймера"
+      },
+      "0.1.11": {
+        "en": "Delete of Timer with same Inputvalue, fixed",
+        "de": "Löschen von Timern mit gleichem Inputwert, behoben",
+        "ru": "Удаление таймера с тем же входным значением, исправлено",
+        "pt": "Exclusão do temporizador com o mesmo valor de entrada, fixo",
+        "nl": "Verwijderen van timer met dezelfde invoerwaarde, vast",
+        "fr": "Suppression de la minuterie avec la même valeur d'entrée, fixe",
+        "it": "Eliminazione del timer con lo stesso valore di ingresso, fissa",
+        "es": "Eliminación del temporizador con el mismo valor de entrada, fijo",
+        "pl": "Usunięcie timera z tą samą wartością wejściową, ustalone",
+        "zh-cn": "删除具有相同 Inputvalue 的 Timer，已修复",
+        "uk": "Видалення таймера з тим же вхідним значенням, виправлено"
+      },
+      "0.1.10": {
+        "en": "Possibility to set intervals manually",
+        "de": "Möglichkeit, Intervalle manuell einzustellen",
+        "ru": "Возможность установить интервалы вручную",
+        "pt": "Possibilidade de definir intervalos manualmente",
+        "nl": "Mogelijkheid om intervallen handmatig in te stellen",
+        "fr": "Possibilité de définir des intervalles manuellement",
+        "it": "Possibilità di impostare manualmente gli intervalli",
+        "es": "Posibilidad de establecer intervalos manualmente",
+        "pl": "Możliwość ręcznego ustawienia interwałów",
+        "zh-cn": "可以手动设置间隔",
+        "uk": "Можливість встановити інтервали вручну"
+      }
     },
-    "native": {
-        "alexa": "alexa2.0",
-        "intervall1": 1,
-        "intervall2": 1,
-        "entprellZeit": 2,
-        "entprellen": false,
-        "unitHour1": "Stunde",
-        "unitHour2": "Stunden",
-        "unitHour3": "h",
-        "unitMinute1": "Minute",
-        "unitMinute2": "Minuten",
-        "unitMinute3": "min",
-        "unitSecond1": "Sekunde",
-        "unitSecond2": "Sekunden",
-        "unitSecond3": "sec"
+    "titleLang": {
+      "en": "Alexa Timer for Vis",
+      "de": "Alexa Timer für Vis",
+      "ru": "Alexa Таймер для Vis",
+      "pt": "Alexa Timer para Vis",
+      "nl": "Alexa Timer voor Vis",
+      "fr": "Alexa Timer pour Vis",
+      "it": "Alexa Timer per Vis",
+      "es": "Alexa Timer for Vis",
+      "pl": "Alexa Timer, właśc",
+      "uk": "Alexa Таймер для Ві",
+      "zh-cn": "Alexa Timer of Vis"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        },
-        {
-            "_id": "all_Timer.alive",
-            "type": "state",
-            "common": {
-                "name": "Ist ein Timer activ?",
-                "type": "boolean",
-                "role": "indicator",
-                "read": true,
-                "write": true,
-                " def": false
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.alive",
-            "type": "state",
-            "common": {
-                "name": "Timer activ",
-                "type": "boolean",
-                "role": "indicator",
-                "read": true,
-                "write": true,
-                "def": false
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.percent",
-            "type": "state",
-            "common": {
-                "name": "Percent",
-                "type": "number",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": 0
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.hour",
-            "type": "state",
-            "common": {
-                "name": "Hours",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "00"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.minute",
-            "type": "state",
-            "common": {
-                "name": "Minutes",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "00"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.second",
-            "type": "state",
-            "common": {
-                "name": "Seconds",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "00"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.string",
-            "type": "state",
-            "common": {
-                "name": "String",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "00:00:00 h"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.name",
-            "type": "state",
-            "common": {
-                "name": "Name des Timers",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "Timer"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.TimeStart",
-            "type": "state",
-            "common": {
-                "name": "Start Time",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "00:00:00"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.TimeEnd",
-            "type": "state",
-            "common": {
-                "name": "End Time",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": "00:00:00"
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.InputDeviceName",
-            "type": "state",
-            "common": {
-                "name": "Input of Device",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": ""
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.Reset",
-            "type": "state",
-            "common": {
-                "name": "Reset Timer",
-                "type": "boolean",
-                "role": "button",
-                "read": false,
-                "write": true,
-                "def": false
-            },
-            "native": {}
-        },
-        {
-            "_id": "timer1.lengthTimer",
-            "type": "state",
-            "common": {
-                "name": "Gestellter Timer",
-                "type": "string",
-                "role": "value",
-                "read": true,
-                "write": true,
-                "def": ""
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "Output Alexa timer to display timers in the VIS",
+      "de": "Ausgabe Alexa Timer, um Timer in der VIS anzuzeigen",
+      "ru": "Вывод Alexa таймер для отображения таймеров в VIS",
+      "pt": "Saída Alexa temporizador para exibir temporizadores no VIS",
+      "nl": "Alexa timer tonen in de VIS",
+      "fr": "Sortie Alexa timer pour afficher les minuteurs dans le VIS",
+      "it": "Uscita Alexa timer per visualizzare timer nel VIS",
+      "es": "Salida Alexa timer para mostrar temporizadores en el VIS",
+      "pl": "Z kolei Alexa zmierza do wyświetlania timerów w VIS",
+      "uk": "Вихідний таймер Alexa для відображення таймерів у VIS",
+      "zh-cn": "产出"
+    },
+    "authors": [
+      "Michael Roling <michael.roling@gmx.de>"
+    ],
+    "keywords": [
+      "Alexa",
+      "Timer",
+      "VIS",
+      "home automation"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "alexa-timer-vis.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
+    "readme": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "logic",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "materialize": true,
+    "supportCustoms": false,
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=2.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "alexa2": ">=3.11.2"
+      }
     ]
+  },
+  "native": {
+    "alexa": "alexa2.0",
+    "intervall1": 1,
+    "intervall2": 1,
+    "entprellZeit": 2,
+    "entprellen": false,
+    "unitHour1": "Stunde",
+    "unitHour2": "Stunden",
+    "unitHour3": "h",
+    "unitMinute1": "Minute",
+    "unitMinute2": "Minuten",
+    "unitMinute3": "min",
+    "unitSecond1": "Sekunde",
+    "unitSecond2": "Sekunden",
+    "unitSecond3": "sec"
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "all_Timer.alive",
+      "type": "state",
+      "common": {
+        "name": "Ist ein Timer activ?",
+        "type": "boolean",
+        "role": "indicator",
+        "read": true,
+        "write": true,
+        " def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.alive",
+      "type": "state",
+      "common": {
+        "name": "Timer activ",
+        "type": "boolean",
+        "role": "indicator",
+        "read": true,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.percent",
+      "type": "state",
+      "common": {
+        "name": "Percent",
+        "type": "number",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": 0
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.hour",
+      "type": "state",
+      "common": {
+        "name": "Hours",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "00"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.minute",
+      "type": "state",
+      "common": {
+        "name": "Minutes",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "00"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.second",
+      "type": "state",
+      "common": {
+        "name": "Seconds",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "00"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.string",
+      "type": "state",
+      "common": {
+        "name": "String",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "00:00:00 h"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.name",
+      "type": "state",
+      "common": {
+        "name": "Name des Timers",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "Timer"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.TimeStart",
+      "type": "state",
+      "common": {
+        "name": "Start Time",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "00:00:00"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.TimeEnd",
+      "type": "state",
+      "common": {
+        "name": "End Time",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": "00:00:00"
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.InputDeviceName",
+      "type": "state",
+      "common": {
+        "name": "Input of Device",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.Reset",
+      "type": "state",
+      "common": {
+        "name": "Reset Timer",
+        "type": "boolean",
+        "role": "button",
+        "read": false,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "timer1.lengthTimer",
+      "type": "state",
+      "common": {
+        "name": "Gestellter Timer",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
+    }
+  ]
 }
