@@ -54,6 +54,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 ## Changelog
 
+- create Timer with Alexa2 TextCommand fixed
 - lengthen and shorten timers
 
 ### 0.1.15 (22.09.2022)
