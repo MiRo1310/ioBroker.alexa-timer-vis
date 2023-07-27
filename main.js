@@ -810,6 +810,12 @@ class AlexaTimerVis extends utils.Adapter {
             timerString += "+" + timerObject.zahlen[element];
             inputString += timerObject.zahlen[element] + " ";
           }
+        } else if (parseInt(element)) {
+          let number = parseInt(element);
+          if (timerString == "") timerString = "(";
+          if (timerString.endsWith("+")) timerString += "(";
+          timerString += number;
+          inputString += number;
         } else if (
           !(
             timerObject.timerActiv.condition.extendTimer.includes(element) ||
