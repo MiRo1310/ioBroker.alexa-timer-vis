@@ -62,6 +62,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 ### **WORK IN PROGRESS**
 
 - Breaking change: minimal supported node.js version is 16.x
+- Another String Variation #58
 
 ### 0.2.0 (2023-07-27)
 
