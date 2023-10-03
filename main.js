@@ -601,6 +601,15 @@ class AlexaTimerVis extends utils.Adapter {
       }
       const time = hour + ":" + minutes + ":" + seconds + unit;
 
+      // #58
+      let time2 = "";
+      if (parseInt(hour) > 1 || (parseInt(hour) === 1 && parseInt(minutes) > 5))
+        time2 = hour + ":" + minutes + ":" + seconds + " " + unitHour3;
+      else if (parseInt(hour) === 1 && parseInt(minutes) < 6)
+        time2 = (parseInt(minutes) + 60).toString() + ":" + seconds + " " + unitMinute3;
+      else if (parseInt(hour) == 0) time2 = minutes + ":" + seconds + " " + unitMinute3;
+      else if (parseInt(minutes) == 0) time2 = seconds + " " + unitSecond3;
+
       // Timer Werte zum Objekt hinzufügen
       // Unterbinden das der Wert neu gesetzt wird
       if (!timer.changeValue) {
@@ -610,6 +619,7 @@ class AlexaTimerVis extends utils.Adapter {
       timer.minute = minutes;
       timer.second = seconds;
       timer.string_Timer = time;
+      timer.string_2_Timer = time2;
       timer.timeLeftSec = timeLeftSec;
       timer.index = index;
       timer.inputString = inputString;
@@ -677,6 +687,7 @@ class AlexaTimerVis extends utils.Adapter {
       timer.minute = "00";
       timer.second = "00";
       timer.string_Timer = "00:00:00 h";
+      timer.string_2_Timer = "";
       timer.onlySec = 0;
       timer.timeLeftSec = 0;
       timer.index = 0;
@@ -1090,6 +1101,7 @@ class AlexaTimerVis extends utils.Adapter {
             this.setStateChanged(element + ".minute", timer.minute, true);
             this.setStateChanged(element + ".second", timer.second, true);
             this.setStateChanged(element + ".string", timer.string_Timer, true);
+            this.setStateChanged(element + ".string_2", timer.string_2_Timer, true);
             this.setStateChanged(element + ".TimeStart", timer.start_Time, true);
             this.setStateChanged(element + ".TimeEnd", timer.end_Time, true);
             this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);

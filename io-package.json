@@ -290,6 +290,19 @@
       "native": {}
     },
     {
+      "_id": "timer1.string_2",
+      "type": "state",
+      "common": {
+        "name": "String_2",
+        "type": "string",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
       "_id": "timer1.name",
       "type": "state",
       "common": {
