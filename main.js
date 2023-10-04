@@ -585,9 +585,9 @@ class AlexaTimerVis extends utils.Adapter {
         unitSecond2
       );
 
-      const hour = arrayTime[0];
-      const minutes = arrayTime[1];
-      const seconds = arrayTime[2];
+      let hour = arrayTime[0];
+      let minutes = arrayTime[1];
+      let seconds = arrayTime[2];
 
       // String der Zeit erstellen mit dynamischer Einheit
       //ANCHOR Einheiten Datenpunkt string
@@ -615,6 +615,14 @@ class AlexaTimerVis extends utils.Adapter {
       if (!timer.changeValue) {
         timer.onlySec = sec;
       }
+      if (hour === "00") {
+        hour = "";
+        if (minutes === "00") {
+          minutes = "";
+          if (seconds === "00") seconds = "";
+        }
+      }
+
       timer.hour = hour;
       timer.minute = minutes;
       timer.second = seconds;
@@ -683,9 +691,9 @@ class AlexaTimerVis extends utils.Adapter {
      */
     const resetValues = (timer, index) => {
       timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
-      timer.hour = "00";
-      timer.minute = "00";
-      timer.second = "00";
+      timer.hour = "";
+      timer.minute = "";
+      timer.second = "";
       timer.string_Timer = "00:00:00 h";
       timer.string_2_Timer = "";
       timer.onlySec = 0;
