@@ -632,6 +632,7 @@ class AlexaTimerVis extends utils.Adapter {
       timer.index = index;
       timer.inputString = inputString;
       timer.percent = Math.round((timeLeftSec / timer.onlySec) * 100);
+      timer.percent2 = 100 - Math.round((timeLeftSec / timer.onlySec) * 100);
       timer.lengthTimer = arrayTime[3];
 
       // Falls der Timername nicht definiert ist soll er einfach nur "Timer" heissen
@@ -706,6 +707,7 @@ class AlexaTimerVis extends utils.Adapter {
       timer.timerInterval = 0;
       timer.lengthTimer = "";
       timer.percent = 0;
+      timer.percent2 = 0;
       timer.changeValue = false;
     };
 
@@ -1114,6 +1116,8 @@ class AlexaTimerVis extends utils.Adapter {
             this.setStateChanged(element + ".TimeEnd", timer.end_Time, true);
             this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
             this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
+
+            this.setStateChanged(element + ".percent2", timer.percent2, true);
             this.setStateChanged(element + ".percent", timer.percent, true);
             this.setStateChanged("all_Timer.alive", alive, true);
           } catch (e) {

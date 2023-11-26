@@ -225,6 +225,18 @@
       "native": {}
     },
     {
+      "_id": "timer1.percent2",
+      "type": "state",
+      "common": {
+        "name": "Percent",
+        "type": "number",
+        "role": "value",
+        "read": true,
+        "write": true,
+        "def": 0
+      },
+      "native": {}
+    },{
       "_id": "timer1.percent",
       "type": "state",
       "common": {
