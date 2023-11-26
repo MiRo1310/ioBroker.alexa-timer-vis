@@ -186,7 +186,27 @@
       "native": {}
     },
     {
+      "_id": "timers",
+      "type": "channel",
+      "common": {
+        "name": "Timer1"
+      },
+      "native": {}
+    },
+    {
       "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },{
+      "_id": "timers.connection",
       "type": "state",
       "common": {
         "role": "indicator.connected",
@@ -211,14 +231,7 @@
       },
       "native": {}
     },
-    {
-      "_id": "timer1",
-      "type": "channel",
-      "common": {
-        "name": "Timer1"
-      },
-      "native": {}
-    },
+   
     {
       "_id": "timer1.alive",
       "type": "state",
