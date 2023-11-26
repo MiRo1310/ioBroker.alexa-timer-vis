@@ -516,12 +516,6 @@ class AlexaTimerVis extends utils.Adapter {
      *
      */
     const startTimer = async (sec, name, inputString) => {
-      const startTimer = new Date().getTime(); // Startzeit Timer
-      const start_Time = time(startTimer);
-      const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
-      const endTimeNumber = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
-      const endTimeString = time(endTimeNumber);
-
       // Index für Timer bestimmen z.B. .timer1
       let timerBlock;
 
@@ -532,6 +526,20 @@ class AlexaTimerVis extends utils.Adapter {
           break;
         }
       }
+      const deviceObj = await getInputDevice(timerObject.timer[timerBlock]);
+      // Get Start Time
+
+      const jsonAlexa = await this.getForeignStateAsync(`alexa2.0.History.json`);
+
+      let startTimer;
+      if (jsonAlexa && jsonAlexa.val && typeof jsonAlexa.val == "string") {
+        startTimer = JSON.parse(jsonAlexa.val).creationTime;
+      } else startTimer = new Date().getTime(); // Startzeit Timer
+
+      const start_Time = time(startTimer);
+      const timerInMillisecond = sec * 1000; // Laufzeit des Timer in millisec
+      const endTimeNumber = startTimer + timerInMillisecond; // Endzeit des Timers in millisec
+      const endTimeString = time(endTimeNumber);
 
       // Werte speichern im Object
       timerObject.timer[timerBlock].endTime = endTimeNumber;
@@ -540,12 +548,13 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Werte schreiben");
 
       // Input Device ermitteln, und im Objekt speichern
-      const device = await getInputDevice(timerObject.timer[timerBlock]);
+
+      console.log("Objekt: " + JSON.stringify(deviceObj));
       try {
         if (typeof timerBlock == "string") {
           this.setObjectAsync("alexa-timer-vis.0." + timerBlock, {
             type: "device",
-            common: { name: `${device}` },
+            common: { name: `${deviceObj.device}` },
             native: {},
           });
         }
@@ -723,7 +732,6 @@ class AlexaTimerVis extends utils.Adapter {
       timer.percent = 0;
       timer.percent2 = 0;
       timer.changeValue = false;
-      console.log(index);
       try {
         this.setObjectAsync("alexa-timer-vis.0." + index, {
           type: "device",
@@ -760,9 +768,10 @@ class AlexaTimerVis extends utils.Adapter {
                   serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
                   if (serial && serial.val) {
                     path.serialNumber = serial.val;
-                  }
-                  console.log(stateObj.val);
-                  resolve(stateObj.val);
+
+                    console.log(stateObj.val);
+                    resolve({ device: stateObj.val, serial: serial.val });
+                  } else resolve({ device: stateObj.val });
                 }
               } catch (e) {
                 this.log.error("Cannot get Serial: " + JSON.stringify(e));
