@@ -532,6 +532,7 @@ class AlexaTimerVis extends utils.Adapter {
           break;
         }
       }
+
       // Werte speichern im Object
       timerObject.timer[timerBlock].endTime = endTimeNumber;
       timerObject.timer[timerBlock].end_Time = endTimeString;
@@ -539,7 +540,20 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Werte schreiben");
 
       // Input Device ermitteln, und im Objekt speichern
-      getInputDevice(timerObject.timer[timerBlock]);
+      const device = await getInputDevice(timerObject.timer[timerBlock]);
+      try {
+        if (typeof timerBlock == "string") {
+          this.setObjectAsync("alexa-timer-vis.0." + timerBlock, {
+            type: "device",
+            common: { name: `${device}` },
+            native: {},
+          });
+        }
+      } catch (e) {
+        this.log.error("Error: " + JSON.stringify(e));
+        this.log.error("Error: " + JSON.stringify(e.stack));
+      }
+
       let int;
 
       // Intervall erzeugen
@@ -709,6 +723,17 @@ class AlexaTimerVis extends utils.Adapter {
       timer.percent = 0;
       timer.percent2 = 0;
       timer.changeValue = false;
+      console.log(index);
+      try {
+        this.setObjectAsync("alexa-timer-vis.0." + index, {
+          type: "device",
+          common: { name: `` },
+          native: {},
+        });
+      } catch (e) {
+        this.log.error("Error in resetValues: " + JSON.stringify(e));
+        this.log.error(JSON.stringify(e.stack));
+      }
     };
 
     // ANCHOR Get Input Device
@@ -718,29 +743,40 @@ class AlexaTimerVis extends utils.Adapter {
      * @param  path Pfad zum Speicherort im Objekt
      *
      */
-    const getInputDevice = (path) => {
-      this.getForeignObject(`alexa2.${idInstanze.instanz}.History.name`, async (err, obj) => {
-        if (err || obj == null) {
-          // Error
-          this.log.error(`The State "name" of Alexa was not found!`);
-          path.inputDevice = "-";
-        } else {
-          try {
-            const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
-            let serial;
-            if (obj && obj.val) {
-              path.inputDevice = obj.val;
-              serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
+    const getInputDevice = async (path) => {
+      try {
+        const obj = await new Promise((resolve, reject) => {
+          this.getForeignObject(`alexa2.${idInstanze.instanz}.History.name`, async (err, obj) => {
+            if (err || obj == null) {
+              this.log.error(`The State "name" of Alexa was not found!`);
+              path.inputDevice = "-";
+              reject(err);
+            } else {
+              try {
+                const stateObj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
+                let serial;
+                if (stateObj && stateObj.val) {
+                  path.inputDevice = stateObj.val;
+                  serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
+                  if (serial && serial.val) {
+                    path.serialNumber = serial.val;
+                  }
+                  console.log(stateObj.val);
+                  resolve(stateObj.val);
+                }
+              } catch (e) {
+                this.log.error("Cannot get Serial: " + JSON.stringify(e));
+                reject(e);
+              }
             }
-            if (serial && serial.val) {
-              path.serialNumber = serial.val;
-              // this.log.debug("SerialNumber: " + JSON.stringify(serial.val));
-            }
-          } catch (e) {
-            this.log.error("Cannot get Serial: " + JSON.stringify(e));
-          }
-        }
-      });
+          });
+        });
+
+        return obj;
+      } catch (error) {
+        this.log.error("Error in getInputDevice: " + JSON.stringify(error));
+        return null;
+      }
     };
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1116,7 +1152,6 @@ class AlexaTimerVis extends utils.Adapter {
             this.setStateChanged(element + ".TimeEnd", timer.end_Time, true);
             this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
             this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
-
             this.setStateChanged(element + ".percent2", timer.percent2, true);
             this.setStateChanged(element + ".percent", timer.percent, true);
             this.setStateChanged("all_Timer.alive", alive, true);
