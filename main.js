@@ -1123,6 +1123,7 @@ class AlexaTimerVis extends utils.Adapter {
           } catch (e) {
             this.log.debug(e);
           }
+
           // Wenn der Name des Timers nicht definiert ist soll einfach nur Timer ausgegeben werden
           const name = timer.name;
           if (name == "Timer") {

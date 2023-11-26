@@ -212,6 +212,14 @@
       "native": {}
     },
     {
+      "_id": "timer1",
+      "type": "channel",
+      "common": {
+        "name": "Timer1"
+      },
+      "native": {}
+    },
+    {
       "_id": "timer1.alive",
       "type": "state",
       "common": {
