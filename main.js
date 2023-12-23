@@ -296,6 +296,7 @@ class AlexaTimerVis extends utils.Adapter {
             if (timerOb.name != "Timer") name = timerOb.name;
             const alexaTextToCommand = `stoppe ${name} ${timerOb.inputString} Timer`;
             // Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
+            delTimer(timer);
             this.setForeignState(alexaCommandState, alexaTextToCommand, false);
           }
         } catch (e) {
