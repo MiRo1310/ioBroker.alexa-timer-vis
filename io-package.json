@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "en": "#82 Delete Timer by Button\n#74 Fixed Starttime\n#71 Name of Echo in data tree\n#75 Percent from 0% to 100%\nBreaking change: minimal supported node.js version is 16.x\n#58 Another String Variation",
+        "de": "#82 Timer by Button löschen\n#74 Fixed Starttime\n#71 Name des Echos im Datenbaum\n#75 Prozent von 0% bis 100%\nBreaking change: minimal unterstützt node.js version is 16.x\n#58 Eine weitere String Variation",
+        "ru": "#82 Удалить Таймер на Кнопке\n#74 Фиксированное время начала\n#71 Имя Эхо в дерево данных\n#75 Процент от 0% до 100%\nИзменение разрыва: минимальная поддерживаемая версия node.js 16.x\n#58 Другой String Variation",
+        "pt": "#82 Excluir Temporizador por Botão\n#74 Tempo de início fixo\n#71 Nome do Echo na árvore de dados\n#75 Percent de 0% a 100%\nAlteração de ruptura: versão node.js suportada mínima é 16.x\n#58 Outra variação de corda",
+        "nl": "82 Delete Timer by Button\n#74 Fixed Starttime\n#71 Name of Echo in data boom\n75 Percent van 0% tot 100%\nVerandering: minimaal ondersteunde node\n♪58 another String Variation",
+        "fr": "#82 Supprimer Timer par Button\n#74 Temps de départ fixe\n#71 Nom d'Echo dans l'arbre de données\n#75 Pourcentage de 0% à 100%\nChangement de rupture: la version node.js supportée minimale est 16.x\n#58 Autre variation de corde",
+        "it": "#82 Delete Timer by Button\n#74 Tempo di partenza fisso\n#71 Nome di Echo nell'albero dei dati\n#75 Percentuale dal 0% al 100%\nCambiamento di rottura: versione minima node.js supportata è 16.x\n#58 Un'altra variazione di tensione",
+        "es": "#82 Delete Timer by Button\n#74 Hora de inicio fija\n#71 Nombre del Eco en el árbol de datos\n#75 Porcentaje del 0% al 100%\nCambio de ruptura: la versión mínima de node.js es 16.x\n#58 Otra variación de cuerdas",
+        "pl": "82 Delete Timer (ang.)\n74 Fixed Starttime (ang.)\nNazwisko Echo w drzewie danych\n75 razy więcej niż 100%\nZmiana przeładowania: wersja minimalna jest 16.x\n58 Another String Variation (ang.)",
+        "uk": "#82 Видалити таймер за допомогою кнопки\n#74 Фіксований старт\n#71 Назва Ехо в дереві даних\n#75 відсоток від 0% до 100%\nЗміна розривів: мінімальний підтриманий вузол.js версія 16.x\n#58 Ще один Рядок змін",
+        "zh-cn": "第82号\n行动74 固定启动时间\n#71 数据树中的森林名称\n#75 最高限额从0%降至100%\n断然变化:最低支持无端。\n行动58"
+      },
       "0.2.0": {
         "en": "create Timer with Alexa2 TextCommand, fixed\nlengthen and shorten timers",
         "de": "timer mit Alexa2 TextCommand erstellen, behoben\nverlängern und verkürzen von timer",
@@ -80,19 +93,6 @@
         "pl": "Usunięcie timera z tą samą wartością wejściową, ustalone",
         "zh-cn": "删除具有相同 Inputvalue 的 Timer，已修复",
         "uk": "Видалення таймера з тим же вхідним значенням, виправлено"
-      },
-      "0.1.10": {
-        "en": "Possibility to set intervals manually",
-        "de": "Möglichkeit, Intervalle manuell einzustellen",
-        "ru": "Возможность установить интервалы вручную",
-        "pt": "Possibilidade de definir intervalos manualmente",
-        "nl": "Mogelijkheid om intervallen handmatig in te stellen",
-        "fr": "Possibilité de définir des intervalles manuellement",
-        "it": "Possibilità di impostare manualmente gli intervalli",
-        "es": "Posibilidad de establecer intervalos manualmente",
-        "pl": "Możliwość ręcznego ustawienia interwałów",
-        "zh-cn": "可以手动设置间隔",
-        "uk": "Можливість встановити інтервали вручну"
       }
     },
     "titleLang": {
@@ -205,7 +205,8 @@
         "def": false
       },
       "native": {}
-    },{
+    },
+    {
       "_id": "timers.connection",
       "type": "state",
       "common": {
@@ -231,7 +232,6 @@
       },
       "native": {}
     },
-   
     {
       "_id": "timer1.alive",
       "type": "state",
@@ -257,7 +257,8 @@
         "def": 0
       },
       "native": {}
-    },{
+    },
+    {
       "_id": "timer1.percent",
       "type": "state",
       "common": {
