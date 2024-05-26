@@ -1,6 +1,5 @@
 module.exports = {
-  ignores: ["./node_modules/", "./.dev-server/"],
-  files: ["./main.js"],
+  files: ["main.js"],
   languageOptions: {
     ecmaVersion: 2018,
     globals: {
