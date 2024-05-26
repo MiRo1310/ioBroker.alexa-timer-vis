@@ -163,7 +163,8 @@
                 "headline2":{
                     "newLine":true,
                     "type": "header",
-                    "text": "Einheiten für den Datenpunkt string",
+                    "text":{"en": "Units for data point string"
+                    , "de": "Einheiten für den Datenpunkt string"},
                     "size": 2                    
                 },
                 "unitHour3" : {
@@ -184,7 +185,7 @@
                     "md": 2,
                     "lg": 1,
                     "label": {
-                        "en":"Unit Minute",
+                        "en":"Unit minute",
                         "de": "Einheit Minuten"
                     }
                 },
@@ -197,6 +198,47 @@
                     "label": {
                         "en":"Unit Second",
                         "de": "Einheit Sekunden"
+                    }
+                    
+                },  "headline3":{
+                    "newLine":true,
+                    "type": "header",
+                    "text": {
+                        "en": "Value for 0 seconds, minutes or hours",
+                        "de":"Wert für 0 Sekunden, Minuten oder Stunden"},
+                    "size": 2                    
+                },
+                "valHourForZero" : {
+                    "newLine": true,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,                                     
+                    "label": {
+                        "en":"Value hours",
+                        "de": "Wert Stunden"
+                    }                   
+                },
+                "valMinuteForZero" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,                  
+                    "label": {
+                        "en":"Value minute",
+                        "de": "Wert Minuten"
+                    }
+                },
+                "valSecondForZero" : {
+                    "newLine": false,
+                    "type" : "text",
+                    "sm": 2,
+                    "md": 2,
+                    "lg": 1,
+                    "label": {
+                        "en":"Value second",
+                        "de": "Wert Sekunden"
                     }
                     
                 }

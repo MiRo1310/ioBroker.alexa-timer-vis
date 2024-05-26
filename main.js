@@ -15,7 +15,7 @@ const time = require("./lib/js/global").time;
 const createState = require("./lib/js/createState").createState;
 const timerObject = require("./lib/js/timerData").timerObject;
 
-let idInstanze;
+let idInstance;
 
 // Variablen für Timeouts und Intervalle
 let setStates;
@@ -24,9 +24,9 @@ let debounceTimeout;
 // Variable um Intervall zum schreiben von States nur einmal auszuführen
 let writeStateActiv = false;
 // Variable mit ID auf welche reagiert werden soll
-let datapoint;
-let intervallMore60 = 0;
-let intervallLess60 = 0;
+let dataPoint;
+let intervalMore60 = 0;
+let intervalLess60 = 0;
 // let debounce;
 // eslint-disable-next-line no-unused-vars
 let debounceTime = 0;
@@ -49,15 +49,15 @@ class AlexaTimerVis extends utils.Adapter {
   // ANCHOR onReady
   async onReady() {
     this.setState("info.connection", false, true);
-    datapoint = `${this.config.alexa}.History.summary`;
-    const datapointArray = datapoint.split(".");
-    idInstanze = {
-      adapter: datapointArray[0],
-      instanz: datapointArray[1],
-      channel_history: datapointArray[2],
+    dataPoint = `${this.config.alexa}.History.summary`;
+    const dataPointArray = dataPoint.split(".");
+    idInstance = {
+      adapter: dataPointArray[0],
+      instanz: dataPointArray[1],
+      channel_history: dataPointArray[2],
     };
-    intervallMore60 = this.config.intervall1;
-    intervallLess60 = this.config.intervall2;
+    intervalMore60 = this.config.intervall1;
+    intervalLess60 = this.config.intervall2;
 
     // Einheiten
     const unitHour1 = this.config.unitHour1;
@@ -69,12 +69,16 @@ class AlexaTimerVis extends utils.Adapter {
     const unitSecond1 = this.config.unitSecond1;
     const unitSecond2 = this.config.unitSecond2;
     const unitSecond3 = this.config.unitSecond3;
+    const valHourForZero = this.config.valHourForZero;
+    const valMinuteForZero = this.config.valMinuteForZero;
+    const valSecondForZero = this.config.valSecondForZero;
+    console.log(valHourForZero, valMinuteForZero, valSecondForZero);
     debounceTime = this.config.entprellZeit;
 
     // Suchen nach dem Alexa Datenpunkt, und schaltet den Adapter auf grün
-    this.getForeignObject(datapoint, (err, obj) => {
+    this.getForeignObject(dataPoint, (err, obj) => {
       if (err || obj == null) {
-        this.log.error(`The State ${datapoint} was not found!`);
+        this.log.error(`The State ${dataPoint} was not found!`);
       } else {
         // Datenpunkt wurde gefunden
         this.log.info("Alexa State was found");
@@ -92,7 +96,7 @@ class AlexaTimerVis extends utils.Adapter {
     // Auf Änderung des Datenpunkts reagieren
     this.on("stateChange", async (id, state) => {
       // Nur wenn die aktualisierung aus der Variable "datapoint" kommt soll der Code ausgeführt werden
-      if (state && typeof state.val === "string" && state.val != "" && id == datapoint) {
+      if (state && typeof state.val === "string" && state.val != "" && id == dataPoint) {
         // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
         let doNothing = false;
         if (timerObject.timerActiv.data.notNotedSentence.find((element) => element === voiceInput)) {
@@ -290,7 +294,7 @@ class AlexaTimerVis extends utils.Adapter {
           const timerOb = timerObject.timer[timer];
           let alexaCommandState;
           if (timerOb.serialNumber != undefined) {
-            alexaCommandState = `alexa2.${idInstanze.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
+            alexaCommandState = `alexa2.${idInstance.instanz}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
             let name = "";
             // Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
             if (timerOb.name != "Timer") name = timerOb.name;
@@ -571,12 +575,12 @@ class AlexaTimerVis extends utils.Adapter {
       const timer = timerObject.timer[timerBlock];
       // Wenn der eingegebene Timer unter 60 Sekunden ist, soll er direkt mit dem kleinen Intervall starten
       if (sec > 60) {
-        int = intervallMore60 * 1000;
+        int = intervalMore60 * 1000;
         onlyOneTimer = false;
       } else {
         // sonst mit dem großen Intervall
-        timerObject.timer.timer1.timerInterval = intervallLess60 * 1000;
-        int = intervallLess60 * 1000;
+        timerObject.timer.timer1.timerInterval = intervalLess60 * 1000;
+        int = intervalLess60 * 1000;
         onlyOneTimer = true;
       }
       // Funktion aufrufen, die das Intervall erzeugt
@@ -716,9 +720,9 @@ class AlexaTimerVis extends utils.Adapter {
      */
     const resetValues = (timer, index) => {
       timerObject.timerActiv.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
-      timer.hour = "";
-      timer.minute = "";
-      timer.second = "";
+      timer.hour = valHourForZero ||"";
+      timer.minute = valMinuteForZero || "";
+      timer.second = valSecondForZero || "";
       timer.string_Timer = "00:00:00 h";
       timer.string_2_Timer = "";
       timer.onlySec = 0;
@@ -755,18 +759,18 @@ class AlexaTimerVis extends utils.Adapter {
     const getInputDevice = async (path) => {
       try {
         const obj = await new Promise((resolve, reject) => {
-          this.getForeignObject(`alexa2.${idInstanze.instanz}.History.name`, async (err, obj) => {
+          this.getForeignObject(`alexa2.${idInstance.instanz}.History.name`, async (err, obj) => {
             if (err || obj == null) {
               this.log.error(`The State "name" of Alexa was not found!`);
               path.inputDevice = "-";
               reject(err);
             } else {
               try {
-                const stateObj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
+                const stateObj = await this.getForeignStateAsync(`alexa2.${idInstance.instanz}.History.name`);
                 let serial;
                 if (stateObj && stateObj.val) {
                   path.inputDevice = stateObj.val;
-                  serial = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.serialNumber`);
+                  serial = await this.getForeignStateAsync(`alexa2.${idInstance.instanz}.History.serialNumber`);
                   if (serial && serial.val) {
                     path.serialNumber = serial.val;
 
@@ -964,7 +968,7 @@ class AlexaTimerVis extends utils.Adapter {
 
       let inputDevice = "";
       // Device auslesen
-      const obj = await this.getForeignStateAsync(`alexa2.${idInstanze.instanz}.History.name`);
+      const obj = await this.getForeignStateAsync(`alexa2.${idInstance.instanz}.History.name`);
       if (obj && obj.val && typeof obj.val == "string") {
         inputDevice = obj.val;
       }
@@ -973,15 +977,15 @@ class AlexaTimerVis extends utils.Adapter {
       let countMatchingName = 0;
       let countMatchingInputDevice = 0;
 
-      // Die Schleife ermittelt wie oft Timer mit dem eingegebenen Wert vorhanden sind, falls mehrmals darf evtl nicht gelöscht werden, da nicht genau definiert ist welcher
+      // Die Schleife ermittelt wie oft Timer mit dem eingegebenen Wert vorhanden sind, falls mehrmals darf evtl. nicht gelöscht werden, da nicht genau definiert ist welcher
       // Timer gemeint ist
       for (const element in timerObject.timer) {
-        // Aufzählen wieviele Timer mit den Sekunden vorkommt
+        // Aufzählen wie viele Timer mit den Sekunden vorkommt
         if (timerObject.timer[element].onlySec == sec) {
           countMatchingTime++;
         }
         // this.log.debug("Name im Object " + JSON.stringify(timerObject.timer[element].name));
-        // Aufzählen wieviele Timer mit dem gleichen Namen vorkommen
+        // Aufzählen wie viele Timer mit dem gleichen Namen vorkommen
         if (timerObject.timer[element].name.trim() == name) {
           countMatchingName++;
         }
@@ -997,7 +1001,7 @@ class AlexaTimerVis extends utils.Adapter {
         this.log.debug("Alexa hatte nachgefragt");
         // CountMatchingName darf eigentlich nur einmal vorkommen, da nicht 2 Timer mit dem gleichen Namen erstellt werden kann
         this.log.debug(JSON.stringify("Vorkommen des Namen " + countMatchingName));
-        this.log.debug("Countmatching == 1 " + JSON.stringify(countMatchingName == 1));
+        this.log.debug("Count matching == 1 " + JSON.stringify(countMatchingName == 1));
 
         // Einer, mit genauem Namen
         if (countMatchingName == 1) {
@@ -1043,7 +1047,7 @@ class AlexaTimerVis extends utils.Adapter {
           // Einer, und einer ist auch nur gestellt
           if (!questionAlexa) {
             this.log.debug("Timer Count = 1 " + JSON.stringify(timerObject.timerActiv.timerCount == 1));
-            this.log.debug("countmatchingTime " + JSON.stringify(countMatchingTime));
+            this.log.debug("CountMatchingTime " + JSON.stringify(countMatchingTime));
             this.log.debug("v sec " + JSON.stringify(timerObject.timer[element]["onlySec"] == sec));
             this.log.debug("sec " + JSON.stringify(sec));
             if (timerObject.timerActiv.timerCount == 1 && timerObject.timerActiv.timer[element] === true) {
@@ -1184,7 +1188,7 @@ class AlexaTimerVis extends utils.Adapter {
     // ANCHOR Subscribe Foreign States
     // Um Statusupdates zu erhalten, müssen Sie diese abonnieren. Die folgende Zeile fügt ein Abonnement für unsere oben erstellte Variable hinzu
     //this.subscribeStates("testVariable");
-    this.subscribeForeignStates(datapoint);
+    this.subscribeForeignStates(dataPoint);
 
     /**
      *

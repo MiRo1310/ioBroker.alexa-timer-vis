@@ -203,7 +203,10 @@
     "unitMinute3": "min",
     "unitSecond1": "Sekunde",
     "unitSecond2": "Sekunden",
-    "unitSecond3": "sec"
+    "unitSecond3": "sec",
+    "valHourForZero": "",
+    "valMinuteForZero": "",
+    "valSecondForZero": ""
   },
   "objects": [],
   "instanceObjects": [
