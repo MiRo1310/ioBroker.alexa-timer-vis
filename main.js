@@ -1027,7 +1027,7 @@ class AlexaTimerVis extends utils.Adapter {
             inputString += timerObject.zahlen[element] + " ";
           }
         } else if (parseInt(element)) {
-          let number = parseInt(element);
+          const number = parseInt(element);
           if (timerString == "") timerString = "(";
           if (timerString.endsWith("+")) timerString += "(";
           timerString += number;
