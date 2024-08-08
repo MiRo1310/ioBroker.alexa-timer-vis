@@ -1,5 +1,13 @@
 module.exports = {
-  files: ["main.js"],
+  files: ["./main.js"],
+  ignores: [
+    "main.test.js",
+    "**/test/**",
+    "**/lib/tools.js",
+    "**/.dev-server/**",
+    "**/admin/**",
+    "**/node_modules/**",
+  ],
   languageOptions: {
     ecmaVersion: 2018,
     globals: {

@@ -123,9 +123,11 @@
     },
     "authors": ["Michael Roling <michael.roling@gmx.de>"],
     "keywords": ["Alexa", "Timer", "VIS", "home automation"],
-    "license": "MIT",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "alexa-timer-vis.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
@@ -133,17 +135,17 @@
     "loglevel": "info",
     "mode": "daemon",
     "type": "logic",
+    "tier": 3,
     "compact": true,
     "connectionType": "local",
     "dataSource": "poll",
-    "materialize": true,
     "supportCustoms": false,
     "adminUI": {
       "config": "json"
     },
     "dependencies": [
       {
-        "js-controller": ">=2.0.0"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
