@@ -58,8 +58,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 1.0.0 (2024-08-09)
 
 - Js-controller >=5.0.19 is required
 
