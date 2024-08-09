@@ -59,7 +59,9 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 	### **WORK IN PROGRESS**
 -->
 
-- Js-controller 5.0.19 is required
+### **WORK IN PROGRESS**
+
+- Js-controller >=5.0.19 is required
 
 ### 0.3.0 (2023-12-23)
 
