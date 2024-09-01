@@ -1,14 +1,32 @@
-//ANCHOR createStates
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-/**
- * States erstellen
- * @param {number} value Wieviele Elemente sollen erstellt werden
- */
-const createState = async (value, _this) => {
+"use strict";
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var state_exports = {};
+__export(state_exports, {
+  createState: () => createState
+});
+module.exports = __toCommonJS(state_exports);
+var import_store = require("../store/store");
+const createState = async (value) => {
+  const store = (0, import_store.useStore)();
+  const _this = store._this;
   try {
     for (let i = 1; i <= value; i++) {
-      // Datenpunkt für allgemeine Anzeige das ein Timer aktiv ist
-
       await _this.setObjectNotExistsAsync("all_Timer.alive", {
         type: "state",
         common: {
@@ -17,9 +35,9 @@ const createState = async (value, _this) => {
           role: "indicator",
           read: true,
           write: true,
-          def: false,
+          def: false
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
         type: "state",
@@ -29,9 +47,9 @@ const createState = async (value, _this) => {
           role: "indicator",
           read: true,
           write: true,
-          def: 0,
+          def: 0
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".percent2", {
         type: "state",
@@ -41,11 +59,10 @@ const createState = async (value, _this) => {
           role: "indicator",
           read: true,
           write: true,
-          def: 0,
+          def: 0
         },
-        native: {},
+        native: {}
       });
-
       await _this.setObjectNotExistsAsync("timer" + i + ".alive", {
         type: "state",
         common: {
@@ -54,9 +71,9 @@ const createState = async (value, _this) => {
           role: "indicator",
           read: true,
           write: true,
-          def: false,
+          def: false
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".hour", {
         type: "state",
@@ -66,9 +83,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "",
+          def: ""
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".minute", {
         type: "state",
@@ -78,9 +95,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "",
+          def: ""
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".second", {
         type: "state",
@@ -90,9 +107,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "",
+          def: ""
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".string", {
         type: "state",
@@ -102,9 +119,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "00:00:00 Std",
+          def: "00:00:00 Std"
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".string_2", {
         type: "state",
@@ -114,9 +131,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "",
+          def: ""
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".name", {
         type: "state",
@@ -126,9 +143,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "Timer",
+          def: "Timer"
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".TimeStart", {
         type: "state",
@@ -138,9 +155,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "00:00:00",
+          def: "00:00:00"
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".TimeEnd", {
         type: "state",
@@ -150,9 +167,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "00:00:00",
+          def: "00:00:00"
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".InputDeviceName", {
         type: "state",
@@ -162,9 +179,9 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "",
+          def: ""
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".Reset", {
         type: "state",
@@ -174,9 +191,9 @@ const createState = async (value, _this) => {
           role: "button",
           read: false,
           write: true,
-          def: false,
+          def: false
         },
-        native: {},
+        native: {}
       });
       await _this.setObjectNotExistsAsync("timer" + i + ".lengthTimer", {
         type: "state",
@@ -186,17 +203,19 @@ const createState = async (value, _this) => {
           role: "value",
           read: true,
           write: true,
-          def: "",
+          def: ""
         },
-        native: {},
+        native: {}
       });
-      // id zusammenbauen
       const id = `alexa-timer-vis.${_this.instance}.timer${i}.Reset`;
-      // Subscribe Reset Button
       _this.subscribeForeignStates(id);
     }
   } catch (e) {
     _this.log.error(e);
   }
 };
-module.exports = { createState };
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  createState
+});
+//# sourceMappingURL=state.js.map
