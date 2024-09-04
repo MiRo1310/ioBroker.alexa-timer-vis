@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/set-adapter-status.ts"],
+  "sourcesContent": ["import { useStore } from \"../store/store\";\nimport { createState } from \"./state\";\n\nexport const setAdapterStatusAndInitStateCreation = (): void => {\n\tconst store = useStore();\n\tconst _this = store._this;\n\n\t_this.getForeignObject(store.pathAlexaSummary, (err, obj) => {\n\t\tif (err || obj == null) {\n\t\t\t_this.log.error(`The State ${store.pathAlexaSummary} was not found!`);\n\t\t} else {\n\t\t\t_this.log.info(\"Alexa State was found\");\n\t\t\t_this.setState(\"info.connection\", true, true);\n\n\t\t\tcreateState(4);\n\t\t}\n\t});\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,mBAAyB;AACzB,mBAA4B;AAErB,MAAM,uCAAuC,MAAY;AAC/D,QAAM,YAAQ,uBAAS;AACvB,QAAM,QAAQ,MAAM;AAEpB,QAAM,iBAAiB,MAAM,kBAAkB,CAAC,KAAK,QAAQ;AAC5D,QAAI,OAAO,OAAO,MAAM;AACvB,YAAM,IAAI,MAAM,aAAa,MAAM,gBAAgB,iBAAiB;AAAA,IACrE,OAAO;AACN,YAAM,IAAI,KAAK,uBAAuB;AACtC,YAAM,SAAS,mBAAmB,MAAM,IAAI;AAE5C,oCAAY,CAAC;AAAA,IACd;AAAA,EACD,CAAC;AACF;",
+  "names": []
+}
