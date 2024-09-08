@@ -50,8 +50,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 
 		this.setState("info.connection", false, true);
 
-		resetAllTimerValuesAndState();
-
 		store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
 
 		store.intervalMore60 = this.config.intervall1;
@@ -73,7 +71,8 @@ export default class AlexaTimerVis extends utils.Adapter {
 
 		store.debounceTime = this.config.entprellZeit;
 
-		setAdapterStatusAndInitStateCreation();
+		await setAdapterStatusAndInitStateCreation();
+		resetAllTimerValuesAndState();
 
 		let voiceInputOld: null | string = null;
 		let voiceInput: string;

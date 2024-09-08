@@ -17,7 +17,7 @@ export const getNewTimerName = (newJsonString: ioBroker.State, timerSelector: st
 		if (isIobrokerValue(newJsonString)) {
 			newJson = JSON.parse(newJsonString.val as string);
 		}
-		_this.log.debug("NewJson: " + JSON.stringify(newJson));
+
 		if (!oldJson || (oldJson.length === 0 && newJson.length)) {
 			timerObject.timer[timerSelector as keyof typeof timerObject.timer].nameFromAlexa = newJson[0]?.label;
 		}

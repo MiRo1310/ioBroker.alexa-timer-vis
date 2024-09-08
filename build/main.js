@@ -71,7 +71,6 @@ class AlexaTimerVis extends utils.Adapter {
     const store = (0, import_store.useStore)();
     store._this = this;
     this.setState("info.connection", false, true);
-    (0, import_reset.resetAllTimerValuesAndState)();
     store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
     store.intervalMore60 = this.config.intervall1;
     store.intervalLess60 = this.config.intervall2;
@@ -88,7 +87,8 @@ class AlexaTimerVis extends utils.Adapter {
     store.valMinuteForZero = this.config.valMinuteForZero;
     store.valSecondForZero = this.config.valSecondForZero;
     store.debounceTime = this.config.entprellZeit;
-    (0, import_set_adapter_status.setAdapterStatusAndInitStateCreation)();
+    await (0, import_set_adapter_status.setAdapterStatusAndInitStateCreation)();
+    (0, import_reset.resetAllTimerValuesAndState)();
     let voiceInputOld = null;
     let voiceInput;
     let timeVoiceInputOld = null;
