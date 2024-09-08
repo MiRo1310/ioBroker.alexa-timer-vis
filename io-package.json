@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "FIX: #119 Error \"has no existing object\" on first start\nUse Typescript\nFEAT: #118 get name from activeTimerList\nFIX: #117 createDevice is deprecated",
+        "de": "FIX: #119 Fehler \"hat kein vorhandenes Objekt\" beim ersten Start\nTypskript verwenden\nFEAT: #118 erhalten name from active TimerList\nFIX: #117 erstellen Gerät ist abgeschrieben",
+        "ru": "FIX: #119 Ошибка «не имеет существующего объекта» на первом этапе\nИспользовать Typescript\n#118 получить имя от активного TimerList\nFIX: #117 Устройство депрецировано",
+        "pt": "FIX: #119 Erro \"não tem nenhum objeto existente\" no início\nTipo de utilização\nFEAT: #118 obter nome de ativo Temporizador\nFIX: #117 criar O dispositivo é desprezado",
+        "nl": "FIX: #119 Fout \"heeft geen bestaand object\" bij de eerste start\nTypescript gebruiken\nFEAT: #118 krijgt naam van actief TimerList\nFIX: #117 aanmaken Apparaat is verouderd",
+        "fr": "FIX: #119 Erreur \"n'a pas d'objet existant\" au premier démarrage\nUtiliser Typescript\nVIANDE: #118 obtenir le nom de active Chronologie\nFIX: #117 créer Le périphérique est déprécié",
+        "it": "FIX: #119 Errore \"non ha oggetto esistente\" al primo inizio\nUtilizzare il tipo\nFEAT: #118 ottenere il nome da attivo TimerList\nFIX: #117 creare Il dispositivo è deprecato",
+        "es": "FIX: #119 Error \"no tiene ningún objeto existente\" en el primer comienzo\nUse Typescript\nFEAT: #118 obtener nombre de activo TimerList\nFIX: #117 crear El dispositivo está deprecado",
+        "pl": "FIX: # 119 Błąd \"nie ma istniejącego obiektu\" na pierwszym starcie\nUżyj skryptu\nFEAT: # 118 uzyskać nazwę z aktywnego Lista czasu\nFIX: # 117 create Urządzenie jest zdeprecjonowane",
+        "uk": "FIX: #119 Помилка \"не існує\" на першому старті\nТип використання\nFEAT: #118 Ім'я від активних Список таймерів\nFIX: #117 Створити Пристрої депресовані",
+        "zh-cn": "FIX: # 119 第一次启动时错误“ 没有已存在对象 ”\n使用打字符\nFEAT: # 118 从活动获得名称 计时列表\nFIX: #117 创建 设备已贬值"
+      },
       "1.0.0": {
         "en": "Js-controller >=5.0.19 is required",
         "de": "Js-Controller >=5.0.19 ist erforderlich",
@@ -80,19 +93,6 @@
         "pl": "Usuwanie timerów o tej samej wartości, naprawione",
         "zh-cn": "删除具有相同值的计时器，已修复",
         "uk": "Видалення таймерів з однаковим значенням, виправлено"
-      },
-      "0.1.12": {
-        "en": "Delete of timer fixed",
-        "de": "Löschen des Timers behoben",
-        "ru": "Исправлено удаление таймера",
-        "pt": "Exclusão do temporizador corrigida",
-        "nl": "Verwijderen van timer vast",
-        "fr": "Suppression de la minuterie corrigée",
-        "it": "Eliminazione del timer fissa",
-        "es": "Eliminación de temporizador arreglado",
-        "pl": "Naprawiono usuwanie timera",
-        "zh-cn": "修复定时器的删除",
-        "uk": "Виправлено видалення таймера"
       }
     },
     "titleLang": {

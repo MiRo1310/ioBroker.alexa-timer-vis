@@ -58,8 +58,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 2.0.0 (2024-09-08)
 
 -   FIX: #119 Error "has no existing object" on first start
 -   Use Typescript
