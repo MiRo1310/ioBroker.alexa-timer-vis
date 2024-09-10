@@ -136,7 +136,6 @@ class AlexaTimerVis extends utils.Adapter {
         }
       } else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && id != "alexa2.0.History.summary") {
         try {
-          this.log.info("Reset Button has been clicked: " + JSON.stringify(id));
           const timer = id.split(".")[2];
           const timerOb = import_timer_data.timerObject.timer[timer];
           let alexaCommandState;

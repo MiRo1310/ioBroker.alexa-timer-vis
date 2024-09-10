@@ -31,21 +31,11 @@ const startTimer = async (sec, name, inputString) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
-    let timerSelector;
-    Object.keys(import_timer_data.timerObject.timerActive.timer).forEach((i) => {
-      if (import_timer_data.timerObject.timerActive.timer[i] === false) {
-        import_timer_data.timerObject.timerActive.timer[i] = true;
-        timerSelector = i;
-      }
-    });
+    const timerSelector = selectAvailableTimer(_this);
     await (0, import_get_input_device.getInputDevice)(import_timer_data.timerObject.timer[timerSelector]);
     await (0, import_timer_name.registerIdToGetTimerName)(timerSelector);
     const jsonAlexa = await _this.getForeignStateAsync(`alexa2.0.History.json`);
-    let startTimer2;
-    if (jsonAlexa && (0, import_global.isString)(jsonAlexa.val)) {
-      startTimer2 = JSON.parse(jsonAlexa.val).creationTime;
-    } else
-      startTimer2 = (/* @__PURE__ */ new Date()).getTime();
+    const startTimer2 = getStartTimerValue(jsonAlexa);
     const start_Time = (0, import_global.timeToString)(startTimer2);
     const timerMilliseconds = sec * 1e3;
     const endTimeMilliseconds = startTimer2 + timerMilliseconds;
@@ -64,6 +54,21 @@ const startTimer = async (sec, name, inputString) => {
     _this.log.error("Error in startTimer: " + JSON.stringify(e.stack));
   }
 };
+function getStartTimerValue(jsonAlexa) {
+  if ((0, import_global.isString)(jsonAlexa == null ? void 0 : jsonAlexa.val)) {
+    return JSON.parse(jsonAlexa.val).creationTime;
+  }
+  return (/* @__PURE__ */ new Date()).getTime();
+}
+function selectAvailableTimer(_this) {
+  for (let i = 0; i < Object.keys(import_timer_data.timerObject.timerActive.timer).length; i++) {
+    const key = Object.keys(import_timer_data.timerObject.timerActive.timer)[i];
+    if (import_timer_data.timerObject.timerActive.timer[key] === false) {
+      import_timer_data.timerObject.timerActive.timer[key] = true;
+      return key;
+    }
+  }
+}
 async function setDeviceNameInStateName(timerBlock, _this, store) {
   if ((0, import_global.isString)(timerBlock)) {
     await _this.setObjectAsync("alexa-timer-vis.0." + timerBlock, {
