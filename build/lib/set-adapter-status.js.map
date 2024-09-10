@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/lib/set-adapter-status.ts"],
-  "sourcesContent": ["import { useStore } from \"../store/store\";\r\nimport { createState } from \"./state\";\r\n\r\nexport const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {\r\n\tconst store = useStore();\r\n\tconst _this = store._this;\r\n\r\n\tconst result = await _this.getForeignObjectAsync(store.pathAlexaSummary);\r\n\tif (!result) {\r\n\t\t_this.log.error(`The State ${store.pathAlexaSummary} was not found!`);\r\n\t\treturn;\r\n\t}\r\n\t_this.log.info(\"Alexa State was found\");\r\n\t_this.setState(\"info.connection\", true, true);\r\n\r\n\tawait createState(4);\r\n};\r\n"],
+  "sourcesContent": ["import { useStore } from \"../store/store\";\nimport { createState } from \"./state\";\n\nexport const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {\n\tconst store = useStore();\n\tconst _this = store._this;\n\n\tconst result = await _this.getForeignObjectAsync(store.pathAlexaSummary);\n\tif (!result) {\n\t\t_this.log.error(`The State ${store.pathAlexaSummary} was not found!`);\n\t\treturn;\n\t}\n\t_this.log.info(\"Alexa State was found\");\n\t_this.setState(\"info.connection\", true, true);\n\n\tawait createState(4);\n};\n"],
   "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,mBAAyB;AACzB,mBAA4B;AAErB,MAAM,uCAAuC,YAA2B;AAC9E,QAAM,YAAQ,uBAAS;AACvB,QAAM,QAAQ,MAAM;AAEpB,QAAM,SAAS,MAAM,MAAM,sBAAsB,MAAM,gBAAgB;AACvE,MAAI,CAAC,QAAQ;AACZ,UAAM,IAAI,MAAM,aAAa,MAAM,gBAAgB,iBAAiB;AACpE;AAAA,EACD;AACA,QAAM,IAAI,KAAK,uBAAuB;AACtC,QAAM,SAAS,mBAAmB,MAAM,IAAI;AAE5C,YAAM,0BAAY,CAAC;AACpB;",
   "names": []
 }

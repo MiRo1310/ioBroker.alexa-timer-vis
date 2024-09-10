@@ -146,7 +146,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 				id != "alexa2.0.History.summary"
 			) {
 				try {
-					this.log.info("Reset Button has been clicked: " + JSON.stringify(id));
 					// Aus ID den Timer erfassen
 					const timer = id.split(".")[2];
 

@@ -119,7 +119,7 @@ export const isStringEmpty = (str: string): boolean => {
 };
 
 export function isString(str: any): str is string {
-	return typeof str == "string";
+	return str && typeof str == "string";
 }
 
 export function isIobrokerValue(obj: ioBroker.State | null | undefined): obj is ioBroker.State {

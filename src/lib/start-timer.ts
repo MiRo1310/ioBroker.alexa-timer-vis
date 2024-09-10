@@ -10,24 +10,13 @@ export const startTimer = async (sec: number, name: string, inputString: string)
 	const store = useStore();
 	const _this = store._this;
 	try {
-		let timerSelector: TimerSelector;
-
-		Object.keys(timerObject.timerActive.timer).forEach((i) => {
-			if (timerObject.timerActive.timer[i as keyof typeof timerObject.timerActive.timer] === false) {
-				timerObject.timerActive.timer[i as keyof typeof timerObject.timerActive.timer] = true;
-				timerSelector = i as keyof Timers;
-			}
-		});
+		const timerSelector = selectAvailableTimer(_this);
 
 		await getInputDevice(timerObject.timer[timerSelector as keyof typeof timerObject.timer]);
 		await registerIdToGetTimerName(timerSelector);
 
 		const jsonAlexa = await _this.getForeignStateAsync(`alexa2.0.History.json`);
-
-		let startTimer: number;
-		if (jsonAlexa && isString(jsonAlexa.val)) {
-			startTimer = JSON.parse(jsonAlexa.val).creationTime;
-		} else startTimer = new Date().getTime();
+		const startTimer: number = getStartTimerValue(jsonAlexa);
 
 		const start_Time = timeToString(startTimer);
 		const timerMilliseconds = sec * 1000;
@@ -53,6 +42,24 @@ export const startTimer = async (sec: number, name: string, inputString: string)
 		_this.log.error("Error in startTimer: " + JSON.stringify(e.stack));
 	}
 };
+
+function getStartTimerValue(jsonAlexa: ioBroker.State | null | undefined): number {
+	if (isString(jsonAlexa?.val)) {
+		return JSON.parse(jsonAlexa.val).creationTime;
+	}
+	return new Date().getTime();
+}
+
+function selectAvailableTimer(_this: AlexaTimerVis): TimerSelector {
+	for (let i = 0; i < Object.keys(timerObject.timerActive.timer).length; i++) {
+		const key = Object.keys(timerObject.timerActive.timer)[i] as keyof typeof timerObject.timerActive.timer;
+
+		if (timerObject.timerActive.timer[key] === false) {
+			timerObject.timerActive.timer[key] = true;
+			return key as keyof Timers;
+		}
+	}
+}
 
 async function setDeviceNameInStateName(
 	timerBlock: string | undefined,

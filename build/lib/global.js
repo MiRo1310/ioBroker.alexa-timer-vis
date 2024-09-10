@@ -118,7 +118,7 @@ const isStringEmpty = (str) => {
   return str === "";
 };
 function isString(str) {
-  return typeof str == "string";
+  return str && typeof str == "string";
 }
 function isIobrokerValue(obj) {
   const result = obj && obj.val !== null && obj.val !== void 0;
