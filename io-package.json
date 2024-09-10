@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "news": {
+      "2.0.1": {
+        "en": "FIX: #128 Timer creating error",
+        "de": "FIX: #128 Timer Fehler erstellen",
+        "ru": "FIX: #128 Таймер, создающий ошибку",
+        "pt": "FIX: #128 Temporizador criando erro",
+        "nl": "FIX: #128 Timer aanmaken fout",
+        "fr": "FIX: #128 Chronomètre créant une erreur",
+        "it": "FIX: #128 Timer crea errore",
+        "es": "FIX: #128 Timer creating error",
+        "pl": "FIX: # 128 Czas tworzenia błędu",
+        "uk": "FIX: #128 Таймер створення помилки",
+        "zh-cn": "FIX: # 128 计时器生成错误"
+      },
       "2.0.0": {
         "en": "FIX: #119 Error \"has no existing object\" on first start\nUse Typescript\nFEAT: #118 get name from activeTimerList\nFIX: #117 createDevice is deprecated",
         "de": "FIX: #119 Fehler \"hat kein vorhandenes Objekt\" beim ersten Start\nTypskript verwenden\nFEAT: #118 erhalten name from active TimerList\nFIX: #117 erstellen Gerät ist abgeschrieben",
@@ -80,19 +93,6 @@
         "pl": "Dodano debouncing w konfiguracji adaptera",
         "uk": "Додано усунення стрибків у конфігурацію адаптера",
         "zh-cn": "在适配器配置中添加了去抖动"
-      },
-      "0.1.13": {
-        "en": "Delete of Timers with the same value, fixed",
-        "de": "Löschen von Timern mit gleichem Wert, behoben",
-        "ru": "Исправлено удаление Таймеров с одинаковым значением",
-        "pt": "Exclusão de temporizadores com o mesmo valor, fixo",
-        "nl": "Verwijderen van timers met dezelfde waarde, vast",
-        "fr": "Suppression des minuteries avec la même valeur, fixe",
-        "it": "Eliminazione dei timer con lo stesso valore, fissa",
-        "es": "Eliminación de Timers con el mismo valor, fijo",
-        "pl": "Usuwanie timerów o tej samej wartości, naprawione",
-        "zh-cn": "删除具有相同值的计时器，已修复",
-        "uk": "Видалення таймерів з однаковим значенням, виправлено"
       }
     },
     "titleLang": {
