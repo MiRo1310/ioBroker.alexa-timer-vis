@@ -72,7 +72,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 		store.debounceTime = this.config.entprellZeit;
 
 		await setAdapterStatusAndInitStateCreation();
-		resetAllTimerValuesAndState();
+		resetAllTimerValuesAndState(this);
 
 		let voiceInputOld: null | string = null;
 		let voiceInput: string;

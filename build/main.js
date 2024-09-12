@@ -88,7 +88,7 @@ class AlexaTimerVis extends utils.Adapter {
     store.valSecondForZero = this.config.valSecondForZero;
     store.debounceTime = this.config.entprellZeit;
     await (0, import_set_adapter_status.setAdapterStatusAndInitStateCreation)();
-    (0, import_reset.resetAllTimerValuesAndState)();
+    (0, import_reset.resetAllTimerValuesAndState)(this);
     let voiceInputOld = null;
     let voiceInput;
     let timeVoiceInputOld = null;
