@@ -23,19 +23,17 @@ __export(generate_values_exports, {
 module.exports = __toCommonJS(generate_values_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
-var import_timer_data = require("./timer-data");
 const generateValues = (timer, sec, index, inputString, name) => {
   const store = (0, import_store.useStore)();
-  const timeLeft = import_timer_data.timerObject.timer[index].endTime - (/* @__PURE__ */ new Date()).getTime();
+  const timeLeft = timer.endTime - (/* @__PURE__ */ new Date()).getTime();
   const timeLeftSec = Math.round(timeLeft / 1e3);
   const result = (0, import_global.secToHourMinSec)(timeLeftSec, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
   const timeString1 = hour + ":" + minutes + ":" + seconds + getTimeUnit(timeLeftSec, store);
-  let timeString2 = isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store);
-  timeString2 = isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store, timeString2);
-  timeString2 = isShorterThanSixtyMinutes(hour, minutes, seconds, store, timeString2);
-  timeString2 = isShorterThanAMinute(minutes, seconds, store, timeString2);
+  const { timeString } = isShorterThanAMinute(
+    isShorterThanSixtyMinutes(isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store)))
+  );
   if (!timer.changeValue) {
     timer.onlySec = sec;
   }
@@ -44,15 +42,14 @@ const generateValues = (timer, sec, index, inputString, name) => {
   timer.minute = minutes;
   timer.second = seconds;
   timer.string_Timer = timeString1;
-  timer.string_2_Timer = timeString2;
+  timer.string_2_Timer = timeString;
   timer.timeLeftSec = timeLeftSec;
   timer.index = index;
   timer.inputString = inputString;
   timer.percent = Math.round(timeLeftSec / timer.onlySec * 100);
   timer.percent2 = 100 - Math.round(timeLeftSec / timer.onlySec * 100);
   timer.lengthTimer = lengthTimer;
-  name = setTimerNameIfNotExist(name);
-  import_timer_data.timerObject.timer[index].name = name;
+  timer.name = setTimerNameIfNotExist(name);
   return timeLeftSec;
 };
 function setTimerNameIfNotExist(name) {
@@ -72,29 +69,32 @@ function resetSuperiorValue(hour, minutes, seconds) {
   }
   return { hour, minutes, seconds };
 }
-function isShorterThanAMinute(minutes, seconds, store, timeString) {
+function isShorterThanAMinute({ minutes, seconds, store, timeString }) {
   if (parseInt(minutes) == 0) {
-    return seconds + " " + store.unitSecond3;
+    return { timeString: seconds + " " + store.unitSecond3 };
   }
-  return timeString;
+  return { timeString };
 }
-function isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store, timeString) {
+function isShorterOrEqualToSixtyFiveMinutes({ hour, minutes, seconds, store, timeString }) {
   if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
-    return (parseInt(minutes) + 60).toString() + ":" + seconds + " " + store.unitMinute3;
+    const timeString2 = hour + ":" + minutes + ":" + seconds + " " + store.unitHour3;
+    return { timeString: timeString2, hour, minutes, seconds, store };
   }
-  return timeString;
+  return { timeString, hour, minutes, seconds, store };
 }
-function isShorterThanSixtyMinutes(hour, minutes, seconds, store, timerString) {
+function isShorterThanSixtyMinutes({ hour, minutes, seconds, store, timeString }) {
   if (parseInt(hour) == 0) {
-    return minutes + ":" + seconds + " " + store.unitMinute3;
+    const timeString2 = minutes + ":" + seconds + " " + store.unitMinute3;
+    return { timeString: timeString2, hour, minutes, seconds, store };
   }
-  return timerString;
+  return { timeString, hour, minutes, seconds, store };
 }
 function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store) {
   if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {
-    return hour + ":" + minutes + ":" + seconds + " " + store.unitHour3;
+    const timeString = hour + ":" + minutes + ":" + seconds + " " + store.unitHour3;
+    return { timeString, hour, minutes, seconds, store };
   }
-  return "";
+  return { timeString: "", hour, minutes, seconds, store };
 }
 function getTimeUnit(timeLeftSec, store) {
   if (timeLeftSec >= 3600) {
