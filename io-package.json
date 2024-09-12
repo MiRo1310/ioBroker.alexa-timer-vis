@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "news": {
+      "2.0.2": {
+        "en": "FIX: #130 Sting_2 remains empty",
+        "de": "FIX: #130 Sting_2 bleibt leer",
+        "ru": "#130 Sting_2 остается пустым",
+        "pt": "FIX: #130 Sting_2 permanece vazio",
+        "nl": "FIX: #130 Sting_2 blijft leeg",
+        "fr": "FIX: #130 Sting_2 reste vide",
+        "it": "FIX: #130 Sting_2 rimane vuoto",
+        "es": "FIX: #130 Sting_2 permanece vacío",
+        "pl": "FIX: # 130 Sting _ 2 pozostaje pusty",
+        "uk": "FIX: #130 Sting_2 залишається порожнім",
+        "zh-cn": "FIX: # 130 Sting_2 仍然为空"
+      },
       "2.0.1": {
         "en": "FIX: #128 Timer creating error",
         "de": "FIX: #128 Timer Fehler erstellen",
@@ -80,19 +93,6 @@
         "pl": "Uwzględnij czas utworzenia, aby uniknąć tworzenia zduplikowanych liczników czasu",
         "uk": "Включіть час створення, щоб уникнути дублювання таймерів",
         "zh-cn": "包括创建时间以避免创建重复的计时器"
-      },
-      "0.1.14": {
-        "en": "Added debouncing in the adapter configuration",
-        "de": "Entprellung in der Adapterkonfiguration hinzugefügt",
-        "ru": "Добавлен дебаунс в конфигурации адаптера",
-        "pt": "Adicionado debouncing na configuração do adaptador",
-        "nl": "Debouncing toegevoegd in de adapterconfiguratie",
-        "fr": "Ajout de l'anti-rebond dans la configuration de l'adaptateur",
-        "it": "Aggiunto antirimbalzo nella configurazione dell'adattatore",
-        "es": "Se agregó antirrebote en la configuración del adaptador.",
-        "pl": "Dodano debouncing w konfiguracji adaptera",
-        "uk": "Додано усунення стрибків у конфігурацію адаптера",
-        "zh-cn": "在适配器配置中添加了去抖动"
       }
     },
     "titleLang": {
