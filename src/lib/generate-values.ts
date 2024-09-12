@@ -1,7 +1,7 @@
 import { Store, useStore } from "../store/store";
 import { secToHourMinSec } from "./global";
-import { timerObject } from "./timer-data";
-export const generateValues = (timer: any, sec: number, index: any, inputString: string, name: string): number => {
+import { Timer, timerObject } from "./timer-data";
+export const generateValues = (timer: Timer, sec: number, index: any, inputString: string, name: string): number => {
 	const store = useStore();
 
 	const timeLeft = timerObject.timer[index as keyof typeof timerObject.timer].endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
@@ -14,9 +14,9 @@ export const generateValues = (timer: any, sec: number, index: any, inputString:
 	const timeString1 = hour + ":" + minutes + ":" + seconds + getTimeUnit(timeLeftSec, store);
 
 	let timeString2 = isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store); // #58
-	timeString2 = isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store);
-	timeString2 = isShorterThanSixtyMinutes(hour, minutes, seconds, store);
-	timeString2 = isShorterThanAMinute(minutes, seconds, store);
+	timeString2 = isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store, timeString2);
+	timeString2 = isShorterThanSixtyMinutes(hour, minutes, seconds, store, timeString2);
+	timeString2 = isShorterThanAMinute(minutes, seconds, store, timeString2);
 
 	if (!timer.changeValue) {
 		timer.onlySec = sec;
@@ -64,25 +64,37 @@ function resetSuperiorValue(
 	return { hour, minutes, seconds };
 }
 
-function isShorterThanAMinute(minutes: string, seconds: string, store: Store): string {
+function isShorterThanAMinute(minutes: string, seconds: string, store: Store, timeString: string): string {
 	if (parseInt(minutes) == 0) {
 		return seconds + " " + store.unitSecond3;
 	}
-	return "";
+	return timeString;
 }
 
-function isShorterThanSixtyMinutes(hour: string, minutes: string, seconds: string, store: Store): string {
-	if (parseInt(hour) == 0) {
-		return minutes + ":" + seconds + " " + store.unitMinute3;
-	}
-	return "";
-}
-
-function isShorterOrEqualToSixtyFiveMinutes(hour: string, minutes: string, seconds: string, store: Store): string {
+function isShorterOrEqualToSixtyFiveMinutes(
+	hour: string,
+	minutes: string,
+	seconds: string,
+	store: Store,
+	timeString: string,
+): string {
 	if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
 		return (parseInt(minutes) + 60).toString() + ":" + seconds + " " + store.unitMinute3;
 	}
-	return "";
+	return timeString;
+}
+
+function isShorterThanSixtyMinutes(
+	hour: string,
+	minutes: string,
+	seconds: string,
+	store: Store,
+	timerString: string,
+): string {
+	if (parseInt(hour) == 0) {
+		return minutes + ":" + seconds + " " + store.unitMinute3;
+	}
+	return timerString;
 }
 
 function isGreaterThanSixtyFiveMinutes(hour: string, minutes: string, seconds: string, store: Store): string {

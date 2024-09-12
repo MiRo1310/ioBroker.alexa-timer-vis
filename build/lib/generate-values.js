@@ -33,9 +33,9 @@ const generateValues = (timer, sec, index, inputString, name) => {
   const { string: lengthTimer } = result;
   const timeString1 = hour + ":" + minutes + ":" + seconds + getTimeUnit(timeLeftSec, store);
   let timeString2 = isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store);
-  timeString2 = isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store);
-  timeString2 = isShorterThanSixtyMinutes(hour, minutes, seconds, store);
-  timeString2 = isShorterThanAMinute(minutes, seconds, store);
+  timeString2 = isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store, timeString2);
+  timeString2 = isShorterThanSixtyMinutes(hour, minutes, seconds, store, timeString2);
+  timeString2 = isShorterThanAMinute(minutes, seconds, store, timeString2);
   if (!timer.changeValue) {
     timer.onlySec = sec;
   }
@@ -72,23 +72,23 @@ function resetSuperiorValue(hour, minutes, seconds) {
   }
   return { hour, minutes, seconds };
 }
-function isShorterThanAMinute(minutes, seconds, store) {
+function isShorterThanAMinute(minutes, seconds, store, timeString) {
   if (parseInt(minutes) == 0) {
     return seconds + " " + store.unitSecond3;
   }
-  return "";
+  return timeString;
 }
-function isShorterThanSixtyMinutes(hour, minutes, seconds, store) {
-  if (parseInt(hour) == 0) {
-    return minutes + ":" + seconds + " " + store.unitMinute3;
-  }
-  return "";
-}
-function isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store) {
+function isShorterOrEqualToSixtyFiveMinutes(hour, minutes, seconds, store, timeString) {
   if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
     return (parseInt(minutes) + 60).toString() + ":" + seconds + " " + store.unitMinute3;
   }
-  return "";
+  return timeString;
+}
+function isShorterThanSixtyMinutes(hour, minutes, seconds, store, timerString) {
+  if (parseInt(hour) == 0) {
+    return minutes + ":" + seconds + " " + store.unitMinute3;
+  }
+  return timerString;
 }
 function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store) {
   if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {

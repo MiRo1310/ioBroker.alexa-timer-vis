@@ -117,7 +117,8 @@ const timerObject = {
       percent: 0,
       percent2: 0,
       changeValue: false,
-      timeLeftSec: 0
+      timeLeftSec: 0,
+      inputString: ""
     },
     timer2: {
       hour: "",
@@ -140,7 +141,8 @@ const timerObject = {
       percent: 0,
       percent2: 0,
       changeValue: false,
-      timeLeftSec: 0
+      timeLeftSec: 0,
+      inputString: ""
     },
     timer3: {
       hour: "",
@@ -163,7 +165,8 @@ const timerObject = {
       percent: 0,
       percent2: 0,
       changeValue: false,
-      timeLeftSec: 0
+      timeLeftSec: 0,
+      inputString: ""
     },
     timer4: {
       hour: "",
@@ -186,7 +189,8 @@ const timerObject = {
       percent: 0,
       percent2: 0,
       changeValue: false,
-      timeLeftSec: 0
+      timeLeftSec: 0,
+      inputString: ""
     }
   },
   brueche1: {

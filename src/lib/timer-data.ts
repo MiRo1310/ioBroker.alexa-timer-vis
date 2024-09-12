@@ -18,6 +18,7 @@ export interface Timer {
 	start_Time: string;
 	end_Time: string;
 	inputDevice: string;
+	inputString: string;
 	serialNumber: string;
 	timerInput: string;
 	timerInterval: number;
@@ -228,6 +229,7 @@ export const timerObject: TimerObject = {
 			percent2: 0,
 			changeValue: false,
 			timeLeftSec: 0,
+			inputString: "",
 		},
 		timer2: {
 			hour: "",
@@ -251,6 +253,7 @@ export const timerObject: TimerObject = {
 			percent2: 0,
 			changeValue: false,
 			timeLeftSec: 0,
+			inputString: "",
 		},
 		timer3: {
 			hour: "",
@@ -274,6 +277,7 @@ export const timerObject: TimerObject = {
 			percent2: 0,
 			changeValue: false,
 			timeLeftSec: 0,
+			inputString: "",
 		},
 		timer4: {
 			hour: "",
@@ -297,6 +301,7 @@ export const timerObject: TimerObject = {
 			percent2: 0,
 			changeValue: false,
 			timeLeftSec: 0,
+			inputString: "",
 		},
 	},
 	brueche1: {

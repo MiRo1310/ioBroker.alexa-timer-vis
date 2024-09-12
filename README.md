@@ -58,6 +58,11 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   FIX: #130 Sting_2 remains empty
+
 ### 2.0.1 (2024-09-10)
 
 -   FIX: #128 Timer creating error
@@ -65,7 +70,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 ### 2.0.0 (2024-09-08)
 
 -   FIX: #119 Error "has no existing object" on first start
--   Use Typescript
+-   FEAT: Use Typescript
 -   FEAT: #118 get name from activeTimerList
 -   FIX: #117 createDevice is deprecated
 
@@ -75,12 +80,12 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 ### 0.3.0 (2023-12-23)
 
--   #82 Delete Timer by Button
--   #74 Fixed Starttime
--   #71 Name of Echo in data tree
--   #75 Percent from 0% to 100%
+-   FIX: #82 Delete Timer by Button
+-   FIX: #74 Start time
+-   FEAT: #71 Name of Echo in data tree
+-   FEAT: #75 Percent from 0% to 100%
 -   Breaking change: minimal supported node.js version is 16.x
--   #58 Another String Variation
+-   FEAT: #58 Another String Variation
 
 ### 0.2.0 (2023-07-27)
 
