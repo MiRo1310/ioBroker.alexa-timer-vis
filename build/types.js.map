@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/types.ts"],
-  "sourcesContent": ["import { Store } from './store/store';\r\n\r\nexport interface GenerateTimeStringObject { timeString: string, hour: string, minutes: string, seconds: string, store: Store }"],
+  "sourcesContent": ["import { Store } from './store/store';\r\n\r\nexport interface GenerateTimeStringObject { timeString: string, hour: string, minutes: string, seconds: string, store: Store }\r\n\r\nexport interface AlexaActiveTimerList {\r\n    id: string;\r\n    label: string | null;\r\n    triggerTime: number;\r\n}"],
   "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;",
   "names": []
 }

@@ -61,6 +61,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 ### **WORK IN PROGRESS**
 
+-   FIX: #133 Timer names are not correct
 -   FIX: #134 All timer alive at start
 
 ### 2.0.2 (2024-09-12)
