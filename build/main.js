@@ -134,19 +134,22 @@ class AlexaTimerVis extends utils.Adapter {
             }
           }
         }
-      } else if (id != `alexa-timer-vis.${this.instance}.info.connection` && state && state.val !== false && id != "alexa2.0.History.summary") {
+      } else if ((0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset")) {
         try {
           const timer = id.split(".")[2];
           const timerOb = import_timer_data.timerObject.timer[timer];
-          let alexaCommandState;
           if ((timerOb == null ? void 0 : timerOb.serialNumber) != void 0) {
-            alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
+            const alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
             let name = "";
-            if (timerOb.name != "Timer")
+            if (timerOb.name != "Timer") {
               name = timerOb.name;
-            const alexaTextToCommand = `stoppe ${name} ${timerOb.timerInput} Timer`;
+            }
             (0, import_delete_timer.delTimer)(timer);
-            this.setForeignState(alexaCommandState, alexaTextToCommand, false);
+            this.setForeignState(
+              alexaCommandState,
+              `stoppe  ${timerOb.inputString}	${timerOb.nameFromAlexa && timerOb.nameFromAlexa !== "" ? timerOb.nameFromAlexa : name} Timer`,
+              false
+            );
           }
         } catch (e) {
           this.log.error("Serial Error: " + JSON.stringify(e));

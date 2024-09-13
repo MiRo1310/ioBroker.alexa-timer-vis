@@ -33,8 +33,6 @@ const getNewTimerName = (newJsonString, timerSelector) => {
     if ((0, import_global.isIobrokerValue)(newJsonString)) {
       newJson = JSON.parse(newJsonString.val);
     }
-    _this.log.debug("oldJson: " + JSON.stringify(oldJson));
-    _this.log.debug("newJson: " + JSON.stringify(newJson));
     onlyOneTimerIsActive(newJson, timerSelector);
     for (let i = 0; i < newJson.length; i++) {
       const elementExist = oldJson.find((oldElement) => {

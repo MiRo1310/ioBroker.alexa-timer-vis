@@ -139,30 +139,26 @@ export default class AlexaTimerVis extends utils.Adapter {
 				}
 
 				// Auf Button reagieren
-			} else if (
-				id != `alexa-timer-vis.${this.instance}.info.connection` &&
-				state &&
-				state.val !== false &&
-				id != "alexa2.0.History.summary"
-			) {
+			} else if (isIobrokerValue(state) && state.val && id.includes("Reset")) {
 				try {
-					// Aus ID den Timer erfassen
 					const timer = id.split(".")[2];
 
 					const timerOb = timerObject.timer[timer as keyof typeof timerObject.timer];
-					let alexaCommandState;
 
 					if (timerOb?.serialNumber != undefined) {
-						alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
+						const alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
 						let name = "";
-						// Wenn der Name ungleich nur "Timer" ist soll dieser mit ausgegeben werden
-						if (timerOb.name != "Timer") name = timerOb.name;
 
-						// TODO: Timer stoppen war vorher timerOb.inputString
-						const alexaTextToCommand = `stoppe ${name} ${timerOb.timerInput} Timer`;
-						// Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
+						if (timerOb.name != "Timer") {
+							name = timerOb.name;
+						}
+
 						delTimer(timer as keyof typeof timerObject.timerActive.timer);
-						this.setForeignState(alexaCommandState, alexaTextToCommand, false);
+						this.setForeignState(
+							alexaCommandState,
+							`stoppe  ${timerOb.inputString}	${timerOb.nameFromAlexa && timerOb.nameFromAlexa !== "" ? timerOb.nameFromAlexa : name} Timer`,
+							false,
+						); // Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
 					}
 				} catch (e) {
 					this.log.error("Serial Error: " + JSON.stringify(e));

@@ -32,7 +32,9 @@ const generateValues = (timer, sec, index, inputString, name) => {
   const { string: lengthTimer } = result;
   const timeString1 = hour + ":" + minutes + ":" + seconds + getTimeUnit(timeLeftSec, store);
   const { timeString } = isShorterThanAMinute(
-    isShorterThanSixtyMinutes(isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store)))
+    isShorterThanSixtyMinutes(
+      isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store))
+    )
   );
   if (!timer.changeValue) {
     timer.onlySec = sec;
@@ -75,14 +77,26 @@ function isShorterThanAMinute({ minutes, seconds, store, timeString }) {
   }
   return { timeString };
 }
-function isShorterOrEqualToSixtyFiveMinutes({ hour, minutes, seconds, store, timeString }) {
+function isShorterOrEqualToSixtyFiveMinutes({
+  hour,
+  minutes,
+  seconds,
+  store,
+  timeString
+}) {
   if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
     const timeString2 = hour + ":" + minutes + ":" + seconds + " " + store.unitHour3;
     return { timeString: timeString2, hour, minutes, seconds, store };
   }
   return { timeString, hour, minutes, seconds, store };
 }
-function isShorterThanSixtyMinutes({ hour, minutes, seconds, store, timeString }) {
+function isShorterThanSixtyMinutes({
+  hour,
+  minutes,
+  seconds,
+  store,
+  timeString
+}) {
   if (parseInt(hour) == 0) {
     const timeString2 = minutes + ":" + seconds + " " + store.unitMinute3;
     return { timeString: timeString2, hour, minutes, seconds, store };

@@ -1,10 +1,9 @@
 import { useStore } from "../store/store";
 import { isIobrokerValue } from "./global";
 import { timerObject, TimerSelector } from "./timer-data";
-import { AlexaActiveTimerList } from '../types';
+import { AlexaActiveTimerList } from "../types";
 
 let oldJson: AlexaActiveTimerList[] = [];
-
 
 export const getNewTimerName = (newJsonString: ioBroker.State, timerSelector: string): void => {
 	const { _this } = useStore();
@@ -52,9 +51,8 @@ export const registerIdToGetTimerName = async (timerSelector: TimerSelector): Pr
 		_this.log.error(e.stack);
 	}
 };
-function onlyOneTimerIsActive(newJson: AlexaActiveTimerList[], timerSelector: string) {
+function onlyOneTimerIsActive(newJson: AlexaActiveTimerList[], timerSelector: string): void {
 	if (newJson.length === 1) {
 		timerObject.timer[timerSelector as keyof typeof timerObject.timer].nameFromAlexa = newJson[0]?.label;
 	}
 }
-
