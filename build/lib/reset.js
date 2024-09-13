@@ -57,11 +57,12 @@ const resetValues = (timer, index) => {
     _this.log.error(JSON.stringify(e.stack));
   }
 };
-function resetAllTimerValuesAndState() {
+function resetAllTimerValuesAndState(_this) {
   Object.keys(import_timer_data.timerObject.timer).forEach((el) => {
     resetValues(import_timer_data.timerObject.timer[el], el);
     (0, import_write_state.writeState)(false);
   });
+  _this.setStateChanged("all_Timer.alive", false, true);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

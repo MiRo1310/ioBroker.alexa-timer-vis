@@ -20,7 +20,6 @@ export interface Timer {
 	inputDevice: string;
 	inputString: string;
 	serialNumber: string;
-	timerInput: string;
 	timerInterval: number;
 	endTime: number;
 	lengthTimer: string;
@@ -221,7 +220,7 @@ export const timerObject: TimerObject = {
 			end_Time: "",
 			inputDevice: "",
 			serialNumber: "",
-			timerInput: "",
+
 			timerInterval: 0,
 			endTime: 0,
 			lengthTimer: "",
@@ -245,7 +244,7 @@ export const timerObject: TimerObject = {
 			end_Time: "",
 			inputDevice: "",
 			serialNumber: "",
-			timerInput: "",
+
 			timerInterval: 0,
 			endTime: 0,
 			lengthTimer: "",
@@ -269,7 +268,7 @@ export const timerObject: TimerObject = {
 			end_Time: "",
 			inputDevice: "",
 			serialNumber: "",
-			timerInput: "",
+
 			timerInterval: 0,
 			endTime: 0,
 			lengthTimer: "",
@@ -293,7 +292,7 @@ export const timerObject: TimerObject = {
 			end_Time: "",
 			inputDevice: "",
 			serialNumber: "",
-			timerInput: "",
+
 			timerInterval: 0,
 			endTime: 0,
 			lengthTimer: "",

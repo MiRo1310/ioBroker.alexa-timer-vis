@@ -15,7 +15,8 @@ export const getToDo = (value: string): void => {
 		for (const element of valueArray) {
 			if (timerObject.timerActive.data.notNoted.includes(element)) {
 				continue;
-			} else if (arraysTodo[string as keyof typeof arraysTodo].includes(element)) {
+			}
+			if (arraysTodo[string as keyof typeof arraysTodo].includes(element)) {
 				foundValue = string as keyof TimerCondition;
 				abortLoop = true;
 				break;

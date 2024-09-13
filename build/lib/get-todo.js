@@ -35,7 +35,8 @@ const getToDo = (value) => {
     for (const element of valueArray) {
       if (import_timer_data.timerObject.timerActive.data.notNoted.includes(element)) {
         continue;
-      } else if (arraysTodo[string].includes(element)) {
+      }
+      if (arraysTodo[string].includes(element)) {
         foundValue = string;
         abortLoop = true;
         break;

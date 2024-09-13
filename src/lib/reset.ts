@@ -1,3 +1,4 @@
+import AlexaTimerVis from "../main";
 import { useStore } from "../store/store";
 import { Timer, TimerSelector, timerObject } from "./timer-data";
 import { writeState } from "./write-state";
@@ -36,9 +37,10 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 	}
 };
 
-export function resetAllTimerValuesAndState(): void {
+export function resetAllTimerValuesAndState(_this: AlexaTimerVis): void {
 	Object.keys(timerObject.timer).forEach((el) => {
 		resetValues(timerObject.timer[el as keyof typeof timerObject.timer], el as TimerSelector);
 		writeState(false);
 	});
+	_this.setStateChanged("all_Timer.alive", false, true);
 }
