@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "news": {
+      "2.0.3": {
+        "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #133 Timer names are not correct\nFIX: #134 All timer alive at start",
+        "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #133 Timernamen sind nicht korrekt\nFIX: #134 Alle Timer am Anfang am Leben",
+        "ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #133 Имя таймера неправильно\n#134 Все таймеры живы на старте",
+        "pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #133 Os nomes do temporizador não estão corretos\nFIX: #134 Todo o temporizador vivo no início",
+        "nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #133 Timer namen zijn niet correct\nFIX: #134 Alle timer levend bij het begin",
+        "fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #133 Les noms des minuteurs ne sont pas corrects\nFIXE: #134 Tout le temps vivant au début",
+        "it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #133 I nomi Timer non sono corretti\nFIX: #134 Tutto il timer vivo all'inizio",
+        "es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #133 Timer names are not correct\nFIX: #134 Todo el tiempor vivo al principio",
+        "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 133 Nazwy czasu nie są poprawne\nFIX: # 134",
+        "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #133 Ім'я таймера не виправити\nFIX: #134 Всі таймер живий на старті",
+        "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: #133 计时器名称不正确\nFIX: #134 所有计时器在开始时还活着"
+      },
       "2.0.2": {
         "en": "FIX: #130 Sting_2 remains empty",
         "de": "FIX: #130 Sting_2 bleibt leer",
@@ -80,19 +93,6 @@
         "pl": "tworzy Timer z Alexa2 TextCommand\nwydłużony i krótkotrwały czas",
         "uk": "створити таймер з Alexa2 TextCommand, фіксований\nтривалі і скорочені таймери",
         "zh-cn": "alexa2案文Command的时间限制\n时间长短"
-      },
-      "0.1.15": {
-        "en": "Include creation time to avoid creating duplicate timers",
-        "de": "Fügen Sie die Erstellungszeit hinzu, um die Erstellung doppelter Timer zu vermeiden",
-        "ru": "Включите время создания, чтобы избежать создания повторяющихся таймеров",
-        "pt": "Inclua o tempo de criação para evitar a criação de cronômetros duplicados",
-        "nl": "Voeg aanmaaktijd toe om dubbele timers te voorkomen",
-        "fr": "Inclure l'heure de création pour éviter de créer des minuteries en double",
-        "it": "Includi l'ora di creazione per evitare di creare timer duplicati",
-        "es": "Incluya el tiempo de creación para evitar la creación de temporizadores duplicados",
-        "pl": "Uwzględnij czas utworzenia, aby uniknąć tworzenia zduplikowanych liczników czasu",
-        "uk": "Включіть час створення, щоб уникнути дублювання таймерів",
-        "zh-cn": "包括创建时间以避免创建重复的计时器"
       }
     },
     "titleLang": {
