@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../src/types.ts"],
-  "sourcesContent": ["import { Store } from \"./store/store\";\r\n\r\nexport interface GenerateTimeStringObject {\r\n\ttimeString: string;\r\n\thour: string;\r\n\tminutes: string;\r\n\tseconds: string;\r\n\tstore: Store;\r\n}\r\n\r\nexport interface AlexaActiveTimerList {\r\n\tid: string;\r\n\tlabel: string | null;\r\n\ttriggerTime: number;\r\n}\r\n"],
+  "sourcesContent": ["import { Store } from \"./store/store\";\n\nexport interface GenerateTimeStringObject {\n\ttimeString: string;\n\thour: string;\n\tminutes: string;\n\tseconds: string;\n\tstore: Store;\n}\n\nexport interface AlexaActiveTimerList {\n\tid: string;\n\tlabel: string | null;\n\ttriggerTime: number;\n}\n"],
   "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;",
   "names": []
 }

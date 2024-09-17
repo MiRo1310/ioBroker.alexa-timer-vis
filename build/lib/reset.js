@@ -39,6 +39,7 @@ const resetValues = (timer, index) => {
     timer.timeLeftSec = 0;
     timer.index = 0;
     timer.name = "Timer";
+    timer.nameFromAlexa = "";
     timer.start_Time = "00:00:00";
     timer.end_Time = "00:00:00";
     timer.inputDevice = "";
