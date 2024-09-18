@@ -25,17 +25,16 @@ module.exports = __toCommonJS(timer_name_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
 var import_timer_data = require("./timer-data");
-let oldJson = [];
 const getNewTimerName = (newJsonString, timerSelector) => {
   const { _this } = (0, import_store.useStore)();
+  let { oldAlexaTimerObject } = (0, import_store.useStore)();
   let newJson = [];
   try {
     if ((0, import_global.isIobrokerValue)(newJsonString)) {
       newJson = JSON.parse(newJsonString.val);
     }
-    onlyOneTimerIsActive(newJson, timerSelector);
     for (let i = 0; i < newJson.length; i++) {
-      const elementExist = oldJson.find((oldElement) => {
+      const elementExist = oldAlexaTimerObject.find((oldElement) => {
         if (oldElement.id === newJson[i].id) {
           return true;
         }
@@ -43,9 +42,11 @@ const getNewTimerName = (newJsonString, timerSelector) => {
       });
       if (!elementExist) {
         import_timer_data.timerObject.timer[timerSelector].nameFromAlexa = newJson[i].label;
+        import_timer_data.timerObject.timer[timerSelector].id = newJson[i].id;
+        import_timer_data.timerObject.timer[timerSelector].timeEndByAlexa = newJson[i].triggerTime;
       }
     }
-    oldJson = newJson;
+    oldAlexaTimerObject = newJson;
   } catch (e) {
     _this.log.error("Error in checkForNewTimerInObject: " + JSON.stringify(e));
     _this.log.error(e.stack);
@@ -67,12 +68,6 @@ const registerIdToGetTimerName = async (timerSelector) => {
     _this.log.error(e.stack);
   }
 };
-function onlyOneTimerIsActive(newJson, timerSelector) {
-  var _a;
-  if (newJson.length === 1) {
-    import_timer_data.timerObject.timer[timerSelector].nameFromAlexa = (_a = newJson[0]) == null ? void 0 : _a.label;
-  }
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   getNewTimerName,

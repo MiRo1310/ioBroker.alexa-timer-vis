@@ -49,6 +49,7 @@ function useStore() {
       deviceSerialNumber: null,
       deviceName: null,
       lastTimers: [],
+      oldAlexaTimerObject: [],
       getAlexaInstanceObject: () => {
         const dataPointArray = store.pathAlexaSummary.split(".");
         return {

@@ -1,4 +1,5 @@
 import AlexaTimerVis from "../main";
+import { AlexaActiveTimerList } from "../types";
 
 let store: Store;
 export function useStore(): Store {
@@ -28,6 +29,7 @@ export function useStore(): Store {
 			deviceSerialNumber: null,
 			deviceName: null,
 			lastTimers: [],
+			oldAlexaTimerObject: [],
 			getAlexaInstanceObject: () => {
 				const dataPointArray = store.pathAlexaSummary.split(".");
 				return {
@@ -78,6 +80,7 @@ export interface Store {
 	deviceSerialNumber: string | null;
 	deviceName: string | null;
 	lastTimers: LastTimer[];
+	oldAlexaTimerObject: AlexaActiveTimerList[];
 	getAlexaInstanceObject: () => AlexaInstanceObject;
 	isAddTimer: () => boolean;
 	isShortenTimer: () => boolean;

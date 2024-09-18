@@ -117,7 +117,9 @@ const timerObject = {
       percent2: 0,
       changeValue: false,
       timeLeftSec: 0,
-      inputString: ""
+      inputString: "",
+      id: "",
+      timeEndByAlexa: 0
     },
     timer2: {
       hour: "",
@@ -140,7 +142,9 @@ const timerObject = {
       percent2: 0,
       changeValue: false,
       timeLeftSec: 0,
-      inputString: ""
+      inputString: "",
+      id: "",
+      timeEndByAlexa: 0
     },
     timer3: {
       hour: "",
@@ -163,7 +167,9 @@ const timerObject = {
       percent2: 0,
       changeValue: false,
       timeLeftSec: 0,
-      inputString: ""
+      inputString: "",
+      id: "",
+      timeEndByAlexa: 0
     },
     timer4: {
       hour: "",
@@ -186,7 +192,9 @@ const timerObject = {
       percent2: 0,
       changeValue: false,
       timeLeftSec: 0,
-      inputString: ""
+      inputString: "",
+      id: "",
+      timeEndByAlexa: 0
     }
   },
   brueche1: {

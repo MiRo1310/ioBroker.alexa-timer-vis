@@ -3,10 +3,9 @@ import { isIobrokerValue } from "./global";
 import { timerObject, TimerSelector } from "./timer-data";
 import { AlexaActiveTimerList } from "../types";
 
-let oldJson: AlexaActiveTimerList[] = [];
-
 export const getNewTimerName = (newJsonString: ioBroker.State, timerSelector: string): void => {
 	const { _this } = useStore();
+	let { oldAlexaTimerObject } = useStore();
 
 	let newJson: AlexaActiveTimerList[] = [];
 	try {
@@ -14,10 +13,8 @@ export const getNewTimerName = (newJsonString: ioBroker.State, timerSelector: st
 			newJson = JSON.parse(newJsonString.val as string);
 		}
 
-		onlyOneTimerIsActive(newJson, timerSelector);
-
 		for (let i = 0; i < newJson.length; i++) {
-			const elementExist = oldJson.find((oldElement: AlexaActiveTimerList) => {
+			const elementExist = oldAlexaTimerObject.find((oldElement: AlexaActiveTimerList) => {
 				if (oldElement.id === newJson[i].id) {
 					return true;
 				}
@@ -25,9 +22,12 @@ export const getNewTimerName = (newJsonString: ioBroker.State, timerSelector: st
 			});
 			if (!elementExist) {
 				timerObject.timer[timerSelector as keyof typeof timerObject.timer].nameFromAlexa = newJson[i].label;
+				timerObject.timer[timerSelector as keyof typeof timerObject.timer].id = newJson[i].id;
+				timerObject.timer[timerSelector as keyof typeof timerObject.timer].timeEndByAlexa =
+					newJson[i].triggerTime;
 			}
 		}
-		oldJson = newJson;
+		oldAlexaTimerObject = newJson;
 	} catch (e: any) {
 		_this.log.error("Error in checkForNewTimerInObject: " + JSON.stringify(e));
 		_this.log.error(e.stack);
@@ -51,8 +51,3 @@ export const registerIdToGetTimerName = async (timerSelector: TimerSelector): Pr
 		_this.log.error(e.stack);
 	}
 };
-function onlyOneTimerIsActive(newJson: AlexaActiveTimerList[], timerSelector: string): void {
-	if (newJson.length === 1) {
-		timerObject.timer[timerSelector as keyof typeof timerObject.timer].nameFromAlexa = newJson[0]?.label;
-	}
-}

@@ -27,6 +27,8 @@ export interface Timer {
 	percent2: number;
 	changeValue: boolean;
 	timeLeftSec: number;
+	id: string;
+	timeEndByAlexa: number;
 }
 export interface Timers {
 	timer1: Timer;
@@ -220,7 +222,6 @@ export const timerObject: TimerObject = {
 			end_Time: "",
 			inputDevice: "",
 			serialNumber: "",
-
 			timerInterval: 0,
 			endTime: 0,
 			lengthTimer: "",
@@ -229,6 +230,8 @@ export const timerObject: TimerObject = {
 			changeValue: false,
 			timeLeftSec: 0,
 			inputString: "",
+			id: "",
+			timeEndByAlexa: 0,
 		},
 		timer2: {
 			hour: "",
@@ -253,6 +256,8 @@ export const timerObject: TimerObject = {
 			changeValue: false,
 			timeLeftSec: 0,
 			inputString: "",
+			id: "",
+			timeEndByAlexa: 0,
 		},
 		timer3: {
 			hour: "",
@@ -277,6 +282,8 @@ export const timerObject: TimerObject = {
 			changeValue: false,
 			timeLeftSec: 0,
 			inputString: "",
+			id: "",
+			timeEndByAlexa: 0,
 		},
 		timer4: {
 			hour: "",
@@ -301,6 +308,8 @@ export const timerObject: TimerObject = {
 			changeValue: false,
 			timeLeftSec: 0,
 			inputString: "",
+			id: "",
+			timeEndByAlexa: 0,
 		},
 	},
 	brueche1: {

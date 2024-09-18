@@ -93,7 +93,7 @@ class AlexaTimerVis extends utils.Adapter {
     let voiceInput;
     let timeVoiceInputOld = null;
     this.on("stateChange", async (id, state) => {
-      checkForTimerName(this);
+      checkForTimerName(this, id);
       if ((0, import_global.isStateChanged)(state, id)) {
         let doNothingByNotNotedElement = false;
         voiceInput = state == null ? void 0 : state.val;
@@ -147,7 +147,7 @@ class AlexaTimerVis extends utils.Adapter {
             (0, import_delete_timer.delTimer)(timer);
             this.setForeignState(
               alexaCommandState,
-              `stoppe  ${timerOb.inputString}	${timerOb.nameFromAlexa && timerOb.nameFromAlexa !== "" ? timerOb.nameFromAlexa : name} Timer`,
+              `l\xF6sche  ${timerOb.nameFromAlexa || name || timerOb.inputString} Timer`,
               false
             );
           }
@@ -155,20 +155,20 @@ class AlexaTimerVis extends utils.Adapter {
           this.log.error("Serial Error: " + JSON.stringify(e));
         }
       }
-      function checkForTimerName(_this) {
+      function checkForTimerName(_this, id2) {
         let timerSelector = "";
         if (store.lastTimers.find((el) => {
-          if (el.id === id) {
+          if (el.id === id2) {
             timerSelector = el.timerSelector;
             return true;
           }
           return false;
         })) {
-          if ((0, import_global.isIobrokerValue)(state)) {
+          if ((0, import_global.isIobrokerValue)(state) && state.val !== "[]") {
             (0, import_timer_name.getNewTimerName)(state, timerSelector);
+            _this.unsubscribeForeignStatesAsync(id2);
           }
-          store.lastTimers = store.lastTimers.filter((el) => el.id !== id);
-          _this.unsubscribeForeignStatesAsync(id);
+          store.lastTimers = store.lastTimers.filter((el) => el.id !== id2);
         }
       }
     });
