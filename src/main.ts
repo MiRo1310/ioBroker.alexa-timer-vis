@@ -79,7 +79,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 		let timeVoiceInputOld: string | null = null;
 
 		this.on("stateChange", async (id, state) => {
-			checkForTimerName(this);
+			checkForTimerName(this, id);
 
 			if (isStateChanged(state, id)) {
 				// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
@@ -156,7 +156,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 						delTimer(timer as keyof typeof timerObject.timerActive.timer);
 						this.setForeignState(
 							alexaCommandState,
-							`stoppe  ${timerOb.inputString}	${timerOb.nameFromAlexa && timerOb.nameFromAlexa !== "" ? timerOb.nameFromAlexa : name} Timer`,
+							`lösche  ${timerOb.nameFromAlexa || name || timerOb.inputString} Timer`,
 							false,
 						); // Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
 					}
@@ -165,7 +165,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 				}
 			}
 
-			function checkForTimerName(_this: AlexaTimerVis): void {
+			function checkForTimerName(_this: AlexaTimerVis, id: string): void {
 				let timerSelector = "";
 				if (
 					store.lastTimers.find((el) => {
@@ -176,12 +176,12 @@ export default class AlexaTimerVis extends utils.Adapter {
 						return false;
 					})
 				) {
-					if (isIobrokerValue(state)) {
+					if (isIobrokerValue(state) && state.val !== "[]") {
 						getNewTimerName(state, timerSelector);
+						_this.unsubscribeForeignStatesAsync(id);
 					}
 
 					store.lastTimers = store.lastTimers.filter((el) => el.id !== id);
-					_this.unsubscribeForeignStatesAsync(id);
 				}
 			}
 		});

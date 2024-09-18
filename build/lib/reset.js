@@ -48,6 +48,7 @@ const resetValues = (timer, index) => {
     timer.percent = 0;
     timer.percent2 = 0;
     timer.changeValue = false;
+    timer.id = "";
     _this.setObjectAsync("alexa-timer-vis.0." + index, {
       type: "device",
       common: { name: `` },
