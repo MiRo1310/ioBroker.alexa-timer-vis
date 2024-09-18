@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "news": {
+      "2.0.4": {
+        "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #137 Reset timer name",
+        "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #137 Timer zurücksetzen",
+        "ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #137",
+        "pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #137 Repor nome do temporizador",
+        "nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #137 Timernaam resetten",
+        "fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #137 Réinitialiser le nom du minuteur",
+        "it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #137 Reset timer name",
+        "es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #137 Nombre del cronómetro",
+        "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 137 Reset timer name",
+        "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #137 Ім'я таймера",
+        "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: # 137 重置计时器名称"
+      },
       "2.0.3": {
         "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #133 Timer names are not correct\nFIX: #134 All timer alive at start",
         "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #133 Timernamen sind nicht korrekt\nFIX: #134 Alle Timer am Anfang am Leben",
@@ -80,19 +93,6 @@
         "pl": "82 Delete Timer (ang.)\n74 Fixed Starttime (ang.)\nNazwisko Echo w drzewie danych\n75 razy więcej niż 100%\nZmiana przeładowania: wersja minimalna jest 16.x\n58 Another String Variation (ang.)",
         "uk": "#82 Видалити таймер за допомогою кнопки\n#74 Фіксований старт\n#71 Назва Ехо в дереві даних\n#75 відсоток від 0% до 100%\nЗміна розривів: мінімальний підтриманий вузол.js версія 16.x\n#58 Ще один Рядок змін",
         "zh-cn": "第82号\n行动74 固定启动时间\n#71 数据树中的森林名称\n#75 最高限额从0%降至100%\n断然变化:最低支持无端。\n行动58"
-      },
-      "0.2.0": {
-        "en": "create Timer with Alexa2 TextCommand, fixed\nlengthen and shorten timers",
-        "de": "timer mit Alexa2 TextCommand erstellen, behoben\nverlängern und verkürzen von timer",
-        "ru": "создать Таймер с Alexa2 TextCommand, фиксированный\nудлиненные и сокращенные таймеры",
-        "pt": "criar Temporizador com Alexa2 TextCommand, corrigido\nalongar e encurtar temporizadores",
-        "nl": "maak Timer met Alexa2 TextCommand\nverleng en kortere timers",
-        "fr": "créer Timer avec Alexa2 TextCommand, fixe\nlongueur et raccourcis",
-        "it": "creare Timer con Alexa2 TextCommand, fisso\nallungare e accorciare i timer",
-        "es": "crear Timer con Alexa2 TextCommand, fijo\ntemporizadores largos y cortos",
-        "pl": "tworzy Timer z Alexa2 TextCommand\nwydłużony i krótkotrwały czas",
-        "uk": "створити таймер з Alexa2 TextCommand, фіксований\nтривалі і скорочені таймери",
-        "zh-cn": "alexa2案文Command的时间限制\n时间长短"
       }
     },
     "titleLang": {

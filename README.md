@@ -58,8 +58,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 2.0.4 (2024-09-18)
 
 -   FIX: #132 Second timer button reset deletes timer one
 -   FIX: #137 Reset timer name
