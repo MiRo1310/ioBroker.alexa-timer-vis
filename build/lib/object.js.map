@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/object.ts"],
+  "sourcesContent": ["export const deepCopy = <T>(obj: T): T => {\n\treturn JSON.parse(JSON.stringify(obj));\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,MAAM,WAAW,CAAI,QAAc;AACzC,SAAO,KAAK,MAAM,KAAK,UAAU,GAAG,CAAC;AACtC;",
+  "names": []
+}

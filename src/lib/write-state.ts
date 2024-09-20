@@ -2,6 +2,7 @@ import { Timer, TimerSelector, timerObject } from "./timer-data";
 import { firstLetterToUpperCase } from "./global";
 import { resetValues } from "./reset";
 import { useStore } from "../store/store";
+import { deepCopy } from "./object";
 
 export function writeState(unload: boolean): void {
 	const store = useStore();
@@ -28,26 +29,33 @@ export function writeState(unload: boolean): void {
 			_this.setStateChanged(element + ".hour", timer.hour, true);
 			_this.setStateChanged(element + ".minute", timer.minute, true);
 			_this.setStateChanged(element + ".second", timer.second, true);
-			_this.setStateChanged(element + ".string", timer.string_Timer, true);
-			_this.setStateChanged(element + ".string_2", timer.string_2_Timer, true);
-			_this.setStateChanged(element + ".TimeStart", timer.start_Time, true);
-			_this.setStateChanged(element + ".TimeEnd", timer.end_Time, true);
+			_this.setStateChanged(element + ".string", timer.stringTimer, true);
+			_this.setStateChanged(element + ".string_2", timer.stringTimer2, true);
+			_this.setStateChanged(element + ".TimeStart", timer.startTimeString, true);
+			_this.setStateChanged(element + ".TimeEnd", timer.endTimeString, true);
 			_this.setStateChanged(element + ".InputDeviceName", timer.inputDevice, true);
 			_this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
 			_this.setStateChanged(element + ".percent2", timer.percent2, true);
 			_this.setStateChanged(element + ".percent", timer.percent, true);
 			_this.setStateChanged(element + ".name", getTimerName(timer), true);
+			_this.setStateChanged(element + ".json", getJson(timer), true);
 			_this.setStateChanged("all_Timer.alive", alive, true);
 		}
 	} catch (e: any) {
 		_this.log.error("Error in writeState: " + JSON.stringify(e));
 		_this.log.error(e.stack);
 	}
+
+	function getJson(timer: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
+		const copy = deepCopy(timer);
+		delete (copy as any).extendOrShortenTimer;
+		return JSON.stringify(copy);
+	}
 }
 
 function getTimerName(timer: Timer): string {
-	if (timer.nameFromAlexa) {
-		return firstLetterToUpperCase(timer.nameFromAlexa + " Timer");
+	if (timer.alexaTimerName) {
+		return firstLetterToUpperCase(timer.alexaTimerName + " Timer");
 	}
 
 	if (timer.name && timer.name !== "Timer") {

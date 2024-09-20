@@ -25,7 +25,7 @@ var import_store = require("../store/store");
 var import_global = require("./global");
 const generateValues = (timer, sec, index, inputString, name) => {
   const store = (0, import_store.useStore)();
-  const timeLeft = timer.endTime - (/* @__PURE__ */ new Date()).getTime();
+  const timeLeft = timer.endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
   const timeLeftSec = Math.round(timeLeft / 1e3);
   const result = (0, import_global.secToHourMinSec)(timeLeftSec, true);
   let { hour, minutes, seconds } = result;
@@ -36,20 +36,20 @@ const generateValues = (timer, sec, index, inputString, name) => {
       isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store))
     )
   );
-  if (!timer.changeValue) {
-    timer.onlySec = sec;
+  if (!timer.extendOrShortenTimer) {
+    timer.voiceInputAsSeconds = sec;
   }
   ({ hour, minutes, seconds } = resetSuperiorValue(hour, minutes, seconds));
   timer.hour = hour;
   timer.minute = minutes;
   timer.second = seconds;
-  timer.string_Timer = timeString1;
-  timer.string_2_Timer = timeString;
-  timer.timeLeftSec = timeLeftSec;
+  timer.stringTimer = timeString1;
+  timer.stringTimer2 = timeString;
+  timer.remainingTimeInSeconds = timeLeftSec;
   timer.index = index;
   timer.inputString = inputString;
-  timer.percent = Math.round(timeLeftSec / timer.onlySec * 100);
-  timer.percent2 = 100 - Math.round(timeLeftSec / timer.onlySec * 100);
+  timer.percent = Math.round(timeLeftSec / timer.voiceInputAsSeconds * 100);
+  timer.percent2 = 100 - Math.round(timeLeftSec / timer.voiceInputAsSeconds * 100);
   timer.lengthTimer = lengthTimer;
   timer.name = setTimerNameIfNotExist(name);
   return timeLeftSec;

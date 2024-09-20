@@ -5,7 +5,7 @@ import {
 	doesAlexaSendAQuestion,
 	isIobrokerValue,
 	isCreateNewTimer as isNewTimerAction,
-	isStateChanged,
+	isAlexaSummaryStateChanged,
 	isVoiceInputNotSameAsOld,
 } from "./lib/global";
 import { timerObject } from "./lib/timer-data";
@@ -81,9 +81,8 @@ export default class AlexaTimerVis extends utils.Adapter {
 		this.on("stateChange", async (id, state) => {
 			checkForTimerName(this, id);
 
-			if (isStateChanged(state, id)) {
-				// Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
-				let doNothingByNotNotedElement = false;
+			if (isAlexaSummaryStateChanged(state, id)) {
+				let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
 				voiceInput = state?.val as string;
 
 				if (timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
@@ -137,26 +136,21 @@ export default class AlexaTimerVis extends utils.Adapter {
 						}
 					}
 				}
-
-				// Auf Button reagieren
-			} else if (isIobrokerValue(state) && state.val && id.includes("Reset")) {
+				return;
+			}
+			if (isIobrokerValue(state) && state.val && id.includes("Reset")) {
 				try {
 					const timer = id.split(".")[2];
 
 					const timerOb = timerObject.timer[timer as keyof typeof timerObject.timer];
 
-					if (timerOb?.serialNumber != undefined) {
+					if (timerOb?.serialNumber) {
 						const alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
-						let name = "";
-
-						if (timerOb.name != "Timer") {
-							name = timerOb.name;
-						}
 
 						delTimer(timer as keyof typeof timerObject.timerActive.timer);
 						this.setForeignState(
 							alexaCommandState,
-							`lösche  ${timerOb.nameFromAlexa || name || timerOb.inputString} Timer`,
+							`stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`,
 							false,
 						); // Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
 					}
@@ -168,9 +162,10 @@ export default class AlexaTimerVis extends utils.Adapter {
 			function checkForTimerName(_this: AlexaTimerVis, id: string): void {
 				let timerSelector = "";
 				if (
-					store.lastTimers.find((el) => {
+					store.lastTimers.find((el, index) => {
 						if (el.id === id) {
 							timerSelector = el.timerSelector;
+							store.lastTimers.splice(index, 1);
 							return true;
 						}
 						return false;
@@ -180,8 +175,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 						getNewTimerName(state, timerSelector);
 						_this.unsubscribeForeignStatesAsync(id);
 					}
-
-					store.lastTimers = store.lastTimers.filter((el) => el.id !== id);
 				}
 			}
 		});

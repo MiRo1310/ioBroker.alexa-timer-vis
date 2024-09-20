@@ -6,7 +6,7 @@ import { Timer } from "./timer-data";
 export const generateValues = (timer: Timer, sec: number, index: any, inputString: string, name: string): number => {
 	const store = useStore();
 
-	const timeLeft = timer.endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
+	const timeLeft = timer.endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec
 	const timeLeftSec = Math.round(timeLeft / 1000); // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
 	const result = secToHourMinSec(timeLeftSec, true);
 	let { hour, minutes, seconds } = result;
@@ -20,8 +20,8 @@ export const generateValues = (timer: Timer, sec: number, index: any, inputStrin
 		),
 	);
 
-	if (!timer.changeValue) {
-		timer.onlySec = sec;
+	if (!timer.extendOrShortenTimer) {
+		timer.voiceInputAsSeconds = sec;
 	}
 
 	({ hour, minutes, seconds } = resetSuperiorValue(hour, minutes, seconds));
@@ -29,13 +29,13 @@ export const generateValues = (timer: Timer, sec: number, index: any, inputStrin
 	timer.hour = hour;
 	timer.minute = minutes;
 	timer.second = seconds;
-	timer.string_Timer = timeString1;
-	timer.string_2_Timer = timeString;
-	timer.timeLeftSec = timeLeftSec;
+	timer.stringTimer = timeString1;
+	timer.stringTimer2 = timeString;
+	timer.remainingTimeInSeconds = timeLeftSec;
 	timer.index = index;
 	timer.inputString = inputString;
-	timer.percent = Math.round((timeLeftSec / timer.onlySec) * 100);
-	timer.percent2 = 100 - Math.round((timeLeftSec / timer.onlySec) * 100);
+	timer.percent = Math.round((timeLeftSec / timer.voiceInputAsSeconds) * 100);
+	timer.percent2 = 100 - Math.round((timeLeftSec / timer.voiceInputAsSeconds) * 100);
 	timer.lengthTimer = lengthTimer;
 	timer.name = setTimerNameIfNotExist(name);
 

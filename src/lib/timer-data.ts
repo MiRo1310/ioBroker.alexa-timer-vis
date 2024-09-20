@@ -9,26 +9,26 @@ export interface Timer {
 	hour: string;
 	minute: string;
 	second: string;
-	string_Timer: string;
-	string_2_Timer: string;
-	onlySec: number;
+	stringTimer: string;
+	stringTimer2: string;
+	voiceInputAsSeconds: number;
 	index: number;
 	name: string;
-	nameFromAlexa: string | null;
-	start_Time: string;
-	end_Time: string;
+	alexaTimerName: string | null;
+	startTimeNumber: number;
+	startTimeString: string;
+	endTimeNumber: number;
+	endTimeString: string;
 	inputDevice: string;
 	inputString: string;
 	serialNumber: string;
 	timerInterval: number;
-	endTime: number;
 	lengthTimer: string;
 	percent: number;
 	percent2: number;
-	changeValue: boolean;
-	timeLeftSec: number;
+	extendOrShortenTimer: boolean;
+	remainingTimeInSeconds: number;
 	id: string;
-	timeEndByAlexa: number;
 }
 export interface Timers {
 	timer1: Timer;
@@ -212,104 +212,101 @@ export const timerObject: TimerObject = {
 			hour: "",
 			minute: "",
 			second: "",
-			string_Timer: "",
-			string_2_Timer: "",
-			onlySec: 0,
+			voiceInputAsSeconds: 0,
+			remainingTimeInSeconds: 0,
+			startTimeNumber: 0,
+			startTimeString: "",
+			endTimeNumber: 0,
+			endTimeString: "",
+			stringTimer: "",
+			stringTimer2: "",
+			lengthTimer: "",
 			index: 0,
 			name: "",
-			nameFromAlexa: "",
-			start_Time: "",
-			end_Time: "",
+			alexaTimerName: "",
 			inputDevice: "",
 			serialNumber: "",
 			timerInterval: 0,
-			endTime: 0,
-			lengthTimer: "",
 			percent: 0,
 			percent2: 0,
-			changeValue: false,
-			timeLeftSec: 0,
+			extendOrShortenTimer: false,
 			inputString: "",
 			id: "",
-			timeEndByAlexa: 0,
 		},
 		timer2: {
 			hour: "",
 			minute: "",
 			second: "",
-			string_Timer: "",
-			string_2_Timer: "",
-			onlySec: 0,
+			voiceInputAsSeconds: 0,
+			remainingTimeInSeconds: 0,
+			startTimeNumber: 0,
+			startTimeString: "",
+			endTimeNumber: 0,
+			endTimeString: "",
+			stringTimer: "",
+			stringTimer2: "",
+			lengthTimer: "",
 			index: 0,
 			name: "",
-			nameFromAlexa: "",
-			start_Time: "",
-			end_Time: "",
+			alexaTimerName: "",
 			inputDevice: "",
 			serialNumber: "",
-
 			timerInterval: 0,
-			endTime: 0,
-			lengthTimer: "",
 			percent: 0,
 			percent2: 0,
-			changeValue: false,
-			timeLeftSec: 0,
+			extendOrShortenTimer: false,
 			inputString: "",
 			id: "",
-			timeEndByAlexa: 0,
 		},
 		timer3: {
 			hour: "",
 			minute: "",
 			second: "",
-			string_Timer: "",
-			string_2_Timer: "",
-			onlySec: 0,
+			voiceInputAsSeconds: 0,
+			remainingTimeInSeconds: 0,
+			startTimeNumber: 0,
+			startTimeString: "",
+			endTimeNumber: 0,
+			endTimeString: "",
+			stringTimer: "",
+			stringTimer2: "",
+			lengthTimer: "",
 			index: 0,
 			name: "",
-			nameFromAlexa: "",
-			start_Time: "",
-			end_Time: "",
+			alexaTimerName: "",
 			inputDevice: "",
 			serialNumber: "",
-
 			timerInterval: 0,
-			endTime: 0,
-			lengthTimer: "",
 			percent: 0,
 			percent2: 0,
-			changeValue: false,
-			timeLeftSec: 0,
+			extendOrShortenTimer: false,
 			inputString: "",
 			id: "",
-			timeEndByAlexa: 0,
 		},
 		timer4: {
 			hour: "",
 			minute: "",
 			second: "",
-			string_Timer: "",
-			string_2_Timer: "",
-			onlySec: 0,
+			voiceInputAsSeconds: 0,
+			remainingTimeInSeconds: 0,
+			startTimeNumber: 0,
+			startTimeString: "",
+			endTimeNumber: 0,
+			endTimeString: "",
+			stringTimer: "",
+			stringTimer2: "",
+			lengthTimer: "",
 			index: 0,
 			name: "",
-			nameFromAlexa: "",
-			start_Time: "",
-			end_Time: "",
+			alexaTimerName: "",
 			inputDevice: "",
 			serialNumber: "",
-
 			timerInterval: 0,
-			endTime: 0,
-			lengthTimer: "",
 			percent: 0,
 			percent2: 0,
-			changeValue: false,
-			timeLeftSec: 0,
+			extendOrShortenTimer: false,
 			inputString: "",
 			id: "",
-			timeEndByAlexa: 0,
 		},
 	},
 	brueche1: {

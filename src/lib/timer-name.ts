@@ -1,33 +1,26 @@
 import { useStore } from "../store/store";
-import { isIobrokerValue } from "./global";
-import { timerObject, TimerSelector } from "./timer-data";
 import { AlexaActiveTimerList } from "../types";
+import { isIobrokerValue } from "./global";
+import { timerObject, Timers, TimerSelector } from "./timer-data";
 
-export const getNewTimerName = (newJsonString: ioBroker.State, timerSelector: string): void => {
+export const getNewTimerName = (jsonString: ioBroker.State, timerSelector: string): void => {
 	const { _this } = useStore();
-	let { oldAlexaTimerObject } = useStore();
 
-	let newJson: AlexaActiveTimerList[] = [];
+	let json: AlexaActiveTimerList[] = [];
 	try {
-		if (isIobrokerValue(newJsonString)) {
-			newJson = JSON.parse(newJsonString.val as string);
+		if (isIobrokerValue(jsonString)) {
+			json = JSON.parse(jsonString.val as string);
 		}
 
-		for (let i = 0; i < newJson.length; i++) {
-			const elementExist = oldAlexaTimerObject.find((oldElement: AlexaActiveTimerList) => {
-				if (oldElement.id === newJson[i].id) {
-					return true;
-				}
-				return false;
-			});
-			if (!elementExist) {
-				timerObject.timer[timerSelector as keyof typeof timerObject.timer].nameFromAlexa = newJson[i].label;
-				timerObject.timer[timerSelector as keyof typeof timerObject.timer].id = newJson[i].id;
-				timerObject.timer[timerSelector as keyof typeof timerObject.timer].timeEndByAlexa =
-					newJson[i].triggerTime;
-			}
+		if (json.length === 1) {
+			saveLabelAndId(json[0], timerSelector);
+			return;
 		}
-		oldAlexaTimerObject = newJson;
+
+		const timerWithUniqueId = getTimerWithUniqueId(json);
+		if (timerWithUniqueId) {
+			saveLabelAndId(timerWithUniqueId, timerSelector);
+		}
 	} catch (e: any) {
 		_this.log.error("Error in checkForNewTimerInObject: " + JSON.stringify(e));
 		_this.log.error(e.stack);
@@ -51,3 +44,25 @@ export const registerIdToGetTimerName = async (timerSelector: TimerSelector): Pr
 		_this.log.error(e.stack);
 	}
 };
+
+function getTimerWithUniqueId(json: AlexaActiveTimerList[]): AlexaActiveTimerList | null {
+	let timerWithUniqueId: AlexaActiveTimerList | null = null;
+	for (let i = 0; i < json.length; i++) {
+		if (timerWithUniqueId) {
+			break;
+		}
+		for (const timer in timerObject.timer) {
+			if (timerObject.timer[timer as keyof Timers].id === json[i].id) {
+				timerWithUniqueId = null;
+				break;
+			}
+			timerWithUniqueId = { id: json[i].id, label: json[i].label || "", triggerTime: json[i].triggerTime };
+		}
+	}
+	return timerWithUniqueId;
+}
+
+function saveLabelAndId({ id, label }: AlexaActiveTimerList, timerSelector: string): void {
+	timerObject.timer[timerSelector as keyof typeof timerObject.timer].alexaTimerName = label || "";
+	timerObject.timer[timerSelector as keyof typeof timerObject.timer].id = id || "";
+}

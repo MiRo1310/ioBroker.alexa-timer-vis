@@ -94,7 +94,7 @@ class AlexaTimerVis extends utils.Adapter {
     let timeVoiceInputOld = null;
     this.on("stateChange", async (id, state) => {
       checkForTimerName(this, id);
-      if ((0, import_global.isStateChanged)(state, id)) {
+      if ((0, import_global.isAlexaSummaryStateChanged)(state, id)) {
         let doNothingByNotNotedElement = false;
         voiceInput = state == null ? void 0 : state.val;
         if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
@@ -134,20 +134,18 @@ class AlexaTimerVis extends utils.Adapter {
             }
           }
         }
-      } else if ((0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset")) {
+        return;
+      }
+      if ((0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset")) {
         try {
           const timer = id.split(".")[2];
           const timerOb = import_timer_data.timerObject.timer[timer];
-          if ((timerOb == null ? void 0 : timerOb.serialNumber) != void 0) {
+          if (timerOb == null ? void 0 : timerOb.serialNumber) {
             const alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
-            let name = "";
-            if (timerOb.name != "Timer") {
-              name = timerOb.name;
-            }
             (0, import_delete_timer.delTimer)(timer);
             this.setForeignState(
               alexaCommandState,
-              `l\xF6sche  ${timerOb.nameFromAlexa || name || timerOb.inputString} Timer`,
+              `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`,
               false
             );
           }
@@ -157,9 +155,10 @@ class AlexaTimerVis extends utils.Adapter {
       }
       function checkForTimerName(_this, id2) {
         let timerSelector = "";
-        if (store.lastTimers.find((el) => {
+        if (store.lastTimers.find((el, index) => {
           if (el.id === id2) {
             timerSelector = el.timerSelector;
+            store.lastTimers.splice(index, 1);
             return true;
           }
           return false;
@@ -168,7 +167,6 @@ class AlexaTimerVis extends utils.Adapter {
             (0, import_timer_name.getNewTimerName)(state, timerSelector);
             _this.unsubscribeForeignStatesAsync(id2);
           }
-          store.lastTimers = store.lastTimers.filter((el) => el.id !== id2);
         }
       }
     });

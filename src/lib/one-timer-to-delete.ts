@@ -24,8 +24,8 @@ export const oneOfMultiTimerDelete = (input: string, timeSec: number, name: stri
 		sortable.push([
 			element,
 
-			timerObject.timer[element as keyof typeof timerObject.timer].onlySec,
-			timerObject.timer[element as keyof typeof timerObject.timer].timeLeftSec,
+			timerObject.timer[element as keyof typeof timerObject.timer].voiceInputAsSeconds,
+			timerObject.timer[element as keyof typeof timerObject.timer].remainingTimeInSeconds,
 			timerObject.timer[element as keyof typeof timerObject.timer].name,
 			timerObject.timer[element as keyof typeof timerObject.timer].inputDevice,
 		]);

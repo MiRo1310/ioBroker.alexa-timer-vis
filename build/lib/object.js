@@ -16,27 +16,16 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var timer_exports = {};
-__export(timer_exports, {
-  extendTimer: () => extendTimer
+var object_exports = {};
+__export(object_exports, {
+  deepCopy: () => deepCopy
 });
-module.exports = __toCommonJS(timer_exports);
-var import_global = require("./global");
-function extendTimer(timers, sec, addOrSub, timerObject) {
-  timers.forEach((timer) => {
-    const timerSeconds = sec;
-    if (timerObject.timerActive.timer[timer] == true) {
-      timerObject.timer[timer].extendOrShortenTimer = true;
-      timerObject.timer[timer].endTimeNumber += timerSeconds * 1e3 * addOrSub;
-      timerObject.timer[timer].endTimeString = (0, import_global.timeToString)(
-        timerObject.timer[timer].endTimeNumber
-      );
-      timerObject.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub;
-    }
-  });
-}
+module.exports = __toCommonJS(object_exports);
+const deepCopy = (obj) => {
+  return JSON.parse(JSON.stringify(obj));
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  extendTimer
+  deepCopy
 });
-//# sourceMappingURL=timer.js.map
+//# sourceMappingURL=object.js.map

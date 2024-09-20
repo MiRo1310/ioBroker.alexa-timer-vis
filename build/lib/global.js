@@ -20,9 +20,9 @@ var global_exports = {};
 __export(global_exports, {
   doesAlexaSendAQuestion: () => doesAlexaSendAQuestion,
   firstLetterToUpperCase: () => firstLetterToUpperCase,
+  isAlexaSummaryStateChanged: () => isAlexaSummaryStateChanged,
   isCreateNewTimer: () => isCreateNewTimer,
   isIobrokerValue: () => isIobrokerValue,
-  isStateChanged: () => isStateChanged,
   isString: () => isString,
   isStringEmpty: () => isStringEmpty,
   isVoiceInputNotSameAsOld: () => isVoiceInputNotSameAsOld,
@@ -100,9 +100,9 @@ function timeToString(milliseconds) {
   const date_string = new Date(milliseconds).toString();
   return date_string.split(" ").slice(4, 5).toString();
 }
-function isStateChanged(state, id) {
+function isAlexaSummaryStateChanged(state, id) {
   const store = (0, import_store.useStore)();
-  return state && typeof state.val === "string" && state.val != "" && id == store.pathAlexaSummary;
+  return state && isString(state.val) && state.val !== "" && id === store.pathAlexaSummary;
 }
 function isCreateNewTimer(voiceInput) {
   return (voiceInput.indexOf("timer") >= 0 || voiceInput.indexOf("stelle") >= 0 || voiceInput.indexOf("stell") >= 0) && voiceInput.indexOf("wecker") == -1;
@@ -136,9 +136,9 @@ function sortArray(array) {
 0 && (module.exports = {
   doesAlexaSendAQuestion,
   firstLetterToUpperCase,
+  isAlexaSummaryStateChanged,
   isCreateNewTimer,
   isIobrokerValue,
-  isStateChanged,
   isString,
   isStringEmpty,
   isVoiceInputNotSameAsOld,

@@ -25,28 +25,21 @@ module.exports = __toCommonJS(timer_name_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
 var import_timer_data = require("./timer-data");
-const getNewTimerName = (newJsonString, timerSelector) => {
+const getNewTimerName = (jsonString, timerSelector) => {
   const { _this } = (0, import_store.useStore)();
-  let { oldAlexaTimerObject } = (0, import_store.useStore)();
-  let newJson = [];
+  let json = [];
   try {
-    if ((0, import_global.isIobrokerValue)(newJsonString)) {
-      newJson = JSON.parse(newJsonString.val);
+    if ((0, import_global.isIobrokerValue)(jsonString)) {
+      json = JSON.parse(jsonString.val);
     }
-    for (let i = 0; i < newJson.length; i++) {
-      const elementExist = oldAlexaTimerObject.find((oldElement) => {
-        if (oldElement.id === newJson[i].id) {
-          return true;
-        }
-        return false;
-      });
-      if (!elementExist) {
-        import_timer_data.timerObject.timer[timerSelector].nameFromAlexa = newJson[i].label;
-        import_timer_data.timerObject.timer[timerSelector].id = newJson[i].id;
-        import_timer_data.timerObject.timer[timerSelector].timeEndByAlexa = newJson[i].triggerTime;
-      }
+    if (json.length === 1) {
+      saveLabelAndId(json[0], timerSelector);
+      return;
     }
-    oldAlexaTimerObject = newJson;
+    const timerWithUniqueId = getTimerWithUniqueId(json);
+    if (timerWithUniqueId) {
+      saveLabelAndId(timerWithUniqueId, timerSelector);
+    }
   } catch (e) {
     _this.log.error("Error in checkForNewTimerInObject: " + JSON.stringify(e));
     _this.log.error(e.stack);
@@ -68,6 +61,26 @@ const registerIdToGetTimerName = async (timerSelector) => {
     _this.log.error(e.stack);
   }
 };
+function getTimerWithUniqueId(json) {
+  let timerWithUniqueId = null;
+  for (let i = 0; i < json.length; i++) {
+    if (timerWithUniqueId) {
+      break;
+    }
+    for (const timer in import_timer_data.timerObject.timer) {
+      if (import_timer_data.timerObject.timer[timer].id === json[i].id) {
+        timerWithUniqueId = null;
+        break;
+      }
+      timerWithUniqueId = { id: json[i].id, label: json[i].label || "", triggerTime: json[i].triggerTime };
+    }
+  }
+  return timerWithUniqueId;
+}
+function saveLabelAndId({ id, label }, timerSelector) {
+  import_timer_data.timerObject.timer[timerSelector].alexaTimerName = label || "";
+  import_timer_data.timerObject.timer[timerSelector].id = id || "";
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   getNewTimerName,

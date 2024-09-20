@@ -17,13 +17,12 @@ export const startTimer = async (sec: number, name: string, inputString: string)
 
 		const jsonAlexa = await _this.getForeignStateAsync(`alexa2.0.History.json`);
 		const startTimer: number = getStartTimerValue(jsonAlexa);
-
 		const start_Time = timeToString(startTimer);
 		const timerMilliseconds = sec * 1000;
 		const endTimeMilliseconds = startTimer + timerMilliseconds;
 		const endTimeString = timeToString(endTimeMilliseconds);
 
-		saveToObject(timerSelector, endTimeMilliseconds, endTimeString, start_Time);
+		saveToObject(timerSelector, endTimeMilliseconds, endTimeString, start_Time, startTimer);
 
 		await setDeviceNameInStateName(timerSelector, _this, store);
 
@@ -84,10 +83,12 @@ function saveToObject(
 	endTimeNumber: number,
 	endTimeString: string,
 	start_Time: string,
+	startTimeNumber: number,
 ): void {
 	if (timerBlock) {
-		timerObject.timer[timerBlock].endTime = endTimeNumber;
-		timerObject.timer[timerBlock].end_Time = endTimeString;
-		timerObject.timer[timerBlock].start_Time = start_Time;
+		timerObject.timer[timerBlock].endTimeNumber = endTimeNumber;
+		timerObject.timer[timerBlock].endTimeString = endTimeString;
+		timerObject.timer[timerBlock].startTimeString = start_Time;
+		timerObject.timer[timerBlock].startTimeNumber = startTimeNumber;
 	}
 }

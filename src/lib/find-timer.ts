@@ -7,7 +7,7 @@ export const findTimer = async (
 	name: string,
 	deleteTimerIndex: number,
 	value: string,
-): Promise<{ oneOfMultiTimer: any[]; timer: any[] }> => {
+): Promise<{ oneOfMultiTimer: any[]; timer: string[] }> => {
 	const store = useStore();
 	const _this = store._this;
 	try {
@@ -28,7 +28,7 @@ export const findTimer = async (
 		let countMatchingInputDevice = 0;
 
 		for (const element in timerObject.timer) {
-			if (timerObject.timer[element as keyof typeof timerObject.timer].onlySec == sec) {
+			if (timerObject.timer[element as keyof typeof timerObject.timer].voiceInputAsSeconds == sec) {
 				countMatchingTime++;
 			}
 
@@ -87,7 +87,7 @@ export const findTimer = async (
 						_this.log.debug("Einer, wenn genau einer gestellt ist");
 					} else if (
 						countMatchingTime == 1 &&
-						timerObject.timer[element as keyof typeof timerObject.timer]["onlySec"] == sec &&
+						timerObject.timer[element as keyof typeof timerObject.timer]["voiceInputAsSeconds"] == sec &&
 						sec !== 0
 					) {
 						timerFound.timer.push(element);
@@ -95,7 +95,7 @@ export const findTimer = async (
 						_this.log.debug("Wenn nur einer gestellt ist mit der der gewünschten Zeit");
 					} else if (
 						countMatchingTime == 1 &&
-						timerObject.timer[element as keyof typeof timerObject.timer]["onlySec"] == sec
+						timerObject.timer[element as keyof typeof timerObject.timer]["voiceInputAsSeconds"] == sec
 					) {
 						timerFound.timer.push(element);
 						_this.log.debug("Einer ist gestellt mit genau diesem Wert");

@@ -40,7 +40,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     let countMatchingName = 0;
     let countMatchingInputDevice = 0;
     for (const element in import_timer_data.timerObject.timer) {
-      if (import_timer_data.timerObject.timer[element].onlySec == sec) {
+      if (import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec) {
         countMatchingTime++;
       }
       if (import_timer_data.timerObject.timer[element].name.trim() == name) {
@@ -77,10 +77,10 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
           if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[element] === true) {
             timerFound.timer.push(element);
             _this.log.debug("Einer, wenn genau einer gestellt ist");
-          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["onlySec"] == sec && sec !== 0) {
+          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["voiceInputAsSeconds"] == sec && sec !== 0) {
             timerFound.timer.push(element);
             _this.log.debug("Wenn nur einer gestellt ist mit der der gew\xFCnschten Zeit");
-          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["onlySec"] == sec) {
+          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["voiceInputAsSeconds"] == sec) {
             timerFound.timer.push(element);
             _this.log.debug("Einer ist gestellt mit genau diesem Wert");
           } else if (import_timer_data.timerObject.timer[element]["name"] == name && name !== "" && countMatchingName == 1) {

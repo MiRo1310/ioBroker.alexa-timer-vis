@@ -39,8 +39,8 @@ const oneOfMultiTimerDelete = (input, timeSec, name, inputDevice) => {
   for (const element in import_timer_data.timerObject.timer) {
     sortable.push([
       element,
-      import_timer_data.timerObject.timer[element].onlySec,
-      import_timer_data.timerObject.timer[element].timeLeftSec,
+      import_timer_data.timerObject.timer[element].voiceInputAsSeconds,
+      import_timer_data.timerObject.timer[element].remainingTimeInSeconds,
       import_timer_data.timerObject.timer[element].name,
       import_timer_data.timerObject.timer[element].inputDevice
     ]);
