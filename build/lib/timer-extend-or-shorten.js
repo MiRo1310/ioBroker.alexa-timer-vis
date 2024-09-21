@@ -35,23 +35,23 @@ const extendOrShortTimer = async ({
   const _this = store._this;
   try {
     const addOrSub = getMultiplikatorForAddOrSub(store);
-    let firstPartOfValue, valueExtend, extendString, extendString2, extendTime, extendTime2;
+    let firstPartOfValue, valueExtend;
+    let extendTime = 0;
+    let extendTime2 = 0;
     if (voiceInput.includes("um")) {
       firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf("um")).split(" ");
       valueExtend = voiceInput.slice(voiceInput.indexOf("um") + 2).split(" ");
-      const res = await (0, import_filter_info.filterInfo)(firstPartOfValue);
-      extendString = res[0];
-      if (typeof extendString == "string")
-        extendTime = eval(extendString);
-      const res2 = await (0, import_filter_info.filterInfo)(valueExtend);
-      extendString2 = res2[0];
-      if (typeof extendString2 == "string")
-        extendTime2 = eval(extendString2);
+      const { timerString } = await (0, import_filter_info.filterInfo)(firstPartOfValue);
+      extendTime = eval(timerString);
+      const { timerString: string2 } = await (0, import_filter_info.filterInfo)(valueExtend);
+      extendTime2 = eval(string2);
     }
     const timers = await (0, import_find_timer.findTimer)(extendTime, decomposeName, 1, voiceInput);
     if (timers.timer) {
       extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
-    } else if (timers.oneOfMultiTimer) {
+      return;
+    }
+    if (timers.oneOfMultiTimer) {
       extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {

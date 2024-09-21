@@ -104,10 +104,10 @@ const filterInfo = async (input) => {
         timerString = timerString.slice(2, timerString.length);
       }
     }
-    return [timerString, name, deleteVal, inputString];
+    return { timerString, name, deleteVal, inputString };
   } catch (e) {
     _this.log.error("Error in filterInfo: " + JSON.stringify(e));
-    return ["", "", 0, ""];
+    return { timerString: "", name: "", deleteVal: 0, inputString: "" };
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

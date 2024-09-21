@@ -2,7 +2,7 @@ import { useStore } from "../store/store";
 import { timerObject } from "./timer-data";
 export const filterInfo = async (
 	input: string[],
-): Promise<[timerString: string, name: string, deleteVal: number, inputString: string]> => {
+): Promise<{ timerString: string; name: string; deleteVal: number; inputString: string }> => {
 	const store = useStore();
 	const _this = store._this;
 	try {
@@ -112,9 +112,9 @@ export const filterInfo = async (
 			}
 		}
 
-		return [timerString, name, deleteVal, inputString];
+		return { timerString, name, deleteVal, inputString };
 	} catch (e: any) {
 		_this.log.error("Error in filterInfo: " + JSON.stringify(e));
-		return ["", "", 0, ""];
+		return { timerString: "", name: "", deleteVal: 0, inputString: "" };
 	}
 };
