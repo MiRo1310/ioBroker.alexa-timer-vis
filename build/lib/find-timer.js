@@ -29,28 +29,17 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
-    if (name) {
-      name = name.trim();
-    }
+    name = name.trim();
     let inputDevice = "";
     const obj = await _this.getForeignStateAsync(`alexa2.${store.getAlexaInstanceObject().instance}.History.name`);
     if ((0, import_global.isIobrokerValue)(obj) && (0, import_global.isString)(obj.val)) {
       inputDevice = obj.val;
     }
-    let countMatchingTime = 0;
-    let countMatchingName = 0;
-    let countMatchingInputDevice = 0;
-    for (const element in import_timer_data.timerObject.timer) {
-      if (import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec) {
-        countMatchingTime++;
-      }
-      if (import_timer_data.timerObject.timer[element].name.trim() == name) {
-        countMatchingName++;
-      }
-      if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
-        countMatchingInputDevice++;
-      }
-    }
+    const { countMatchingName, countMatchingTime, countMatchingInputDevice } = getMatchingTimerCounts(
+      inputDevice,
+      sec,
+      name
+    );
     const timerFound = { oneOfMultiTimer: [], timer: [] };
     if (store.questionAlexa) {
       if (countMatchingName == 1) {
@@ -77,16 +66,12 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
         if (!store.questionAlexa) {
           if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[element] === true) {
             timerFound.timer.push(element);
-            _this.log.debug("Einer, wenn genau einer gestellt ist");
           } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["voiceInputAsSeconds"] == sec && sec !== 0) {
             timerFound.timer.push(element);
-            _this.log.debug("Wenn nur einer gestellt ist mit der der gew\xFCnschten Zeit");
           } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["voiceInputAsSeconds"] == sec) {
             timerFound.timer.push(element);
-            _this.log.debug("Einer ist gestellt mit genau diesem Wert");
           } else if (import_timer_data.timerObject.timer[element]["name"] == name && name !== "" && countMatchingName == 1) {
             timerFound.timer.push(element);
-            _this.log.debug("Mit genauem Namen");
           }
         }
       } else if (deleteTimerIndex == 2) {
@@ -96,7 +81,6 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
           if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("nein") != -1) {
             if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
               timerFound.timer.push(element);
-              _this.log.debug("Only this device");
             }
           } else if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("ja") != -1) {
             for (const element2 in import_timer_data.timerObject.timerActive.timer) {
@@ -113,6 +97,35 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     return { oneOfMultiTimer: [], timer: [] };
   }
 };
+function findTimerWithExactSameInputDevice(element, inputDevice, countMatchingInputDevice) {
+  if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
+    countMatchingInputDevice++;
+  }
+  return countMatchingInputDevice;
+}
+function findTimerWithExactSameName(element, countMatchingName, name) {
+  if (import_timer_data.timerObject.timer[element].name.trim() == name) {
+    countMatchingName++;
+  }
+  return countMatchingName;
+}
+function findTimerWithExactSameSec(element, countMatchingTime, sec) {
+  if (import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec) {
+    countMatchingTime++;
+  }
+  return countMatchingTime;
+}
+function getMatchingTimerCounts(inputDevice, sec, name) {
+  let countMatchingTime = 0;
+  let countMatchingName = 0;
+  let countMatchingInputDevice = 0;
+  for (const element in import_timer_data.timerObject.timer) {
+    countMatchingTime = findTimerWithExactSameSec(element, countMatchingTime, sec);
+    countMatchingName = findTimerWithExactSameName(element, countMatchingName, name);
+    countMatchingInputDevice = findTimerWithExactSameInputDevice(element, inputDevice, countMatchingInputDevice);
+  }
+  return { countMatchingName, countMatchingTime, countMatchingInputDevice };
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   findTimer

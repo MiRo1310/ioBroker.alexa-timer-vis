@@ -33,22 +33,21 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_global = require("./lib/global");
-var import_timer_data = require("./lib/timer-data");
-var import_store = require("./store/store");
-var import_set_adapter_status = require("./lib/set-adapter-status");
-var import_get_todo = require("./lib/get-todo");
-var import_delete_timer = require("./lib/delete-timer");
-var import_decompose_input_value = require("./lib/decompose-input-value");
-var import_compare_serial = require("./lib/compare-serial");
 var import_check_voice_input = require("./lib/check-voice-input");
-var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
-var import_timer_delete = require("./lib/timer-delete");
-var import_timer_add = require("./lib/timer-add");
-var import_write_state = require("./lib/write-state");
-var import_timer_name = require("./lib/timer-name");
+var import_compare_serial = require("./lib/compare-serial");
+var import_decompose_input_value = require("./lib/decompose-input-value");
+var import_delete_timer = require("./lib/delete-timer");
+var import_get_todo = require("./lib/get-todo");
+var import_global = require("./lib/global");
 var import_reset = require("./lib/reset");
-var import_console = require("console");
+var import_set_adapter_status = require("./lib/set-adapter-status");
+var import_timer_add = require("./lib/timer-add");
+var import_timer_data = require("./lib/timer-data");
+var import_timer_delete = require("./lib/timer-delete");
+var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
+var import_timer_name = require("./lib/timer-name");
+var import_write_state = require("./lib/write-state");
+var import_store = require("./store/store");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -117,7 +116,6 @@ class AlexaTimerVis extends utils.Adapter {
             debounceTimeout = this.setTimeout(() => {
               voiceInputOld = null;
               timeVoiceInputOld = null;
-              this.log.debug("Reset ValueOld");
             }, store.debounceTime * 1e3);
             (0, import_global.doesAlexaSendAQuestion)(voiceInput);
             (0, import_get_todo.getToDo)(voiceInput);
@@ -137,22 +135,11 @@ class AlexaTimerVis extends utils.Adapter {
         }
         return;
       }
-      if ((0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset")) {
-        try {
-          const timer = id.split(".")[2];
-          const timerOb = import_timer_data.timerObject.timer[timer];
-          if (timerOb == null ? void 0 : timerOb.serialNumber) {
-            const alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
-            (0, import_delete_timer.delTimer)(timer);
-            this.setForeignState(
-              alexaCommandState,
-              `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`,
-              false
-            );
-          }
-        } catch (e) {
-          (0, import_console.error)("Error in Reset Timer: " + JSON.stringify(e));
-        }
+      if (isAlexaTimerVisResetButton(state, id)) {
+        const timer = id.split(".")[2];
+        const timerObj = import_timer_data.timerObject.timer[timer];
+        (0, import_delete_timer.delTimer)(timer);
+        this.setForeignState(getAlexaTextToCommandState(store, timerObj), buildTextCommand(timerObj), false);
       }
       function checkForTimerName(_this, id2) {
         let timerSelector = "";
@@ -199,6 +186,15 @@ if (require.main !== module) {
   adapter = (options) => new AlexaTimerVis(options);
 } else {
   (() => new AlexaTimerVis())();
+}
+function getAlexaTextToCommandState(store, timerObj) {
+  return `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerObj.serialNumber}.Commands.textCommand`;
+}
+function isAlexaTimerVisResetButton(state, id) {
+  return (0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset") ? true : false;
+}
+function buildTextCommand(timerOb) {
+  return `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

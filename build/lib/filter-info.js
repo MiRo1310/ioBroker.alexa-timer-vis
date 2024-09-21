@@ -96,19 +96,27 @@ const filterInfo = async (input) => {
       timerString = timerString.slice(0, timerString.length - 1);
     }
     if (input.length) {
-      if (timerString.includes("*3600")) {
-        if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
-          timerString += ")*60";
-        }
-      }
-      if (timerString.charAt(0) == ")") {
-        timerString = timerString.slice(2, timerString.length);
-      }
+      timerString = hasMinutes(timerString);
+      timerString = checkFirstChart(timerString);
     }
     return { timerString, name, deleteVal, inputString };
   } catch (e) {
     (0, import_logging.errorLogging)("Error in filterInfo", e, _this);
     return { timerString: "", name: "", deleteVal: 0, inputString: "" };
+  }
+  function hasMinutes(timerString) {
+    if (timerString.includes("*3600")) {
+      if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
+        timerString += ")*60";
+      }
+    }
+    return timerString;
+  }
+  function checkFirstChart(timerString) {
+    if (timerString.charAt(0) == ")") {
+      timerString = timerString.slice(2, timerString.length);
+    }
+    return timerString;
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
