@@ -4,6 +4,7 @@ import { findTimer } from "./find-timer";
 import { timerObject } from "./timer-data";
 import { timeToString } from "./global";
 import { TimerObject, Timers } from "./timer-data";
+import { errorLogging } from "./logging";
 
 export const extendOrShortTimer = async ({
 	voiceInput,
@@ -41,7 +42,7 @@ export const extendOrShortTimer = async ({
 			extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, timerObject);
 		}
 	} catch (e: any) {
-		_this.log.error("Error: " + JSON.stringify(e));
+		errorLogging("Error in extendOrShortTimer", e, _this);
 	}
 };
 function getMultiplikatorForAddOrSub(store: Store): 1 | -1 {

@@ -1,5 +1,6 @@
 import { useStore } from "../store/store";
 import { filterInfo } from "./filter-info";
+import { errorLogging } from "./logging";
 export const decomposeInputValue = async (
 	voiceString: string,
 ): Promise<{ name: string; timerSec: number; deleteVal: number; inputString: string }> => {
@@ -14,7 +15,7 @@ export const decomposeInputValue = async (
 
 		return { name, timerSec: eval(timerString), deleteVal, inputString };
 	} catch (e: any) {
-		_this.log.error("Error: " + JSON.stringify(e));
+		errorLogging("Error in decomposeInputValue", e, _this);
 		return { name: "", timerSec: 0, deleteVal: 0, inputString: "" };
 	}
 };

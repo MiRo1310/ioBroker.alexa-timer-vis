@@ -21,6 +21,7 @@ __export(state_exports, {
   createState: () => createState
 });
 module.exports = __toCommonJS(state_exports);
+var import_console = require("console");
 var import_store = require("../store/store");
 const createState = async (value) => {
   const store = (0, import_store.useStore)();
@@ -223,7 +224,7 @@ const createState = async (value) => {
       _this.subscribeForeignStates(id);
     }
   } catch (e) {
-    _this.log.error(e);
+    (0, import_console.error)("Error in createState: " + JSON.stringify(e));
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

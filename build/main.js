@@ -48,6 +48,7 @@ var import_timer_add = require("./lib/timer-add");
 var import_write_state = require("./lib/write-state");
 var import_timer_name = require("./lib/timer-name");
 var import_reset = require("./lib/reset");
+var import_console = require("console");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -150,7 +151,7 @@ class AlexaTimerVis extends utils.Adapter {
             );
           }
         } catch (e) {
-          this.log.error("Serial Error: " + JSON.stringify(e));
+          (0, import_console.error)("Error in Reset Timer: " + JSON.stringify(e));
         }
       }
       function checkForTimerName(_this, id2) {

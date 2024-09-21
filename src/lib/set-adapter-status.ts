@@ -7,7 +7,7 @@ export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
 
 	const result = await _this.getForeignObjectAsync(store.pathAlexaSummary);
 	if (!result) {
-		_this.log.error(`The State ${store.pathAlexaSummary} was not found!`);
+		_this.log.warn(`The State ${store.pathAlexaSummary} was not found!`);
 		return;
 	}
 	_this.log.info("Alexa State was found");

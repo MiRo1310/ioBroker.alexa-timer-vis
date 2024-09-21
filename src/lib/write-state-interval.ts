@@ -1,6 +1,7 @@
 import { timerObject } from "./timer-data";
 import { writeState } from "./write-state";
 import { useStore } from "../store/store";
+import { errorLogging } from "./logging";
 
 let writeStateActive = false;
 export const writeStateIntervall = (): void => {
@@ -23,8 +24,7 @@ export const writeStateIntervall = (): void => {
 			}, timerObject.timerActive.data.interval);
 		}
 	} catch (e: any) {
-		_this.log.error("Error in writeStateIntervall: " + JSON.stringify(e));
-		_this.log.error(e.stack);
+		errorLogging("Error in writeStateIntervall", e, _this);
 		_this.clearInterval(store.interval);
 	}
 };

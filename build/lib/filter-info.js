@@ -22,6 +22,7 @@ __export(filter_info_exports, {
 });
 module.exports = __toCommonJS(filter_info_exports);
 var import_store = require("../store/store");
+var import_logging = require("./logging");
 var import_timer_data = require("./timer-data");
 const filterInfo = async (input) => {
   const store = (0, import_store.useStore)();
@@ -106,7 +107,7 @@ const filterInfo = async (input) => {
     }
     return { timerString, name, deleteVal, inputString };
   } catch (e) {
-    _this.log.error("Error in filterInfo: " + JSON.stringify(e));
+    (0, import_logging.errorLogging)("Error in filterInfo", e, _this);
     return { timerString: "", name: "", deleteVal: 0, inputString: "" };
   }
 };

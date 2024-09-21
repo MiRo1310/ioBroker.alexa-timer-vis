@@ -23,6 +23,7 @@ __export(decompose_input_value_exports, {
 module.exports = __toCommonJS(decompose_input_value_exports);
 var import_store = require("../store/store");
 var import_filter_info = require("./filter-info");
+var import_logging = require("./logging");
 const decomposeInputValue = async (voiceString) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -32,7 +33,7 @@ const decomposeInputValue = async (voiceString) => {
     const { timerString, name, deleteVal, inputString } = await (0, import_filter_info.filterInfo)(inputDecomposed);
     return { name, timerSec: eval(timerString), deleteVal, inputString };
   } catch (e) {
-    _this.log.error("Error: " + JSON.stringify(e));
+    (0, import_logging.errorLogging)("Error in decomposeInputValue", e, _this);
     return { name: "", timerSec: 0, deleteVal: 0, inputString: "" };
   }
 };

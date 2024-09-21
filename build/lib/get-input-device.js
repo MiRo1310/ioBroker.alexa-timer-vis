@@ -23,6 +23,7 @@ __export(get_input_device_exports, {
 module.exports = __toCommonJS(get_input_device_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
+var import_logging = require("./logging");
 const getInputDevice = async (path) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -39,7 +40,7 @@ const getInputDevice = async (path) => {
       store.deviceSerialNumber = serialStateObj == null ? void 0 : serialStateObj.val;
     }
   } catch (error) {
-    _this.log.error("Error in getInputDevice: " + JSON.stringify(error));
+    (0, import_logging.errorLogging)("Error in getInputDevice", error, _this);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

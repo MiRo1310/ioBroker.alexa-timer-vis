@@ -3,6 +3,7 @@ import { firstLetterToUpperCase } from "./global";
 import { resetValues } from "./reset";
 import { useStore } from "../store/store";
 import { deepCopy } from "./object";
+import { errorLogging } from "./logging";
 
 export function writeState(unload: boolean): void {
 	const store = useStore();
@@ -42,8 +43,7 @@ export function writeState(unload: boolean): void {
 			_this.setStateChanged("all_Timer.alive", alive, true);
 		}
 	} catch (e: any) {
-		_this.log.error("Error in writeState: " + JSON.stringify(e));
-		_this.log.error(e.stack);
+		errorLogging("Error in writeState", e, _this);
 	}
 
 	function getJson(timer: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {

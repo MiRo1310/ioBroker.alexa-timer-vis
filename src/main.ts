@@ -22,6 +22,7 @@ import { timerAdd } from "./lib/timer-add";
 import { writeState } from "./lib/write-state";
 import { getNewTimerName } from "./lib/timer-name";
 import { resetAllTimerValuesAndState } from "./lib/reset";
+import { error } from "console";
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
@@ -155,7 +156,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 						); // Alexa State setzen, Alexa gibt dadurch eine Sprachausgabe
 					}
 				} catch (e) {
-					this.log.error("Serial Error: " + JSON.stringify(e));
+					error("Error in Reset Timer: " + JSON.stringify(e));
 				}
 			}
 

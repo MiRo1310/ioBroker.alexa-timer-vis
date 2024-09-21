@@ -1,3 +1,4 @@
+import { error } from "console";
 import { useStore } from "../store/store";
 export const createState = async (value: number): Promise<void> => {
 	const store = useStore();
@@ -203,6 +204,6 @@ export const createState = async (value: number): Promise<void> => {
 			_this.subscribeForeignStates(id);
 		}
 	} catch (e: any) {
-		_this.log.error(e);
+		error("Error in createState: " + JSON.stringify(e));
 	}
 };

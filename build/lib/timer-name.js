@@ -25,6 +25,7 @@ module.exports = __toCommonJS(timer_name_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
 var import_timer_data = require("./timer-data");
+var import_logging = require("./logging");
 const getNewTimerName = (jsonString, timerSelector) => {
   const { _this } = (0, import_store.useStore)();
   let json = [];
@@ -41,8 +42,7 @@ const getNewTimerName = (jsonString, timerSelector) => {
       saveLabelAndId(timerWithUniqueId, timerSelector);
     }
   } catch (e) {
-    _this.log.error("Error in checkForNewTimerInObject: " + JSON.stringify(e));
-    _this.log.error(e.stack);
+    (0, import_logging.errorLogging)("Error in getNewTimerName", e, _this);
   }
 };
 const registerIdToGetTimerName = async (timerSelector) => {
@@ -57,8 +57,7 @@ const registerIdToGetTimerName = async (timerSelector) => {
     store.lastTimers.push({ timerSerial: serial, timerSelector, id: foreignId });
     await _this.subscribeForeignStatesAsync(foreignId);
   } catch (e) {
-    _this.log.error("Error in getName: " + JSON.stringify(e));
-    _this.log.error(e.stack);
+    (0, import_logging.errorLogging)("Error in registerIdToGetTimerName", e, _this);
   }
 };
 function getTimerWithUniqueId(json) {

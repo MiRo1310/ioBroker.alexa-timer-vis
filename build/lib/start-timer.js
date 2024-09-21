@@ -27,6 +27,7 @@ var import_global = require("./global");
 var import_get_input_device = require("./get-input-device");
 var import_interval = require("./interval");
 var import_timer_name = require("./timer-name");
+var import_logging = require("./logging");
 const startTimer = async (sec, name, inputString) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -50,8 +51,7 @@ const startTimer = async (sec, name, inputString) => {
     import_timer_data.timerObject.timer.timer1.timerInterval = store.intervalLess60 * 1e3;
     (0, import_interval.interval)(sec, timerSelector, inputString, name, timer, store.intervalLess60 * 1e3, true);
   } catch (e) {
-    _this.log.error("Error in startTimer: " + JSON.stringify(e));
-    _this.log.error("Error in startTimer: " + JSON.stringify(e.stack));
+    (0, import_logging.errorLogging)("Error in startTimer", e, _this);
   }
 };
 function getStartTimerValue(jsonAlexa) {

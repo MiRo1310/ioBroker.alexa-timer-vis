@@ -1,5 +1,6 @@
 import AlexaTimerVis from "../main";
 import { useStore } from "../store/store";
+import { errorLogging } from "./logging";
 import { Timer, TimerSelector, timerObject } from "./timer-data";
 import { writeState } from "./write-state";
 
@@ -34,8 +35,7 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 			native: {},
 		});
 	} catch (e: any) {
-		_this.log.error("Error in resetValues: " + JSON.stringify(e));
-		_this.log.error(JSON.stringify(e.stack));
+		errorLogging("Error in resetValues", e, _this);
 	}
 };
 

@@ -24,6 +24,7 @@ module.exports = __toCommonJS(find_timer_exports);
 var import_store = require("../store/store");
 var import_timer_data = require("./timer-data");
 var import_global = require("./global");
+var import_logging = require("./logging");
 const findTimer = async (sec, name, deleteTimerIndex, value) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -95,12 +96,12 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
           if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("nein") != -1) {
             if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
               timerFound.timer.push(element);
-              _this.log.debug("Nur auf diesem Ger\xE4t l\xF6schen");
+              _this.log.debug("Only this device");
             }
           } else if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("ja") != -1) {
             for (const element2 in import_timer_data.timerObject.timerActive.timer) {
               timerFound.timer.push(element2);
-              _this.log.debug("Alles l\xF6schen");
+              _this.log.debug("Clear all");
             }
           }
         }
@@ -108,7 +109,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     }
     return timerFound;
   } catch (e) {
-    _this.log.error("Error in findTimer: " + e);
+    (0, import_logging.errorLogging)("Error in findTimer", e, _this);
     return { oneOfMultiTimer: [], timer: [] };
   }
 };

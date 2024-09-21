@@ -27,6 +27,7 @@ var import_filter_info = require("./filter-info");
 var import_find_timer = require("./find-timer");
 var import_timer_data = require("./timer-data");
 var import_global = require("./global");
+var import_logging = require("./logging");
 const extendOrShortTimer = async ({
   voiceInput,
   decomposeName
@@ -55,7 +56,7 @@ const extendOrShortTimer = async ({
       extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    _this.log.error("Error: " + JSON.stringify(e));
+    (0, import_logging.errorLogging)("Error in extendOrShortTimer", e, _this);
   }
 };
 function getMultiplikatorForAddOrSub(store2) {

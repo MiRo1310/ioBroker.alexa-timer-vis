@@ -1,6 +1,7 @@
 import { useStore } from "../store/store";
 import { timerObject } from "./timer-data";
 import { isIobrokerValue, isString } from "./global";
+import { errorLogging } from "./logging";
 
 export const findTimer = async (
 	sec: number,
@@ -122,7 +123,7 @@ export const findTimer = async (
 					if (countMatchingInputDevice != timerObject.timerActive.timerCount && value.indexOf("nein") != -1) {
 						if (timerObject.timer[element as keyof typeof timerObject.timer].inputDevice == inputDevice) {
 							timerFound.timer.push(element);
-							_this.log.debug("Nur auf diesem Gerät löschen");
+							_this.log.debug("Only this device");
 						}
 					}
 					// Alle, von allen Geräten
@@ -133,7 +134,7 @@ export const findTimer = async (
 						for (const element in timerObject.timerActive.timer) {
 							timerFound.timer.push(element);
 
-							_this.log.debug("Alles löschen");
+							_this.log.debug("Clear all");
 						}
 					}
 				}
@@ -141,7 +142,7 @@ export const findTimer = async (
 		}
 		return timerFound;
 	} catch (e) {
-		_this.log.error("Error in findTimer: " + e);
+		errorLogging("Error in findTimer", e, _this);
 
 		return { oneOfMultiTimer: [], timer: [] };
 	}

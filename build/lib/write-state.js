@@ -26,6 +26,7 @@ var import_global = require("./global");
 var import_reset = require("./reset");
 var import_store = require("../store/store");
 var import_object = require("./object");
+var import_logging = require("./logging");
 function writeState(unload) {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -62,8 +63,7 @@ function writeState(unload) {
       _this.setStateChanged("all_Timer.alive", alive, true);
     }
   } catch (e) {
-    _this.log.error("Error in writeState: " + JSON.stringify(e));
-    _this.log.error(e.stack);
+    (0, import_logging.errorLogging)("Error in writeState", e, _this);
   }
   function getJson(timer) {
     const copy = (0, import_object.deepCopy)(timer);

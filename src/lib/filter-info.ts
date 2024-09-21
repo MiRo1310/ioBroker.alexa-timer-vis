@@ -1,4 +1,5 @@
 import { useStore } from "../store/store";
+import { errorLogging } from "./logging";
 import { timerObject } from "./timer-data";
 export const filterInfo = async (
 	input: string[],
@@ -114,7 +115,7 @@ export const filterInfo = async (
 
 		return { timerString, name, deleteVal, inputString };
 	} catch (e: any) {
-		_this.log.error("Error in filterInfo: " + JSON.stringify(e));
+		errorLogging("Error in filterInfo", e, _this);
 		return { timerString: "", name: "", deleteVal: 0, inputString: "" };
 	}
 };

@@ -23,6 +23,7 @@ __export(reset_exports, {
 });
 module.exports = __toCommonJS(reset_exports);
 var import_store = require("../store/store");
+var import_logging = require("./logging");
 var import_timer_data = require("./timer-data");
 var import_write_state = require("./write-state");
 const resetValues = (timer, index) => {
@@ -55,8 +56,7 @@ const resetValues = (timer, index) => {
       native: {}
     });
   } catch (e) {
-    _this.log.error("Error in resetValues: " + JSON.stringify(e));
-    _this.log.error(JSON.stringify(e.stack));
+    (0, import_logging.errorLogging)("Error in resetValues", e, _this);
   }
 };
 function resetAllTimerValuesAndState(_this) {
