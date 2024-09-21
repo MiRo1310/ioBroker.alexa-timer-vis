@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/lib/delete-timer.ts"],
-  "sourcesContent": ["import { timerObject } from \"./timer-data\";\n\nexport const delTimer = (timer: keyof typeof timerObject.timerActive.timer): void => {\n\ttimerObject.timerActive.timer[timer] = false;\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAErB,MAAM,WAAW,CAAC,UAA4D;AACpF,gCAAY,YAAY,MAAM,KAAK,IAAI;AACxC;",
+  "sourcesContent": ["import { timerObject } from \"./timer-data\";\nimport { resetValues } from \"./reset\";\n\nexport const delTimer = (timer: keyof typeof timerObject.timerActive.timer): void => {\n\tresetValues(timerObject.timer[timer], timer);\n\ttimerObject.timerActive.timer[timer] = false;\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAC5B,mBAA4B;AAErB,MAAM,WAAW,CAAC,UAA4D;AACpF,gCAAY,8BAAY,MAAM,KAAK,GAAG,KAAK;AAC3C,gCAAY,YAAY,MAAM,KAAK,IAAI;AACxC;",
   "names": []
 }

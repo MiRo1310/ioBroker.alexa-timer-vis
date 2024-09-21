@@ -17,7 +17,7 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 		timer.voiceInputAsSeconds = 0;
 		timer.remainingTimeInSeconds = 0;
 		timer.index = 0;
-		timer.name = "Timer";
+		timer.name = "";
 		timer.alexaTimerName = "";
 		timer.startTimeString = "00:00:00";
 		timer.endTimeString = "00:00:00";
@@ -28,6 +28,10 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 		timer.percent2 = 0;
 		timer.extendOrShortenTimer = false;
 		timer.id = "";
+		timer.serialNumber = "";
+		timer.inputString = "";
+		timer.startTimeNumber = 0;
+		timer.endTimeNumber = 0;
 
 		_this.setObjectAsync("alexa-timer-vis.0." + index, {
 			type: "device",

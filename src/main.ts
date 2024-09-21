@@ -22,6 +22,7 @@ import { extendOrShortTimer } from "./lib/timer-extend-or-shorten";
 import { getNewTimerName } from "./lib/timer-name";
 import { writeState } from "./lib/write-state";
 import { Store, useStore } from "./store/store";
+import { errorLogging } from "./lib/logging";
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
@@ -79,89 +80,97 @@ export default class AlexaTimerVis extends utils.Adapter {
 		let timeVoiceInputOld: string | null = null;
 
 		this.on("stateChange", async (id, state) => {
-			checkForTimerName(this, id);
+			try {
+				checkForTimerName(this, id);
 
-			if (isAlexaSummaryStateChanged(state, id)) {
-				let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
-				voiceInput = state?.val as string;
+				if (isAlexaSummaryStateChanged(state, id)) {
+					let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
+					voiceInput = state?.val as string;
 
-				if (timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
-					doNothingByNotNotedElement = true;
+					if (timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
+						doNothingByNotNotedElement = true;
+					}
+
+					if (isNewTimerAction(voiceInput)) {
+						const { varInputContainsDelete } = shouldDelete(voiceInput);
+
+						const {
+							name: decomposeName,
+							timerSec,
+							deleteVal,
+							inputString: decomposeInputString,
+						} = await decomposeInputValue(voiceInput);
+
+						const { sameTime } = await compareCreationTimeAndSerial();
+
+						if (
+							(!sameTime &&
+								isVoiceInputNotSameAsOld(voiceInput, voiceInputOld) &&
+								!doNothingByNotNotedElement &&
+								timeVoiceInputOld != timerSec.toString()) ||
+							varInputContainsDelete
+						) {
+							voiceInputOld = voiceInput;
+							timeVoiceInputOld = timerSec?.toString();
+
+							this.clearTimeout(debounceTimeout);
+
+							debounceTimeout = this.setTimeout(() => {
+								voiceInputOld = null;
+								timeVoiceInputOld = null;
+							}, store.debounceTime * 1000);
+
+							doesAlexaSendAQuestion(voiceInput);
+							getToDo(voiceInput);
+
+							if (store.isDeleteTimer()) {
+								timerDelete(decomposeName, timerSec, voiceInput, deleteVal);
+								return;
+							}
+							if (store.isAddTimer()) {
+								timerAdd(decomposeName, timerSec, decomposeInputString);
+								return;
+							}
+							if (store.isExtendTimer() || store.isShortenTimer()) {
+								extendOrShortTimer({ voiceInput, decomposeName });
+								return;
+							}
+						}
+					}
+					return;
+				}
+				if (isAlexaTimerVisResetButton(state, id)) {
+					const timer = id.split(".")[2] as keyof Timers;
+					const timerObj = timerObject.timer[timer];
+
+					this.setForeignState(
+						getAlexaTextToCommandState(store, timerObj),
+						buildTextCommand(timerObj),
+						false,
+					);
+					delTimer(timer);
 				}
 
-				if (isNewTimerAction(voiceInput)) {
-					const { varInputContainsDelete } = shouldDelete(voiceInput);
-
-					const {
-						name: decomposeName,
-						timerSec,
-						deleteVal,
-						inputString: decomposeInputString,
-					} = await decomposeInputValue(voiceInput);
-
-					const { sameTime } = await compareCreationTimeAndSerial();
-
+				function checkForTimerName(_this: AlexaTimerVis, id: string): void {
+					let timerSelector = "";
 					if (
-						(!sameTime &&
-							isVoiceInputNotSameAsOld(voiceInput, voiceInputOld) &&
-							!doNothingByNotNotedElement &&
-							timeVoiceInputOld != timerSec.toString()) ||
-						varInputContainsDelete
+						store.lastTimers.find((el, index) => {
+							if (el.id === id) {
+								timerSelector = el.timerSelector;
+								store.lastTimers.splice(index, 1);
+								return true;
+							}
+							return false;
+						})
 					) {
-						voiceInputOld = voiceInput;
-						timeVoiceInputOld = timerSec.toString();
-
-						this.clearTimeout(debounceTimeout);
-
-						debounceTimeout = this.setTimeout(() => {
-							voiceInputOld = null;
-							timeVoiceInputOld = null;
-						}, store.debounceTime * 1000);
-
-						doesAlexaSendAQuestion(voiceInput);
-						getToDo(voiceInput);
-
-						if (store.isDeleteTimer()) {
-							timerDelete(decomposeName, timerSec, voiceInput, deleteVal);
-							return;
-						}
-						if (store.isAddTimer()) {
-							timerAdd(decomposeName, timerSec, decomposeInputString);
-							return;
-						}
-						if (store.isExtendTimer() || store.isShortenTimer()) {
-							extendOrShortTimer({ voiceInput, decomposeName });
-							return;
+						if (isIobrokerValue(state) && state.val !== "[]") {
+							getNewTimerName(state, timerSelector);
+							_this.unsubscribeForeignStatesAsync(id);
 						}
 					}
 				}
-				return;
-			}
-			if (isAlexaTimerVisResetButton(state, id)) {
-				const timer = id.split(".")[2] as keyof Timers;
-				const timerObj = timerObject.timer[timer];
-
-				delTimer(timer);
-				this.setForeignState(getAlexaTextToCommandState(store, timerObj), buildTextCommand(timerObj), false);
-			}
-
-			function checkForTimerName(_this: AlexaTimerVis, id: string): void {
-				let timerSelector = "";
-				if (
-					store.lastTimers.find((el, index) => {
-						if (el.id === id) {
-							timerSelector = el.timerSelector;
-							store.lastTimers.splice(index, 1);
-							return true;
-						}
-						return false;
-					})
-				) {
-					if (isIobrokerValue(state) && state.val !== "[]") {
-						getNewTimerName(state, timerSelector);
-						_this.unsubscribeForeignStatesAsync(id);
-					}
-				}
+			} catch (e) {
+				errorLogging("Error in stateChange", e, this);
 			}
 		});
 
@@ -192,6 +201,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
 			callback();
 		} catch (e) {
+			errorLogging("Error in onUnload", e, this);
 			callback();
 		}
 	}

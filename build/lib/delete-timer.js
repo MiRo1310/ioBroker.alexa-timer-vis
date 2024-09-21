@@ -22,7 +22,9 @@ __export(delete_timer_exports, {
 });
 module.exports = __toCommonJS(delete_timer_exports);
 var import_timer_data = require("./timer-data");
+var import_reset = require("./reset");
 const delTimer = (timer) => {
+  (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer], timer);
   import_timer_data.timerObject.timerActive.timer[timer] = false;
 };
 // Annotate the CommonJS export names for ESM import in node:

@@ -48,6 +48,7 @@ var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
 var import_timer_name = require("./lib/timer-name");
 var import_write_state = require("./lib/write-state");
 var import_store = require("./store/store");
+var import_logging = require("./lib/logging");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -93,69 +94,77 @@ class AlexaTimerVis extends utils.Adapter {
     let voiceInput;
     let timeVoiceInputOld = null;
     this.on("stateChange", async (id, state) => {
-      checkForTimerName(this, id);
-      if ((0, import_global.isAlexaSummaryStateChanged)(state, id)) {
-        let doNothingByNotNotedElement = false;
-        voiceInput = state == null ? void 0 : state.val;
-        if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
-          doNothingByNotNotedElement = true;
-        }
-        if ((0, import_global.isCreateNewTimer)(voiceInput)) {
-          const { varInputContainsDelete } = (0, import_check_voice_input.shouldDelete)(voiceInput);
-          const {
-            name: decomposeName,
-            timerSec,
-            deleteVal,
-            inputString: decomposeInputString
-          } = await (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
-          const { sameTime } = await (0, import_compare_serial.compareCreationTimeAndSerial)();
-          if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != timerSec.toString() || varInputContainsDelete) {
-            voiceInputOld = voiceInput;
-            timeVoiceInputOld = timerSec.toString();
-            this.clearTimeout(debounceTimeout);
-            debounceTimeout = this.setTimeout(() => {
-              voiceInputOld = null;
-              timeVoiceInputOld = null;
-            }, store.debounceTime * 1e3);
-            (0, import_global.doesAlexaSendAQuestion)(voiceInput);
-            (0, import_get_todo.getToDo)(voiceInput);
-            if (store.isDeleteTimer()) {
-              (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
-              return;
+      try {
+        let checkForTimerName = function(_this, id2) {
+          let timerSelector = "";
+          if (store.lastTimers.find((el, index) => {
+            if (el.id === id2) {
+              timerSelector = el.timerSelector;
+              store.lastTimers.splice(index, 1);
+              return true;
             }
-            if (store.isAddTimer()) {
-              (0, import_timer_add.timerAdd)(decomposeName, timerSec, decomposeInputString);
-              return;
-            }
-            if (store.isExtendTimer() || store.isShortenTimer()) {
-              (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, decomposeName });
-              return;
+            return false;
+          })) {
+            if ((0, import_global.isIobrokerValue)(state) && state.val !== "[]") {
+              (0, import_timer_name.getNewTimerName)(state, timerSelector);
+              _this.unsubscribeForeignStatesAsync(id2);
             }
           }
-        }
-        return;
-      }
-      if (isAlexaTimerVisResetButton(state, id)) {
-        const timer = id.split(".")[2];
-        const timerObj = import_timer_data.timerObject.timer[timer];
-        (0, import_delete_timer.delTimer)(timer);
-        this.setForeignState(getAlexaTextToCommandState(store, timerObj), buildTextCommand(timerObj), false);
-      }
-      function checkForTimerName(_this, id2) {
-        let timerSelector = "";
-        if (store.lastTimers.find((el, index) => {
-          if (el.id === id2) {
-            timerSelector = el.timerSelector;
-            store.lastTimers.splice(index, 1);
-            return true;
+        };
+        checkForTimerName(this, id);
+        if ((0, import_global.isAlexaSummaryStateChanged)(state, id)) {
+          let doNothingByNotNotedElement = false;
+          voiceInput = state == null ? void 0 : state.val;
+          if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
+            doNothingByNotNotedElement = true;
           }
-          return false;
-        })) {
-          if ((0, import_global.isIobrokerValue)(state) && state.val !== "[]") {
-            (0, import_timer_name.getNewTimerName)(state, timerSelector);
-            _this.unsubscribeForeignStatesAsync(id2);
+          if ((0, import_global.isCreateNewTimer)(voiceInput)) {
+            const { varInputContainsDelete } = (0, import_check_voice_input.shouldDelete)(voiceInput);
+            const {
+              name: decomposeName,
+              timerSec,
+              deleteVal,
+              inputString: decomposeInputString
+            } = await (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
+            const { sameTime } = await (0, import_compare_serial.compareCreationTimeAndSerial)();
+            if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != timerSec.toString() || varInputContainsDelete) {
+              voiceInputOld = voiceInput;
+              timeVoiceInputOld = timerSec == null ? void 0 : timerSec.toString();
+              this.clearTimeout(debounceTimeout);
+              debounceTimeout = this.setTimeout(() => {
+                voiceInputOld = null;
+                timeVoiceInputOld = null;
+              }, store.debounceTime * 1e3);
+              (0, import_global.doesAlexaSendAQuestion)(voiceInput);
+              (0, import_get_todo.getToDo)(voiceInput);
+              if (store.isDeleteTimer()) {
+                (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
+                return;
+              }
+              if (store.isAddTimer()) {
+                (0, import_timer_add.timerAdd)(decomposeName, timerSec, decomposeInputString);
+                return;
+              }
+              if (store.isExtendTimer() || store.isShortenTimer()) {
+                (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, decomposeName });
+                return;
+              }
+            }
           }
+          return;
         }
+        if (isAlexaTimerVisResetButton(state, id)) {
+          const timer = id.split(".")[2];
+          const timerObj = import_timer_data.timerObject.timer[timer];
+          this.setForeignState(
+            getAlexaTextToCommandState(store, timerObj),
+            buildTextCommand(timerObj),
+            false
+          );
+          (0, import_delete_timer.delTimer)(timer);
+        }
+      } catch (e) {
+        (0, import_logging.errorLogging)("Error in stateChange", e, this);
       }
     });
     this.subscribeForeignStates(store.pathAlexaSummary);
@@ -177,6 +186,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
+      (0, import_logging.errorLogging)("Error in onUnload", e, this);
       callback();
     }
   }
