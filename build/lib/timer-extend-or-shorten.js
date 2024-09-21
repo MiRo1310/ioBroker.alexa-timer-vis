@@ -18,14 +18,15 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_extend_or_shorten_exports = {};
 __export(timer_extend_or_shorten_exports, {
-  extendOrShortTimer: () => extendOrShortTimer
+  extendOrShortTimer: () => extendOrShortTimer,
+  extendTimer: () => extendTimer
 });
 module.exports = __toCommonJS(timer_extend_or_shorten_exports);
 var import_store = require("../store/store");
 var import_filter_info = require("./filter-info");
 var import_find_timer = require("./find-timer");
-var import_timer = require("./timer");
 var import_timer_data = require("./timer-data");
+var import_global = require("./global");
 const extendOrShortTimer = async ({
   voiceInput,
   decomposeName
@@ -49,9 +50,9 @@ const extendOrShortTimer = async ({
     }
     const timers = await (0, import_find_timer.findTimer)(extendTime, decomposeName, 1, voiceInput);
     if (timers.timer) {
-      (0, import_timer.extendTimer)(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
+      extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
     } else if (timers.oneOfMultiTimer) {
-      (0, import_timer.extendTimer)(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
+      extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
     _this.log.error("Error: " + JSON.stringify(e));
@@ -63,8 +64,22 @@ function getMultiplikatorForAddOrSub(store2) {
   }
   return 1;
 }
+function extendTimer(timers2, sec, addOrSub2, timerObject2) {
+  timers2.forEach((timer) => {
+    const timerSeconds = sec;
+    if (timerObject2.timerActive.timer[timer] == true) {
+      timerObject2.timer[timer].extendOrShortenTimer = true;
+      timerObject2.timer[timer].endTimeNumber += timerSeconds * 1e3 * addOrSub2;
+      timerObject2.timer[timer].endTimeString = (0, import_global.timeToString)(
+        timerObject2.timer[timer].endTimeNumber
+      );
+      timerObject2.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub2;
+    }
+  });
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  extendOrShortTimer
+  extendOrShortTimer,
+  extendTimer
 });
 //# sourceMappingURL=timer-extend-or-shorten.js.map

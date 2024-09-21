@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/lib/timer.ts"],
-  "sourcesContent": ["import { timeToString } from \"./global\";\nimport { TimerObject, Timers } from \"./timer-data\";\n\nexport function extendTimer(timers: string[], sec: number, addOrSub: number, timerObject: TimerObject): void {\n\ttimers.forEach((timer: string) => {\n\t\tconst timerSeconds = sec;\n\n\t\tif (timerObject.timerActive.timer[timer as keyof Timers] == true) {\n\t\t\ttimerObject.timer[timer as keyof Timers].extendOrShortenTimer = true;\n\n\t\t\ttimerObject.timer[timer as keyof Timers].endTimeNumber += timerSeconds * 1000 * addOrSub;\n\n\t\t\ttimerObject.timer[timer as keyof Timers].endTimeString = timeToString(\n\t\t\t\ttimerObject.timer[timer as keyof Timers].endTimeNumber,\n\t\t\t);\n\t\t\ttimerObject.timer[timer as keyof Timers].voiceInputAsSeconds += timerSeconds * addOrSub;\n\t\t}\n\t});\n}\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,oBAA6B;AAGtB,SAAS,YAAY,QAAkB,KAAa,UAAkB,aAAgC;AAC5G,SAAO,QAAQ,CAAC,UAAkB;AACjC,UAAM,eAAe;AAErB,QAAI,YAAY,YAAY,MAAM,KAAqB,KAAK,MAAM;AACjE,kBAAY,MAAM,KAAqB,EAAE,uBAAuB;AAEhE,kBAAY,MAAM,KAAqB,EAAE,iBAAiB,eAAe,MAAO;AAEhF,kBAAY,MAAM,KAAqB,EAAE,oBAAgB;AAAA,QACxD,YAAY,MAAM,KAAqB,EAAE;AAAA,MAC1C;AACA,kBAAY,MAAM,KAAqB,EAAE,uBAAuB,eAAe;AAAA,IAChF;AAAA,EACD,CAAC;AACF;",
-  "names": []
-}
