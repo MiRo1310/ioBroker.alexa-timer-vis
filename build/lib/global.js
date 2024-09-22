@@ -122,10 +122,7 @@ function isString(str) {
 }
 function isIobrokerValue(obj) {
   const result = obj && obj.val !== null && obj.val !== void 0;
-  if (result) {
-    return true;
-  }
-  return false;
+  return result ? true : false;
 }
 function sortArray(array) {
   return array.sort(function(a, b) {

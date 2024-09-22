@@ -127,10 +127,7 @@ export function isString(str: any): str is string {
 
 export function isIobrokerValue(obj: ioBroker.State | null | undefined): obj is ioBroker.State {
 	const result = obj && obj.val !== null && obj.val !== undefined;
-	if (result) {
-		return true;
-	}
-	return false;
+	return result ? true : false;
 }
 
 export function sortArray(array: any[]): any[] {

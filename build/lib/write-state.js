@@ -58,6 +58,7 @@ function writeState(unload) {
       _this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
       _this.setStateChanged(element + ".percent2", timer.percent2, true);
       _this.setStateChanged(element + ".percent", timer.percent, true);
+      _this.log.debug("Timer: " + JSON.stringify(timer));
       _this.setStateChanged(element + ".name", getTimerName(timer), true);
       _this.setStateChanged(element + ".json", getJson(timer), true);
       _this.setStateChanged("all_Timer.alive", alive, true);
@@ -75,7 +76,7 @@ function getTimerName(timer) {
   if (timer.alexaTimerName) {
     return (0, import_global.firstLetterToUpperCase)(timer.alexaTimerName + " Timer");
   }
-  if (timer.name && timer.name !== "Timer") {
+  if (timer.name !== "Timer") {
     return (0, import_global.firstLetterToUpperCase)(timer.name) + " Timer";
   }
   return "Timer";
