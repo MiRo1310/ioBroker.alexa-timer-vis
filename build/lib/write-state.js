@@ -42,15 +42,14 @@ async function writeState(unload) {
         (0, import_reset.resetValues)(timer, element);
         alive = false;
       }
+      if (!await _this.objectExists(element + ".name")) {
+        return;
+      }
       _this.setStateChanged(
         element + ".alive",
         import_timer_data.timerObject.timerActive.timer[element],
         true
       );
-      if (!await _this.objectExists(element + ".name")) {
-        _this.log.debug("Object does not exist: " + element + ".name");
-        return;
-      }
       _this.setStateChanged(element + ".hour", timer.hour, true);
       _this.setStateChanged(element + ".minute", timer.minute, true);
       _this.setStateChanged(element + ".second", timer.second, true);
@@ -62,7 +61,6 @@ async function writeState(unload) {
       _this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
       _this.setStateChanged(element + ".percent2", timer.percent2, true);
       _this.setStateChanged(element + ".percent", timer.percent, true);
-      _this.log.debug("Timer: " + JSON.stringify(timer));
       _this.setStateChanged(element + ".name", getTimerName(timer), true);
       _this.setStateChanged(element + ".json", getJson(timer), true);
       _this.setStateChanged("all_Timer.alive", alive, true);
