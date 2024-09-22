@@ -127,7 +127,7 @@ class AlexaTimerVis extends utils.Adapter {
               inputString: decomposeInputString
             } = await (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
             const { sameTime } = await (0, import_compare_serial.compareCreationTimeAndSerial)();
-            if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != timerSec.toString() || varInputContainsDelete) {
+            if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != (timerSec == null ? void 0 : timerSec.toString()) || varInputContainsDelete) {
               voiceInputOld = voiceInput;
               timeVoiceInputOld = timerSec == null ? void 0 : timerSec.toString();
               this.clearTimeout(debounceTimeout);

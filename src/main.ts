@@ -107,7 +107,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 							(!sameTime &&
 								isVoiceInputNotSameAsOld(voiceInput, voiceInputOld) &&
 								!doNothingByNotNotedElement &&
-								timeVoiceInputOld != timerSec.toString()) ||
+								timeVoiceInputOld != timerSec?.toString()) ||
 							varInputContainsDelete
 						) {
 							voiceInputOld = voiceInput;
