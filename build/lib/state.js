@@ -40,6 +40,7 @@ const createState = async (value) => {
         },
         native: {}
       });
+      _this.log.debug("Created all_Timer.alive");
       await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
         type: "state",
         common: {

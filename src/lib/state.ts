@@ -17,6 +17,7 @@ export const createState = async (value: number): Promise<void> => {
 				},
 				native: {},
 			});
+			_this.log.debug("Created all_Timer.alive");
 			await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
 				type: "state",
 				common: {

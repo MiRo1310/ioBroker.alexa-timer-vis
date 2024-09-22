@@ -27,7 +27,7 @@ var import_reset = require("./reset");
 var import_store = require("../store/store");
 var import_object = require("./object");
 var import_logging = require("./logging");
-function writeState(unload) {
+async function writeState(unload) {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   const timers = import_timer_data.timerObject.timerActive.timer;
@@ -47,6 +47,10 @@ function writeState(unload) {
         import_timer_data.timerObject.timerActive.timer[element],
         true
       );
+      if (!await _this.objectExists(element + ".name")) {
+        _this.log.debug("Object does not exist: " + element + ".name");
+        return;
+      }
       _this.setStateChanged(element + ".hour", timer.hour, true);
       _this.setStateChanged(element + ".minute", timer.minute, true);
       _this.setStateChanged(element + ".second", timer.second, true);
