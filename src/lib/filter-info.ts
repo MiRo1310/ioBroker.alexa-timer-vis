@@ -84,7 +84,7 @@ export const filterInfo = async (
 				if (timerString.endsWith("+")) timerString += "(";
 				timerString += number;
 				inputString += number;
-			} else if (!(store.isShortenTimer || store.isExtendTimer)) {
+			} else if (!(store.isShortenTimer() || store.isExtendTimer())) {
 				// Wenn nichts zutrifft, und der Wert auch nicht in extend und shorten gefunden wird,  kann es sich nur noch um den Namen des Timers handeln
 				name = element.trim();
 			}

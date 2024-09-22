@@ -102,7 +102,7 @@ function timeToString(milliseconds) {
 }
 function isAlexaSummaryStateChanged(state, id) {
   const store = (0, import_store.useStore)();
-  return state && isString(state.val) && state.val !== "" && id === store.pathAlexaSummary;
+  return state && isString(state.val) && state.val !== "" && id === store.pathAlexaStateToListenTo;
 }
 function isCreateNewTimer(voiceInput) {
   return (voiceInput.indexOf("timer") >= 0 || voiceInput.indexOf("stelle") >= 0 || voiceInput.indexOf("stell") >= 0) && voiceInput.indexOf("wecker") == -1;

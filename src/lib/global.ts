@@ -96,7 +96,7 @@ export function isAlexaSummaryStateChanged(
 	id: string,
 ): boolean | null | undefined {
 	const store = useStore();
-	return state && isString(state.val) && state.val !== "" && id === store.pathAlexaSummary;
+	return state && isString(state.val) && state.val !== "" && id === store.pathAlexaStateToListenTo;
 }
 
 export function isCreateNewTimer(voiceInput: string): boolean {

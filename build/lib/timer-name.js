@@ -54,8 +54,9 @@ const registerIdToGetTimerName = async (timerSelector) => {
       return;
     }
     const foreignId = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
-    store.lastTimers.push({ timerSerial: serial, timerSelector, id: foreignId });
+    store.lastTimer = { timerSerial: serial, timerSelector, id: foreignId };
     await _this.subscribeForeignStatesAsync(foreignId);
+    _this.log.debug(`Subscribed to ${foreignId}`);
   } catch (e) {
     (0, import_logging.errorLogging)("Error in registerIdToGetTimerName", e, _this);
   }

@@ -11,6 +11,7 @@ export function useStore(): Store {
 			valHourForZero: "",
 			valMinuteForZero: "",
 			valSecondForZero: "",
+			pathAlexaStateToListenTo: "",
 			pathAlexaSummary: "",
 			intervalMore60: 0,
 			intervalLess60: 0,
@@ -29,10 +30,10 @@ export function useStore(): Store {
 			interval: null,
 			deviceSerialNumber: null,
 			deviceName: null,
-			lastTimers: [],
+			lastTimer: { id: "", timerSelector: "", timerSerial: "" },
 			oldAlexaTimerObject: [],
 			getAlexaInstanceObject: () => {
-				const dataPointArray = store.pathAlexaSummary.split(".");
+				const dataPointArray = store.pathAlexaStateToListenTo.split(".");
 				return {
 					adapter: dataPointArray[0],
 					instance: dataPointArray[1],
@@ -62,6 +63,7 @@ export interface Store {
 	valHourForZero: string;
 	valMinuteForZero: string;
 	valSecondForZero: string;
+	pathAlexaStateToListenTo: string;
 	pathAlexaSummary: string;
 	intervalMore60: number;
 	intervalLess60: number;
@@ -80,7 +82,7 @@ export interface Store {
 	interval: ioBroker.Interval | undefined;
 	deviceSerialNumber: string | null;
 	deviceName: string | null;
-	lastTimers: LastTimer[];
+	lastTimer: LastTimer;
 	oldAlexaTimerObject: AlexaActiveTimerList[];
 	getAlexaInstanceObject: () => AlexaInstanceObject;
 	isAddTimer: () => boolean;

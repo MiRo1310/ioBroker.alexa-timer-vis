@@ -88,7 +88,7 @@ const filterInfo = async (input) => {
           timerString += "(";
         timerString += number;
         inputString += number;
-      } else if (!(store.isShortenTimer || store.isExtendTimer)) {
+      } else if (!(store.isShortenTimer() || store.isExtendTimer())) {
         name = element.trim();
       }
     });

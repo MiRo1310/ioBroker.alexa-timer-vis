@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/lib/get-notification-type.ts"],
-  "sourcesContent": ["import { useStore } from \"../store/store\";\nimport { isIobrokerValue } from \"./global\";\nimport { TimerCondition } from \"./timer-data\";\n\nexport const getNotificationType = async (): Promise<void> => {\n\tconst store = useStore();\n\tconst { _this } = store;\n\n\tconst link = `alexa2.${store.getAlexaInstanceObject().instance}.history.intent`;\n\tconst result = await _this.getForeignStateAsync(link);\n\tif (isIobrokerValue(result)) {\n\t\tstore.timerAction = result.val as TimerCondition;\n\t}\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,mBAAyB;AACzB,oBAAgC;AAGzB,MAAM,sBAAsB,YAA2B;AAC7D,QAAM,YAAQ,uBAAS;AACvB,QAAM,EAAE,MAAM,IAAI;AAElB,QAAM,OAAO,UAAU,MAAM,uBAAuB,EAAE,QAAQ;AAC9D,QAAM,SAAS,MAAM,MAAM,qBAAqB,IAAI;AACpD,UAAI,+BAAgB,MAAM,GAAG;AAC5B,UAAM,cAAc,OAAO;AAAA,EAC5B;AACD;",
-  "names": []
-}

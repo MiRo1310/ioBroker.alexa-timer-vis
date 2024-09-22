@@ -18,17 +18,25 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var delete_timer_exports = {};
 __export(delete_timer_exports, {
-  delTimer: () => delTimer
+  delTimer: () => delTimer,
+  removeTimerInLastTimers: () => removeTimerInLastTimers
 });
 module.exports = __toCommonJS(delete_timer_exports);
 var import_timer_data = require("./timer-data");
 var import_reset = require("./reset");
+var import_store = require("../store/store");
+const removeTimerInLastTimers = () => {
+  const store = (0, import_store.useStore)();
+  store.lastTimer = { id: "", timerSelector: "", timerSerial: "" };
+};
 const delTimer = (timer) => {
   (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer], timer);
   import_timer_data.timerObject.timerActive.timer[timer] = false;
+  removeTimerInLastTimers();
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  delTimer
+  delTimer,
+  removeTimerInLastTimers
 });
 //# sourceMappingURL=delete-timer.js.map
