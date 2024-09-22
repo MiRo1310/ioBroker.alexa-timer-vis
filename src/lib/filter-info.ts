@@ -19,7 +19,7 @@ export const filterInfo = async (
 				return;
 			}
 
-			if (timerObject.timerActive.condition.deleteTimer.indexOf(element) >= 0) {
+			if (store.isDeleteTimer()) {
 				deleteVal++;
 			} else if (data.stopAll.indexOf(element) >= 0) {
 				deleteVal++;
@@ -84,12 +84,7 @@ export const filterInfo = async (
 				if (timerString.endsWith("+")) timerString += "(";
 				timerString += number;
 				inputString += number;
-			} else if (
-				!(
-					timerObject.timerActive.condition.extendTimer.includes(element) ||
-					timerObject.timerActive.condition.shortenTimer.includes(element)
-				)
-			) {
+			} else if (!(store.isShortenTimer || store.isExtendTimer)) {
 				// Wenn nichts zutrifft, und der Wert auch nicht in extend und shorten gefunden wird,  kann es sich nur noch um den Namen des Timers handeln
 				name = element.trim();
 			}

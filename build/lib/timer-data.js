@@ -25,30 +25,6 @@ const timerObject = {
   timerActive: {
     timerCount: 0,
     // Anzahl aktiver Timer
-    condition: {
-      deleteTimer: [
-        "stopp",
-        "stoppe",
-        "anhalten",
-        "abbrechen",
-        "beenden",
-        "beende",
-        "reset",
-        "resete",
-        "l\xF6schen",
-        "l\xF6sche",
-        "l\xF6sch",
-        "stop",
-        "delete"
-      ],
-      // Vorselektion stoppen oder löschen
-      extendTimer: ["verl\xE4ngere", "verl\xE4nger"],
-      // Timer verlängern
-      shortenTimer: ["verk\xFCrze", "verk\xFCrzen"],
-      // Timer verkürzen
-      addTimer: ["stunde", "stunden", "minute", "minuten", "sekunde", "sekunden", "hour", "minute", "second"]
-      // Vorselektion hinzufügen
-    },
     data: {
       interval: 1e3,
       // Aktualisierungsinterval

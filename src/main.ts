@@ -1,11 +1,10 @@
 "use strict";
 import * as utils from "@iobroker/adapter-core";
 
-import { shouldDelete } from "./lib/check-voice-input";
 import { compareCreationTimeAndSerial } from "./lib/compare-serial";
 import { decomposeInputValue } from "./lib/decompose-input-value";
 import { delTimer } from "./lib/delete-timer";
-import { getToDo } from "./lib/get-todo";
+import { getNotificationType } from "./lib/get-notification-type";
 import {
 	doesAlexaSendAQuestion,
 	isAlexaSummaryStateChanged,
@@ -13,6 +12,7 @@ import {
 	isCreateNewTimer as isNewTimerAction,
 	isVoiceInputNotSameAsOld,
 } from "./lib/global";
+import { errorLogging } from "./lib/logging";
 import { resetAllTimerValuesAndState } from "./lib/reset";
 import { setAdapterStatusAndInitStateCreation } from "./lib/set-adapter-status";
 import { timerAdd } from "./lib/timer-add";
@@ -22,7 +22,6 @@ import { extendOrShortTimer } from "./lib/timer-extend-or-shorten";
 import { getNewTimerName } from "./lib/timer-name";
 import { writeState } from "./lib/write-state";
 import { Store, useStore } from "./store/store";
-import { errorLogging } from "./lib/logging";
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
@@ -92,8 +91,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 					}
 
 					if (isNewTimerAction(voiceInput)) {
-						const { varInputContainsDelete } = shouldDelete(voiceInput);
-
 						const {
 							name: decomposeName,
 							timerSec,
@@ -108,7 +105,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 								isVoiceInputNotSameAsOld(voiceInput, voiceInputOld) &&
 								!doNothingByNotNotedElement &&
 								timeVoiceInputOld != timerSec?.toString()) ||
-							varInputContainsDelete
+							store.isDeleteTimer()
 						) {
 							voiceInputOld = voiceInput;
 							timeVoiceInputOld = timerSec?.toString();
@@ -121,7 +118,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 							}, store.debounceTime * 1000);
 
 							doesAlexaSendAQuestion(voiceInput);
-							getToDo(voiceInput);
+							await getNotificationType();
 
 							if (store.isDeleteTimer()) {
 								timerDelete(decomposeName, timerSec, voiceInput, deleteVal);

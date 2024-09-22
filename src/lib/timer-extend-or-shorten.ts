@@ -46,7 +46,7 @@ export const extendOrShortTimer = async ({
 	}
 };
 function getMultiplikatorForAddOrSub(store: Store): 1 | -1 {
-	if (store.timerAction === "shortenTimer") {
+	if (store.isShortenTimer()) {
 		return -1;
 	}
 	return 1;

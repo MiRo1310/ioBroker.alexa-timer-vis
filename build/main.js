@@ -33,12 +33,12 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_check_voice_input = require("./lib/check-voice-input");
 var import_compare_serial = require("./lib/compare-serial");
 var import_decompose_input_value = require("./lib/decompose-input-value");
 var import_delete_timer = require("./lib/delete-timer");
-var import_get_todo = require("./lib/get-todo");
+var import_get_notification_type = require("./lib/get-notification-type");
 var import_global = require("./lib/global");
+var import_logging = require("./lib/logging");
 var import_reset = require("./lib/reset");
 var import_set_adapter_status = require("./lib/set-adapter-status");
 var import_timer_add = require("./lib/timer-add");
@@ -48,7 +48,6 @@ var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
 var import_timer_name = require("./lib/timer-name");
 var import_write_state = require("./lib/write-state");
 var import_store = require("./store/store");
-var import_logging = require("./lib/logging");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -119,7 +118,6 @@ class AlexaTimerVis extends utils.Adapter {
             doNothingByNotNotedElement = true;
           }
           if ((0, import_global.isCreateNewTimer)(voiceInput)) {
-            const { varInputContainsDelete } = (0, import_check_voice_input.shouldDelete)(voiceInput);
             const {
               name: decomposeName,
               timerSec,
@@ -127,7 +125,7 @@ class AlexaTimerVis extends utils.Adapter {
               inputString: decomposeInputString
             } = await (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
             const { sameTime } = await (0, import_compare_serial.compareCreationTimeAndSerial)();
-            if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != (timerSec == null ? void 0 : timerSec.toString()) || varInputContainsDelete) {
+            if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != (timerSec == null ? void 0 : timerSec.toString()) || store.isDeleteTimer()) {
               voiceInputOld = voiceInput;
               timeVoiceInputOld = timerSec == null ? void 0 : timerSec.toString();
               this.clearTimeout(debounceTimeout);
@@ -136,7 +134,7 @@ class AlexaTimerVis extends utils.Adapter {
                 timeVoiceInputOld = null;
               }, store.debounceTime * 1e3);
               (0, import_global.doesAlexaSendAQuestion)(voiceInput);
-              (0, import_get_todo.getToDo)(voiceInput);
+              await (0, import_get_notification_type.getNotificationType)();
               if (store.isDeleteTimer()) {
                 (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
                 return;

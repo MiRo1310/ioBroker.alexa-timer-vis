@@ -1,5 +1,6 @@
 import AlexaTimerVis from "../main";
 import { AlexaActiveTimerList } from "../types";
+import { TimerCondition } from "../lib/timer-data";
 
 let store: Store;
 export function useStore(): Store {
@@ -39,16 +40,16 @@ export function useStore(): Store {
 				};
 			},
 			isAddTimer: () => {
-				return store.timerAction === "addTimer";
+				return store.timerAction === "SetNotificationIntent";
 			},
 			isShortenTimer: () => {
-				return store.timerAction === "shortenTimer";
+				return store.timerAction === "ShortenNotificationIntent";
 			},
 			isExtendTimer: () => {
-				return store.timerAction === "extendTimer";
+				return store.timerAction === "ExtendNotificationIntent";
 			},
 			isDeleteTimer: () => {
-				return store.timerAction === "deleteTimer";
+				return store.timerAction === "RemoveNotificationIntent";
 			},
 		};
 	}
@@ -74,7 +75,7 @@ export interface Store {
 	unitSecond1: string;
 	unitSecond2: string;
 	unitSecond3: string;
-	timerAction: "shortenTimer" | "extendTimer" | "deleteTimer" | "addTimer" | null;
+	timerAction: TimerCondition | null;
 	questionAlexa: boolean;
 	interval: ioBroker.Interval | undefined;
 	deviceSerialNumber: string | null;

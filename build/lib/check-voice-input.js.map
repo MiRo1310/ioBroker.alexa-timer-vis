@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/lib/check-voice-input.ts"],
-  "sourcesContent": ["import { timerObject } from \"./timer-data\";\n\nexport const shouldDelete = (voiceInput: string): { varInputContainsDelete: boolean } => {\n\tfor (const element of timerObject.timerActive.condition.deleteTimer) {\n\t\tif (voiceInput.includes(element)) {\n\t\t\treturn { varInputContainsDelete: true };\n\t\t}\n\t}\n\n\treturn { varInputContainsDelete: false };\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAErB,MAAM,eAAe,CAAC,eAA4D;AACxF,aAAW,WAAW,8BAAY,YAAY,UAAU,aAAa;AACpE,QAAI,WAAW,SAAS,OAAO,GAAG;AACjC,aAAO,EAAE,wBAAwB,KAAK;AAAA,IACvC;AAAA,EACD;AAEA,SAAO,EAAE,wBAAwB,MAAM;AACxC;",
-  "names": []
-}

@@ -37,7 +37,7 @@ const filterInfo = async (input) => {
       if (data.notNoted.indexOf(element) >= 0) {
         return;
       }
-      if (import_timer_data.timerObject.timerActive.condition.deleteTimer.indexOf(element) >= 0) {
+      if (store.isDeleteTimer()) {
         deleteVal++;
       } else if (data.stopAll.indexOf(element) >= 0) {
         deleteVal++;
@@ -88,7 +88,7 @@ const filterInfo = async (input) => {
           timerString += "(";
         timerString += number;
         inputString += number;
-      } else if (!(import_timer_data.timerObject.timerActive.condition.extendTimer.includes(element) || import_timer_data.timerObject.timerActive.condition.shortenTimer.includes(element))) {
+      } else if (!(store.isShortenTimer || store.isExtendTimer)) {
         name = element.trim();
       }
     });

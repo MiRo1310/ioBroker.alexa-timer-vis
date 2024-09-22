@@ -59,16 +59,16 @@ function useStore() {
         };
       },
       isAddTimer: () => {
-        return store.timerAction === "addTimer";
+        return store.timerAction === "SetNotificationIntent";
       },
       isShortenTimer: () => {
-        return store.timerAction === "shortenTimer";
+        return store.timerAction === "ShortenNotificationIntent";
       },
       isExtendTimer: () => {
-        return store.timerAction === "extendTimer";
+        return store.timerAction === "ExtendNotificationIntent";
       },
       isDeleteTimer: () => {
-        return store.timerAction === "deleteTimer";
+        return store.timerAction === "RemoveNotificationIntent";
       }
     };
   }

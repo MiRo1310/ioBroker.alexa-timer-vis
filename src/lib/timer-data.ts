@@ -1,9 +1,8 @@
-export interface TimerCondition {
-	deleteTimer: string[];
-	extendTimer: string[];
-	shortenTimer: string[];
-	addTimer: string[];
-}
+export type TimerCondition =
+	| "ShortenNotificationIntent"
+	| "ExtendNotificationIntent"
+	| "RemoveNotificationIntent"
+	| "SetNotificationIntent";
 
 export interface Timer {
 	hour: string;
@@ -40,7 +39,6 @@ export interface Timers {
 export interface TimerObject {
 	timerActive: {
 		timerCount: number;
-		condition: TimerCondition;
 		data: {
 			interval: number;
 			notNoted: string[];
@@ -148,26 +146,7 @@ export type TimerSelector = keyof Timers | undefined;
 export const timerObject: TimerObject = {
 	timerActive: {
 		timerCount: 0, // Anzahl aktiver Timer
-		condition: {
-			deleteTimer: [
-				"stopp",
-				"stoppe",
-				"anhalten",
-				"abbrechen",
-				"beenden",
-				"beende",
-				"reset",
-				"resete",
-				"löschen",
-				"lösche",
-				"lösch",
-				"stop",
-				"delete",
-			], // Vorselektion stoppen oder löschen
-			extendTimer: ["verlängere", "verlänger"], // Timer verlängern
-			shortenTimer: ["verkürze", "verkürzen"], // Timer verkürzen
-			addTimer: ["stunde", "stunden", "minute", "minuten", "sekunde", "sekunden", "hour", "minute", "second"], // Vorselektion hinzufügen
-		},
+
 		data: {
 			interval: 1000, // Aktualisierungsinterval
 			notNoted: [

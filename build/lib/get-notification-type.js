@@ -16,22 +16,24 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var check_voice_input_exports = {};
-__export(check_voice_input_exports, {
-  shouldDelete: () => shouldDelete
+var get_notification_type_exports = {};
+__export(get_notification_type_exports, {
+  getNotificationType: () => getNotificationType
 });
-module.exports = __toCommonJS(check_voice_input_exports);
-var import_timer_data = require("./timer-data");
-const shouldDelete = (voiceInput) => {
-  for (const element of import_timer_data.timerObject.timerActive.condition.deleteTimer) {
-    if (voiceInput.includes(element)) {
-      return { varInputContainsDelete: true };
-    }
+module.exports = __toCommonJS(get_notification_type_exports);
+var import_store = require("../store/store");
+var import_global = require("./global");
+const getNotificationType = async () => {
+  const store = (0, import_store.useStore)();
+  const { _this } = store;
+  const link = `alexa2.${store.getAlexaInstanceObject().instance}.history.intent`;
+  const result = await _this.getForeignStateAsync(link);
+  if ((0, import_global.isIobrokerValue)(result)) {
+    store.timerAction = result.val;
   }
-  return { varInputContainsDelete: false };
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  shouldDelete
+  getNotificationType
 });
-//# sourceMappingURL=check-voice-input.js.map
+//# sourceMappingURL=get-notification-type.js.map
