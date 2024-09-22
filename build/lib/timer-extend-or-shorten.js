@@ -18,14 +18,16 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_extend_or_shorten_exports = {};
 __export(timer_extend_or_shorten_exports, {
-  extendOrShortTimer: () => extendOrShortTimer
+  extendOrShortTimer: () => extendOrShortTimer,
+  extendTimer: () => extendTimer
 });
 module.exports = __toCommonJS(timer_extend_or_shorten_exports);
 var import_store = require("../store/store");
 var import_filter_info = require("./filter-info");
 var import_find_timer = require("./find-timer");
-var import_timer = require("./timer");
 var import_timer_data = require("./timer-data");
+var import_global = require("./global");
+var import_logging = require("./logging");
 const extendOrShortTimer = async ({
   voiceInput,
   decomposeName
@@ -34,37 +36,51 @@ const extendOrShortTimer = async ({
   const _this = store._this;
   try {
     const addOrSub = getMultiplikatorForAddOrSub(store);
-    let firstPartOfValue, valueExtend, extendString, extendString2, extendTime, extendTime2;
+    let firstPartOfValue, valueExtend;
+    let extendTime = 0;
+    let extendTime2 = 0;
     if (voiceInput.includes("um")) {
       firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf("um")).split(" ");
       valueExtend = voiceInput.slice(voiceInput.indexOf("um") + 2).split(" ");
-      const res = await (0, import_filter_info.filterInfo)(firstPartOfValue);
-      extendString = res[0];
-      if (typeof extendString == "string")
-        extendTime = eval(extendString);
-      const res2 = await (0, import_filter_info.filterInfo)(valueExtend);
-      extendString2 = res2[0];
-      if (typeof extendString2 == "string")
-        extendTime2 = eval(extendString2);
+      const { timerString } = await (0, import_filter_info.filterInfo)(firstPartOfValue);
+      extendTime = eval(timerString);
+      const { timerString: string2 } = await (0, import_filter_info.filterInfo)(valueExtend);
+      extendTime2 = eval(string2);
     }
     const timers = await (0, import_find_timer.findTimer)(extendTime, decomposeName, 1, voiceInput);
     if (timers.timer) {
-      (0, import_timer.extendTimer)(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
-    } else if (timers.oneOfMultiTimer) {
-      (0, import_timer.extendTimer)(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
+      extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
+      return;
+    }
+    if (timers.oneOfMultiTimer) {
+      extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    _this.log.error("Error: " + JSON.stringify(e));
+    (0, import_logging.errorLogging)("Error in extendOrShortTimer", e, _this);
   }
 };
 function getMultiplikatorForAddOrSub(store2) {
-  if (store2.timerAction === "shortenTimer") {
+  if (store2.isShortenTimer()) {
     return -1;
   }
   return 1;
 }
+function extendTimer(timers2, sec, addOrSub2, timerObject2) {
+  timers2.forEach((timer) => {
+    const timerSeconds = sec;
+    if (timerObject2.timerActive.timer[timer] == true) {
+      timerObject2.timer[timer].extendOrShortenTimer = true;
+      timerObject2.timer[timer].endTimeNumber += timerSeconds * 1e3 * addOrSub2;
+      timerObject2.timer[timer].endTimeString = (0, import_global.timeToString)(
+        timerObject2.timer[timer].endTimeNumber
+      );
+      timerObject2.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub2;
+    }
+  });
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  extendOrShortTimer
+  extendOrShortTimer,
+  extendTimer
 });
 //# sourceMappingURL=timer-extend-or-shorten.js.map

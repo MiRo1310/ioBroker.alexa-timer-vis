@@ -23,6 +23,7 @@ __export(compare_serial_exports, {
 module.exports = __toCommonJS(compare_serial_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
+var import_logging = require("./logging");
 let oldCreationTime;
 let oldSerial;
 const compareCreationTimeAndSerial = async () => {
@@ -47,7 +48,7 @@ const compareCreationTimeAndSerial = async () => {
     }
     return { sameTime: isSameTime, sameSerial: isSameSerial };
   } catch (error) {
-    _this.log.error("Error in compareCreationTimeAndSerial: " + JSON.stringify(error));
+    (0, import_logging.errorLogging)("Error in compareCreationTimeAndSerial", error, _this);
     return { sameTime: false, sameSerial: false };
   }
 };

@@ -1,3 +1,4 @@
+import { error } from "console";
 import { useStore } from "../store/store";
 export const createState = async (value: number): Promise<void> => {
 	const store = useStore();
@@ -11,11 +12,12 @@ export const createState = async (value: number): Promise<void> => {
 					type: "boolean",
 					role: "indicator",
 					read: true,
-					write: true,
+					write: false,
 					def: false,
 				},
 				native: {},
 			});
+			_this.log.debug("Created all_Timer.alive");
 			await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
 				type: "state",
 				common: {
@@ -23,7 +25,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "number",
 					role: "indicator",
 					read: true,
-					write: true,
+					write: false,
 					def: 0,
 				},
 				native: {},
@@ -35,7 +37,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "number",
 					role: "indicator",
 					read: true,
-					write: true,
+					write: false,
 					def: 0,
 				},
 				native: {},
@@ -48,7 +50,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "boolean",
 					role: "indicator",
 					read: true,
-					write: true,
+					write: false,
 					def: false,
 				},
 				native: {},
@@ -60,7 +62,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "",
 				},
 				native: {},
@@ -72,7 +74,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "",
 				},
 				native: {},
@@ -84,7 +86,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "",
 				},
 				native: {},
@@ -96,7 +98,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "00:00:00 Std",
 				},
 				native: {},
@@ -108,7 +110,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "",
 				},
 				native: {},
@@ -120,7 +122,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "Timer",
 				},
 				native: {},
@@ -132,7 +134,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "00:00:00",
 				},
 				native: {},
@@ -144,7 +146,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "00:00:00",
 				},
 				native: {},
@@ -156,7 +158,7 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
 					def: "",
 				},
 				native: {},
@@ -167,7 +169,7 @@ export const createState = async (value: number): Promise<void> => {
 					name: "Reset Timer",
 					type: "boolean",
 					role: "button",
-					read: false,
+					read: true,
 					write: true,
 					def: false,
 				},
@@ -180,7 +182,19 @@ export const createState = async (value: number): Promise<void> => {
 					type: "string",
 					role: "value",
 					read: true,
-					write: true,
+					write: false,
+					def: "",
+				},
+				native: {},
+			});
+			await _this.setObjectNotExistsAsync("timer" + i + ".json", {
+				type: "state",
+				common: {
+					name: "json",
+					type: "string",
+					role: "json",
+					read: true,
+					write: false,
 					def: "",
 				},
 				native: {},
@@ -191,6 +205,6 @@ export const createState = async (value: number): Promise<void> => {
 			_this.subscribeForeignStates(id);
 		}
 	} catch (e: any) {
-		_this.log.error(e);
+		error("Error in createState: " + JSON.stringify(e));
 	}
 };

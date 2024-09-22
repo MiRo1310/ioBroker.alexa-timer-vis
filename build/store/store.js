@@ -30,6 +30,7 @@ function useStore() {
       valHourForZero: "",
       valMinuteForZero: "",
       valSecondForZero: "",
+      pathAlexaStateToListenTo: "",
       pathAlexaSummary: "",
       intervalMore60: 0,
       intervalLess60: 0,
@@ -48,10 +49,10 @@ function useStore() {
       interval: null,
       deviceSerialNumber: null,
       deviceName: null,
-      lastTimers: [],
+      lastTimer: { id: "", timerSelector: "", timerSerial: "" },
       oldAlexaTimerObject: [],
       getAlexaInstanceObject: () => {
-        const dataPointArray = store.pathAlexaSummary.split(".");
+        const dataPointArray = store.pathAlexaStateToListenTo.split(".");
         return {
           adapter: dataPointArray[0],
           instance: dataPointArray[1],
@@ -59,16 +60,16 @@ function useStore() {
         };
       },
       isAddTimer: () => {
-        return store.timerAction === "addTimer";
+        return store.timerAction === "SetNotificationIntent";
       },
       isShortenTimer: () => {
-        return store.timerAction === "shortenTimer";
+        return store.timerAction === "ShortenNotificationIntent";
       },
       isExtendTimer: () => {
-        return store.timerAction === "extendTimer";
+        return store.timerAction === "ExtendNotificationIntent";
       },
       isDeleteTimer: () => {
-        return store.timerAction === "deleteTimer";
+        return store.timerAction === "RemoveNotificationIntent";
       }
     };
   }

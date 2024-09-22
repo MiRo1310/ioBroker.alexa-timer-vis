@@ -1,5 +1,6 @@
 import AlexaTimerVis from "../main";
 import { AlexaActiveTimerList } from "../types";
+import { TimerCondition } from "../lib/timer-data";
 
 let store: Store;
 export function useStore(): Store {
@@ -10,6 +11,7 @@ export function useStore(): Store {
 			valHourForZero: "",
 			valMinuteForZero: "",
 			valSecondForZero: "",
+			pathAlexaStateToListenTo: "",
 			pathAlexaSummary: "",
 			intervalMore60: 0,
 			intervalLess60: 0,
@@ -28,10 +30,10 @@ export function useStore(): Store {
 			interval: null,
 			deviceSerialNumber: null,
 			deviceName: null,
-			lastTimers: [],
+			lastTimer: { id: "", timerSelector: "", timerSerial: "" },
 			oldAlexaTimerObject: [],
 			getAlexaInstanceObject: () => {
-				const dataPointArray = store.pathAlexaSummary.split(".");
+				const dataPointArray = store.pathAlexaStateToListenTo.split(".");
 				return {
 					adapter: dataPointArray[0],
 					instance: dataPointArray[1],
@@ -39,16 +41,16 @@ export function useStore(): Store {
 				};
 			},
 			isAddTimer: () => {
-				return store.timerAction === "addTimer";
+				return store.timerAction === "SetNotificationIntent";
 			},
 			isShortenTimer: () => {
-				return store.timerAction === "shortenTimer";
+				return store.timerAction === "ShortenNotificationIntent";
 			},
 			isExtendTimer: () => {
-				return store.timerAction === "extendTimer";
+				return store.timerAction === "ExtendNotificationIntent";
 			},
 			isDeleteTimer: () => {
-				return store.timerAction === "deleteTimer";
+				return store.timerAction === "RemoveNotificationIntent";
 			},
 		};
 	}
@@ -61,6 +63,7 @@ export interface Store {
 	valHourForZero: string;
 	valMinuteForZero: string;
 	valSecondForZero: string;
+	pathAlexaStateToListenTo: string;
 	pathAlexaSummary: string;
 	intervalMore60: number;
 	intervalLess60: number;
@@ -74,12 +77,12 @@ export interface Store {
 	unitSecond1: string;
 	unitSecond2: string;
 	unitSecond3: string;
-	timerAction: "shortenTimer" | "extendTimer" | "deleteTimer" | "addTimer" | null;
+	timerAction: TimerCondition | null;
 	questionAlexa: boolean;
 	interval: ioBroker.Interval | undefined;
 	deviceSerialNumber: string | null;
 	deviceName: string | null;
-	lastTimers: LastTimer[];
+	lastTimer: LastTimer;
 	oldAlexaTimerObject: AlexaActiveTimerList[];
 	getAlexaInstanceObject: () => AlexaInstanceObject;
 	isAddTimer: () => boolean;

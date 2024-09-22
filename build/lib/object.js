@@ -16,22 +16,16 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var check_voice_input_exports = {};
-__export(check_voice_input_exports, {
-  shouldDelete: () => shouldDelete
+var object_exports = {};
+__export(object_exports, {
+  deepCopy: () => deepCopy
 });
-module.exports = __toCommonJS(check_voice_input_exports);
-var import_timer_data = require("./timer-data");
-const shouldDelete = (voiceInput) => {
-  for (const element of import_timer_data.timerObject.timerActive.condition.deleteTimer) {
-    if (voiceInput.includes(element)) {
-      return { varInputContainsDelete: true };
-    }
-  }
-  return { varInputContainsDelete: false };
+module.exports = __toCommonJS(object_exports);
+const deepCopy = (obj) => {
+  return JSON.parse(JSON.stringify(obj));
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  shouldDelete
+  deepCopy
 });
-//# sourceMappingURL=check-voice-input.js.map
+//# sourceMappingURL=object.js.map

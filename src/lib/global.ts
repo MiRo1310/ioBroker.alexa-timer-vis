@@ -91,9 +91,12 @@ export function timeToString(milliseconds: number): string {
 	return date_string.split(" ").slice(4, 5).toString();
 }
 
-export function isStateChanged(state: ioBroker.State | null | undefined, id: string): boolean | null | undefined {
+export function isAlexaSummaryStateChanged(
+	state: ioBroker.State | null | undefined,
+	id: string,
+): boolean | null | undefined {
 	const store = useStore();
-	return state && typeof state.val === "string" && state.val != "" && id == store.pathAlexaSummary;
+	return state && isString(state.val) && state.val !== "" && id === store.pathAlexaStateToListenTo;
 }
 
 export function isCreateNewTimer(voiceInput: string): boolean {
@@ -124,10 +127,7 @@ export function isString(str: any): str is string {
 
 export function isIobrokerValue(obj: ioBroker.State | null | undefined): obj is ioBroker.State {
 	const result = obj && obj.val !== null && obj.val !== undefined;
-	if (result) {
-		return true;
-	}
-	return false;
+	return result ? true : false;
 }
 
 export function sortArray(array: any[]): any[] {

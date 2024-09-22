@@ -1,5 +1,6 @@
 import AlexaTimerVis from "../main";
 import { useStore } from "../store/store";
+import { errorLogging } from "./logging";
 import { Timer, TimerSelector, timerObject } from "./timer-data";
 import { writeState } from "./write-state";
 
@@ -11,22 +12,26 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 		timer.hour = store.valHourForZero || "";
 		timer.minute = store.valMinuteForZero || "";
 		timer.second = store.valSecondForZero || "";
-		timer.string_Timer = "00:00:00 h";
-		timer.string_2_Timer = "";
-		timer.onlySec = 0;
-		timer.timeLeftSec = 0;
+		timer.stringTimer = "00:00:00 h";
+		timer.stringTimer2 = "";
+		timer.voiceInputAsSeconds = 0;
+		timer.remainingTimeInSeconds = 0;
 		timer.index = 0;
-		timer.name = "Timer";
-		timer.nameFromAlexa = "";
-		timer.start_Time = "00:00:00";
-		timer.end_Time = "00:00:00";
+		timer.name = "";
+		timer.alexaTimerName = "";
+		timer.startTimeString = "00:00:00";
+		timer.endTimeString = "00:00:00";
 		timer.inputDevice = "";
 		timer.timerInterval = 0;
 		timer.lengthTimer = "";
 		timer.percent = 0;
 		timer.percent2 = 0;
-		timer.changeValue = false;
+		timer.extendOrShortenTimer = false;
 		timer.id = "";
+		timer.serialNumber = "";
+		timer.inputString = "";
+		timer.startTimeNumber = 0;
+		timer.endTimeNumber = 0;
 
 		_this.setObjectAsync("alexa-timer-vis.0." + index, {
 			type: "device",
@@ -34,8 +39,7 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 			native: {},
 		});
 	} catch (e: any) {
-		_this.log.error("Error in resetValues: " + JSON.stringify(e));
-		_this.log.error(JSON.stringify(e.stack));
+		errorLogging("Error in resetValues", e, _this);
 	}
 };
 

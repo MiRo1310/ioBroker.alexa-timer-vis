@@ -27,6 +27,7 @@ var import_global = require("./global");
 var import_get_input_device = require("./get-input-device");
 var import_interval = require("./interval");
 var import_timer_name = require("./timer-name");
+var import_logging = require("./logging");
 const startTimer = async (sec, name, inputString) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -40,7 +41,7 @@ const startTimer = async (sec, name, inputString) => {
     const timerMilliseconds = sec * 1e3;
     const endTimeMilliseconds = startTimer2 + timerMilliseconds;
     const endTimeString = (0, import_global.timeToString)(endTimeMilliseconds);
-    saveToObject(timerSelector, endTimeMilliseconds, endTimeString, start_Time);
+    saveToObject(timerSelector, endTimeMilliseconds, endTimeString, start_Time, startTimer2);
     await setDeviceNameInStateName(timerSelector, _this, store);
     const timer = import_timer_data.timerObject.timer[timerSelector];
     if (isMoreThanAMinute(sec)) {
@@ -50,8 +51,7 @@ const startTimer = async (sec, name, inputString) => {
     import_timer_data.timerObject.timer.timer1.timerInterval = store.intervalLess60 * 1e3;
     (0, import_interval.interval)(sec, timerSelector, inputString, name, timer, store.intervalLess60 * 1e3, true);
   } catch (e) {
-    _this.log.error("Error in startTimer: " + JSON.stringify(e));
-    _this.log.error("Error in startTimer: " + JSON.stringify(e.stack));
+    (0, import_logging.errorLogging)("Error in startTimer", e, _this);
   }
 };
 function getStartTimerValue(jsonAlexa) {
@@ -81,11 +81,12 @@ async function setDeviceNameInStateName(timerBlock, _this, store) {
 function isMoreThanAMinute(sec) {
   return sec > 60;
 }
-function saveToObject(timerBlock, endTimeNumber, endTimeString, start_Time) {
+function saveToObject(timerBlock, endTimeNumber, endTimeString, start_Time, startTimeNumber) {
   if (timerBlock) {
-    import_timer_data.timerObject.timer[timerBlock].endTime = endTimeNumber;
-    import_timer_data.timerObject.timer[timerBlock].end_Time = endTimeString;
-    import_timer_data.timerObject.timer[timerBlock].start_Time = start_Time;
+    import_timer_data.timerObject.timer[timerBlock].endTimeNumber = endTimeNumber;
+    import_timer_data.timerObject.timer[timerBlock].endTimeString = endTimeString;
+    import_timer_data.timerObject.timer[timerBlock].startTimeString = start_Time;
+    import_timer_data.timerObject.timer[timerBlock].startTimeNumber = startTimeNumber;
   }
 }
 // Annotate the CommonJS export names for ESM import in node:

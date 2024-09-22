@@ -33,21 +33,20 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_global = require("./lib/global");
-var import_timer_data = require("./lib/timer-data");
-var import_store = require("./store/store");
-var import_set_adapter_status = require("./lib/set-adapter-status");
-var import_get_todo = require("./lib/get-todo");
-var import_delete_timer = require("./lib/delete-timer");
-var import_decompose_input_value = require("./lib/decompose-input-value");
 var import_compare_serial = require("./lib/compare-serial");
-var import_check_voice_input = require("./lib/check-voice-input");
-var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
-var import_timer_delete = require("./lib/timer-delete");
-var import_timer_add = require("./lib/timer-add");
-var import_write_state = require("./lib/write-state");
-var import_timer_name = require("./lib/timer-name");
+var import_decompose_input_value = require("./lib/decompose-input-value");
+var import_delete_timer = require("./lib/delete-timer");
+var import_global = require("./lib/global");
+var import_logging = require("./lib/logging");
 var import_reset = require("./lib/reset");
+var import_set_adapter_status = require("./lib/set-adapter-status");
+var import_timer_add = require("./lib/timer-add");
+var import_timer_data = require("./lib/timer-data");
+var import_timer_delete = require("./lib/timer-delete");
+var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
+var import_timer_name = require("./lib/timer-name");
+var import_write_state = require("./lib/write-state");
+var import_store = require("./store/store");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -71,6 +70,7 @@ class AlexaTimerVis extends utils.Adapter {
     const store = (0, import_store.useStore)();
     store._this = this;
     this.setState("info.connection", false, true);
+    store.pathAlexaStateToListenTo = `${this.config.alexa}.History.intent`;
     store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
     store.intervalMore60 = this.config.intervall1;
     store.intervalLess60 = this.config.intervall2;
@@ -93,15 +93,31 @@ class AlexaTimerVis extends utils.Adapter {
     let voiceInput;
     let timeVoiceInputOld = null;
     this.on("stateChange", async (id, state) => {
-      checkForTimerName(this, id);
-      if ((0, import_global.isStateChanged)(state, id)) {
-        let doNothingByNotNotedElement = false;
-        voiceInput = state == null ? void 0 : state.val;
-        if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
-          doNothingByNotNotedElement = true;
-        }
-        if ((0, import_global.isCreateNewTimer)(voiceInput)) {
-          const { varInputContainsDelete } = (0, import_check_voice_input.shouldDelete)(voiceInput);
+      try {
+        let checkForTimerName = function(_this, id2) {
+          if (!(0, import_global.isIobrokerValue)(state) || state.val === "[]") {
+            return;
+          }
+          const lastTimer = store.lastTimer;
+          if (lastTimer.id === id2) {
+            (0, import_delete_timer.removeTimerInLastTimers)();
+            (0, import_timer_name.getNewTimerName)(state, lastTimer.timerSelector);
+            _this.unsubscribeForeignStatesAsync(id2);
+          }
+        };
+        checkForTimerName(this, id);
+        if ((0, import_global.isAlexaSummaryStateChanged)(state, id)) {
+          let doNothingByNotNotedElement = false;
+          if ((0, import_global.isIobrokerValue)(state)) {
+            store.timerAction = state.val;
+          }
+          const res = await this.getForeignStateAsync(store.pathAlexaSummary);
+          if ((0, import_global.isIobrokerValue)(res)) {
+            voiceInput = res == null ? void 0 : res.val;
+          }
+          if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
+            doNothingByNotNotedElement = true;
+          }
           const {
             name: decomposeName,
             timerSec,
@@ -109,17 +125,15 @@ class AlexaTimerVis extends utils.Adapter {
             inputString: decomposeInputString
           } = await (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
           const { sameTime } = await (0, import_compare_serial.compareCreationTimeAndSerial)();
-          if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != timerSec.toString() || varInputContainsDelete) {
+          if (!sameTime && (0, import_global.isVoiceInputNotSameAsOld)(voiceInput, voiceInputOld) && !doNothingByNotNotedElement && timeVoiceInputOld != (timerSec == null ? void 0 : timerSec.toString()) || store.isDeleteTimer()) {
             voiceInputOld = voiceInput;
-            timeVoiceInputOld = timerSec.toString();
+            timeVoiceInputOld = timerSec == null ? void 0 : timerSec.toString();
             this.clearTimeout(debounceTimeout);
             debounceTimeout = this.setTimeout(() => {
               voiceInputOld = null;
               timeVoiceInputOld = null;
-              this.log.debug("Reset ValueOld");
             }, store.debounceTime * 1e3);
             (0, import_global.doesAlexaSendAQuestion)(voiceInput);
-            (0, import_get_todo.getToDo)(voiceInput);
             if (store.isDeleteTimer()) {
               (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
               return;
@@ -133,46 +147,23 @@ class AlexaTimerVis extends utils.Adapter {
               return;
             }
           }
+          return;
         }
-      } else if ((0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset")) {
-        try {
+        if (isAlexaTimerVisResetButton(state, id)) {
           const timer = id.split(".")[2];
-          const timerOb = import_timer_data.timerObject.timer[timer];
-          if ((timerOb == null ? void 0 : timerOb.serialNumber) != void 0) {
-            const alexaCommandState = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerOb.serialNumber}.Commands.textCommand`;
-            let name = "";
-            if (timerOb.name != "Timer") {
-              name = timerOb.name;
-            }
-            (0, import_delete_timer.delTimer)(timer);
-            this.setForeignState(
-              alexaCommandState,
-              `l\xF6sche  ${timerOb.nameFromAlexa || name || timerOb.inputString} Timer`,
-              false
-            );
-          }
-        } catch (e) {
-          this.log.error("Serial Error: " + JSON.stringify(e));
+          const timerObj = import_timer_data.timerObject.timer[timer];
+          this.setForeignState(
+            getAlexaTextToCommandState(store, timerObj),
+            buildTextCommand(timerObj),
+            false
+          );
+          (0, import_delete_timer.delTimer)(timer);
         }
-      }
-      function checkForTimerName(_this, id2) {
-        let timerSelector = "";
-        if (store.lastTimers.find((el) => {
-          if (el.id === id2) {
-            timerSelector = el.timerSelector;
-            return true;
-          }
-          return false;
-        })) {
-          if ((0, import_global.isIobrokerValue)(state) && state.val !== "[]") {
-            (0, import_timer_name.getNewTimerName)(state, timerSelector);
-            _this.unsubscribeForeignStatesAsync(id2);
-          }
-          store.lastTimers = store.lastTimers.filter((el) => el.id !== id2);
-        }
+      } catch (e) {
+        (0, import_logging.errorLogging)("Error in stateChange", e, this);
       }
     });
-    this.subscribeForeignStates(store.pathAlexaSummary);
+    this.subscribeForeignStates(store.pathAlexaStateToListenTo);
   }
   onUnload(callback) {
     const store = (0, import_store.useStore)();
@@ -191,6 +182,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
+      (0, import_logging.errorLogging)("Error in onUnload", e, this);
       callback();
     }
   }
@@ -200,6 +192,15 @@ if (require.main !== module) {
   adapter = (options) => new AlexaTimerVis(options);
 } else {
   (() => new AlexaTimerVis())();
+}
+function getAlexaTextToCommandState(store, timerObj) {
+  return `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerObj.serialNumber}.Commands.textCommand`;
+}
+function isAlexaTimerVisResetButton(state, id) {
+  return (0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset") ? true : false;
+}
+function buildTextCommand(timerOb) {
+  return `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

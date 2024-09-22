@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/lib/timer.ts"],
-  "sourcesContent": ["import { timeToString } from \"./global\";\n\nexport function extendTimer(timers: any, sec: number, addOrSub: number, timerObject: any): void {\n\ttimers.forEach((timer: string) => {\n\t\tconst timerSeconds = sec;\n\n\t\tif (timerObject.timerActive.timer[timer] == true) {\n\t\t\ttimerObject.timer[timer].changeValue = true;\n\n\t\t\ttimerObject.timer[timer].endTime += timerSeconds * 1000 * addOrSub;\n\n\t\t\ttimerObject.timer[timer].end_Time = timeToString(timerObject.timer[timer].endTime);\n\t\t\ttimerObject.timer[timer].onlySec += timerSeconds * addOrSub;\n\t\t}\n\t});\n}\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,oBAA6B;AAEtB,SAAS,YAAY,QAAa,KAAa,UAAkB,aAAwB;AAC/F,SAAO,QAAQ,CAAC,UAAkB;AACjC,UAAM,eAAe;AAErB,QAAI,YAAY,YAAY,MAAM,KAAK,KAAK,MAAM;AACjD,kBAAY,MAAM,KAAK,EAAE,cAAc;AAEvC,kBAAY,MAAM,KAAK,EAAE,WAAW,eAAe,MAAO;AAE1D,kBAAY,MAAM,KAAK,EAAE,eAAW,4BAAa,YAAY,MAAM,KAAK,EAAE,OAAO;AACjF,kBAAY,MAAM,KAAK,EAAE,WAAW,eAAe;AAAA,IACpD;AAAA,EACD,CAAC;AACF;",
-  "names": []
-}

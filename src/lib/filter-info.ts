@@ -1,8 +1,9 @@
 import { useStore } from "../store/store";
+import { errorLogging } from "./logging";
 import { timerObject } from "./timer-data";
 export const filterInfo = async (
 	input: string[],
-): Promise<[timerString: string, name: string, deleteVal: number, inputString: string]> => {
+): Promise<{ timerString: string; name: string; deleteVal: number; inputString: string }> => {
 	const store = useStore();
 	const _this = store._this;
 	try {
@@ -18,7 +19,7 @@ export const filterInfo = async (
 				return;
 			}
 
-			if (timerObject.timerActive.condition.deleteTimer.indexOf(element) >= 0) {
+			if (store.isDeleteTimer()) {
 				deleteVal++;
 			} else if (data.stopAll.indexOf(element) >= 0) {
 				deleteVal++;
@@ -83,12 +84,7 @@ export const filterInfo = async (
 				if (timerString.endsWith("+")) timerString += "(";
 				timerString += number;
 				inputString += number;
-			} else if (
-				!(
-					timerObject.timerActive.condition.extendTimer.includes(element) ||
-					timerObject.timerActive.condition.shortenTimer.includes(element)
-				)
-			) {
+			} else if (!(store.isShortenTimer() || store.isExtendTimer())) {
 				// Wenn nichts zutrifft, und der Wert auch nicht in extend und shorten gefunden wird,  kann es sich nur noch um den Namen des Timers handeln
 				name = element.trim();
 			}
@@ -97,24 +93,33 @@ export const filterInfo = async (
 			timerString = timerString.slice(0, timerString.length - 1);
 		}
 		if (input.length) {
-			if (timerString.includes("*3600")) {
-				if (
-					!timerString.includes("*60") &&
-					timerString.slice(timerString.length - 5, timerString.length) != "*3600" &&
-					timerString.charAt(timerString.length - 1) != ")"
-				) {
-					timerString += ")*60";
-				}
-			}
-
-			if (timerString.charAt(0) == ")") {
-				timerString = timerString.slice(2, timerString.length);
-			}
+			timerString = hasMinutes(timerString);
+			timerString = checkFirstChart(timerString);
 		}
 
-		return [timerString, name, deleteVal, inputString];
+		return { timerString, name, deleteVal, inputString };
 	} catch (e: any) {
-		_this.log.error("Error in filterInfo: " + JSON.stringify(e));
-		return ["", "", 0, ""];
+		errorLogging("Error in filterInfo", e, _this);
+		return { timerString: "", name: "", deleteVal: 0, inputString: "" };
+	}
+
+	function hasMinutes(timerString: string): string {
+		if (timerString.includes("*3600")) {
+			if (
+				!timerString.includes("*60") &&
+				timerString.slice(timerString.length - 5, timerString.length) != "*3600" &&
+				timerString.charAt(timerString.length - 1) != ")"
+			) {
+				timerString += ")*60";
+			}
+		}
+		return timerString;
+	}
+
+	function checkFirstChart(timerString: string): string {
+		if (timerString.charAt(0) == ")") {
+			timerString = timerString.slice(2, timerString.length);
+		}
+		return timerString;
 	}
 };

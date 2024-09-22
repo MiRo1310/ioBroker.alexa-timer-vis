@@ -22,6 +22,7 @@ __export(filter_info_exports, {
 });
 module.exports = __toCommonJS(filter_info_exports);
 var import_store = require("../store/store");
+var import_logging = require("./logging");
 var import_timer_data = require("./timer-data");
 const filterInfo = async (input) => {
   const store = (0, import_store.useStore)();
@@ -36,7 +37,7 @@ const filterInfo = async (input) => {
       if (data.notNoted.indexOf(element) >= 0) {
         return;
       }
-      if (import_timer_data.timerObject.timerActive.condition.deleteTimer.indexOf(element) >= 0) {
+      if (store.isDeleteTimer()) {
         deleteVal++;
       } else if (data.stopAll.indexOf(element) >= 0) {
         deleteVal++;
@@ -87,7 +88,7 @@ const filterInfo = async (input) => {
           timerString += "(";
         timerString += number;
         inputString += number;
-      } else if (!(import_timer_data.timerObject.timerActive.condition.extendTimer.includes(element) || import_timer_data.timerObject.timerActive.condition.shortenTimer.includes(element))) {
+      } else if (!(store.isShortenTimer() || store.isExtendTimer())) {
         name = element.trim();
       }
     });
@@ -95,19 +96,27 @@ const filterInfo = async (input) => {
       timerString = timerString.slice(0, timerString.length - 1);
     }
     if (input.length) {
-      if (timerString.includes("*3600")) {
-        if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
-          timerString += ")*60";
-        }
-      }
-      if (timerString.charAt(0) == ")") {
-        timerString = timerString.slice(2, timerString.length);
+      timerString = hasMinutes(timerString);
+      timerString = checkFirstChart(timerString);
+    }
+    return { timerString, name, deleteVal, inputString };
+  } catch (e) {
+    (0, import_logging.errorLogging)("Error in filterInfo", e, _this);
+    return { timerString: "", name: "", deleteVal: 0, inputString: "" };
+  }
+  function hasMinutes(timerString) {
+    if (timerString.includes("*3600")) {
+      if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
+        timerString += ")*60";
       }
     }
-    return [timerString, name, deleteVal, inputString];
-  } catch (e) {
-    _this.log.error("Error in filterInfo: " + JSON.stringify(e));
-    return ["", "", 0, ""];
+    return timerString;
+  }
+  function checkFirstChart(timerString) {
+    if (timerString.charAt(0) == ")") {
+      timerString = timerString.slice(2, timerString.length);
+    }
+    return timerString;
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

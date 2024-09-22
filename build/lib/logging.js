@@ -16,25 +16,18 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var timer_exports = {};
-__export(timer_exports, {
-  extendTimer: () => extendTimer
+var logging_exports = {};
+__export(logging_exports, {
+  errorLogging: () => errorLogging
 });
-module.exports = __toCommonJS(timer_exports);
-var import_global = require("./global");
-function extendTimer(timers, sec, addOrSub, timerObject) {
-  timers.forEach((timer) => {
-    const timerSeconds = sec;
-    if (timerObject.timerActive.timer[timer] == true) {
-      timerObject.timer[timer].changeValue = true;
-      timerObject.timer[timer].endTime += timerSeconds * 1e3 * addOrSub;
-      timerObject.timer[timer].end_Time = (0, import_global.timeToString)(timerObject.timer[timer].endTime);
-      timerObject.timer[timer].onlySec += timerSeconds * addOrSub;
-    }
-  });
-}
+module.exports = __toCommonJS(logging_exports);
+const errorLogging = (text, error, _this) => {
+  _this.log.error(text + ": " + JSON.stringify(error || ""));
+  _this.log.error(JSON.stringify(error.stack || ""));
+  _this.log.error(JSON.stringify(error.message || ""));
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  extendTimer
+  errorLogging
 });
-//# sourceMappingURL=timer.js.map
+//# sourceMappingURL=logging.js.map
