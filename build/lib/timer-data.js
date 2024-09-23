@@ -256,10 +256,7 @@ const timerObject = {
     f\u00FCnfter: 5,
     f\u00FCnf: 5
   },
-  interval: { timer1: null },
-  timeouts: {
-    getName: null
-  }
+  interval: { timer1: null }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
