@@ -1,465 +1,237 @@
 {
-  "common": {
-    "name": "alexa-timer-vis",
-    "version": "2.0.4",
-    "news": {
-      "2.0.4": {
-        "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #137 Reset timer name",
-        "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #137 Timer zurücksetzen",
-        "ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #137",
-        "pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #137 Repor nome do temporizador",
-        "nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #137 Timernaam resetten",
-        "fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #137 Réinitialiser le nom du minuteur",
-        "it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #137 Reset timer name",
-        "es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #137 Nombre del cronómetro",
-        "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 137 Reset timer name",
-        "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #137 Ім'я таймера",
-        "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: # 137 重置计时器名称"
-      },
-      "2.0.3": {
-        "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #133 Timer names are not correct\nFIX: #134 All timer alive at start",
-        "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #133 Timernamen sind nicht korrekt\nFIX: #134 Alle Timer am Anfang am Leben",
-        "ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #133 Имя таймера неправильно\n#134 Все таймеры живы на старте",
-        "pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #133 Os nomes do temporizador não estão corretos\nFIX: #134 Todo o temporizador vivo no início",
-        "nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #133 Timer namen zijn niet correct\nFIX: #134 Alle timer levend bij het begin",
-        "fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #133 Les noms des minuteurs ne sont pas corrects\nFIXE: #134 Tout le temps vivant au début",
-        "it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #133 I nomi Timer non sono corretti\nFIX: #134 Tutto il timer vivo all'inizio",
-        "es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #133 Timer names are not correct\nFIX: #134 Todo el tiempor vivo al principio",
-        "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 133 Nazwy czasu nie są poprawne\nFIX: # 134",
-        "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #133 Ім'я таймера не виправити\nFIX: #134 Всі таймер живий на старті",
-        "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: #133 计时器名称不正确\nFIX: #134 所有计时器在开始时还活着"
-      },
-      "2.0.2": {
-        "en": "FIX: #130 Sting_2 remains empty",
-        "de": "FIX: #130 Sting_2 bleibt leer",
-        "ru": "#130 Sting_2 остается пустым",
-        "pt": "FIX: #130 Sting_2 permanece vazio",
-        "nl": "FIX: #130 Sting_2 blijft leeg",
-        "fr": "FIX: #130 Sting_2 reste vide",
-        "it": "FIX: #130 Sting_2 rimane vuoto",
-        "es": "FIX: #130 Sting_2 permanece vacío",
-        "pl": "FIX: # 130 Sting _ 2 pozostaje pusty",
-        "uk": "FIX: #130 Sting_2 залишається порожнім",
-        "zh-cn": "FIX: # 130 Sting_2 仍然为空"
-      },
-      "2.0.1": {
-        "en": "FIX: #128 Timer creating error",
-        "de": "FIX: #128 Timer Fehler erstellen",
-        "ru": "FIX: #128 Таймер, создающий ошибку",
-        "pt": "FIX: #128 Temporizador criando erro",
-        "nl": "FIX: #128 Timer aanmaken fout",
-        "fr": "FIX: #128 Chronomètre créant une erreur",
-        "it": "FIX: #128 Timer crea errore",
-        "es": "FIX: #128 Timer creating error",
-        "pl": "FIX: # 128 Czas tworzenia błędu",
-        "uk": "FIX: #128 Таймер створення помилки",
-        "zh-cn": "FIX: # 128 计时器生成错误"
-      },
-      "2.0.0": {
-        "en": "FIX: #119 Error \"has no existing object\" on first start\nUse Typescript\nFEAT: #118 get name from activeTimerList\nFIX: #117 createDevice is deprecated",
-        "de": "FIX: #119 Fehler \"hat kein vorhandenes Objekt\" beim ersten Start\nTypskript verwenden\nFEAT: #118 erhalten name from active TimerList\nFIX: #117 erstellen Gerät ist abgeschrieben",
-        "ru": "FIX: #119 Ошибка «не имеет существующего объекта» на первом этапе\nИспользовать Typescript\n#118 получить имя от активного TimerList\nFIX: #117 Устройство депрецировано",
-        "pt": "FIX: #119 Erro \"não tem nenhum objeto existente\" no início\nTipo de utilização\nFEAT: #118 obter nome de ativo Temporizador\nFIX: #117 criar O dispositivo é desprezado",
-        "nl": "FIX: #119 Fout \"heeft geen bestaand object\" bij de eerste start\nTypescript gebruiken\nFEAT: #118 krijgt naam van actief TimerList\nFIX: #117 aanmaken Apparaat is verouderd",
-        "fr": "FIX: #119 Erreur \"n'a pas d'objet existant\" au premier démarrage\nUtiliser Typescript\nVIANDE: #118 obtenir le nom de active Chronologie\nFIX: #117 créer Le périphérique est déprécié",
-        "it": "FIX: #119 Errore \"non ha oggetto esistente\" al primo inizio\nUtilizzare il tipo\nFEAT: #118 ottenere il nome da attivo TimerList\nFIX: #117 creare Il dispositivo è deprecato",
-        "es": "FIX: #119 Error \"no tiene ningún objeto existente\" en el primer comienzo\nUse Typescript\nFEAT: #118 obtener nombre de activo TimerList\nFIX: #117 crear El dispositivo está deprecado",
-        "pl": "FIX: # 119 Błąd \"nie ma istniejącego obiektu\" na pierwszym starcie\nUżyj skryptu\nFEAT: # 118 uzyskać nazwę z aktywnego Lista czasu\nFIX: # 117 create Urządzenie jest zdeprecjonowane",
-        "uk": "FIX: #119 Помилка \"не існує\" на першому старті\nТип використання\nFEAT: #118 Ім'я від активних Список таймерів\nFIX: #117 Створити Пристрої депресовані",
-        "zh-cn": "FIX: # 119 第一次启动时错误“ 没有已存在对象 ”\n使用打字符\nFEAT: # 118 从活动获得名称 计时列表\nFIX: #117 创建 设备已贬值"
-      },
-      "1.0.0": {
-        "en": "Js-controller >=5.0.19 is required",
-        "de": "Js-Controller >=5.0.19 ist erforderlich",
-        "ru": "Js-контроллер >=5.0.19 требуется",
-        "pt": "Js-controller >=5.0.19 é necessário",
-        "nl": "Js-controller > 5.0.19 is vereist",
-        "fr": "Js-contrôleur >=5.0.19 est nécessaire",
-        "it": "Js-controller >=5.0.19 è richiesto",
-        "es": "Se requiere Js-controller",
-        "pl": "Wymagany jest kontroler js- 19",
-        "uk": "Js-controller >=5.0.19 потрібно",
-        "zh-cn": "需要Js控制器 >=5.0.19"
-      },
-      "0.3.0": {
-        "en": "#82 Delete Timer by Button\n#74 Fixed Starttime\n#71 Name of Echo in data tree\n#75 Percent from 0% to 100%\nBreaking change: minimal supported node.js version is 16.x\n#58 Another String Variation",
-        "de": "#82 Timer by Button löschen\n#74 Fixed Starttime\n#71 Name des Echos im Datenbaum\n#75 Prozent von 0% bis 100%\nBreaking change: minimal unterstützt node.js version is 16.x\n#58 Eine weitere String Variation",
-        "ru": "#82 Удалить Таймер на Кнопке\n#74 Фиксированное время начала\n#71 Имя Эхо в дерево данных\n#75 Процент от 0% до 100%\nИзменение разрыва: минимальная поддерживаемая версия node.js 16.x\n#58 Другой String Variation",
-        "pt": "#82 Excluir Temporizador por Botão\n#74 Tempo de início fixo\n#71 Nome do Echo na árvore de dados\n#75 Percent de 0% a 100%\nAlteração de ruptura: versão node.js suportada mínima é 16.x\n#58 Outra variação de corda",
-        "nl": "82 Delete Timer by Button\n#74 Fixed Starttime\n#71 Name of Echo in data boom\n75 Percent van 0% tot 100%\nVerandering: minimaal ondersteunde node\n♪58 another String Variation",
-        "fr": "#82 Supprimer Timer par Button\n#74 Temps de départ fixe\n#71 Nom d'Echo dans l'arbre de données\n#75 Pourcentage de 0% à 100%\nChangement de rupture: la version node.js supportée minimale est 16.x\n#58 Autre variation de corde",
-        "it": "#82 Delete Timer by Button\n#74 Tempo di partenza fisso\n#71 Nome di Echo nell'albero dei dati\n#75 Percentuale dal 0% al 100%\nCambiamento di rottura: versione minima node.js supportata è 16.x\n#58 Un'altra variazione di tensione",
-        "es": "#82 Delete Timer by Button\n#74 Hora de inicio fija\n#71 Nombre del Eco en el árbol de datos\n#75 Porcentaje del 0% al 100%\nCambio de ruptura: la versión mínima de node.js es 16.x\n#58 Otra variación de cuerdas",
-        "pl": "82 Delete Timer (ang.)\n74 Fixed Starttime (ang.)\nNazwisko Echo w drzewie danych\n75 razy więcej niż 100%\nZmiana przeładowania: wersja minimalna jest 16.x\n58 Another String Variation (ang.)",
-        "uk": "#82 Видалити таймер за допомогою кнопки\n#74 Фіксований старт\n#71 Назва Ехо в дереві даних\n#75 відсоток від 0% до 100%\nЗміна розривів: мінімальний підтриманий вузол.js версія 16.x\n#58 Ще один Рядок змін",
-        "zh-cn": "第82号\n行动74 固定启动时间\n#71 数据树中的森林名称\n#75 最高限额从0%降至100%\n断然变化:最低支持无端。\n行动58"
-      }
-    },
-    "titleLang": {
-      "en": "Alexa Timer for Vis",
-      "de": "Alexa Timer für Vis",
-      "ru": "Alexa Таймер для Vis",
-      "pt": "Alexa Timer para Vis",
-      "nl": "Alexa Timer voor Vis",
-      "fr": "Alexa Timer pour Vis",
-      "it": "Alexa Timer per Vis",
-      "es": "Alexa Timer for Vis",
-      "pl": "Alexa Timer, właśc",
-      "uk": "Alexa Таймер для Ві",
-      "zh-cn": "Alexa Timer of Vis"
-    },
-    "desc": {
-      "en": "Output Alexa timer to display timers in the VIS",
-      "de": "Ausgabe Alexa Timer, um Timer in der VIS anzuzeigen",
-      "ru": "Вывод Alexa таймер для отображения таймеров в VIS",
-      "pt": "Saída Alexa temporizador para exibir temporizadores no VIS",
-      "nl": "Alexa timer tonen in de VIS",
-      "fr": "Sortie Alexa timer pour afficher les minuteurs dans le VIS",
-      "it": "Uscita Alexa timer per visualizzare timer nel VIS",
-      "es": "Salida Alexa timer para mostrar temporizadores en el VIS",
-      "pl": "Z kolei Alexa zmierza do wyświetlania timerów w VIS",
-      "uk": "Вихідний таймер Alexa для відображення таймерів у VIS",
-      "zh-cn": "产出"
-    },
-    "authors": [
-      "Michael Roling <michael.roling@gmx.de>"
-    ],
-    "keywords": [
-      "Alexa",
-      "Timer",
-      "VIS",
-      "home automation"
-    ],
-    "licenseInformation": {
-      "license": "MIT",
-      "type": "free"
-    },
-    "platform": "Javascript/Node.js",
-    "icon": "alexa-timer-vis.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
-    "readme": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "logic",
-    "tier": 3,
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "supportCustoms": false,
-    "adminUI": {
-      "config": "json"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=5.0.19"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "alexa2": ">=3.11.2"
-      }
-    ]
-  },
-  "messages": [
-    {
-      "condition": {
-        "operand": "and",
-        "rules": [
-          "oldVersion<0.3.0",
-          "newVersion>=0.3.1"
-        ]
-      },
-      "title": {
-        "en": "Important notice!",
-        "de": "Wichtiger Hinweis!",
-        "ru": "Важное замечание!",
-        "pt": "Notícia importante!",
-        "nl": "Belangrijke mededeling!",
-        "fr": "Avis important!",
-        "it": "Avviso IMPORTANTE!",
-        "es": "Noticia importante!",
-        "pl": "Ważna uwaga!",
-        "zh-cn": "重要通知!",
-        "uk": "Важливе повідомлення!"
-      },
-      "text": {
-        "en": "Breaking change!!! At least NodeJs 18 is required",
-        "de": "Wechseln!!! Mindestens NodeJs 18 ist erforderlich",
-        "ru": "Разрыв изменения!!! По крайней мере NodeJs 18 требуется",
-        "pt": "Mudança de ruptura!!! Pelo menos NodeJs 18 é necessário",
-        "nl": "Breek verandering!!! Ten minste NodeJs 18 is vereist",
-        "fr": "Briser le changement!!! Au moins NodeJs 18 est nécessaire",
-        "it": "Cambiamento di rottura!!! Almeno NodeJs 18 è richiesto",
-        "es": "Cambio de ruptura! Por lo menos NodeJs 18 es necesario",
-        "pl": "Łamanie drobnych! Co najmniej NodeJs 18 jest wymagane",
-        "uk": "Змінити зміни! При найменшому NodeJs 18 потрібно",
-        "zh-cn": "突破变化! 至少需要节点Js 18"
-      },
-      "level": "warn",
-      "buttons": [
-        "agree",
-        "cancel"
-      ]
-    }
-  ],
-  "native": {
-    "alexa": "alexa2.0",
-    "intervall1": 1,
-    "intervall2": 1,
-    "entprellZeit": 2,
-    "entprellen": false,
-    "unitHour1": "Stunde",
-    "unitHour2": "Stunden",
-    "unitHour3": "h",
-    "unitMinute1": "Minute",
-    "unitMinute2": "Minuten",
-    "unitMinute3": "min",
-    "unitSecond1": "Sekunde",
-    "unitSecond2": "Sekunden",
-    "unitSecond3": "sec",
-    "valHourForZero": "",
-    "valMinuteForZero": "",
-    "valSecondForZero": ""
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "timers",
-      "type": "device",
-      "common": {
-        "name": "Timer1"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "timers.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "all_Timer.alive",
-      "type": "state",
-      "common": {
-        "name": "Ist ein Timer activ?",
-        "type": "boolean",
-        "role": "indicator",
-        "read": true,
-        "write": true,
-        " def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.alive",
-      "type": "state",
-      "common": {
-        "name": "Timer activ",
-        "type": "boolean",
-        "role": "indicator",
-        "read": true,
-        "write": true,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.percent2",
-      "type": "state",
-      "common": {
-        "name": "Percent",
-        "type": "number",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.percent",
-      "type": "state",
-      "common": {
-        "name": "Percent",
-        "type": "number",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.hour",
-      "type": "state",
-      "common": {
-        "name": "Hours",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.minute",
-      "type": "state",
-      "common": {
-        "name": "Minutes",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.second",
-      "type": "state",
-      "common": {
-        "name": "Seconds",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.string",
-      "type": "state",
-      "common": {
-        "name": "String",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": "00:00:00 h"
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.string_2",
-      "type": "state",
-      "common": {
-        "name": "String_2",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.name",
-      "type": "state",
-      "common": {
-        "name": "Name des Timers",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": "Timer"
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.TimeStart",
-      "type": "state",
-      "common": {
-        "name": "Start Time",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": "00:00:00"
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.TimeEnd",
-      "type": "state",
-      "common": {
-        "name": "End Time",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": "00:00:00"
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.InputDeviceName",
-      "type": "state",
-      "common": {
-        "name": "Input of Device",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.Reset",
-      "type": "state",
-      "common": {
-        "name": "Reset Timer",
-        "type": "boolean",
-        "role": "button",
-        "read": false,
-        "write": true,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "timer1.lengthTimer",
-      "type": "state",
-      "common": {
-        "name": "Gestellter Timer",
-        "type": "string",
-        "role": "value",
-        "read": true,
-        "write": true,
-        "def": ""
-      },
-      "native": {}
-    }
-  ]
+	"common": {
+		"name": "alexa-timer-vis",
+		"version": "2.0.4",
+		"news": {
+			"2.0.4": {
+				"en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #137 Reset timer name",
+				"de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #137 Timer zurücksetzen",
+				"ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #137",
+				"pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #137 Repor nome do temporizador",
+				"nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #137 Timernaam resetten",
+				"fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #137 Réinitialiser le nom du minuteur",
+				"it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #137 Reset timer name",
+				"es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #137 Nombre del cronómetro",
+				"pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 137 Reset timer name",
+				"uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #137 Ім'я таймера",
+				"zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: # 137 重置计时器名称"
+			},
+			"2.0.3": {
+				"en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #133 Timer names are not correct\nFIX: #134 All timer alive at start",
+				"de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #133 Timernamen sind nicht korrekt\nFIX: #134 Alle Timer am Anfang am Leben",
+				"ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #133 Имя таймера неправильно\n#134 Все таймеры живы на старте",
+				"pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #133 Os nomes do temporizador não estão corretos\nFIX: #134 Todo o temporizador vivo no início",
+				"nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #133 Timer namen zijn niet correct\nFIX: #134 Alle timer levend bij het begin",
+				"fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #133 Les noms des minuteurs ne sont pas corrects\nFIXE: #134 Tout le temps vivant au début",
+				"it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #133 I nomi Timer non sono corretti\nFIX: #134 Tutto il timer vivo all'inizio",
+				"es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #133 Timer names are not correct\nFIX: #134 Todo el tiempor vivo al principio",
+				"pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 133 Nazwy czasu nie są poprawne\nFIX: # 134",
+				"uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #133 Ім'я таймера не виправити\nFIX: #134 Всі таймер живий на старті",
+				"zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: #133 计时器名称不正确\nFIX: #134 所有计时器在开始时还活着"
+			},
+			"2.0.2": {
+				"en": "FIX: #130 Sting_2 remains empty",
+				"de": "FIX: #130 Sting_2 bleibt leer",
+				"ru": "#130 Sting_2 остается пустым",
+				"pt": "FIX: #130 Sting_2 permanece vazio",
+				"nl": "FIX: #130 Sting_2 blijft leeg",
+				"fr": "FIX: #130 Sting_2 reste vide",
+				"it": "FIX: #130 Sting_2 rimane vuoto",
+				"es": "FIX: #130 Sting_2 permanece vacío",
+				"pl": "FIX: # 130 Sting _ 2 pozostaje pusty",
+				"uk": "FIX: #130 Sting_2 залишається порожнім",
+				"zh-cn": "FIX: # 130 Sting_2 仍然为空"
+			},
+			"2.0.1": {
+				"en": "FIX: #128 Timer creating error",
+				"de": "FIX: #128 Timer Fehler erstellen",
+				"ru": "FIX: #128 Таймер, создающий ошибку",
+				"pt": "FIX: #128 Temporizador criando erro",
+				"nl": "FIX: #128 Timer aanmaken fout",
+				"fr": "FIX: #128 Chronomètre créant une erreur",
+				"it": "FIX: #128 Timer crea errore",
+				"es": "FIX: #128 Timer creating error",
+				"pl": "FIX: # 128 Czas tworzenia błędu",
+				"uk": "FIX: #128 Таймер створення помилки",
+				"zh-cn": "FIX: # 128 计时器生成错误"
+			},
+			"2.0.0": {
+				"en": "FIX: #119 Error \"has no existing object\" on first start\nUse Typescript\nFEAT: #118 get name from activeTimerList\nFIX: #117 createDevice is deprecated",
+				"de": "FIX: #119 Fehler \"hat kein vorhandenes Objekt\" beim ersten Start\nTypskript verwenden\nFEAT: #118 erhalten name from active TimerList\nFIX: #117 erstellen Gerät ist abgeschrieben",
+				"ru": "FIX: #119 Ошибка «не имеет существующего объекта» на первом этапе\nИспользовать Typescript\n#118 получить имя от активного TimerList\nFIX: #117 Устройство депрецировано",
+				"pt": "FIX: #119 Erro \"não tem nenhum objeto existente\" no início\nTipo de utilização\nFEAT: #118 obter nome de ativo Temporizador\nFIX: #117 criar O dispositivo é desprezado",
+				"nl": "FIX: #119 Fout \"heeft geen bestaand object\" bij de eerste start\nTypescript gebruiken\nFEAT: #118 krijgt naam van actief TimerList\nFIX: #117 aanmaken Apparaat is verouderd",
+				"fr": "FIX: #119 Erreur \"n'a pas d'objet existant\" au premier démarrage\nUtiliser Typescript\nVIANDE: #118 obtenir le nom de active Chronologie\nFIX: #117 créer Le périphérique est déprécié",
+				"it": "FIX: #119 Errore \"non ha oggetto esistente\" al primo inizio\nUtilizzare il tipo\nFEAT: #118 ottenere il nome da attivo TimerList\nFIX: #117 creare Il dispositivo è deprecato",
+				"es": "FIX: #119 Error \"no tiene ningún objeto existente\" en el primer comienzo\nUse Typescript\nFEAT: #118 obtener nombre de activo TimerList\nFIX: #117 crear El dispositivo está deprecado",
+				"pl": "FIX: # 119 Błąd \"nie ma istniejącego obiektu\" na pierwszym starcie\nUżyj skryptu\nFEAT: # 118 uzyskać nazwę z aktywnego Lista czasu\nFIX: # 117 create Urządzenie jest zdeprecjonowane",
+				"uk": "FIX: #119 Помилка \"не існує\" на першому старті\nТип використання\nFEAT: #118 Ім'я від активних Список таймерів\nFIX: #117 Створити Пристрої депресовані",
+				"zh-cn": "FIX: # 119 第一次启动时错误“ 没有已存在对象 ”\n使用打字符\nFEAT: # 118 从活动获得名称 计时列表\nFIX: #117 创建 设备已贬值"
+			},
+			"1.0.0": {
+				"en": "Js-controller >=5.0.19 is required",
+				"de": "Js-Controller >=5.0.19 ist erforderlich",
+				"ru": "Js-контроллер >=5.0.19 требуется",
+				"pt": "Js-controller >=5.0.19 é necessário",
+				"nl": "Js-controller > 5.0.19 is vereist",
+				"fr": "Js-contrôleur >=5.0.19 est nécessaire",
+				"it": "Js-controller >=5.0.19 è richiesto",
+				"es": "Se requiere Js-controller",
+				"pl": "Wymagany jest kontroler js- 19",
+				"uk": "Js-controller >=5.0.19 потрібно",
+				"zh-cn": "需要Js控制器 >=5.0.19"
+			},
+			"0.3.0": {
+				"en": "#82 Delete Timer by Button\n#74 Fixed Starttime\n#71 Name of Echo in data tree\n#75 Percent from 0% to 100%\nBreaking change: minimal supported node.js version is 16.x\n#58 Another String Variation",
+				"de": "#82 Timer by Button löschen\n#74 Fixed Starttime\n#71 Name des Echos im Datenbaum\n#75 Prozent von 0% bis 100%\nBreaking change: minimal unterstützt node.js version is 16.x\n#58 Eine weitere String Variation",
+				"ru": "#82 Удалить Таймер на Кнопке\n#74 Фиксированное время начала\n#71 Имя Эхо в дерево данных\n#75 Процент от 0% до 100%\nИзменение разрыва: минимальная поддерживаемая версия node.js 16.x\n#58 Другой String Variation",
+				"pt": "#82 Excluir Temporizador por Botão\n#74 Tempo de início fixo\n#71 Nome do Echo na árvore de dados\n#75 Percent de 0% a 100%\nAlteração de ruptura: versão node.js suportada mínima é 16.x\n#58 Outra variação de corda",
+				"nl": "82 Delete Timer by Button\n#74 Fixed Starttime\n#71 Name of Echo in data boom\n75 Percent van 0% tot 100%\nVerandering: minimaal ondersteunde node\n♪58 another String Variation",
+				"fr": "#82 Supprimer Timer par Button\n#74 Temps de départ fixe\n#71 Nom d'Echo dans l'arbre de données\n#75 Pourcentage de 0% à 100%\nChangement de rupture: la version node.js supportée minimale est 16.x\n#58 Autre variation de corde",
+				"it": "#82 Delete Timer by Button\n#74 Tempo di partenza fisso\n#71 Nome di Echo nell'albero dei dati\n#75 Percentuale dal 0% al 100%\nCambiamento di rottura: versione minima node.js supportata è 16.x\n#58 Un'altra variazione di tensione",
+				"es": "#82 Delete Timer by Button\n#74 Hora de inicio fija\n#71 Nombre del Eco en el árbol de datos\n#75 Porcentaje del 0% al 100%\nCambio de ruptura: la versión mínima de node.js es 16.x\n#58 Otra variación de cuerdas",
+				"pl": "82 Delete Timer (ang.)\n74 Fixed Starttime (ang.)\nNazwisko Echo w drzewie danych\n75 razy więcej niż 100%\nZmiana przeładowania: wersja minimalna jest 16.x\n58 Another String Variation (ang.)",
+				"uk": "#82 Видалити таймер за допомогою кнопки\n#74 Фіксований старт\n#71 Назва Ехо в дереві даних\n#75 відсоток від 0% до 100%\nЗміна розривів: мінімальний підтриманий вузол.js версія 16.x\n#58 Ще один Рядок змін",
+				"zh-cn": "第82号\n行动74 固定启动时间\n#71 数据树中的森林名称\n#75 最高限额从0%降至100%\n断然变化:最低支持无端。\n行动58"
+			}
+		},
+		"titleLang": {
+			"en": "Alexa Timer for Vis",
+			"de": "Alexa Timer für Vis",
+			"ru": "Alexa Таймер для Vis",
+			"pt": "Alexa Timer para Vis",
+			"nl": "Alexa Timer voor Vis",
+			"fr": "Alexa Timer pour Vis",
+			"it": "Alexa Timer per Vis",
+			"es": "Alexa Timer for Vis",
+			"pl": "Alexa Timer, właśc",
+			"uk": "Alexa Таймер для Ві",
+			"zh-cn": "Alexa Timer of Vis"
+		},
+		"desc": {
+			"en": "Output Alexa timer to display timers in the VIS",
+			"de": "Ausgabe Alexa Timer, um Timer in der VIS anzuzeigen",
+			"ru": "Вывод Alexa таймер для отображения таймеров в VIS",
+			"pt": "Saída Alexa temporizador para exibir temporizadores no VIS",
+			"nl": "Alexa timer tonen in de VIS",
+			"fr": "Sortie Alexa timer pour afficher les minuteurs dans le VIS",
+			"it": "Uscita Alexa timer per visualizzare timer nel VIS",
+			"es": "Salida Alexa timer para mostrar temporizadores en el VIS",
+			"pl": "Z kolei Alexa zmierza do wyświetlania timerów w VIS",
+			"uk": "Вихідний таймер Alexa для відображення таймерів у VIS",
+			"zh-cn": "产出"
+		},
+		"authors": ["Michael Roling <michael.roling@gmx.de>"],
+		"keywords": ["Alexa", "Timer", "VIS", "home automation"],
+		"licenseInformation": {
+			"license": "MIT",
+			"type": "free"
+		},
+		"platform": "Javascript/Node.js",
+		"icon": "alexa-timer-vis.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/MiRo1310/ioBroker.alexa-timer-vis/main/admin/alexa-timer-vis.png",
+		"readme": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "logic",
+		"tier": 3,
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"supportCustoms": false,
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=5.0.19"
+			}
+		],
+		"globalDependencies": [
+			{
+				"alexa2": ">=3.11.2"
+			}
+		]
+	},
+	"messages": [
+		{
+			"condition": {
+				"operand": "and",
+				"rules": ["oldVersion<0.3.0", "newVersion>=0.3.1"]
+			},
+			"title": {
+				"en": "Important notice!",
+				"de": "Wichtiger Hinweis!",
+				"ru": "Важное замечание!",
+				"pt": "Notícia importante!",
+				"nl": "Belangrijke mededeling!",
+				"fr": "Avis important!",
+				"it": "Avviso IMPORTANTE!",
+				"es": "Noticia importante!",
+				"pl": "Ważna uwaga!",
+				"zh-cn": "重要通知!",
+				"uk": "Важливе повідомлення!"
+			},
+			"text": {
+				"en": "Breaking change!!! At least NodeJs 18 is required",
+				"de": "Wechseln!!! Mindestens NodeJs 18 ist erforderlich",
+				"ru": "Разрыв изменения!!! По крайней мере NodeJs 18 требуется",
+				"pt": "Mudança de ruptura!!! Pelo menos NodeJs 18 é necessário",
+				"nl": "Breek verandering!!! Ten minste NodeJs 18 is vereist",
+				"fr": "Briser le changement!!! Au moins NodeJs 18 est nécessaire",
+				"it": "Cambiamento di rottura!!! Almeno NodeJs 18 è richiesto",
+				"es": "Cambio de ruptura! Por lo menos NodeJs 18 es necesario",
+				"pl": "Łamanie drobnych! Co najmniej NodeJs 18 jest wymagane",
+				"uk": "Змінити зміни! При найменшому NodeJs 18 потрібно",
+				"zh-cn": "突破变化! 至少需要节点Js 18"
+			},
+			"level": "warn",
+			"buttons": ["agree", "cancel"]
+		}
+	],
+	"native": {
+		"alexa": "alexa2.0",
+		"intervall1": 1,
+		"intervall2": 1,
+		"entprellZeit": 2,
+		"entprellen": false,
+		"unitHour1": "Stunde",
+		"unitHour2": "Stunden",
+		"unitHour3": "h",
+		"unitMinute1": "Minute",
+		"unitMinute2": "Minuten",
+		"unitMinute3": "min",
+		"unitSecond1": "Sekunde",
+		"unitSecond2": "Sekunden",
+		"unitSecond3": "sec",
+		"valHourForZero": "",
+		"valMinuteForZero": "",
+		"valSecondForZero": ""
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
 }

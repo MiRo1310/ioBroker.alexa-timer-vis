@@ -67,9 +67,13 @@ class AlexaTimerVis extends utils.Adapter {
     return AlexaTimerVis.instance;
   }
   async onReady() {
+    var _a;
     const store = (0, import_store.useStore)();
     store._this = this;
     this.setState("info.connection", false, true);
+    if (this.adapterConfig && "_id" in this.adapterConfig) {
+      store.alexaTimerVisInstance = (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "");
+    }
     store.pathAlexaStateToListenTo = `${this.config.alexa}.History.intent`;
     store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
     store.intervalMore60 = this.config.intervall1;
@@ -169,7 +173,7 @@ class AlexaTimerVis extends utils.Adapter {
     const store = (0, import_store.useStore)();
     try {
       this.log.info("Adapter shuts down");
-      (0, import_write_state.writeState)(true);
+      (0, import_write_state.writeState)({ reset: true });
       this.clearTimeout(timeout_1);
       this.clearTimeout(debounceTimeout);
       this.clearInterval(store.interval);

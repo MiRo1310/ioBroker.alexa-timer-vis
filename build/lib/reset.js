@@ -27,13 +27,13 @@ var import_logging = require("./logging");
 var import_timer_data = require("./timer-data");
 var import_write_state = require("./write-state");
 const resetValues = (timer, index) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
+  const { _this, getAlexaTimerVisInstance, valHourForZero, valMinuteForZero, valSecondForZero } = (0, import_store.useStore)();
   try {
     import_timer_data.timerObject.timerActive.timer[index] = false;
-    timer.hour = store.valHourForZero || "";
-    timer.minute = store.valMinuteForZero || "";
-    timer.second = store.valSecondForZero || "";
+    _this.log.debug(JSON.stringify(import_timer_data.timerObject.timerActive));
+    timer.hour = valHourForZero || "";
+    timer.minute = valMinuteForZero || "";
+    timer.second = valSecondForZero || "";
     timer.stringTimer = "00:00:00 h";
     timer.stringTimer2 = "";
     timer.voiceInputAsSeconds = 0;
@@ -54,7 +54,7 @@ const resetValues = (timer, index) => {
     timer.inputString = "";
     timer.startTimeNumber = 0;
     timer.endTimeNumber = 0;
-    _this.setObjectAsync("alexa-timer-vis.0." + index, {
+    _this.setObjectAsync(getAlexaTimerVisInstance() + index, {
       type: "device",
       common: { name: `` },
       native: {}
@@ -66,7 +66,7 @@ const resetValues = (timer, index) => {
 function resetAllTimerValuesAndState(_this) {
   Object.keys(import_timer_data.timerObject.timer).forEach((el) => {
     resetValues(import_timer_data.timerObject.timer[el], el);
-    (0, import_write_state.writeState)(false);
+    (0, import_write_state.writeState)({ reset: true });
   });
   _this.setStateChanged("all_Timer.alive", false, true);
 }

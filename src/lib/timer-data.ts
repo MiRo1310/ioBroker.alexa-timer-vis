@@ -137,9 +137,6 @@ export interface TimerObject {
 		fünf: number;
 	};
 	interval: { timer1: ioBroker.Interval | undefined };
-	timeouts: {
-		getName: ioBroker.Timeout | null | undefined;
-	};
 }
 export type TimerSelector = keyof Timers | undefined;
 
@@ -372,7 +369,4 @@ export const timerObject: TimerObject = {
 		fünf: 5,
 	},
 	interval: { timer1: null },
-	timeouts: {
-		getName: null,
-	},
 };

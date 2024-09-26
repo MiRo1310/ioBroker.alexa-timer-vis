@@ -5,13 +5,14 @@ import { Timer, TimerSelector, timerObject } from "./timer-data";
 import { writeState } from "./write-state";
 
 export const resetValues = (timer: Timer, index: TimerSelector): void => {
-	const store = useStore();
-	const _this = store._this;
+	const { _this, getAlexaTimerVisInstance, valHourForZero, valMinuteForZero, valSecondForZero } = useStore();
+
 	try {
 		timerObject.timerActive.timer[index as keyof typeof timerObject.timerActive.timer] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
-		timer.hour = store.valHourForZero || "";
-		timer.minute = store.valMinuteForZero || "";
-		timer.second = store.valSecondForZero || "";
+		_this.log.debug(JSON.stringify(timerObject.timerActive));
+		timer.hour = valHourForZero || "";
+		timer.minute = valMinuteForZero || "";
+		timer.second = valSecondForZero || "";
 		timer.stringTimer = "00:00:00 h";
 		timer.stringTimer2 = "";
 		timer.voiceInputAsSeconds = 0;
@@ -32,8 +33,7 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 		timer.inputString = "";
 		timer.startTimeNumber = 0;
 		timer.endTimeNumber = 0;
-
-		_this.setObjectAsync("alexa-timer-vis.0." + index, {
+		_this.setObjectAsync(getAlexaTimerVisInstance() + index, {
 			type: "device",
 			common: { name: `` },
 			native: {},
@@ -46,7 +46,8 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 export function resetAllTimerValuesAndState(_this: AlexaTimerVis): void {
 	Object.keys(timerObject.timer).forEach((el) => {
 		resetValues(timerObject.timer[el as keyof typeof timerObject.timer], el as TimerSelector);
-		writeState(false);
+
+		writeState({ reset: true });
 	});
 	_this.setStateChanged("all_Timer.alive", false, true);
 }

@@ -21,8 +21,8 @@ __export(state_exports, {
   createState: () => createState
 });
 module.exports = __toCommonJS(state_exports);
-var import_console = require("console");
 var import_store = require("../store/store");
+var import_logging = require("./logging");
 const createState = async (value) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -40,7 +40,6 @@ const createState = async (value) => {
         },
         native: {}
       });
-      _this.log.debug("Created all_Timer.alive");
       await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
         type: "state",
         common: {
@@ -225,7 +224,7 @@ const createState = async (value) => {
       _this.subscribeForeignStates(id);
     }
   } catch (e) {
-    (0, import_console.error)("Error in createState: " + JSON.stringify(e));
+    (0, import_logging.errorLogging)("Error in createState", e, _this);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

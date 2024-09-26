@@ -1,5 +1,5 @@
-import { error } from "console";
 import { useStore } from "../store/store";
+import { errorLogging } from "./logging";
 export const createState = async (value: number): Promise<void> => {
 	const store = useStore();
 	const _this = store._this;
@@ -17,7 +17,6 @@ export const createState = async (value: number): Promise<void> => {
 				},
 				native: {},
 			});
-			_this.log.debug("Created all_Timer.alive");
 			await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
 				type: "state",
 				common: {
@@ -205,6 +204,6 @@ export const createState = async (value: number): Promise<void> => {
 			_this.subscribeForeignStates(id);
 		}
 	} catch (e: any) {
-		error("Error in createState: " + JSON.stringify(e));
+		errorLogging("Error in createState", e, _this);
 	}
 };

@@ -27,7 +27,7 @@ var import_reset = require("./reset");
 var import_store = require("../store/store");
 var import_object = require("./object");
 var import_logging = require("./logging");
-async function writeState(unload) {
+function writeState({ reset }) {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   const timers = import_timer_data.timerObject.timerActive.timer;
@@ -38,7 +38,7 @@ async function writeState(unload) {
         return;
       }
       let alive = true;
-      if (unload) {
+      if (reset) {
         (0, import_reset.resetValues)(timer, element);
         alive = false;
       }
@@ -47,10 +47,6 @@ async function writeState(unload) {
         import_timer_data.timerObject.timerActive.timer[element],
         true
       );
-      if (!await _this.objectExists(element + ".name")) {
-        _this.log.debug("Object does not exist: " + element + ".name");
-        return;
-      }
       _this.setStateChanged(element + ".hour", timer.hour, true);
       _this.setStateChanged(element + ".minute", timer.minute, true);
       _this.setStateChanged(element + ".second", timer.second, true);
@@ -62,7 +58,6 @@ async function writeState(unload) {
       _this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
       _this.setStateChanged(element + ".percent2", timer.percent2, true);
       _this.setStateChanged(element + ".percent", timer.percent, true);
-      _this.log.debug("Timer: " + JSON.stringify(timer));
       _this.setStateChanged(element + ".name", getTimerName(timer), true);
       _this.setStateChanged(element + ".json", getJson(timer), true);
       _this.setStateChanged("all_Timer.alive", alive, true);

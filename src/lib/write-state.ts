@@ -5,7 +5,7 @@ import { useStore } from "../store/store";
 import { deepCopy } from "./object";
 import { errorLogging } from "./logging";
 
-export async function writeState(unload: boolean): Promise<void> {
+export function writeState({ reset }: { reset: boolean }): void {
 	const store = useStore();
 	const _this = store._this;
 	const timers = timerObject.timerActive.timer;
@@ -18,20 +18,17 @@ export async function writeState(unload: boolean): Promise<void> {
 			}
 
 			let alive = true;
-			if (unload) {
+			if (reset) {
 				resetValues(timer, element as TimerSelector);
 				alive = false;
 			}
+
 			_this.setStateChanged(
 				element + ".alive",
 				timerObject.timerActive.timer[element as keyof typeof timerObject.timer],
 				true,
 			);
 
-			if (!(await _this.objectExists(element + ".name"))) {
-				_this.log.debug("Object does not exist: " + element + ".name");
-				return;
-			}
 			_this.setStateChanged(element + ".hour", timer.hour, true);
 			_this.setStateChanged(element + ".minute", timer.minute, true);
 			_this.setStateChanged(element + ".second", timer.second, true);
@@ -43,7 +40,6 @@ export async function writeState(unload: boolean): Promise<void> {
 			_this.setStateChanged(element + ".lengthTimer", timer.lengthTimer, true);
 			_this.setStateChanged(element + ".percent2", timer.percent2, true);
 			_this.setStateChanged(element + ".percent", timer.percent, true);
-			_this.log.debug("Timer: " + JSON.stringify(timer));
 			_this.setStateChanged(element + ".name", getTimerName(timer), true);
 			_this.setStateChanged(element + ".json", getJson(timer), true);
 			_this.setStateChanged("all_Timer.alive", alive, true);

@@ -47,6 +47,9 @@ export default class AlexaTimerVis extends utils.Adapter {
 		store._this = this;
 
 		this.setState("info.connection", false, true);
+		if (this.adapterConfig && "_id" in this.adapterConfig) {
+			store.alexaTimerVisInstance = this.adapterConfig?._id.replace("system.adapter.", "");
+		}
 
 		store.pathAlexaStateToListenTo = `${this.config.alexa}.History.intent`;
 		store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
@@ -174,7 +177,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 		try {
 			this.log.info("Adapter shuts down");
 
-			writeState(true);
+			writeState({ reset: true });
 
 			this.clearTimeout(timeout_1);
 			this.clearTimeout(debounceTimeout);

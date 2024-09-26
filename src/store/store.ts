@@ -32,6 +32,7 @@ export function useStore(): Store {
 			deviceName: null,
 			lastTimer: { id: "", timerSelector: "", timerSerial: "" },
 			oldAlexaTimerObject: [],
+			alexaTimerVisInstance: "",
 			getAlexaInstanceObject: () => {
 				const dataPointArray = store.pathAlexaStateToListenTo.split(".");
 				return {
@@ -51,6 +52,9 @@ export function useStore(): Store {
 			},
 			isDeleteTimer: () => {
 				return store.timerAction === "RemoveNotificationIntent";
+			},
+			getAlexaTimerVisInstance: () => {
+				return store.alexaTimerVisInstance;
 			},
 		};
 	}
@@ -84,11 +88,13 @@ export interface Store {
 	deviceName: string | null;
 	lastTimer: LastTimer;
 	oldAlexaTimerObject: AlexaActiveTimerList[];
+	alexaTimerVisInstance: string;
 	getAlexaInstanceObject: () => AlexaInstanceObject;
 	isAddTimer: () => boolean;
 	isShortenTimer: () => boolean;
 	isExtendTimer: () => boolean;
 	isDeleteTimer: () => boolean;
+	getAlexaTimerVisInstance: () => string;
 }
 interface AlexaInstanceObject {
 	adapter: string;
