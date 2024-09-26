@@ -21,27 +21,26 @@ __export(write_state_interval_exports, {
   writeStateIntervall: () => writeStateIntervall
 });
 module.exports = __toCommonJS(write_state_interval_exports);
-var import_timer_data = require("./timer-data");
-var import_write_state = require("./write-state");
 var import_store = require("../store/store");
 var import_logging = require("./logging");
-let writeStateActive = false;
+var import_timer_data = require("./timer-data");
+var import_write_state = require("./write-state");
 const writeStateIntervall = () => {
   const store = (0, import_store.useStore)();
-  const _this = store._this;
+  const { _this } = store;
   try {
-    if (!writeStateActive) {
-      writeStateActive = true;
-      store.interval = _this.setInterval(() => {
-        (0, import_write_state.writeState)(false);
-        if (import_timer_data.timerObject.timerActive.timerCount == 0) {
-          writeStateActive = false;
-          _this.setState("all_Timer.alive", false, true);
-          _this.log.debug("Intervall stopped!");
-          _this.clearInterval(store.interval);
-        }
-      }, import_timer_data.timerObject.timerActive.data.interval);
+    if (store.interval) {
+      return;
     }
+    store.interval = _this.setInterval(async () => {
+      (0, import_write_state.writeState)({ reset: false });
+      if (import_timer_data.timerObject.timerActive.timerCount === 0) {
+        _this.setStateChanged("all_Timer.alive", false, true);
+        _this.clearInterval(store.interval);
+        store.interval = null;
+        _this.log.debug("Intervall stopped!");
+      }
+    }, import_timer_data.timerObject.timerActive.data.interval);
   } catch (e) {
     (0, import_logging.errorLogging)("Error in writeStateIntervall", e, _this);
     _this.clearInterval(store.interval);

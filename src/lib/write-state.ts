@@ -5,7 +5,7 @@ import { useStore } from "../store/store";
 import { deepCopy } from "./object";
 import { errorLogging } from "./logging";
 
-export async function writeState(unload: boolean): Promise<void> {
+export function writeState({ reset }: { reset: boolean }): void {
 	const store = useStore();
 	const _this = store._this;
 	const timers = timerObject.timerActive.timer;
@@ -18,13 +18,11 @@ export async function writeState(unload: boolean): Promise<void> {
 			}
 
 			let alive = true;
-			if (unload) {
+			if (reset) {
 				resetValues(timer, element as TimerSelector);
 				alive = false;
 			}
-			if (!(await _this.objectExists(element + ".name"))) {
-				return;
-			}
+
 			_this.setStateChanged(
 				element + ".alive",
 				timerObject.timerActive.timer[element as keyof typeof timerObject.timer],

@@ -27,7 +27,7 @@ var import_reset = require("./reset");
 var import_store = require("../store/store");
 var import_object = require("./object");
 var import_logging = require("./logging");
-async function writeState(unload) {
+function writeState({ reset }) {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   const timers = import_timer_data.timerObject.timerActive.timer;
@@ -38,12 +38,9 @@ async function writeState(unload) {
         return;
       }
       let alive = true;
-      if (unload) {
+      if (reset) {
         (0, import_reset.resetValues)(timer, element);
         alive = false;
-      }
-      if (!await _this.objectExists(element + ".name")) {
-        return;
       }
       _this.setStateChanged(
         element + ".alive",
