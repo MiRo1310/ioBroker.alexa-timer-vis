@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.5",
+    "version": "2.0.6",
     "news": {
+      "2.0.6": {
+        "en": "FEAT: #151 Responsive Design",
+        "de": "FEAT: #151 Responsive Design",
+        "ru": "#151 Ответственный дизайн",
+        "pt": "FEAT: #151 Design responsivo",
+        "nl": "FEAT: #151 Responsive Design",
+        "fr": "VIANDE: #151 Conception sensible",
+        "it": "FEAT: #151 Responsive Design",
+        "es": "FEAT: #151 Diseño responsable",
+        "pl": "FEAT: # 151 Responsive Design",
+        "uk": "FEAT: #151 Відповідальний дизайн",
+        "zh-cn": "FEAT: #151 反应设计"
+      },
       "2.0.5": {
         "en": "FIX: #142 Timeout error\nFIX: #137 Reset timer name\nFEAT: Add json state",
         "de": "FIX: #142 Timeout Fehler\nFIX: #137 Timer zurücksetzen\nFEAT: json state hinzufügen",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 119 Błąd \"nie ma istniejącego obiektu\" na pierwszym starcie\nUżyj skryptu\nFEAT: # 118 uzyskać nazwę z aktywnego Lista czasu\nFIX: # 117 create Urządzenie jest zdeprecjonowane",
         "uk": "FIX: #119 Помилка \"не існує\" на першому старті\nТип використання\nFEAT: #118 Ім'я від активних Список таймерів\nFIX: #117 Створити Пристрої депресовані",
         "zh-cn": "FIX: # 119 第一次启动时错误“ 没有已存在对象 ”\n使用打字符\nFEAT: # 118 从活动获得名称 计时列表\nFIX: #117 创建 设备已贬值"
-      },
-      "1.0.0": {
-        "en": "Js-controller >=5.0.19 is required",
-        "de": "Js-Controller >=5.0.19 ist erforderlich",
-        "ru": "Js-контроллер >=5.0.19 требуется",
-        "pt": "Js-controller >=5.0.19 é necessário",
-        "nl": "Js-controller > 5.0.19 is vereist",
-        "fr": "Js-contrôleur >=5.0.19 est nécessaire",
-        "it": "Js-controller >=5.0.19 è richiesto",
-        "es": "Se requiere Js-controller",
-        "pl": "Wymagany jest kontroler js- 19",
-        "uk": "Js-controller >=5.0.19 потрібно",
-        "zh-cn": "需要Js控制器 >=5.0.19"
       }
     },
     "titleLang": {
