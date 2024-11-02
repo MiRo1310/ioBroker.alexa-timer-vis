@@ -127,7 +127,7 @@ export const findTimer = async (
 		}
 		return timerFound;
 	} catch (e) {
-		errorLogging("Error in findTimer", e, _this);
+		errorLogging({ text: "Error in findTimer", error: e, _this });
 		return { oneOfMultiTimer: [], timer: [] };
 	}
 };

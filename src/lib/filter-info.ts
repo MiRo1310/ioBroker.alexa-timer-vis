@@ -99,7 +99,7 @@ export const filterInfo = async (
 
 		return { timerString, name, deleteVal, inputString };
 	} catch (e: any) {
-		errorLogging("Error in filterInfo", e, _this);
+		errorLogging({ text: "Error in filterInfo", error: e, _this });
 		return { timerString: "", name: "", deleteVal: 0, inputString: "" };
 	}
 

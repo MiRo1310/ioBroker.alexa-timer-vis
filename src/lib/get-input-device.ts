@@ -22,6 +22,6 @@ export const getInputDevice = async (path: Timer): Promise<void> => {
 			store.deviceSerialNumber = serialStateObj?.val as string;
 		}
 	} catch (error) {
-		errorLogging("Error in getInputDevice", error, _this);
+		errorLogging({ text: "Error in getInputDevice", error, _this });
 	}
 };

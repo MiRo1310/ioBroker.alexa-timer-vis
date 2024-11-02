@@ -15,7 +15,7 @@ export const decomposeInputValue = async (
 
 		return { name, timerSec: eval(timerString), deleteVal, inputString };
 	} catch (e: any) {
-		errorLogging("Error in decomposeInputValue", e, _this);
+		errorLogging({ text: "Error in decomposeInputValue: ", error: e, _this, value: "Input: " + voiceString });
 		return { name: "", timerSec: 0, deleteVal: 0, inputString: "" };
 	}
 };

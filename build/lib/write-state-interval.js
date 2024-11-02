@@ -42,7 +42,7 @@ const writeStateIntervall = () => {
       }
     }, import_timer_data.timerObject.timerActive.data.interval);
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in writeStateIntervall", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in writeStateIntervall", error: e, _this });
     _this.clearInterval(store.interval);
   }
 };

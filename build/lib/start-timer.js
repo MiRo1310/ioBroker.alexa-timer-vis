@@ -51,7 +51,7 @@ const startTimer = async (sec, name, inputString) => {
     import_timer_data.timerObject.timer.timer1.timerInterval = store.intervalLess60 * 1e3;
     (0, import_interval.interval)(sec, timerSelector, inputString, name, timer, store.intervalLess60 * 1e3, true);
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in startTimer", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in startTimer", error: e, _this });
   }
 };
 function getStartTimerValue(jsonAlexa) {

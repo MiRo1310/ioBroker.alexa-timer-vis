@@ -60,7 +60,7 @@ const resetValues = (timer, index) => {
       native: {}
     });
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in resetValues", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in resetValues", error: e, _this });
   }
 };
 function resetAllTimerValuesAndState(_this) {

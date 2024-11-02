@@ -21,7 +21,7 @@ export const writeStateIntervall = (): void => {
 			}
 		}, timerObject.timerActive.data.interval);
 	} catch (e: any) {
-		errorLogging("Error in writeStateIntervall", e, _this);
+		errorLogging({ text: "Error in writeStateIntervall", error: e, _this });
 		_this.clearInterval(store.interval);
 	}
 };

@@ -204,6 +204,6 @@ export const createState = async (value: number): Promise<void> => {
 			_this.subscribeForeignStates(id);
 		}
 	} catch (e: any) {
-		errorLogging("Error in createState", e, _this);
+		errorLogging({ text: "Error in createState", error: e, _this });
 	}
 };

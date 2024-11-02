@@ -48,7 +48,7 @@ const compareCreationTimeAndSerial = async () => {
     }
     return { sameTime: isSameTime, sameSerial: isSameSerial };
   } catch (error) {
-    (0, import_logging.errorLogging)("Error in compareCreationTimeAndSerial", error, _this);
+    (0, import_logging.errorLogging)({ text: "Error in compareCreationTimeAndSerial", error, _this });
     return { sameTime: false, sameSerial: false };
   }
 };

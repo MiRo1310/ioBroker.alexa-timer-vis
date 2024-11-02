@@ -63,7 +63,7 @@ function writeState({ reset }) {
       _this.setStateChanged("all_Timer.alive", alive, true);
     }
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in writeState", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in writeState", error: e, _this });
   }
   function getJson(timer) {
     const copy = (0, import_object.deepCopy)(timer);

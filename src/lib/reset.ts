@@ -39,7 +39,7 @@ export const resetValues = (timer: Timer, index: TimerSelector): void => {
 			native: {},
 		});
 	} catch (e: any) {
-		errorLogging("Error in resetValues", e, _this);
+		errorLogging({ text: "Error in resetValues", error: e, _this });
 	}
 };
 

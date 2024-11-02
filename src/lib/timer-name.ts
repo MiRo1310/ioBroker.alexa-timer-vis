@@ -23,7 +23,7 @@ export const getNewTimerName = (jsonString: ioBroker.State, timerSelector: strin
 			saveLabelAndId(timerWithUniqueId, timerSelector);
 		}
 	} catch (e: any) {
-		errorLogging("Error in getNewTimerName", e, _this);
+		errorLogging({ text: "Error in getNewTimerName", error: e, _this });
 	}
 };
 
@@ -41,7 +41,7 @@ export const registerIdToGetTimerName = async (timerSelector: TimerSelector): Pr
 		await _this.subscribeForeignStatesAsync(foreignId);
 		_this.log.debug(`Subscribed to ${foreignId}`);
 	} catch (e: any) {
-		errorLogging("Error in registerIdToGetTimerName", e, _this);
+		errorLogging({ text: "Error in registerIdToGetTimerName", error: e, _this });
 	}
 };
 

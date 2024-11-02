@@ -31,7 +31,7 @@ export const compareCreationTimeAndSerial = async (): Promise<{ sameTime: boolea
 
 		return { sameTime: isSameTime, sameSerial: isSameSerial };
 	} catch (error: any) {
-		errorLogging("Error in compareCreationTimeAndSerial", error, _this);
+		errorLogging({ text: "Error in compareCreationTimeAndSerial", error, _this });
 		return { sameTime: false, sameSerial: false };
 	}
 };

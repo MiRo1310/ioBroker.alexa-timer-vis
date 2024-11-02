@@ -165,7 +165,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 					}
 				}
 			} catch (e) {
-				errorLogging("Error in stateChange", e, this);
+				errorLogging({ text: "Error in stateChange", error: e, _this: this });
 			}
 		});
 
@@ -196,7 +196,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
 			callback();
 		} catch (e) {
-			errorLogging("Error in onUnload", e, this);
+			errorLogging({ text: "Error in onUnload", error: e, _this: this });
 			callback();
 		}
 	}

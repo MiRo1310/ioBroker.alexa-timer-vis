@@ -45,7 +45,7 @@ export function writeState({ reset }: { reset: boolean }): void {
 			_this.setStateChanged("all_Timer.alive", alive, true);
 		}
 	} catch (e: any) {
-		errorLogging("Error in writeState", e, _this);
+		errorLogging({ text: "Error in writeState", error: e, _this });
 	}
 
 	function getJson(timer: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {

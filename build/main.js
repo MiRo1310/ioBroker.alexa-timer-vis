@@ -164,7 +164,7 @@ class AlexaTimerVis extends utils.Adapter {
           (0, import_delete_timer.delTimer)(timer);
         }
       } catch (e) {
-        (0, import_logging.errorLogging)("Error in stateChange", e, this);
+        (0, import_logging.errorLogging)({ text: "Error in stateChange", error: e, _this: this });
       }
     });
     this.subscribeForeignStates(store.pathAlexaStateToListenTo);
@@ -186,7 +186,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
-      (0, import_logging.errorLogging)("Error in onUnload", e, this);
+      (0, import_logging.errorLogging)({ text: "Error in onUnload", error: e, _this: this });
       callback();
     }
   }

@@ -93,7 +93,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     }
     return timerFound;
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in findTimer", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in findTimer", error: e, _this });
     return { oneOfMultiTimer: [], timer: [] };
   }
 };

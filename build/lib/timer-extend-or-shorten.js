@@ -56,7 +56,7 @@ const extendOrShortTimer = async ({
       extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in extendOrShortTimer", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in extendOrShortTimer", error: e, _this });
   }
 };
 function getMultiplikatorForAddOrSub(store2) {

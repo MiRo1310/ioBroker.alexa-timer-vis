@@ -21,8 +21,14 @@ __export(logging_exports, {
   errorLogging: () => errorLogging
 });
 module.exports = __toCommonJS(logging_exports);
-const errorLogging = (text, error, _this) => {
+const errorLogging = ({
+  text,
+  error,
+  _this,
+  value
+}) => {
   _this.log.error(text + ": " + JSON.stringify(error || ""));
+  _this.log.error(JSON.stringify(value || ""));
   _this.log.error(JSON.stringify(error.stack || ""));
   _this.log.error(JSON.stringify(error.message || ""));
 };

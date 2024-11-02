@@ -42,7 +42,7 @@ export const extendOrShortTimer = async ({
 			extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, timerObject);
 		}
 	} catch (e: any) {
-		errorLogging("Error in extendOrShortTimer", e, _this);
+		errorLogging({ text: "Error in extendOrShortTimer", error: e, _this });
 	}
 };
 function getMultiplikatorForAddOrSub(store: Store): 1 | -1 {

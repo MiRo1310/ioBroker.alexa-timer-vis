@@ -42,7 +42,7 @@ const getNewTimerName = (jsonString, timerSelector) => {
       saveLabelAndId(timerWithUniqueId, timerSelector);
     }
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in getNewTimerName", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in getNewTimerName", error: e, _this });
   }
 };
 const registerIdToGetTimerName = async (timerSelector) => {
@@ -58,7 +58,7 @@ const registerIdToGetTimerName = async (timerSelector) => {
     await _this.subscribeForeignStatesAsync(foreignId);
     _this.log.debug(`Subscribed to ${foreignId}`);
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in registerIdToGetTimerName", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in registerIdToGetTimerName", error: e, _this });
   }
 };
 function getTimerWithUniqueId(json) {

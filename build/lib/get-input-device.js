@@ -40,7 +40,7 @@ const getInputDevice = async (path) => {
       store.deviceSerialNumber = serialStateObj == null ? void 0 : serialStateObj.val;
     }
   } catch (error) {
-    (0, import_logging.errorLogging)("Error in getInputDevice", error, _this);
+    (0, import_logging.errorLogging)({ text: "Error in getInputDevice", error, _this });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

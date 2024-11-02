@@ -101,7 +101,7 @@ const filterInfo = async (input) => {
     }
     return { timerString, name, deleteVal, inputString };
   } catch (e) {
-    (0, import_logging.errorLogging)("Error in filterInfo", e, _this);
+    (0, import_logging.errorLogging)({ text: "Error in filterInfo", error: e, _this });
     return { timerString: "", name: "", deleteVal: 0, inputString: "" };
   }
   function hasMinutes(timerString) {
