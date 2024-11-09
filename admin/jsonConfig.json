@@ -83,7 +83,7 @@
 					"sm": 2,
 					"md": 2,
 					"lg": 1,
-					"xl:": 1,
+					"xl": 1,
 					"label": {
 						"en": "Unit hours",
 						"de": "Einheit Stunden"
@@ -100,7 +100,7 @@
 					"sm": 2,
 					"md": 2,
 					"lg": 1,
-					"xl:": 1,
+					"xl": 1,
 					"label": {
 						"en": "Unit hours",
 						"de": "Einheit Stunden"
@@ -117,7 +117,7 @@
 					"sm": 2,
 					"md": 2,
 					"lg": 1,
-					"xl:": 1,
+					"xl": 1,
 					"label": {
 						"en": "Unit minute",
 						"de": "Einheit Minuten"
@@ -134,7 +134,7 @@
 					"sm": 2,
 					"md": 2,
 					"lg": 1,
-					"xl:": 1,
+					"xl": 1,
 					"label": {
 						"en": "Unit minute",
 						"de": "Einheit Minuten"
@@ -151,7 +151,7 @@
 					"sm": 2,
 					"md": 2,
 					"lg": 1,
-					"xl:": 1,
+					"xl": 1,
 					"label": {
 						"en": "Unit second",
 						"de": "Einheit Sekunden"
@@ -164,11 +164,12 @@
 				"unitSecond2": {
 					"newLine": false,
 					"type": "text",
+
 					"xs": 12,
 					"sm": 2,
 					"md": 2,
 					"lg": 1,
-					"xl:": 1,
+					"xl": 1,
 					"label": {
 						"en": "Unit second",
 						"de": "Einheit Sekunden"
