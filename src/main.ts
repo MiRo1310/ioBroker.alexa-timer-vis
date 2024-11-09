@@ -84,6 +84,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 			try {
 				checkForTimerName(this, id);
 				if (isAlexaStateToListenToChanged(state, id)) {
+					this.log.debug("Alexa state changed");
 					let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
 					if (isIobrokerValue(state)) {
 						store.timerAction = state.val as TimerCondition;
@@ -91,8 +92,10 @@ export default class AlexaTimerVis extends utils.Adapter {
 					const res = await this.getForeignStateAsync(store.pathAlexaSummary);
 					if (isIobrokerValue(res)) {
 						voiceInput = res?.val as string;
+						this.log.debug("VoiceInput: " + voiceInput);
 					}
 					if (timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
+						this.log.debug("NotNotedSentence found");
 						doNothingByNotNotedElement = true;
 					}
 

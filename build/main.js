@@ -111,6 +111,7 @@ class AlexaTimerVis extends utils.Adapter {
         };
         checkForTimerName(this, id);
         if ((0, import_global.isAlexaSummaryStateChanged)(state, id)) {
+          this.log.debug("Alexa state changed");
           let doNothingByNotNotedElement = false;
           if ((0, import_global.isIobrokerValue)(state)) {
             store.timerAction = state.val;
@@ -118,8 +119,10 @@ class AlexaTimerVis extends utils.Adapter {
           const res = await this.getForeignStateAsync(store.pathAlexaSummary);
           if ((0, import_global.isIobrokerValue)(res)) {
             voiceInput = res == null ? void 0 : res.val;
+            this.log.debug("VoiceInput: " + voiceInput);
           }
           if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
+            this.log.debug("NotNotedSentence found");
             doNothingByNotNotedElement = true;
           }
           const {
