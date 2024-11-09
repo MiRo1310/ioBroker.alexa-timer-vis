@@ -135,3 +135,6 @@ export function sortArray(array: any[]): any[] {
 		return a[2] - b[2];
 	});
 }
+export function countOccurrences(str: string, char: string): number {
+	return str.split(char).length - 1;
+}

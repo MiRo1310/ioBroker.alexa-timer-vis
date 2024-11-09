@@ -1,4 +1,5 @@
 import { useStore } from "../store/store";
+import { firstLetterToUpperCase, countOccurrences } from "./global";
 import { errorLogging } from "./logging";
 import { timerObject } from "./timer-data";
 export const filterInfo = async (
@@ -30,7 +31,7 @@ export const filterInfo = async (
 				}
 			} else if (data.hour.indexOf(element) >= 0) {
 				timerString += ")*3600+";
-				inputString += "Stunden ";
+				inputString += firstLetterToUpperCase(element) + " ";
 			} else if (data.minute.indexOf(element) >= 0) {
 				timerString += ")*60+";
 				inputString += "Minuten ";
@@ -95,6 +96,9 @@ export const filterInfo = async (
 		if (input.length) {
 			timerString = hasMinutes(timerString);
 			timerString = checkFirstChart(timerString);
+		}
+		if (countOccurrences(timerString, ")") > countOccurrences(timerString, "(")) {
+			timerString = "(" + timerString;
 		}
 
 		return { timerString, name, deleteVal, inputString };

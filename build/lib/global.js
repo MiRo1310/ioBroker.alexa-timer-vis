@@ -18,6 +18,7 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var global_exports = {};
 __export(global_exports, {
+  countOccurrences: () => countOccurrences,
   doesAlexaSendAQuestion: () => doesAlexaSendAQuestion,
   firstLetterToUpperCase: () => firstLetterToUpperCase,
   isAlexaSummaryStateChanged: () => isAlexaSummaryStateChanged,
@@ -129,8 +130,12 @@ function sortArray(array) {
     return a[2] - b[2];
   });
 }
+function countOccurrences(str, char) {
+  return str.split(char).length - 1;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  countOccurrences,
   doesAlexaSendAQuestion,
   firstLetterToUpperCase,
   isAlexaSummaryStateChanged,
