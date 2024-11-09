@@ -22,6 +22,7 @@ __export(filter_info_exports, {
 });
 module.exports = __toCommonJS(filter_info_exports);
 var import_store = require("../store/store");
+var import_global = require("./global");
 var import_logging = require("./logging");
 var import_timer_data = require("./timer-data");
 const filterInfo = async (input) => {
@@ -48,7 +49,7 @@ const filterInfo = async (input) => {
         }
       } else if (data.hour.indexOf(element) >= 0) {
         timerString += ")*3600+";
-        inputString += "Stunden ";
+        inputString += (0, import_global.firstLetterToUpperCase)(element) + " ";
       } else if (data.minute.indexOf(element) >= 0) {
         timerString += ")*60+";
         inputString += "Minuten ";
@@ -98,6 +99,9 @@ const filterInfo = async (input) => {
     if (input.length) {
       timerString = hasMinutes(timerString);
       timerString = checkFirstChart(timerString);
+    }
+    if ((0, import_global.countOccurrences)(timerString, ")") > (0, import_global.countOccurrences)(timerString, "(")) {
+      timerString = "(" + timerString;
     }
     return { timerString, name, deleteVal, inputString };
   } catch (e) {
