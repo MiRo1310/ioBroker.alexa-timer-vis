@@ -63,6 +63,7 @@ A timer or several by voice input, is created via Alexa, this is evaluated by th
 
 ### **WORK IN PROGRESS**
 
+-   FIX: #157 Add size attribute xl for text in jsonConfig
 -   FIX: #156 Error in decomposeInputValue
 
 ### 2.0.6 (2024-10-19)
