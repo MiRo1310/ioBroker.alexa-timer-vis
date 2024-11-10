@@ -83,7 +83,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 		this.on("stateChange", async (id, state) => {
 			try {
 				checkForTimerName(this, id);
-				if (isAlexaStateToListenToChanged(state, id)) {
+				if (isAlexaStateToListenToChanged(state, id) && isTimerAction(state)) {
 					this.log.debug("Alexa state changed");
 					let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
 					if (isIobrokerValue(state)) {
@@ -225,4 +225,16 @@ function isAlexaTimerVisResetButton(state: ioBroker.State | null | undefined, id
 
 function buildTextCommand(timerOb: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
 	return `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`;
+}
+
+function isTimerAction(state: ioBroker.State | null | undefined): boolean {
+	if (!state?.val) {
+		return false;
+	}
+	return [
+		"SetNotificationIntent",
+		"ShortenNotificationIntent",
+		"ExtendNotificationIntent",
+		"RemoveNotificationIntent",
+	].includes(state.val as string);
 }

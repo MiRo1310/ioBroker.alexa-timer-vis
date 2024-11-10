@@ -110,7 +110,7 @@ class AlexaTimerVis extends utils.Adapter {
           }
         };
         checkForTimerName(this, id);
-        if ((0, import_global.isAlexaSummaryStateChanged)(state, id)) {
+        if ((0, import_global.isAlexaSummaryStateChanged)(state, id) && isTimerAction(state)) {
           this.log.debug("Alexa state changed");
           let doNothingByNotNotedElement = false;
           if ((0, import_global.isIobrokerValue)(state)) {
@@ -208,6 +208,17 @@ function isAlexaTimerVisResetButton(state, id) {
 }
 function buildTextCommand(timerOb) {
   return `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`;
+}
+function isTimerAction(state) {
+  if (!(state == null ? void 0 : state.val)) {
+    return false;
+  }
+  return [
+    "SetNotificationIntent",
+    "ShortenNotificationIntent",
+    "ExtendNotificationIntent",
+    "RemoveNotificationIntent"
+  ].includes(state.val);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
