@@ -273,28 +273,6 @@
 					}
 				}
 			}
-		},
-		"_settings": {
-			"type": "panel",
-			"label": "Settings",
-			"items": {
-				"entprellZeit": {
-					"type": "number",
-					"newLine": true,
-					"min": 1,
-					"step": 1,
-					"xs": 12,
-					"sm": 12,
-					"md": 6,
-					"lg": 6,
-					"xl": 6,
-					"label": "Entprellzeit in Sekunden",
-					"help": {
-						"en": "",
-						"de": "Entprellzeit"
-					}
-				}
-			}
 		}
 	}
 }

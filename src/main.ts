@@ -1,14 +1,11 @@
 "use strict";
 import * as utils from "@iobroker/adapter-core";
-
-import { compareCreationTimeAndSerial } from "./lib/compare-serial";
 import { decomposeInputValue } from "./lib/decompose-input-value";
 import { delTimer, removeTimerInLastTimers as resetLastTimer } from "./lib/delete-timer";
 import {
 	doesAlexaSendAQuestion,
 	isAlexaSummaryStateChanged as isAlexaStateToListenToChanged,
 	isIobrokerValue,
-	isVoiceInputNotSameAsOld,
 } from "./lib/global";
 import { errorLogging } from "./lib/logging";
 import { resetAllTimerValuesAndState } from "./lib/reset";
@@ -76,9 +73,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 		await setAdapterStatusAndInitStateCreation();
 		resetAllTimerValuesAndState(this);
 
-		let voiceInputOld: null | string = null;
 		let voiceInput: string;
-		let timeVoiceInputOld: string | null = null;
 
 		this.on("stateChange", async (id, state) => {
 			try {
@@ -94,6 +89,10 @@ export default class AlexaTimerVis extends utils.Adapter {
 						voiceInput = res?.val as string;
 						this.log.debug("VoiceInput: " + voiceInput);
 					}
+					if (timerObject.timerActive.data.abortWords.find((word) => voiceInput.includes(word))) {
+						this.log.debug("AbortWord found");
+						return;
+					}
 					if (timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
 						this.log.debug("NotNotedSentence found");
 						doNothingByNotNotedElement = true;
@@ -106,25 +105,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 						inputString: decomposeInputString,
 					} = await decomposeInputValue(voiceInput);
 
-					const { sameTime } = await compareCreationTimeAndSerial();
-
-					if (
-						(!sameTime &&
-							isVoiceInputNotSameAsOld(voiceInput, voiceInputOld) &&
-							!doNothingByNotNotedElement &&
-							timeVoiceInputOld != timerSec?.toString()) ||
-						store.isDeleteTimer()
-					) {
-						voiceInputOld = voiceInput;
-						timeVoiceInputOld = timerSec?.toString();
-
-						this.clearTimeout(debounceTimeout);
-
-						debounceTimeout = this.setTimeout(() => {
-							voiceInputOld = null;
-							timeVoiceInputOld = null;
-						}, store.debounceTime * 1000);
-
+					if (!doNothingByNotNotedElement || store.isDeleteTimer()) {
 						doesAlexaSendAQuestion(voiceInput);
 
 						if (store.isDeleteTimer()) {
