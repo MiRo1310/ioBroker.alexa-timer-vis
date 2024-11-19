@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "news": {
+      "2.0.7": {
+        "en": "FIX: #157 Add size attribute xl for text in jsonConfig\nFIX: #156 Error in decomposeInputValue",
+        "de": "FIX: #157 Größe Attribut xl für Text in jsonConfig hinzufügen\nFIX: #156 Fehler in decomposeInputValue",
+        "ru": "FIX: #157 Добавить атрибут xl для текста в jsonConfig\nFIX: #156 Ошибка в decomposeInputValue",
+        "pt": "FIX: #157 Adicionar atributo tamanho xl para texto em jsonConfig\nFIX: #156 Erro no decomposeInputValue",
+        "nl": "FIX: #157 Voeg grootte attribuut xl toe voor tekst in jsonConfig\nFIX: #156 Fout in decomposeInputValue",
+        "fr": "FIX: #157 Ajouter l'attribut taille xl pour le texte dans jsonConfig\nFIX: #156 Erreur lors de la décompositionInputValue",
+        "it": "FIX: #157 Aggiungi attributo di dimensione xl per testo in jsonConfig\nFIX: #156 Errore in decomposeValore di input",
+        "es": "FIX: #157 Atributo de talla xl para texto en jsonConfig\nFIX: #156 Error en descomposiciónInputValue",
+        "pl": "FIX: # 157 Dodaj atrybut rozmiar xl dla tekstu w jsonConfig\nFIX: # 156 Błąd w dekomposeInputValue",
+        "uk": "FIX: #157 Додати атрибут розмірів xl для тексту в jsonConfig\nFIX: #156 Помилка в decomposeInputValue",
+        "zh-cn": "FIX: # 157 在jsonConfig中文本添加大小属性 xl\nFIX: #156 解析输入值错误"
+      },
       "2.0.6": {
         "en": "FEAT: #151 Responsive Design",
         "de": "FEAT: #151 Responsive Design",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 128 Czas tworzenia błędu",
         "uk": "FIX: #128 Таймер створення помилки",
         "zh-cn": "FIX: # 128 计时器生成错误"
-      },
-      "2.0.0": {
-        "en": "FIX: #119 Error \"has no existing object\" on first start\nUse Typescript\nFEAT: #118 get name from activeTimerList\nFIX: #117 createDevice is deprecated",
-        "de": "FIX: #119 Fehler \"hat kein vorhandenes Objekt\" beim ersten Start\nTypskript verwenden\nFEAT: #118 erhalten name from active TimerList\nFIX: #117 erstellen Gerät ist abgeschrieben",
-        "ru": "FIX: #119 Ошибка «не имеет существующего объекта» на первом этапе\nИспользовать Typescript\n#118 получить имя от активного TimerList\nFIX: #117 Устройство депрецировано",
-        "pt": "FIX: #119 Erro \"não tem nenhum objeto existente\" no início\nTipo de utilização\nFEAT: #118 obter nome de ativo Temporizador\nFIX: #117 criar O dispositivo é desprezado",
-        "nl": "FIX: #119 Fout \"heeft geen bestaand object\" bij de eerste start\nTypescript gebruiken\nFEAT: #118 krijgt naam van actief TimerList\nFIX: #117 aanmaken Apparaat is verouderd",
-        "fr": "FIX: #119 Erreur \"n'a pas d'objet existant\" au premier démarrage\nUtiliser Typescript\nVIANDE: #118 obtenir le nom de active Chronologie\nFIX: #117 créer Le périphérique est déprécié",
-        "it": "FIX: #119 Errore \"non ha oggetto esistente\" al primo inizio\nUtilizzare il tipo\nFEAT: #118 ottenere il nome da attivo TimerList\nFIX: #117 creare Il dispositivo è deprecato",
-        "es": "FIX: #119 Error \"no tiene ningún objeto existente\" en el primer comienzo\nUse Typescript\nFEAT: #118 obtener nombre de activo TimerList\nFIX: #117 crear El dispositivo está deprecado",
-        "pl": "FIX: # 119 Błąd \"nie ma istniejącego obiektu\" na pierwszym starcie\nUżyj skryptu\nFEAT: # 118 uzyskać nazwę z aktywnego Lista czasu\nFIX: # 117 create Urządzenie jest zdeprecjonowane",
-        "uk": "FIX: #119 Помилка \"не існує\" на першому старті\nТип використання\nFEAT: #118 Ім'я від активних Список таймерів\nFIX: #117 Створити Пристрої депресовані",
-        "zh-cn": "FIX: # 119 第一次启动时错误“ 没有已存在对象 ”\n使用打字符\nFEAT: # 118 从活动获得名称 计时列表\nFIX: #117 创建 设备已贬值"
       }
     },
     "titleLang": {
