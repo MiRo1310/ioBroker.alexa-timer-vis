@@ -30,7 +30,7 @@ const generateValues = (timer, sec, index, inputString, name) => {
   const result = (0, import_global.secToHourMinSec)(timeLeftSec, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
-  const timeString1 = hour + ":" + minutes + ":" + seconds + getTimeUnit(timeLeftSec, store);
+  const timeString1 = `${hour}:${minutes}:${seconds}${getTimeUnit(timeLeftSec, store)}`;
   const { timeString } = isShorterThanAMinute(
     isShorterThanSixtyMinutes(
       isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store))
@@ -55,7 +55,7 @@ const generateValues = (timer, sec, index, inputString, name) => {
   return timeLeftSec;
 };
 function setTimerNameIfNotExist(name) {
-  if (name == "" || name == null || name == void 0) {
+  if (name == "" || !name) {
     return "Timer";
   }
   return name;
@@ -65,15 +65,16 @@ function resetSuperiorValue(hour, minutes, seconds) {
     hour = "";
     if (minutes === "00") {
       minutes = "";
-      if (seconds === "00")
+      if (seconds === "00") {
         seconds = "";
+      }
     }
   }
   return { hour, minutes, seconds };
 }
 function isShorterThanAMinute({ minutes, seconds, store, timeString }) {
   if (parseInt(minutes) == 0) {
-    return { timeString: seconds + " " + store.unitSecond3 };
+    return { timeString: `${seconds} ${store.unitSecond3}` };
   }
   return { timeString };
 }
@@ -85,7 +86,7 @@ function isShorterOrEqualToSixtyFiveMinutes({
   timeString
 }) {
   if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
-    const timeString2 = hour + ":" + minutes + ":" + seconds + " " + store.unitHour3;
+    const timeString2 = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
     return { timeString: timeString2, hour, minutes, seconds, store };
   }
   return { timeString, hour, minutes, seconds, store };
@@ -98,14 +99,14 @@ function isShorterThanSixtyMinutes({
   timeString
 }) {
   if (parseInt(hour) == 0) {
-    const timeString2 = minutes + ":" + seconds + " " + store.unitMinute3;
+    const timeString2 = `${minutes}:${seconds} ${store.unitMinute3}`;
     return { timeString: timeString2, hour, minutes, seconds, store };
   }
   return { timeString, hour, minutes, seconds, store };
 }
 function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store) {
   if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {
-    const timeString = hour + ":" + minutes + ":" + seconds + " " + store.unitHour3;
+    const timeString = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
     return { timeString, hour, minutes, seconds, store };
   }
   return { timeString: "", hour, minutes, seconds, store };

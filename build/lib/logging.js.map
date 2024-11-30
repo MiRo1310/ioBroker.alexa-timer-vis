@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/lib/logging.ts"],
-  "sourcesContent": ["import AlexaTimerVis from \"../main\";\n\nexport const errorLogging = ({\n\ttext,\n\terror,\n\t_this,\n\tvalue,\n}: {\n\ttext: string;\n\terror: any;\n\t_this: AlexaTimerVis;\n\tvalue?: any;\n}): void => {\n\t_this.log.error(text + \": \" + JSON.stringify(error || \"\"));\n\t_this.log.error(JSON.stringify(value || \"\"));\n\t_this.log.error(JSON.stringify(error.stack || \"\"));\n\t_this.log.error(JSON.stringify(error.message || \"\"));\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEO,MAAM,eAAe,CAAC;AAAA,EAC5B;AAAA,EACA;AAAA,EACA;AAAA,EACA;AACD,MAKY;AACX,QAAM,IAAI,MAAM,OAAO,OAAO,KAAK,UAAU,SAAS,EAAE,CAAC;AACzD,QAAM,IAAI,MAAM,KAAK,UAAU,SAAS,EAAE,CAAC;AAC3C,QAAM,IAAI,MAAM,KAAK,UAAU,MAAM,SAAS,EAAE,CAAC;AACjD,QAAM,IAAI,MAAM,KAAK,UAAU,MAAM,WAAW,EAAE,CAAC;AACpD;",
+  "sourcesContent": ["import type AlexaTimerVis from '../main';\n\nexport const errorLogging = ({\n    text,\n    error,\n    _this,\n    value,\n}: {\n    text: string;\n    error: any;\n    _this: AlexaTimerVis;\n    value?: any;\n}): void => {\n    _this.log.error(`${text}: ${JSON.stringify(error || '')}`);\n    _this.log.error(JSON.stringify(value || ''));\n    _this.log.error(JSON.stringify(error.stack || ''));\n    _this.log.error(JSON.stringify(error.message || ''));\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEO,MAAM,eAAe,CAAC;AAAA,EACzB;AAAA,EACA;AAAA,EACA;AAAA,EACA;AACJ,MAKY;AACR,QAAM,IAAI,MAAM,GAAG,IAAI,KAAK,KAAK,UAAU,SAAS,EAAE,CAAC,EAAE;AACzD,QAAM,IAAI,MAAM,KAAK,UAAU,SAAS,EAAE,CAAC;AAC3C,QAAM,IAAI,MAAM,KAAK,UAAU,MAAM,SAAS,EAAE,CAAC;AACjD,QAAM,IAAI,MAAM,KAAK,UAAU,MAAM,WAAW,EAAE,CAAC;AACvD;",
   "names": []
 }

@@ -64,13 +64,19 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     for (const element in import_timer_data.timerObject.timer) {
       if (deleteTimerIndex == 1) {
         if (!store.questionAlexa) {
-          if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[element] === true) {
+          if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[element]) {
             timerFound.timer.push(element);
-          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["voiceInputAsSeconds"] == sec && sec !== 0) {
+          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec && sec !== 0) {
             timerFound.timer.push(element);
-          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element]["voiceInputAsSeconds"] == sec) {
+          } else if (
+            // _this.log.debug("Wenn nur einer gestellt ist mit der der gewünschten Zeit");
+            countMatchingTime == 1 && import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec
+          ) {
             timerFound.timer.push(element);
-          } else if (import_timer_data.timerObject.timer[element]["name"] == name && name !== "" && countMatchingName == 1) {
+          } else if (
+            // Einer, mit genauem Namen
+            import_timer_data.timerObject.timer[element].name == name && name !== "" && countMatchingName == 1
+          ) {
             timerFound.timer.push(element);
           }
         }
@@ -82,7 +88,10 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
             if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
               timerFound.timer.push(element);
             }
-          } else if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("ja") != -1) {
+          } else if (
+            // Alle, von allen Geräten
+            countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("ja") != -1
+          ) {
             for (const element2 in import_timer_data.timerObject.timerActive.timer) {
               timerFound.timer.push(element2);
               _this.log.debug("Clear all");

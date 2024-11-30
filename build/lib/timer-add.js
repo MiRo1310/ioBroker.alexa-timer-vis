@@ -26,27 +26,33 @@ var import_state = require("./state");
 var import_timer_data = require("./timer-data");
 var import_write_state_interval = require("./write-state-interval");
 var import_global = require("./global");
+var import_logging = require("./logging");
+var import_store = require("../store/store");
 const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
   var _a;
+  const { _this } = (0, import_store.useStore)();
   const name = decomposeName;
-  const inputString = decomposeInputString;
   if (timerSec && timerSec != 0) {
     let nameExist = false;
     for (const element in import_timer_data.timerObject.timer) {
       if (((_a = import_timer_data.timerObject.timer[element]) == null ? void 0 : _a.name) == name && !(0, import_global.isStringEmpty)(name)) {
         nameExist = true;
+        break;
       }
-      break;
     }
     if (!nameExist) {
       import_timer_data.timerObject.timerActive.timerCount++;
-      (0, import_state.createState)(import_timer_data.timerObject.timerActive.timerCount);
-      const timer = "timer" + import_timer_data.timerObject.timerActive.timerCount;
+      (0, import_state.createState)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
+        (0, import_logging.errorLogging)({ text: "Error in timerAdd", error: e, _this });
+      });
+      const timer = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
       if (import_timer_data.timerObject.timerActive.timer[timer] === void 0) {
         import_timer_data.timerObject.timerActive.timer[timer] = false;
         import_timer_data.timerObject.timer[timer] = {};
       }
-      (0, import_start_timer.startTimer)(timerSec, name, inputString);
+      (0, import_start_timer.startTimer)(timerSec, name, decomposeInputString).catch((e) => {
+        (0, import_logging.errorLogging)({ text: "Error in timerAdd", error: e, _this });
+      });
       (0, import_write_state_interval.writeStateIntervall)();
     }
   }

@@ -27,7 +27,7 @@ const errorLogging = ({
   _this,
   value
 }) => {
-  _this.log.error(text + ": " + JSON.stringify(error || ""));
+  _this.log.error(`${text}: ${JSON.stringify(error || "")}`);
   _this.log.error(JSON.stringify(value || ""));
   _this.log.error(JSON.stringify(error.stack || ""));
   _this.log.error(JSON.stringify(error.message || ""));
