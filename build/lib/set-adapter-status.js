@@ -32,7 +32,7 @@ const setAdapterStatusAndInitStateCreation = async () => {
     return;
   }
   _this.log.info("Alexa State was found");
-  _this.setState("info.connection", true, true);
+  await _this.setState("info.connection", true, true);
   await (0, import_state.createState)(4);
 };
 // Annotate the CommonJS export names for ESM import in node:

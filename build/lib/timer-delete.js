@@ -25,7 +25,8 @@ var import_delete_timer = require("./delete-timer");
 var import_find_timer = require("./find-timer");
 var import_one_timer_to_delete = require("./one-timer-to-delete");
 var import_store = require("../store/store");
-const timerDelete = (decomposeName, timerSec, voiceInput, deleteVal) => {
+var import_logging = require("./logging");
+const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   let name = decomposeName;
@@ -43,15 +44,20 @@ const timerDelete = (decomposeName, timerSec, voiceInput, deleteVal) => {
     }
     _this.log.debug("Timer can be deleted");
   }
-  (0, import_find_timer.findTimer)(timerAbortSec, name, deleteTimerIndex, voiceInput).then((timers) => {
-    if (timers.timer) {
-      timers.timer.forEach((element) => {
-        (0, import_delete_timer.delTimer)(element);
-      });
-    } else if (timers.oneOfMultiTimer) {
-      const a = timers.oneOfMultiTimer;
-      if (typeof a[0] == "string" && typeof a[1] == "number" && typeof a[2] == "string" && typeof a[3] == "string")
-        (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(a[0], a[1], a[2], a[3]);
+  await (0, import_find_timer.findTimer)(timerAbortSec, name, deleteTimerIndex, voiceInput).then((timers) => {
+    try {
+      if (timers.timer) {
+        timers.timer.forEach((element) => {
+          (0, import_delete_timer.delTimer)(element);
+        });
+      } else if (timers.oneOfMultiTimer) {
+        const a = timers.oneOfMultiTimer;
+        if (typeof a[0] == "string" && typeof a[1] == "number" && typeof a[2] == "string" && typeof a[3] == "string") {
+          (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(a[0], a[1], a[2], a[3]);
+        }
+      }
+    } catch (e) {
+      (0, import_logging.errorLogging)({ text: "Error in timerDelete", error: e, _this });
     }
   });
 };

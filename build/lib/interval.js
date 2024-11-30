@@ -26,6 +26,7 @@ var import_global = require("./global");
 var import_reset = require("./reset");
 var import_timer_data = require("./timer-data");
 var import_store = require("../store/store");
+var import_logging = require("./logging");
 const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -44,19 +45,13 @@ const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) 
           import_timer_data.timerObject.interval[timerBlock]
         );
       }
-      interval(
-        sec,
-        timerBlock,
-        inputString,
-        name,
-        timer,
-        import_timer_data.timerObject.timer[timerBlock].timerInterval,
-        true
-      );
+      interval(sec, timerBlock, inputString, name, timer, import_timer_data.timerObject.timer[timerBlock].timerInterval, true);
     }
-    if (timeLeftSec <= 0 || import_timer_data.timerObject.timerActive.timer[timerBlock] == false) {
+    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerBlock]) {
       import_timer_data.timerObject.timerActive.timerCount--;
-      (0, import_reset.resetValues)(timer, timerBlock);
+      (0, import_reset.resetValues)(timer, timerBlock).catch((e) => {
+        (0, import_logging.errorLogging)({ text: "Error in interval", error: e, _this });
+      });
       _this.log.debug("Timer stopped");
       if (import_timer_data.timerObject.interval) {
         _this.clearInterval(

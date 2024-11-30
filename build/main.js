@@ -51,7 +51,7 @@ let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
   static instance;
   /**
-   * @param {Partial<utils.AdapterOptions>} [options={}]
+   * @param [options] - See {@link
    */
   constructor(options = {}) {
     super({
@@ -69,7 +69,7 @@ class AlexaTimerVis extends utils.Adapter {
     var _a;
     const store = (0, import_store.useStore)();
     store._this = this;
-    this.setState("info.connection", false, true);
+    await this.setState("info.connection", false, true);
     if (this.adapterConfig && "_id" in this.adapterConfig) {
       store.alexaTimerVisInstance = (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "");
     }
@@ -95,18 +95,7 @@ class AlexaTimerVis extends utils.Adapter {
     let voiceInput;
     this.on("stateChange", async (id, state) => {
       try {
-        let checkForTimerName = function(_this, id2) {
-          if (!(0, import_global.isIobrokerValue)(state) || state.val === "[]") {
-            return;
-          }
-          const lastTimer = store.lastTimer;
-          if (lastTimer.id === id2) {
-            (0, import_delete_timer.removeTimerInLastTimers)();
-            (0, import_timer_name.getNewTimerName)(state, lastTimer.timerSelector);
-            _this.unsubscribeForeignStatesAsync(id2);
-          }
-        };
-        checkForTimerName(this, id);
+        await checkForTimerName(this, id);
         if ((0, import_global.isAlexaSummaryStateChanged)(state, id) && isTimerAction(state)) {
           this.log.debug("Alexa state changed");
           let doNothingByNotNotedElement = false;
@@ -116,7 +105,7 @@ class AlexaTimerVis extends utils.Adapter {
           const res = await this.getForeignStateAsync(store.pathAlexaSummary);
           if ((0, import_global.isIobrokerValue)(res)) {
             voiceInput = res == null ? void 0 : res.val;
-            this.log.debug("VoiceInput: " + voiceInput);
+            this.log.debug(`VoiceInput: ${voiceInput}`);
           }
           if (import_timer_data.timerObject.timerActive.data.abortWords.find((word) => voiceInput.includes(word))) {
             this.log.debug("AbortWord found");
@@ -131,11 +120,11 @@ class AlexaTimerVis extends utils.Adapter {
             timerSec,
             deleteVal,
             inputString: decomposeInputString
-          } = await (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
+          } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
           if (!doNothingByNotNotedElement || store.isDeleteTimer()) {
             (0, import_global.doesAlexaSendAQuestion)(voiceInput);
             if (store.isDeleteTimer()) {
-              (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
+              await (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
               return;
             }
             if (store.isAddTimer()) {
@@ -143,7 +132,7 @@ class AlexaTimerVis extends utils.Adapter {
               return;
             }
             if (store.isExtendTimer() || store.isShortenTimer()) {
-              (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, decomposeName });
+              await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, decomposeName });
               return;
             }
           }
@@ -159,6 +148,17 @@ class AlexaTimerVis extends utils.Adapter {
           );
           (0, import_delete_timer.delTimer)(timer);
         }
+        async function checkForTimerName(_this, id2) {
+          if (!(0, import_global.isIobrokerValue)(state) || state.val === "[]") {
+            return;
+          }
+          const lastTimer = store.lastTimer;
+          if (lastTimer.id === id2) {
+            (0, import_delete_timer.removeTimerInLastTimers)();
+            (0, import_timer_name.getNewTimerName)(state, lastTimer.timerSelector);
+            await _this.unsubscribeForeignStatesAsync(id2);
+          }
+        }
       } catch (e) {
         (0, import_logging.errorLogging)({ text: "Error in stateChange", error: e, _this: this });
       }
@@ -169,7 +169,9 @@ class AlexaTimerVis extends utils.Adapter {
     const store = (0, import_store.useStore)();
     try {
       this.log.info("Adapter shuts down");
-      (0, import_write_state.writeState)({ reset: true });
+      (0, import_write_state.writeState)({ reset: true }).catch((e) => {
+        (0, import_logging.errorLogging)({ text: "Error in onUnload", error: e, _this: this });
+      });
       this.clearTimeout(timeout_1);
       this.clearTimeout(debounceTimeout);
       this.clearInterval(store.interval);
@@ -197,7 +199,7 @@ function getAlexaTextToCommandState(store, timerObj) {
   return `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerObj.serialNumber}.Commands.textCommand`;
 }
 function isAlexaTimerVisResetButton(state, id) {
-  return (0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset") ? true : false;
+  return !!((0, import_global.isIobrokerValue)(state) && state.val && id.includes("Reset"));
 }
 function buildTextCommand(timerOb) {
   return `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== "" ? timerOb.alexaTimerName : timerOb.name !== "Timer" ? timerOb.name.replace("Timer", "") : timerOb.inputString} Timer`;

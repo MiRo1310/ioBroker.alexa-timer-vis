@@ -63,7 +63,7 @@ function getStartTimerValue(jsonAlexa) {
 function selectAvailableTimer(_this) {
   for (let i = 0; i < Object.keys(import_timer_data.timerObject.timerActive.timer).length; i++) {
     const key = Object.keys(import_timer_data.timerObject.timerActive.timer)[i];
-    if (import_timer_data.timerObject.timerActive.timer[key] === false) {
+    if (!import_timer_data.timerObject.timerActive.timer[key]) {
       import_timer_data.timerObject.timerActive.timer[key] = true;
       return key;
     }
@@ -71,7 +71,7 @@ function selectAvailableTimer(_this) {
 }
 async function setDeviceNameInStateName(timerBlock, _this, store) {
   if ((0, import_global.isString)(timerBlock)) {
-    await _this.setObjectAsync("alexa-timer-vis.0." + timerBlock, {
+    await _this.setObjectAsync(`alexa-timer-vis.0.${timerBlock}`, {
       type: "device",
       common: { name: `${store.deviceName}` },
       native: {}

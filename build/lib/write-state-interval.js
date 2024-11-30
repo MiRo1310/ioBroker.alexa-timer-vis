@@ -32,8 +32,10 @@ const writeStateIntervall = () => {
     if (store.interval) {
       return;
     }
-    store.interval = _this.setInterval(async () => {
-      (0, import_write_state.writeState)({ reset: false });
+    store.interval = _this.setInterval(() => {
+      (0, import_write_state.writeState)({ reset: false }).catch((e) => {
+        (0, import_logging.errorLogging)({ text: "Error in writeStateIntervall", error: e, _this });
+      });
       if (import_timer_data.timerObject.timerActive.timerCount === 0) {
         _this.setStateChanged("all_Timer.alive", false, true);
         _this.clearInterval(store.interval);

@@ -42,9 +42,9 @@ const extendOrShortTimer = async ({
     if (voiceInput.includes("um")) {
       firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf("um")).split(" ");
       valueExtend = voiceInput.slice(voiceInput.indexOf("um") + 2).split(" ");
-      const { timerString } = await (0, import_filter_info.filterInfo)(firstPartOfValue);
+      const { timerString } = (0, import_filter_info.filterInfo)(firstPartOfValue);
       extendTime = eval(timerString);
-      const { timerString: string2 } = await (0, import_filter_info.filterInfo)(valueExtend);
+      const { timerString: string2 } = (0, import_filter_info.filterInfo)(valueExtend);
       extendTime2 = eval(string2);
     }
     const timers = await (0, import_find_timer.findTimer)(extendTime, decomposeName, 1, voiceInput);
@@ -68,7 +68,7 @@ function getMultiplikatorForAddOrSub(store2) {
 function extendTimer(timers2, sec, addOrSub2, timerObject2) {
   timers2.forEach((timer) => {
     const timerSeconds = sec;
-    if (timerObject2.timerActive.timer[timer] == true) {
+    if (timerObject2.timerActive.timer[timer]) {
       timerObject2.timer[timer].extendOrShortenTimer = true;
       timerObject2.timer[timer].endTimeNumber += timerSeconds * 1e3 * addOrSub2;
       timerObject2.timer[timer].endTimeString = (0, import_global.timeToString)(

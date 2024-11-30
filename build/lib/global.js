@@ -22,11 +22,9 @@ __export(global_exports, {
   doesAlexaSendAQuestion: () => doesAlexaSendAQuestion,
   firstLetterToUpperCase: () => firstLetterToUpperCase,
   isAlexaSummaryStateChanged: () => isAlexaSummaryStateChanged,
-  isCreateNewTimer: () => isCreateNewTimer,
   isIobrokerValue: () => isIobrokerValue,
   isString: () => isString,
   isStringEmpty: () => isStringEmpty,
-  isVoiceInputNotSameAsOld: () => isVoiceInputNotSameAsOld,
   secToHourMinSec: () => secToHourMinSec,
   sortArray: () => sortArray,
   timeToString: () => timeToString
@@ -66,9 +64,9 @@ function getHourUnit(hour, store) {
 function getDoubleIntValues(doubleInt, hour, minutes, seconds) {
   if (doubleInt) {
     return {
-      hourString: ("0" + hour).slice(-2),
-      minutesString: ("0" + minutes).slice(-2),
-      secondsString: ("0" + seconds).slice(-2)
+      hourString: `0${hour}`.slice(-2),
+      minutesString: `0${minutes}`.slice(-2),
+      secondsString: `0${seconds}`.slice(-2)
     };
   }
   return {
@@ -105,12 +103,6 @@ function isAlexaSummaryStateChanged(state, id) {
   const store = (0, import_store.useStore)();
   return state && isString(state.val) && state.val !== "" && id === store.pathAlexaStateToListenTo;
 }
-function isCreateNewTimer(voiceInput) {
-  return (voiceInput.indexOf("timer") >= 0 || voiceInput.indexOf("stelle") >= 0 || voiceInput.indexOf("stell") >= 0) && voiceInput.indexOf("wecker") == -1;
-}
-function isVoiceInputNotSameAsOld(voiceInput, voiceInputOld) {
-  return voiceInput !== voiceInputOld && voiceInput !== "";
-}
 function doesAlexaSendAQuestion(voiceInput) {
   const store = (0, import_store.useStore)();
   store.questionAlexa = voiceInput.indexOf(",") != -1;
@@ -123,7 +115,7 @@ function isString(str) {
 }
 function isIobrokerValue(obj) {
   const result = obj && obj.val !== null && obj.val !== void 0;
-  return result ? true : false;
+  return !!result;
 }
 function sortArray(array) {
   return array.sort(function(a, b) {
@@ -139,11 +131,9 @@ function countOccurrences(str, char) {
   doesAlexaSendAQuestion,
   firstLetterToUpperCase,
   isAlexaSummaryStateChanged,
-  isCreateNewTimer,
   isIobrokerValue,
   isString,
   isStringEmpty,
-  isVoiceInputNotSameAsOld,
   secToHourMinSec,
   sortArray,
   timeToString

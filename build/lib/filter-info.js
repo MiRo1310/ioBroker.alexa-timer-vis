@@ -25,7 +25,7 @@ var import_store = require("../store/store");
 var import_global = require("./global");
 var import_logging = require("./logging");
 var import_timer_data = require("./timer-data");
-const filterInfo = async (input) => {
+const filterInfo = (input) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
@@ -49,7 +49,7 @@ const filterInfo = async (input) => {
         }
       } else if (data.hour.indexOf(element) >= 0) {
         timerString += ")*3600+";
-        inputString += (0, import_global.firstLetterToUpperCase)(element) + " ";
+        inputString += `${(0, import_global.firstLetterToUpperCase)(element)} `;
       } else if (data.minute.indexOf(element) >= 0) {
         timerString += ")*60+";
         inputString += "Minuten ";
@@ -60,33 +60,35 @@ const filterInfo = async (input) => {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
         }
-        timerString += "*" + import_timer_data.timerObject.brueche1[element] + ")*60";
+        timerString += `*${import_timer_data.timerObject.brueche1[element]})*60`;
       } else if (import_timer_data.timerObject.brueche2[element] > 0) {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
         }
-        timerString += "*" + import_timer_data.timerObject.brueche2[element] + ")*3600";
+        timerString += `*${import_timer_data.timerObject.brueche2[element]})*3600`;
       } else if (import_timer_data.timerObject.zahlen[element] > 0) {
         if (import_timer_data.timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
           if ((timerString.charAt(timerString.length - 1) != "*3600+" || timerString.charAt(timerString.length - 1) != "*60+") && timerString.charAt(timerString.length - 3) != "(") {
-            timerString += "(" + import_timer_data.timerObject.zahlen[element];
+            timerString += `(${import_timer_data.timerObject.zahlen[element]}`;
           } else {
             timerString += import_timer_data.timerObject.zahlen[element];
           }
-          inputString += import_timer_data.timerObject.zahlen[element] + " ";
+          inputString += `${import_timer_data.timerObject.zahlen[element]} `;
         } else if (element == "hundert") {
-          timerString += "*" + import_timer_data.timerObject.zahlen[element];
-          inputString += import_timer_data.timerObject.zahlen[element] + " ";
+          timerString += `*${import_timer_data.timerObject.zahlen[element]}`;
+          inputString += `${import_timer_data.timerObject.zahlen[element]} `;
         } else {
-          timerString += "+" + import_timer_data.timerObject.zahlen[element];
-          inputString += import_timer_data.timerObject.zahlen[element] + " ";
+          timerString += `+${import_timer_data.timerObject.zahlen[element]}`;
+          inputString += `${import_timer_data.timerObject.zahlen[element]} `;
         }
       } else if (parseInt(element)) {
         const number = parseInt(element);
-        if (timerString == "")
+        if (timerString == "") {
           timerString = "(";
-        if (timerString.endsWith("+"))
+        }
+        if (timerString.endsWith("+")) {
           timerString += "(";
+        }
         timerString += number;
         inputString += number;
       } else if (!(store.isShortenTimer() || store.isExtendTimer())) {
@@ -101,7 +103,7 @@ const filterInfo = async (input) => {
       timerString = checkFirstChart(timerString);
     }
     if ((0, import_global.countOccurrences)(timerString, ")") > (0, import_global.countOccurrences)(timerString, "(")) {
-      timerString = "(" + timerString;
+      timerString = `(${timerString}`;
     }
     return { timerString, name, deleteVal, inputString };
   } catch (e) {

@@ -40,7 +40,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".percent", {
+      await _this.setObjectNotExistsAsync(`timer${i}.percent`, {
         type: "state",
         common: {
           name: "Percent",
@@ -52,7 +52,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".percent2", {
+      await _this.setObjectNotExistsAsync(`timer${i}.percent2`, {
         type: "state",
         common: {
           name: "Percent",
@@ -64,7 +64,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".alive", {
+      await _this.setObjectNotExistsAsync(`timer${i}.alive`, {
         type: "state",
         common: {
           name: "Timer active",
@@ -76,7 +76,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".hour", {
+      await _this.setObjectNotExistsAsync(`timer${i}.hour`, {
         type: "state",
         common: {
           name: "Hours",
@@ -88,7 +88,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".minute", {
+      await _this.setObjectNotExistsAsync(`timer${i}.minute`, {
         type: "state",
         common: {
           name: "Minutes",
@@ -100,7 +100,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".second", {
+      await _this.setObjectNotExistsAsync(`timer${i}.second`, {
         type: "state",
         common: {
           name: "Seconds",
@@ -112,7 +112,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".string", {
+      await _this.setObjectNotExistsAsync(`timer${i}.string`, {
         type: "state",
         common: {
           name: "String",
@@ -124,7 +124,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".string_2", {
+      await _this.setObjectNotExistsAsync(`timer${i}.string_2`, {
         type: "state",
         common: {
           name: "String_2",
@@ -136,7 +136,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".name", {
+      await _this.setObjectNotExistsAsync(`timer${i}.name`, {
         type: "state",
         common: {
           name: "Name des Timers",
@@ -148,7 +148,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".TimeStart", {
+      await _this.setObjectNotExistsAsync(`timer${i}.TimeStart`, {
         type: "state",
         common: {
           name: "Start Time",
@@ -160,7 +160,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".TimeEnd", {
+      await _this.setObjectNotExistsAsync(`timer${i}.TimeEnd`, {
         type: "state",
         common: {
           name: "End Time",
@@ -172,7 +172,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".InputDeviceName", {
+      await _this.setObjectNotExistsAsync(`timer${i}.InputDeviceName`, {
         type: "state",
         common: {
           name: "Input of Device",
@@ -184,7 +184,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".Reset", {
+      await _this.setObjectNotExistsAsync(`timer${i}.Reset`, {
         type: "state",
         common: {
           name: "Reset Timer",
@@ -196,7 +196,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".lengthTimer", {
+      await _this.setObjectNotExistsAsync(`timer${i}.lengthTimer`, {
         type: "state",
         common: {
           name: "Gestellter Timer",
@@ -208,7 +208,7 @@ const createState = async (value) => {
         },
         native: {}
       });
-      await _this.setObjectNotExistsAsync("timer" + i + ".json", {
+      await _this.setObjectNotExistsAsync(`timer${i}.json`, {
         type: "state",
         common: {
           name: "json",
