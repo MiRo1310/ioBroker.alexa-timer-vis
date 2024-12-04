@@ -64,8 +64,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 2.0.8 (2024-12-04)
 
 - CHORE: Update dependencies
 - CHORE: Migration to ESLint 9 and @iobroker/eslint-config

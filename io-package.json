@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.7",
+    "version": "2.0.8",
     "news": {
+      "2.0.8": {
+        "en": "CHORE: Update dependencies\nCHORE: Migration to ESLint 9 and @iobroker/eslint-config",
+        "de": "CHORE: Aktualisieren von Abhängigkeiten\nCHORE: Migration auf ESLint 9 und @iobroker/eslint-config",
+        "ru": "CHORE: зависимости от обновления\nCHORE: Migration to ESLint 9 and @iobroker/eslint-config",
+        "pt": "CHORE: Atualizar dependências\nCHORE: Migração para ESLint 9 e @iobroker/eslint-config",
+        "nl": "Afhankelijkheden bijwerken\nCHORE: migratie naar ESLint 9 en @iobroker/eslint-config",
+        "fr": "CHORE : Mise à jour des dépendances\nCHORE: Migration vers ESLint 9 et @iobroker/eslint-config",
+        "it": "CHORE: dipendenze di aggiornamento\nCHORE: Migrazione a ESLint 9 e @iobroker/eslint-config",
+        "es": "CHORE: Actualizar las dependencias\nCHORE: Migración a ESLint 9 y @iobroker/eslint-config",
+        "pl": "CHORE: Uaktualnij zależności\nCHORE: Migracja do ESLint 9 i @ iobroker / eslint- config",
+        "uk": "CHORE: Оновити залежності\nCHORE: Міграція до ESLint 9 і @iobroker/eslint-config",
+        "zh-cn": "CHORE: 更新依赖性\nCHORE: 迁移到ESLint 9 和 @iobroster/eslint-config"
+      },
       "2.0.7": {
         "en": "FIX: #157 Add size attribute xl for text in jsonConfig\nFIX: #156 Error in decomposeInputValue",
         "de": "FIX: #157 Größe Attribut xl für Text in jsonConfig hinzufügen\nFIX: #156 Fehler in decomposeInputValue",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 130 Sting _ 2 pozostaje pusty",
         "uk": "FIX: #130 Sting_2 залишається порожнім",
         "zh-cn": "FIX: # 130 Sting_2 仍然为空"
-      },
-      "2.0.1": {
-        "en": "FIX: #128 Timer creating error",
-        "de": "FIX: #128 Timer Fehler erstellen",
-        "ru": "FIX: #128 Таймер, создающий ошибку",
-        "pt": "FIX: #128 Temporizador criando erro",
-        "nl": "FIX: #128 Timer aanmaken fout",
-        "fr": "FIX: #128 Chronomètre créant une erreur",
-        "it": "FIX: #128 Timer crea errore",
-        "es": "FIX: #128 Timer creating error",
-        "pl": "FIX: # 128 Czas tworzenia błędu",
-        "uk": "FIX: #128 Таймер створення помилки",
-        "zh-cn": "FIX: # 128 计时器生成错误"
       }
     },
     "titleLang": {
