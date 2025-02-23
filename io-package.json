@@ -157,7 +157,8 @@
     ],
     "globalDependencies": [
       {
-        "alexa2": ">=3.11.2"
+        "alexa2": ">=3.11.2",
+        "admin": ">=6.17.14"
       }
     ]
   },
