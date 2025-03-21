@@ -11,15 +11,12 @@ import { errorLogging } from './lib/logging';
 import { resetAllTimerValuesAndState } from './lib/reset';
 import { setAdapterStatusAndInitStateCreation } from './lib/set-adapter-status';
 import { timerAdd } from './lib/timer-add';
-import type { Timer, TimerCondition, Timers } from './lib/timer-data';
-// eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './lib/timer-data';
+import { timerObject } from './config/timer-data';
 import { timerDelete } from './lib/timer-delete';
 import { extendOrShortTimer } from './lib/timer-extend-or-shorten';
 import { getNewTimerName } from './lib/timer-name';
 import { writeState } from './lib/write-state';
-import type { Store } from './store/store';
-// eslint-disable-next-line no-duplicate-imports
+import type { Store, Timer, TimerCondition, Timers } from './types/types';
 import { useStore } from './store/store';
 
 let timeout_1: ioBroker.Timeout | undefined;
@@ -84,7 +81,7 @@ export default class AlexaTimerVis extends utils.Adapter {
         this.on('stateChange', async (id, state) => {
             try {
                 await checkForTimerName(this, id);
-                if (isAlexaStateToListenToChanged(state, id) && isTimerAction(state)) {
+                if (isAlexaStateToListenToChanged({ state: state, id: id }) && isTimerAction(state)) {
                     this.log.debug('Alexa state changed');
                     let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
                     if (isIobrokerValue(state)) {
@@ -95,7 +92,11 @@ export default class AlexaTimerVis extends utils.Adapter {
                         voiceInput = res?.val as string;
                         this.log.debug(`VoiceInput: ${voiceInput}`);
                     }
-                    if (timerObject.timerActive.data.abortWords.find(word => voiceInput.includes(word))) {
+                    if (
+                        timerObject.timerActive.data.abortWords.find(word =>
+                            voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase()),
+                        )
+                    ) {
                         this.log.debug('AbortWord found');
                         return;
                     }

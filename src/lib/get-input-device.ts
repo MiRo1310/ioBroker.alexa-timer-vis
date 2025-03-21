@@ -1,6 +1,6 @@
 import { useStore } from '../store/store';
 import { isIobrokerValue } from './global';
-import type { Timer } from './timer-data';
+import type { Timer } from '../types/types';
 import { errorLogging } from './logging';
 
 export const getInputDevice = async (path: Timer): Promise<void> => {

@@ -1,9 +1,7 @@
 import { useStore } from '../store/store';
-import type { AlexaActiveTimerList } from '../types';
+import type { AlexaActiveTimerList, Timers, TimerSelector } from '../types/types';
 import { isIobrokerValue } from './global';
-import type { Timers, TimerSelector } from './timer-data';
-// eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './timer-data';
+import { timerObject } from '../config/timer-data';
 import { errorLogging } from './logging';
 
 export const getNewTimerName = (jsonString: ioBroker.State, timerSelector: string): void => {

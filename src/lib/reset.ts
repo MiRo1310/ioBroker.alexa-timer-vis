@@ -1,9 +1,9 @@
 import type AlexaTimerVis from '../main';
 import { useStore } from '../store/store';
 import { errorLogging } from './logging';
-import type { Timer, TimerSelector } from './timer-data';
-// eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './timer-data';
+import type { Timer, TimerSelector } from '../types/types';
+
+import { timerObject } from '../config/timer-data';
 import { writeState } from './write-state';
 
 export const resetValues = async (timer: Timer, index: TimerSelector): Promise<void> => {
@@ -19,7 +19,7 @@ export const resetValues = async (timer: Timer, index: TimerSelector): Promise<v
         timer.stringTimer2 = '';
         timer.voiceInputAsSeconds = 0;
         timer.remainingTimeInSeconds = 0;
-        timer.index = 0;
+        timer.index = undefined;
         timer.name = '';
         timer.alexaTimerName = '';
         timer.startTimeString = '00:00:00';
@@ -35,7 +35,8 @@ export const resetValues = async (timer: Timer, index: TimerSelector): Promise<v
         timer.inputString = '';
         timer.startTimeNumber = 0;
         timer.endTimeNumber = 0;
-        await _this.setObjectAsync(getAlexaTimerVisInstance() + index, {
+
+        await _this.setObject(getAlexaTimerVisInstance() + index, {
             type: 'device',
             common: { name: `` },
             native: {},

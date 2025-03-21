@@ -12,20 +12,20 @@ export const decomposeInputValue = (
 } => {
     const store = useStore();
     const _this = store._this;
-    let stringToEval = '';
+
     try {
         let inputDecomposed = voiceString.split(',');
         inputDecomposed = inputDecomposed[0].split(' ');
 
         const { timerString, name, deleteVal, inputString } = filterInfo(inputDecomposed);
-        stringToEval = timerString;
+
         return { name, timerSec: eval(timerString), deleteVal, inputString };
     } catch (e: any) {
         errorLogging({
             text: 'Error in decomposeInputValue: ',
             error: e,
             _this,
-            value: `Input: ${voiceString} TimerString: ${stringToEval}`,
+            value: `Input: ${voiceString} `,
         });
         return { name: '', timerSec: 0, deleteVal: 0, inputString: '' };
     }

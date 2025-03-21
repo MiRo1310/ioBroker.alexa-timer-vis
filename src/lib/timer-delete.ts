@@ -31,22 +31,16 @@ export const timerDelete = async (
         _this.log.debug('Timer can be deleted');
     }
 
-    await findTimer(timerAbortSec, name, deleteTimerIndex, voiceInput).then((timers: any) => {
+    await findTimer(timerAbortSec, name, deleteTimerIndex, voiceInput).then(timers => {
         try {
             if (timers.timer) {
-                timers.timer.forEach((element: any) => {
+                timers.timer.forEach(element => {
                     delTimer(element);
                 });
             } else if (timers.oneOfMultiTimer) {
-                const a = timers.oneOfMultiTimer;
-                if (
-                    typeof a[0] == 'string' &&
-                    typeof a[1] == 'number' &&
-                    typeof a[2] == 'string' &&
-                    typeof a[3] == 'string'
-                ) {
-                    oneOfMultiTimerDelete(a[0], a[1], a[2], a[3]);
-                }
+                const { value, sec, name, inputDevice } = timers.oneOfMultiTimer;
+
+                oneOfMultiTimerDelete(value, sec, name, inputDevice);
             }
         } catch (e: any) {
             errorLogging({ text: 'Error in timerDelete', error: e, _this });

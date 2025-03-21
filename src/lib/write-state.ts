@@ -1,6 +1,6 @@
-import type { Timer, TimerSelector } from './timer-data';
-// eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './timer-data';
+import type { Timer, TimerSelector } from '../types/types';
+
+import { timerObject } from '../config/timer-data';
 import { firstLetterToUpperCase } from './global';
 import { resetValues } from './reset';
 import { useStore } from '../store/store';

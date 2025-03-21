@@ -1,4 +1,4 @@
-import { timerObject } from './timer-data';
+import { timerObject } from '../config/timer-data';
 import { resetValues } from './reset';
 import { useStore } from '../store/store';
 import { errorLogging } from './logging';

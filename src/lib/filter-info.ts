@@ -1,7 +1,7 @@
 import { useStore } from '../store/store';
 import { firstLetterToUpperCase, countOccurrences } from './global';
 import { errorLogging } from './logging';
-import { timerObject } from './timer-data';
+import { timerObject } from '../config/timer-data';
 
 export const filterInfo = (
     input: string[],
@@ -30,7 +30,7 @@ export const filterInfo = (
                 deleteVal++;
             } else if (data.stopAll.indexOf(element) >= 0) {
                 deleteVal++;
-            } else if (data.connecter.indexOf(element) >= 0) {
+            } else if (data.connector.indexOf(element) >= 0) {
                 if (timerString.charAt(timerString.length - 1) !== '+') {
                     timerString += '+';
                     inputString += 'und ';

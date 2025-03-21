@@ -1,8 +1,8 @@
 import type AlexaTimerVis from '../main';
-import type { AlexaActiveTimerList } from '../types';
-import type { TimerCondition } from '../lib/timer-data';
+import type { Store } from '../types/types';
 
 let store: Store;
+
 export function useStore(): Store {
     if (!store) {
         store = {
@@ -59,50 +59,4 @@ export function useStore(): Store {
         };
     }
     return store;
-}
-
-export interface Store {
-    _this: AlexaTimerVis;
-    token: string | null;
-    valHourForZero: string;
-    valMinuteForZero: string;
-    valSecondForZero: string;
-    pathAlexaStateToListenTo: string;
-    pathAlexaSummary: string;
-    intervalMore60: number;
-    intervalLess60: number;
-    debounceTime: number;
-    unitHour1: string;
-    unitHour2: string;
-    unitHour3: string;
-    unitMinute1: string;
-    unitMinute2: string;
-    unitMinute3: string;
-    unitSecond1: string;
-    unitSecond2: string;
-    unitSecond3: string;
-    timerAction: TimerCondition | null;
-    questionAlexa: boolean;
-    interval: ioBroker.Interval | undefined;
-    deviceSerialNumber: string | null;
-    deviceName: string | null;
-    lastTimer: LastTimer;
-    oldAlexaTimerObject: AlexaActiveTimerList[];
-    alexaTimerVisInstance: string;
-    getAlexaInstanceObject: () => AlexaInstanceObject;
-    isAddTimer: () => boolean;
-    isShortenTimer: () => boolean;
-    isExtendTimer: () => boolean;
-    isDeleteTimer: () => boolean;
-    getAlexaTimerVisInstance: () => string;
-}
-interface AlexaInstanceObject {
-    adapter: string;
-    instance: string;
-    channel_history: string;
-}
-interface LastTimer {
-    timerSelector: string;
-    timerSerial: string;
-    id: string;
 }

@@ -1,6 +1,6 @@
 import { useStore } from '../store/store';
 import { errorLogging } from './logging';
-import { timerObject } from './timer-data';
+import { timerObject } from '../config/timer-data';
 import { writeState } from './write-state';
 
 export const writeStateIntervall = (): void => {

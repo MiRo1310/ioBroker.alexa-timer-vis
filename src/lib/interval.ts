@@ -1,9 +1,8 @@
 import { generateValues } from './generate-values';
 import { secToHourMinSec } from './global';
 import { resetValues } from './reset';
-import type { Timer, TimerSelector } from './timer-data';
-// eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './timer-data';
+import type { Timer, TimerSelector } from '../types/types';
+import { timerObject } from '../config/timer-data';
 import { useStore } from '../store/store';
 import { errorLogging } from './logging';
 

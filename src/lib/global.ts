@@ -1,5 +1,4 @@
-import type { Store } from '../store/store';
-// eslint-disable-next-line no-duplicate-imports
+import type { Store } from '../types/types';
 import { useStore } from '../store/store';
 
 export const secToHourMinSec = (
@@ -98,10 +97,13 @@ export function timeToString(milliseconds: number): string {
     return date_string.split(' ').slice(4, 5).toString();
 }
 
-export function isAlexaSummaryStateChanged(
-    state: ioBroker.State | null | undefined,
-    id: string,
-): boolean | null | undefined {
+export function isAlexaSummaryStateChanged({
+    state,
+    id,
+}: {
+    state?: ioBroker.State | null;
+    id: string;
+}): boolean | null | undefined {
     const store = useStore();
     return state && isString(state.val) && state.val !== '' && id === store.pathAlexaStateToListenTo;
 }
@@ -115,8 +117,8 @@ export const isStringEmpty = (str: string): boolean => {
     return str === '';
 };
 
-export function isString(str: any): str is string {
-    return str && typeof str == 'string';
+export function isString(str?: string | number | boolean | object | null): str is string {
+    return typeof str == 'string';
 }
 
 export function isIobrokerValue(obj: ioBroker.State | null | undefined): obj is ioBroker.State {

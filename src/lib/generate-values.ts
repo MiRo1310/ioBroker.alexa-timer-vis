@@ -1,11 +1,14 @@
-import type { Store } from '../store/store';
-// eslint-disable-next-line no-duplicate-imports
+import type { GenerateTimeStringObject, Store, Timer, TimerSelector } from '../types/types';
 import { useStore } from '../store/store';
-import type { GenerateTimeStringObject } from '../types';
 import { secToHourMinSec } from './global';
-import type { Timer } from './timer-data';
 
-export const generateValues = (timer: Timer, sec: number, index: any, inputString: string, name: string): number => {
+export const generateValues = (
+    timer: Timer,
+    sec: number,
+    timerIndex: TimerSelector,
+    inputString: string,
+    name: string,
+): number => {
     const store = useStore();
 
     const timeLeft = timer.endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec
@@ -34,7 +37,7 @@ export const generateValues = (timer: Timer, sec: number, index: any, inputStrin
     timer.stringTimer = timeString1;
     timer.stringTimer2 = timeString;
     timer.remainingTimeInSeconds = timeLeftSec;
-    timer.index = index;
+    timer.index = timerIndex;
     timer.inputString = inputString;
     timer.percent = Math.round((timeLeftSec / timer.voiceInputAsSeconds) * 100);
     timer.percent2 = 100 - Math.round((timeLeftSec / timer.voiceInputAsSeconds) * 100);
@@ -44,7 +47,7 @@ export const generateValues = (timer: Timer, sec: number, index: any, inputStrin
     return timeLeftSec;
 };
 
-function setTimerNameIfNotExist(name: string | null | undefined): string {
+function setTimerNameIfNotExist(name?: string | null): string {
     if (name == '' || !name) {
         return 'Timer';
     }

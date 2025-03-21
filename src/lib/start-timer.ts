@@ -1,8 +1,5 @@
-import type { TimerSelector } from './timer-data';
-// eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './timer-data';
-import type { Store } from '../store/store';
-// eslint-disable-next-line no-duplicate-imports
+import type { Store, TimerSelector } from '../types/types';
+import { timerObject } from '../config/timer-data';
 import { useStore } from '../store/store';
 import { isString, timeToString } from './global';
 import { getInputDevice } from './get-input-device';

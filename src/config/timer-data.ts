@@ -1,147 +1,4 @@
-export type TimerCondition =
-    | 'ShortenNotificationIntent'
-    | 'ExtendNotificationIntent'
-    | 'RemoveNotificationIntent'
-    | 'SetNotificationIntent';
-
-export interface Timer {
-    hour: string;
-    minute: string;
-    second: string;
-    stringTimer: string;
-    stringTimer2: string;
-    voiceInputAsSeconds: number;
-    index: number;
-    name: string;
-    alexaTimerName: string | null;
-    startTimeNumber: number;
-    startTimeString: string;
-    endTimeNumber: number;
-    endTimeString: string;
-    inputDevice: string;
-    inputString: string;
-    serialNumber: string;
-    timerInterval: number;
-    lengthTimer: string;
-    percent: number;
-    percent2: number;
-    extendOrShortenTimer: boolean;
-    remainingTimeInSeconds: number;
-    id: string;
-}
-export interface Timers {
-    timer1: Timer;
-    timer2: Timer;
-    timer3: Timer;
-    timer4: Timer;
-}
-
-export interface TimerObject {
-    timerActive: {
-        timerCount: number;
-        data: {
-            interval: number;
-            notNoted: string[];
-            notNotedSentence: string[];
-            stopAll: string[];
-            connecter: string[];
-            hour: string[];
-            minute: string[];
-            second: string[];
-            abortWords: string[];
-        };
-        timer: {
-            [key in keyof Timers]: boolean;
-        };
-    };
-    timer: Timers;
-    brueche1: {
-        halbe: number;
-        halb: string;
-    };
-    brueche2: {
-        viertelstunde: number;
-        dreiviertelstunde: number;
-    };
-    zahlen: {
-        eins: number;
-        ein: number;
-        one: number;
-        eine: number;
-        zwei: number;
-        zwo: number;
-        two: number;
-        drei: number;
-        three: number;
-        vier: number;
-        four: number;
-        fünf: number;
-        five: number;
-        sechs: number;
-        six: number;
-        sieben: number;
-        seven: number;
-        acht: number;
-        eight: number;
-        neun: number;
-        nine: number;
-        zehn: number;
-        ten: number;
-        elf: number;
-        eleven: number;
-        zwölf: number;
-        twelve: number;
-        dreizehn: number;
-        thirteen: number;
-        vierzehn: number;
-        fourteen: number;
-        fünfzehn: number;
-        fifteen: number;
-        sechzehn: number;
-        sixteen: number;
-        siebzehn: number;
-        seventeen: number;
-        achtzehn: number;
-        eighteen: number;
-        neunzehn: number;
-        nineteen: number;
-        zwanzig: number;
-        twenty: number;
-        dreißig: number;
-        thirty: number;
-        vierzig: number;
-        fourty: number;
-        fünfzig: number;
-        fifty: number;
-        sechzig: number;
-        sixty: number;
-        siebzig: number;
-        seventy: number;
-        achtzig: number;
-        eighty: number;
-        neunzig: number;
-        ninety: number;
-        hundert: number;
-        hundred: number;
-    };
-    ziffern: string[];
-    zuweisung: {
-        erster: number;
-        eins: number;
-        zweiter: number;
-        zwei: number;
-        dritter: number;
-        drei: number;
-        vierter: number;
-        vier: number;
-        fünfter: number;
-        fünf: number;
-    };
-    interval: {
-        timer1: ioBroker.Interval | undefined;
-    };
-}
-export type TimerSelector = keyof Timers | undefined;
+import type { TimerObject } from '../types/types';
 
 export const timerObject: TimerObject = {
     timerActive: {
@@ -172,11 +29,11 @@ export const timerObject: TimerObject = {
             ], // Wörter die nicht beachtet werden sollen
             notNotedSentence: ['stell ein timer', 'stelle einen timer', 'stelle ein timer', 'stell einen timer'],
             stopAll: ['alle', 'all'], // Spezielle Definition zum löschen aller Timer
-            connecter: ['und', 'and'], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
+            connector: ['und', 'and'], // Verbindungsglied im Text, für das ein + eingesetzt werden soll
             hour: ['stunde', 'stunden', 'hour', 'hours'], // Wörter für Stunden, dient als Multiplikator
             minute: ['minute', 'minuten', 'minute', 'minutes'], // Wörter für Minuten, dient als Multiplikator
             second: ['sekunde', 'sekunden', 'second', 'seconds'], // Wörter für Sekunden
-            abortWords: ['wecker'],
+            abortWords: ['wecker, uhr'],
         },
         timer: {
             // Liste mit Timern, zeigt den aktuellen Zustand
@@ -201,7 +58,7 @@ export const timerObject: TimerObject = {
             stringTimer: '',
             stringTimer2: '',
             lengthTimer: '',
-            index: 0,
+            index: undefined,
             name: '',
             alexaTimerName: '',
             inputDevice: '',
@@ -226,7 +83,7 @@ export const timerObject: TimerObject = {
             stringTimer: '',
             stringTimer2: '',
             lengthTimer: '',
-            index: 0,
+            index: undefined,
             name: '',
             alexaTimerName: '',
             inputDevice: '',
@@ -251,7 +108,7 @@ export const timerObject: TimerObject = {
             stringTimer: '',
             stringTimer2: '',
             lengthTimer: '',
-            index: 0,
+            index: undefined,
             name: '',
             alexaTimerName: '',
             inputDevice: '',
@@ -276,7 +133,7 @@ export const timerObject: TimerObject = {
             stringTimer: '',
             stringTimer2: '',
             lengthTimer: '',
-            index: 0,
+            index: undefined,
             name: '',
             alexaTimerName: '',
             inputDevice: '',

@@ -1,6 +1,6 @@
 import { startTimer } from './start-timer';
 import { createState } from './state';
-import { timerObject } from './timer-data';
+import { timerObject } from '../config/timer-data';
 import { writeStateIntervall } from './write-state-interval';
 import { isStringEmpty } from './global';
 import { errorLogging } from './logging';
