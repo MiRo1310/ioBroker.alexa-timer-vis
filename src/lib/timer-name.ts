@@ -1,70 +1,69 @@
-import { useStore } from '../store/store';
-import type { AlexaActiveTimerList } from '../types';
-import { isIobrokerValue } from './global';
-import type { Timers, TimerSelector } from './timer-data';
+import { useStore } from "../store/store";
+import type { AlexaActiveTimerList, Timers, TimerSelector } from "../types/types";
+import { isIobrokerValue } from "./global";
 // eslint-disable-next-line no-duplicate-imports
-import { timerObject } from './timer-data';
-import { errorLogging } from './logging';
+import { timerObject } from "../config/timer-data";
+import { errorLogging } from "./logging";
 
 export const getNewTimerName = (jsonString: ioBroker.State, timerSelector: string): void => {
-    const { _this } = useStore();
+	const { _this } = useStore();
 
-    let json: AlexaActiveTimerList[] = [];
-    try {
-        if (isIobrokerValue(jsonString)) {
-            json = JSON.parse(jsonString.val as string);
-        }
+	let json: AlexaActiveTimerList[] = [];
+	try {
+		if (isIobrokerValue(jsonString)) {
+			json = JSON.parse(jsonString.val as string);
+		}
 
-        if (json.length === 1) {
-            saveLabelAndId(json[0], timerSelector);
-            return;
-        }
+		if (json.length === 1) {
+			saveLabelAndId(json[0], timerSelector);
+			return;
+		}
 
-        const timerWithUniqueId = getTimerWithUniqueId(json);
-        if (timerWithUniqueId) {
-            saveLabelAndId(timerWithUniqueId, timerSelector);
-        }
-    } catch (e: any) {
-        errorLogging({ text: 'Error in getNewTimerName', error: e, _this });
-    }
+		const timerWithUniqueId = getTimerWithUniqueId(json);
+		if (timerWithUniqueId) {
+			saveLabelAndId(timerWithUniqueId, timerSelector);
+		}
+	} catch (e: any) {
+		errorLogging({ text: "Error in getNewTimerName", error: e, _this });
+	}
 };
 
 export const registerIdToGetTimerName = async (timerSelector: TimerSelector): Promise<void> => {
-    const store = useStore();
-    const _this = store._this;
-    try {
-        const serial = store.deviceSerialNumber;
-        if (!serial) {
-            return;
-        }
-        const foreignId = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
-        store.lastTimer = { timerSerial: serial, timerSelector: timerSelector as string, id: foreignId };
+	const store = useStore();
+	const _this = store._this;
+	try {
+		const serial = store.deviceSerialNumber;
+		if (!serial) {
+			return;
+		}
+		const foreignId = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
+		store.lastTimer = { timerSerial: serial, timerSelector: timerSelector as string, id: foreignId };
 
-        await _this.subscribeForeignStatesAsync(foreignId);
-        _this.log.debug(`Subscribed to ${foreignId}`);
-    } catch (e: any) {
-        errorLogging({ text: 'Error in registerIdToGetTimerName', error: e, _this });
-    }
+		await _this.subscribeForeignStatesAsync(foreignId);
+		_this.log.debug(`Subscribed to ${foreignId}`);
+	} catch (e: any) {
+		errorLogging({ text: "Error in registerIdToGetTimerName", error: e, _this });
+	}
 };
 
 function getTimerWithUniqueId(json: AlexaActiveTimerList[]): AlexaActiveTimerList | null {
-    let timerWithUniqueId: AlexaActiveTimerList | null = null;
-    for (let i = 0; i < json.length; i++) {
-        if (timerWithUniqueId) {
-            break;
-        }
-        for (const timer in timerObject.timer) {
-            if (timerObject.timer[timer as keyof Timers].id === json[i].id) {
-                timerWithUniqueId = null;
-                break;
-            }
-            timerWithUniqueId = { id: json[i].id, label: json[i].label || '', triggerTime: json[i].triggerTime };
-        }
-    }
-    return timerWithUniqueId;
+	let timerWithUniqueId: AlexaActiveTimerList | null = null;
+	for (let i = 0; i < json.length; i++) {
+		if (timerWithUniqueId) {
+			break;
+		}
+		for (const timer in timerObject.timer) {
+			if (timerObject.timer[timer as keyof Timers].id === json[i].id) {
+				timerWithUniqueId = null;
+				break;
+			}
+			timerWithUniqueId = { id: json[i].id, label: json[i].label || "", triggerTime: json[i].triggerTime };
+		}
+	}
+	return timerWithUniqueId;
 }
 
 function saveLabelAndId({ id, label }: AlexaActiveTimerList, timerSelector: string): void {
-    timerObject.timer[timerSelector as keyof typeof timerObject.timer].alexaTimerName = label || '';
-    timerObject.timer[timerSelector as keyof typeof timerObject.timer].id = id || '';
+	timerObject.timer[timerSelector as keyof typeof timerObject.timer].alexaTimerName = label || "";
+	timerObject.timer[timerSelector as keyof typeof timerObject.timer].id = id || "";
 }
