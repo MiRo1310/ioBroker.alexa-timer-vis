@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.0.8",
+    "version": "2.0.9",
     "news": {
+      "2.0.9": {
+        "en": "FEAT: Add more config\nCHORE: Update dependencies",
+        "de": "FEAT: Add more config\nCHORE: Aktualisieren von Abhängigkeiten",
+        "ru": "Альбом: Add More Config\nИзображение: Update Dependencies",
+        "pt": "FEAT: Adicionar mais configuração\nCHORE: Atualizar dependências",
+        "nl": "FEAT: Voeg meer configuratie toe\nAfhankelijkheden bijwerken",
+        "fr": "FAT: Ajouter plus de configuration\nCHORE : Mise à jour des dépendances",
+        "it": "FEAT: Aggiungi più configurazione\nCHORE: dipendenze di aggiornamento",
+        "es": "FEAT: Añadir más config\nCHORE: Actualizar las dependencias",
+        "pl": "FEAT: Dodaj więcej konfiguracji\nCHORE: Uaktualnij zależności",
+        "uk": "FEAT: Додати більше налаштування\nCHORE: Оновити залежності",
+        "zh-cn": "FEAT: 添加更多配置\nCHORE: 更新依赖性"
+      },
       "2.0.8": {
         "en": "CHORE: Update dependencies\nCHORE: Migration to ESLint 9 and @iobroker/eslint-config",
         "de": "CHORE: Aktualisieren von Abhängigkeiten\nCHORE: Migration auf ESLint 9 und @iobroker/eslint-config",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 133 Nazwy czasu nie są poprawne\nFIX: # 134",
         "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #133 Ім'я таймера не виправити\nFIX: #134 Всі таймер живий на старті",
         "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: #133 计时器名称不正确\nFIX: #134 所有计时器在开始时还活着"
-      },
-      "2.0.2": {
-        "en": "FIX: #130 Sting_2 remains empty",
-        "de": "FIX: #130 Sting_2 bleibt leer",
-        "ru": "#130 Sting_2 остается пустым",
-        "pt": "FIX: #130 Sting_2 permanece vazio",
-        "nl": "FIX: #130 Sting_2 blijft leeg",
-        "fr": "FIX: #130 Sting_2 reste vide",
-        "it": "FIX: #130 Sting_2 rimane vuoto",
-        "es": "FIX: #130 Sting_2 permanece vacío",
-        "pl": "FIX: # 130 Sting _ 2 pozostaje pusty",
-        "uk": "FIX: #130 Sting_2 залишається порожнім",
-        "zh-cn": "FIX: # 130 Sting_2 仍然为空"
       }
     },
     "titleLang": {
