@@ -65,6 +65,10 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+- CHORE: Update dependencies
+
 ### 2.0.8 (2024-12-04)
 
 - CHORE: Update dependencies
