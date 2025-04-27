@@ -24,7 +24,7 @@ module.exports = __toCommonJS(interval_exports);
 var import_generate_values = require("./generate-values");
 var import_global = require("./global");
 var import_reset = require("./reset");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_store = require("../store/store");
 var import_logging = require("./logging");
 const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) => {
@@ -50,7 +50,7 @@ const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) 
     if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerBlock]) {
       import_timer_data.timerObject.timerActive.timerCount--;
       (0, import_reset.resetValues)(timer, timerBlock).catch((e) => {
-        (0, import_logging.errorLogging)({ text: "Error in interval", error: e, _this });
+        (0, import_logging.errorLogger)("Error in interval", e, _this);
       });
       _this.log.debug("Timer stopped");
       if (import_timer_data.timerObject.interval) {

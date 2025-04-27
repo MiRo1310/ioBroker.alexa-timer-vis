@@ -22,7 +22,7 @@ __export(delete_timer_exports, {
   removeTimerInLastTimers: () => removeTimerInLastTimers
 });
 module.exports = __toCommonJS(delete_timer_exports);
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_reset = require("./reset");
 var import_store = require("../store/store");
 var import_logging = require("./logging");
@@ -32,7 +32,7 @@ const removeTimerInLastTimers = () => {
 };
 const delTimer = (timer) => {
   (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer], timer).catch((e) => {
-    (0, import_logging.errorLogging)({ text: "Error in delTimer", error: e, _this: (0, import_store.useStore)()._this });
+    (0, import_logging.errorLogger)("Error in delTimer", e, (0, import_store.useStore)()._this);
   });
   import_timer_data.timerObject.timerActive.timer[timer] = false;
   removeTimerInLastTimers();

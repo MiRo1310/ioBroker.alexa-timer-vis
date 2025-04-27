@@ -1,18 +1,20 @@
 import type AlexaTimerVis from '../main';
 
-export const errorLogging = ({
-    text,
-    error,
-    _this,
-    value,
-}: {
-    text: string;
-    error: any;
-    _this: AlexaTimerVis;
-    value?: any;
-}): void => {
-    _this.log.error(`${text}: ${JSON.stringify(error || '')}`);
-    _this.log.error(JSON.stringify(value || ''));
-    _this.log.error(JSON.stringify(error.stack || ''));
-    _this.log.error(JSON.stringify(error.message || ''));
+export const errorLogger = (title: string, e: any, adapter: AlexaTimerVis): void => {
+    if (adapter.supportsFeature && adapter.supportsFeature('PLUGINS')) {
+        const sentryInstance = adapter.getPluginInstance('sentry');
+        if (sentryInstance) {
+            sentryInstance.getSentryObject().captureException(e);
+        }
+    }
+    adapter.log.error(title);
+
+    adapter.log.error(`Error message: ${e.message}`);
+    adapter.log.error(`Error stack: ${e.stack}`);
+    if (e?.response) {
+        adapter.log.error(`Server response: ${e?.response?.status}`);
+    }
+    if (e?.response) {
+        adapter.log.error(`Server status: ${e?.response?.statusText}`);
+    }
 };

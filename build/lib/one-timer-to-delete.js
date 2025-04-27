@@ -21,7 +21,7 @@ __export(one_timer_to_delete_exports, {
   oneOfMultiTimerDelete: () => oneOfMultiTimerDelete
 });
 module.exports = __toCommonJS(one_timer_to_delete_exports);
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_global = require("./global");
 const oneOfMultiTimerDelete = (input, timeSec, name, inputDevice) => {
   const separateInput = input.slice(input.indexOf(",") + 2, input.length);

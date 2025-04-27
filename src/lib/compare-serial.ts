@@ -1,6 +1,6 @@
 import { useStore } from '../store/store';
 import { isIobrokerValue } from './global';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 let oldCreationTime: ioBroker.StateValue | null;
 let oldSerial: string;
@@ -35,7 +35,7 @@ export const compareCreationTimeAndSerial = async (): Promise<{
 
         return { sameTime: isSameTime, sameSerial: isSameSerial };
     } catch (error: any) {
-        errorLogging({ text: 'Error in compareCreationTimeAndSerial', error, _this });
+        errorLogger('Error in compareCreationTimeAndSerial', error, _this);
         return { sameTime: false, sameSerial: false };
     }
 };

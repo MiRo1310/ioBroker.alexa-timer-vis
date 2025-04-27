@@ -99,7 +99,10 @@ function timeToString(milliseconds) {
   const date_string = new Date(milliseconds).toString();
   return date_string.split(" ").slice(4, 5).toString();
 }
-function isAlexaSummaryStateChanged(state, id) {
+function isAlexaSummaryStateChanged({
+  state,
+  id
+}) {
   const store = (0, import_store.useStore)();
   return state && isString(state.val) && state.val !== "" && id === store.pathAlexaStateToListenTo;
 }
@@ -111,7 +114,7 @@ const isStringEmpty = (str) => {
   return str === "";
 };
 function isString(str) {
-  return str && typeof str == "string";
+  return typeof str == "string";
 }
 function isIobrokerValue(obj) {
   const result = obj && obj.val !== null && obj.val !== void 0;

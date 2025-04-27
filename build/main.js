@@ -40,7 +40,7 @@ var import_logging = require("./lib/logging");
 var import_reset = require("./lib/reset");
 var import_set_adapter_status = require("./lib/set-adapter-status");
 var import_timer_add = require("./lib/timer-add");
-var import_timer_data = require("./lib/timer-data");
+var import_timer_data = require("./config/timer-data");
 var import_timer_delete = require("./lib/timer-delete");
 var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
 var import_timer_name = require("./lib/timer-name");
@@ -96,7 +96,7 @@ class AlexaTimerVis extends utils.Adapter {
     this.on("stateChange", async (id, state) => {
       try {
         await checkForTimerName(this, id);
-        if ((0, import_global.isAlexaSummaryStateChanged)(state, id) && isTimerAction(state)) {
+        if ((0, import_global.isAlexaSummaryStateChanged)({ state, id }) && isTimerAction(state)) {
           this.log.debug("Alexa state changed");
           let doNothingByNotNotedElement = false;
           if ((0, import_global.isIobrokerValue)(state)) {
@@ -107,7 +107,9 @@ class AlexaTimerVis extends utils.Adapter {
             voiceInput = res == null ? void 0 : res.val;
             this.log.debug(`VoiceInput: ${voiceInput}`);
           }
-          if (import_timer_data.timerObject.timerActive.data.abortWords.find((word) => voiceInput.includes(word))) {
+          if (import_timer_data.timerObject.timerActive.data.abortWords.find(
+            (word) => voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase())
+          )) {
             this.log.debug("AbortWord found");
             return;
           }
@@ -160,7 +162,7 @@ class AlexaTimerVis extends utils.Adapter {
           }
         }
       } catch (e) {
-        (0, import_logging.errorLogging)({ text: "Error in stateChange", error: e, _this: this });
+        (0, import_logging.errorLogger)("Error in stateChange", e, this);
       }
     });
     this.subscribeForeignStates(store.pathAlexaStateToListenTo);
@@ -170,7 +172,7 @@ class AlexaTimerVis extends utils.Adapter {
     try {
       this.log.info("Adapter shuts down");
       (0, import_write_state.writeState)({ reset: true }).catch((e) => {
-        (0, import_logging.errorLogging)({ text: "Error in onUnload", error: e, _this: this });
+        (0, import_logging.errorLogger)("Error in onUnload", e, this);
       });
       this.clearTimeout(timeout_1);
       this.clearTimeout(debounceTimeout);
@@ -184,7 +186,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
-      (0, import_logging.errorLogging)({ text: "Error in onUnload", error: e, _this: this });
+      (0, import_logging.errorLogger)("Error in onUnload", e, this);
       callback();
     }
   }

@@ -22,7 +22,7 @@ __export(find_timer_exports, {
 });
 module.exports = __toCommonJS(find_timer_exports);
 var import_store = require("../store/store");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_global = require("./global");
 var import_logging = require("./logging");
 const findTimer = async (sec, name, deleteTimerIndex, value) => {
@@ -40,53 +40,45 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
       sec,
       name
     );
-    const timerFound = { oneOfMultiTimer: [], timer: [] };
+    const timerFound = { oneOfMultiTimer: {}, timer: [] };
     if (store.questionAlexa) {
       if (countMatchingName == 1) {
-        const value2 = "";
-        const sec2 = 0;
-        timerFound.oneOfMultiTimer = [value2, sec2, name, inputDevice];
+        timerFound.oneOfMultiTimer = { value: "", sec: 0, name, inputDevice };
       } else if (countMatchingTime > 1) {
-        const name2 = "";
-        const inputDevice2 = "";
-        timerFound.oneOfMultiTimer = [value, sec, name2, inputDevice2];
+        timerFound.oneOfMultiTimer = { value, sec, name: "", inputDevice: "" };
       } else if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount) {
-        const name2 = "";
-        const inputDevice2 = "";
-        timerFound.oneOfMultiTimer = [value, sec, name2, inputDevice2];
+        timerFound.oneOfMultiTimer = { value, sec, name: "", inputDevice: "" };
       } else {
-        const sec2 = 0;
-        const name2 = "";
-        const inputDevice2 = "";
-        timerFound.oneOfMultiTimer = [value, sec2, name2, inputDevice2];
+        timerFound.oneOfMultiTimer = { value, sec: 0, name: "", inputDevice: "" };
       }
     }
     for (const element in import_timer_data.timerObject.timer) {
+      const timerName = element;
       if (deleteTimerIndex == 1) {
         if (!store.questionAlexa) {
-          if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[element]) {
-            timerFound.timer.push(element);
-          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec && sec !== 0) {
-            timerFound.timer.push(element);
+          if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[timerName]) {
+            timerFound.timer.push(timerName);
+          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[timerName].voiceInputAsSeconds == sec && sec !== 0) {
+            timerFound.timer.push(timerName);
           } else if (
             // _this.log.debug("Wenn nur einer gestellt ist mit der der gewünschten Zeit");
-            countMatchingTime == 1 && import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec
+            countMatchingTime == 1 && import_timer_data.timerObject.timer[timerName].voiceInputAsSeconds == sec
           ) {
-            timerFound.timer.push(element);
+            timerFound.timer.push(timerName);
           } else if (
             // Einer, mit genauem Namen
-            import_timer_data.timerObject.timer[element].name == name && name !== "" && countMatchingName == 1
+            import_timer_data.timerObject.timer[timerName].name == name && name !== "" && countMatchingName == 1
           ) {
-            timerFound.timer.push(element);
+            timerFound.timer.push(timerName);
           }
         }
       } else if (deleteTimerIndex == 2) {
         if (!store.questionAlexa) {
-          timerFound.timer.push(element);
+          timerFound.timer.push(timerName);
         } else {
           if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("nein") != -1) {
-            if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
-              timerFound.timer.push(element);
+            if (import_timer_data.timerObject.timer[timerName].inputDevice == inputDevice) {
+              timerFound.timer.push(timerName);
             }
           } else if (
             // Alle, von allen Geräten
@@ -102,8 +94,8 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     }
     return timerFound;
   } catch (e) {
-    (0, import_logging.errorLogging)({ text: "Error in findTimer", error: e, _this });
-    return { oneOfMultiTimer: [], timer: [] };
+    (0, import_logging.errorLogger)("Error in findTimer", e, _this);
+    return { oneOfMultiTimer: {}, timer: [] };
   }
 };
 function findTimerWithExactSameInputDevice(element, inputDevice, countMatchingInputDevice) {
@@ -128,7 +120,8 @@ function getMatchingTimerCounts(inputDevice, sec, name) {
   let countMatchingTime = 0;
   let countMatchingName = 0;
   let countMatchingInputDevice = 0;
-  for (const element in import_timer_data.timerObject.timer) {
+  for (const el in import_timer_data.timerObject.timer) {
+    const element = el;
     countMatchingTime = findTimerWithExactSameSec(element, countMatchingTime, sec);
     countMatchingName = findTimerWithExactSameName(element, countMatchingName, name);
     countMatchingInputDevice = findTimerWithExactSameInputDevice(element, inputDevice, countMatchingInputDevice);

@@ -1,6 +1,6 @@
 import { useStore } from '../store/store';
 import { firstLetterToUpperCase, countOccurrences } from './global';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 import { timerObject } from '../config/timer-data';
 
 export const filterInfo = (
@@ -110,7 +110,7 @@ export const filterInfo = (
 
         return { timerString, name, deleteVal, inputString };
     } catch (e: any) {
-        errorLogging({ text: 'Error in filterInfo', error: e, _this });
+        errorLogger('Error in filterInfo', e, _this);
         return { timerString: '', name: '', deleteVal: 0, inputString: '' };
     }
 

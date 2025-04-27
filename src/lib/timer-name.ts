@@ -2,7 +2,7 @@ import { useStore } from '../store/store';
 import type { AlexaActiveTimerList, Timers, TimerSelector } from '../types/types';
 import { isIobrokerValue } from './global';
 import { timerObject } from '../config/timer-data';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const getNewTimerName = (jsonString: ioBroker.State, timerSelector: string): void => {
     const { _this } = useStore();
@@ -23,7 +23,7 @@ export const getNewTimerName = (jsonString: ioBroker.State, timerSelector: strin
             saveLabelAndId(timerWithUniqueId, timerSelector);
         }
     } catch (e: any) {
-        errorLogging({ text: 'Error in getNewTimerName', error: e, _this });
+        errorLogger('Error in getNewTimerName', e, _this);
     }
 };
 
@@ -41,7 +41,7 @@ export const registerIdToGetTimerName = async (timerSelector: TimerSelector): Pr
         await _this.subscribeForeignStatesAsync(foreignId);
         _this.log.debug(`Subscribed to ${foreignId}`);
     } catch (e: any) {
-        errorLogging({ text: 'Error in registerIdToGetTimerName', error: e, _this });
+        errorLogger('Error in registerIdToGetTimerName', e, _this);
     }
 };
 

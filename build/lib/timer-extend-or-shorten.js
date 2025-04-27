@@ -25,7 +25,7 @@ module.exports = __toCommonJS(timer_extend_or_shorten_exports);
 var import_store = require("../store/store");
 var import_filter_info = require("./filter-info");
 var import_find_timer = require("./find-timer");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_global = require("./global");
 var import_logging = require("./logging");
 const extendOrShortTimer = async ({
@@ -53,10 +53,10 @@ const extendOrShortTimer = async ({
       return;
     }
     if (timers.oneOfMultiTimer) {
-      extendTimer(timers.oneOfMultiTimer, extendTime2, addOrSub, import_timer_data.timerObject);
+      extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    (0, import_logging.errorLogging)({ text: "Error in extendOrShortTimer", error: e, _this });
+    (0, import_logging.errorLogger)("Error in extendOrShortTimer", e, _this);
   }
 };
 function getMultiplikatorForAddOrSub(store2) {
@@ -71,9 +71,7 @@ function extendTimer(timers2, sec, addOrSub2, timerObject2) {
     if (timerObject2.timerActive.timer[timer]) {
       timerObject2.timer[timer].extendOrShortenTimer = true;
       timerObject2.timer[timer].endTimeNumber += timerSeconds * 1e3 * addOrSub2;
-      timerObject2.timer[timer].endTimeString = (0, import_global.timeToString)(
-        timerObject2.timer[timer].endTimeNumber
-      );
+      timerObject2.timer[timer].endTimeString = (0, import_global.timeToString)(timerObject2.timer[timer].endTimeNumber);
       timerObject2.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub2;
     }
   });

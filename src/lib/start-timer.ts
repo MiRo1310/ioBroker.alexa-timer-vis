@@ -6,7 +6,7 @@ import { getInputDevice } from './get-input-device';
 import { interval } from './interval';
 import type AlexaTimerVis from '../main';
 import { registerIdToGetTimerName } from './timer-name';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const startTimer = async (sec: number, name: string, inputString: string): Promise<void> => {
     const store = useStore();
@@ -39,7 +39,7 @@ export const startTimer = async (sec: number, name: string, inputString: string)
 
         interval(sec, timerSelector, inputString, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {
-        errorLogging({ text: 'Error in startTimer', error: e, _this });
+        errorLogger('Error in startTimer', e, _this);
     }
 };
 

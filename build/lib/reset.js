@@ -24,7 +24,7 @@ __export(reset_exports, {
 module.exports = __toCommonJS(reset_exports);
 var import_store = require("../store/store");
 var import_logging = require("./logging");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_write_state = require("./write-state");
 const resetValues = async (timer, index) => {
   const { _this, getAlexaTimerVisInstance, valHourForZero, valMinuteForZero, valSecondForZero } = (0, import_store.useStore)();
@@ -38,7 +38,7 @@ const resetValues = async (timer, index) => {
     timer.stringTimer2 = "";
     timer.voiceInputAsSeconds = 0;
     timer.remainingTimeInSeconds = 0;
-    timer.index = 0;
+    timer.index = void 0;
     timer.name = "";
     timer.alexaTimerName = "";
     timer.startTimeString = "00:00:00";
@@ -54,22 +54,22 @@ const resetValues = async (timer, index) => {
     timer.inputString = "";
     timer.startTimeNumber = 0;
     timer.endTimeNumber = 0;
-    await _this.setObjectAsync(getAlexaTimerVisInstance() + index, {
+    await _this.setObject(getAlexaTimerVisInstance() + index, {
       type: "device",
       common: { name: `` },
       native: {}
     });
   } catch (e) {
-    (0, import_logging.errorLogging)({ text: "Error in resetValues", error: e, _this });
+    (0, import_logging.errorLogger)("Error in resetValues", e, _this);
   }
 };
 function resetAllTimerValuesAndState(_this) {
   Object.keys(import_timer_data.timerObject.timer).forEach((el) => {
     resetValues(import_timer_data.timerObject.timer[el], el).catch((e) => {
-      (0, import_logging.errorLogging)({ text: "Error in resetAllTimerValuesAndState", error: e, _this });
+      (0, import_logging.errorLogger)("Error in resetAllTimerValuesAndState", e, _this);
     });
     (0, import_write_state.writeState)({ reset: true }).catch((e) => {
-      (0, import_logging.errorLogging)({ text: "Error in resetAllTimerValuesAndState", error: e, _this });
+      (0, import_logging.errorLogger)("Error in resetAllTimerValuesAndState", e, _this);
     });
   });
   _this.setStateChanged("all_Timer.alive", false, true);

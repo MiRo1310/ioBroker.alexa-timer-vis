@@ -1,7 +1,7 @@
 import { useStore } from '../store/store';
 import { isIobrokerValue } from './global';
 import type { Timer } from '../types/types';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const getInputDevice = async (path: Timer): Promise<void> => {
     const store = useStore();
@@ -22,6 +22,6 @@ export const getInputDevice = async (path: Timer): Promise<void> => {
             store.deviceSerialNumber = serialStateObj?.val as string;
         }
     } catch (error) {
-        errorLogging({ text: 'Error in getInputDevice', error, _this });
+        errorLogger('Error in getInputDevice', error, _this);
     }
 };
