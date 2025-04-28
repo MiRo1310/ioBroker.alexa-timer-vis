@@ -80,19 +80,6 @@
         "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 137 Reset timer name",
         "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #137 Ім'я таймера",
         "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: # 137 重置计时器名称"
-      },
-      "2.0.3": {
-        "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #133 Timer names are not correct\nFIX: #134 All timer alive at start",
-        "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #133 Timernamen sind nicht korrekt\nFIX: #134 Alle Timer am Anfang am Leben",
-        "ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #133 Имя таймера неправильно\n#134 Все таймеры живы на старте",
-        "pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #133 Os nomes do temporizador não estão corretos\nFIX: #134 Todo o temporizador vivo no início",
-        "nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #133 Timer namen zijn niet correct\nFIX: #134 Alle timer levend bij het begin",
-        "fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #133 Les noms des minuteurs ne sont pas corrects\nFIXE: #134 Tout le temps vivant au début",
-        "it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #133 I nomi Timer non sono corretti\nFIX: #134 Tutto il timer vivo all'inizio",
-        "es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #133 Timer names are not correct\nFIX: #134 Todo el tiempor vivo al principio",
-        "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 133 Nazwy czasu nie są poprawne\nFIX: # 134",
-        "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #133 Ім'я таймера не виправити\nFIX: #134 Всі таймер живий на старті",
-        "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: #133 计时器名称不正确\nFIX: #134 所有计时器在开始时还活着"
       }
     },
     "titleLang": {
