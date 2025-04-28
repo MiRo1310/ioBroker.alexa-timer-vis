@@ -20,7 +20,7 @@
     "url": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3"
