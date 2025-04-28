@@ -1,21 +1,8 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.1.0",
+    "version": "2.0.9",
     "news": {
-      "2.1.0": {
-        "en": "FEAT: #141 Activate sentry",
-        "de": "FEAT: #141 Aktivieren Sie die Sendung",
-        "ru": "#141 Активировать часового",
-        "pt": "FEAT: #141 Activar sentinela",
-        "nl": "FEAT: #141 Activeer wachters",
-        "fr": "VIANDE: #141 Activer la sentinelle",
-        "it": "FEAT: #141 Attiva la sentinella",
-        "es": "FEAT: #141 Activar centry",
-        "pl": "FEAT: # 141 Włącz wartownik",
-        "uk": "FEAT: #141 Активувати відправлення",
-        "zh-cn": "FEAT: #141 启动哨兵"
-      },
       "2.0.9": {
         "en": "FEAT: Add more config\nCHORE: Update dependencies",
         "de": "FEAT: Add more config\nCHORE: Aktualisieren von Abhängigkeiten",
