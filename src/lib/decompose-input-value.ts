@@ -1,6 +1,6 @@
 import { useStore } from '../store/store';
 import { filterInfo } from './filter-info';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const decomposeInputValue = (
     voiceString: string,
@@ -21,12 +21,7 @@ export const decomposeInputValue = (
 
         return { name, timerSec: eval(timerString), deleteVal, inputString };
     } catch (e: any) {
-        errorLogging({
-            text: 'Error in decomposeInputValue: ',
-            error: e,
-            _this,
-            value: `Input: ${voiceString} `,
-        });
+        errorLogger('Error in decomposeInputValue: ', e, _this);
         return { name: '', timerSec: 0, deleteVal: 0, inputString: '' };
     }
 };

@@ -7,7 +7,7 @@ import {
     isAlexaSummaryStateChanged as isAlexaStateToListenToChanged,
     isIobrokerValue,
 } from './lib/global';
-import { errorLogging } from './lib/logging';
+import { errorLogger } from './lib/logging';
 import { resetAllTimerValuesAndState } from './lib/reset';
 import { setAdapterStatusAndInitStateCreation } from './lib/set-adapter-status';
 import { timerAdd } from './lib/timer-add';
@@ -156,7 +156,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                     }
                 }
             } catch (e) {
-                errorLogging({ text: 'Error in stateChange', error: e, _this: this });
+                errorLogger('Error in stateChange', e, this);
             }
         });
 
@@ -169,7 +169,7 @@ export default class AlexaTimerVis extends utils.Adapter {
             this.log.info('Adapter shuts down');
 
             writeState({ reset: true }).catch((e: any) => {
-                errorLogging({ text: 'Error in onUnload', error: e, _this: this });
+                errorLogger('Error in onUnload', e, this);
             });
 
             this.clearTimeout(timeout_1);
@@ -189,7 +189,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
             callback();
         } catch (e) {
-            errorLogging({ text: 'Error in onUnload', error: e, _this: this });
+            errorLogger('Error in onUnload', e, this);
             callback();
         }
     }

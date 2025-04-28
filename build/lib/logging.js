@@ -18,22 +18,29 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var logging_exports = {};
 __export(logging_exports, {
-  errorLogging: () => errorLogging
+  errorLogger: () => errorLogger
 });
 module.exports = __toCommonJS(logging_exports);
-const errorLogging = ({
-  text,
-  error,
-  _this,
-  value
-}) => {
-  _this.log.error(`${text}: ${JSON.stringify(error || "")}`);
-  _this.log.error(JSON.stringify(value || ""));
-  _this.log.error(JSON.stringify(error.stack || ""));
-  _this.log.error(JSON.stringify(error.message || ""));
+const errorLogger = (title, e, adapter) => {
+  var _a, _b;
+  if (adapter.supportsFeature && adapter.supportsFeature("PLUGINS")) {
+    const sentryInstance = adapter.getPluginInstance("sentry");
+    if (sentryInstance) {
+      sentryInstance.getSentryObject().captureException(e);
+    }
+  }
+  adapter.log.error(title);
+  adapter.log.error(`Error message: ${e.message}`);
+  adapter.log.error(`Error stack: ${e.stack}`);
+  if (e == null ? void 0 : e.response) {
+    adapter.log.error(`Server response: ${(_a = e == null ? void 0 : e.response) == null ? void 0 : _a.status}`);
+  }
+  if (e == null ? void 0 : e.response) {
+    adapter.log.error(`Server status: ${(_b = e == null ? void 0 : e.response) == null ? void 0 : _b.statusText}`);
+  }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  errorLogging
+  errorLogger
 });
 //# sourceMappingURL=logging.js.map

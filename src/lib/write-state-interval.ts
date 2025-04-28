@@ -1,5 +1,5 @@
 import { useStore } from '../store/store';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 import { timerObject } from '../config/timer-data';
 import { writeState } from './write-state';
 
@@ -12,7 +12,7 @@ export const writeStateIntervall = (): void => {
         }
         store.interval = _this.setInterval((): void => {
             writeState({ reset: false }).catch((e: any) => {
-                errorLogging({ text: 'Error in writeStateIntervall', error: e, _this });
+                errorLogger('Error in writeStateIntervall', e, _this);
             });
 
             if (timerObject.timerActive.timerCount === 0) {
@@ -23,7 +23,7 @@ export const writeStateIntervall = (): void => {
             }
         }, timerObject.timerActive.data.interval);
     } catch (e: any) {
-        errorLogging({ text: 'Error in writeStateIntervall', error: e, _this });
+        errorLogger('Error in writeStateIntervall', e, _this);
         _this.clearInterval(store.interval);
     }
 };

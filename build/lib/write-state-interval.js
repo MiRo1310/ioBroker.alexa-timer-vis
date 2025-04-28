@@ -23,7 +23,7 @@ __export(write_state_interval_exports, {
 module.exports = __toCommonJS(write_state_interval_exports);
 var import_store = require("../store/store");
 var import_logging = require("./logging");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_write_state = require("./write-state");
 const writeStateIntervall = () => {
   const store = (0, import_store.useStore)();
@@ -34,7 +34,7 @@ const writeStateIntervall = () => {
     }
     store.interval = _this.setInterval(() => {
       (0, import_write_state.writeState)({ reset: false }).catch((e) => {
-        (0, import_logging.errorLogging)({ text: "Error in writeStateIntervall", error: e, _this });
+        (0, import_logging.errorLogger)("Error in writeStateIntervall", e, _this);
       });
       if (import_timer_data.timerObject.timerActive.timerCount === 0) {
         _this.setStateChanged("all_Timer.alive", false, true);
@@ -44,7 +44,7 @@ const writeStateIntervall = () => {
       }
     }, import_timer_data.timerObject.timerActive.data.interval);
   } catch (e) {
-    (0, import_logging.errorLogging)({ text: "Error in writeStateIntervall", error: e, _this });
+    (0, import_logging.errorLogger)("Error in writeStateIntervall", e, _this);
     _this.clearInterval(store.interval);
   }
 };

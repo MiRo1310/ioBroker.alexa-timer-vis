@@ -23,7 +23,7 @@ __export(timer_add_exports, {
 module.exports = __toCommonJS(timer_add_exports);
 var import_start_timer = require("./start-timer");
 var import_state = require("./state");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_write_state_interval = require("./write-state-interval");
 var import_global = require("./global");
 var import_logging = require("./logging");
@@ -43,7 +43,7 @@ const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
     if (!nameExist) {
       import_timer_data.timerObject.timerActive.timerCount++;
       (0, import_state.createState)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
-        (0, import_logging.errorLogging)({ text: "Error in timerAdd", error: e, _this });
+        (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
       });
       const timer = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
       if (import_timer_data.timerObject.timerActive.timer[timer] === void 0) {
@@ -51,7 +51,7 @@ const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
         import_timer_data.timerObject.timer[timer] = {};
       }
       (0, import_start_timer.startTimer)(timerSec, name, decomposeInputString).catch((e) => {
-        (0, import_logging.errorLogging)({ text: "Error in timerAdd", error: e, _this });
+        (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
       });
       (0, import_write_state_interval.writeStateIntervall)();
     }

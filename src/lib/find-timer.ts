@@ -1,7 +1,7 @@
 import { useStore } from '../store/store';
 import { timerObject } from '../config/timer-data';
 import { isIobrokerValue, isString } from './global';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 import type { OneOfMultiTimer, TimerName } from '../types/types';
 
 export const findTimer = async (
@@ -110,7 +110,7 @@ export const findTimer = async (
         }
         return timerFound;
     } catch (e) {
-        errorLogging({ text: 'Error in findTimer', error: e, _this });
+        errorLogger('Error in findTimer', e, _this);
         return { oneOfMultiTimer: {} as OneOfMultiTimer, timer: [] };
     }
 };

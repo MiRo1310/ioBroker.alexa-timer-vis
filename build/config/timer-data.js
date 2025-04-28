@@ -53,7 +53,7 @@ const timerObject = {
       notNotedSentence: ["stell ein timer", "stelle einen timer", "stelle ein timer", "stell einen timer"],
       stopAll: ["alle", "all"],
       // Spezielle Definition zum löschen aller Timer
-      connecter: ["und", "and"],
+      connector: ["und", "and"],
       // Verbindungsglied im Text, für das ein + eingesetzt werden soll
       hour: ["stunde", "stunden", "hour", "hours"],
       // Wörter für Stunden, dient als Multiplikator
@@ -61,7 +61,7 @@ const timerObject = {
       // Wörter für Minuten, dient als Multiplikator
       second: ["sekunde", "sekunden", "second", "seconds"],
       // Wörter für Sekunden
-      abortWords: ["wecker"]
+      abortWords: ["wecker, uhr"]
     },
     timer: {
       // Liste mit Timern, zeigt den aktuellen Zustand
@@ -86,7 +86,7 @@ const timerObject = {
       stringTimer: "",
       stringTimer2: "",
       lengthTimer: "",
-      index: 0,
+      index: void 0,
       name: "",
       alexaTimerName: "",
       inputDevice: "",
@@ -111,7 +111,7 @@ const timerObject = {
       stringTimer: "",
       stringTimer2: "",
       lengthTimer: "",
-      index: 0,
+      index: void 0,
       name: "",
       alexaTimerName: "",
       inputDevice: "",
@@ -136,7 +136,7 @@ const timerObject = {
       stringTimer: "",
       stringTimer2: "",
       lengthTimer: "",
-      index: 0,
+      index: void 0,
       name: "",
       alexaTimerName: "",
       inputDevice: "",
@@ -161,7 +161,7 @@ const timerObject = {
       stringTimer: "",
       stringTimer2: "",
       lengthTimer: "",
-      index: 0,
+      index: void 0,
       name: "",
       alexaTimerName: "",
       inputDevice: "",

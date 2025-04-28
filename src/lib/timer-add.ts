@@ -3,7 +3,7 @@ import { createState } from './state';
 import { timerObject } from '../config/timer-data';
 import { writeStateIntervall } from './write-state-interval';
 import { isStringEmpty } from './global';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 import { useStore } from '../store/store';
 
 export const timerAdd = (decomposeName: string, timerSec: number, decomposeInputString: string): void => {
@@ -25,7 +25,7 @@ export const timerAdd = (decomposeName: string, timerSec: number, decomposeInput
             timerObject.timerActive.timerCount++;
 
             createState(timerObject.timerActive.timerCount).catch((e: any) => {
-                errorLogging({ text: 'Error in timerAdd', error: e, _this });
+                errorLogger('Error in timerAdd', e, _this);
             });
 
             const timer = `timer${timerObject.timerActive.timerCount}`;
@@ -37,7 +37,7 @@ export const timerAdd = (decomposeName: string, timerSec: number, decomposeInput
             }
 
             startTimer(timerSec, name, decomposeInputString).catch((e: any) => {
-                errorLogging({ text: 'Error in timerAdd', error: e, _this });
+                errorLogger('Error in timerAdd', e, _this);
             });
 
             writeStateIntervall();

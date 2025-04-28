@@ -24,7 +24,7 @@ module.exports = __toCommonJS(filter_info_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
 var import_logging = require("./logging");
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 const filterInfo = (input) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -42,7 +42,7 @@ const filterInfo = (input) => {
         deleteVal++;
       } else if (data.stopAll.indexOf(element) >= 0) {
         deleteVal++;
-      } else if (data.connecter.indexOf(element) >= 0) {
+      } else if (data.connector.indexOf(element) >= 0) {
         if (timerString.charAt(timerString.length - 1) !== "+") {
           timerString += "+";
           inputString += "und ";
@@ -107,7 +107,7 @@ const filterInfo = (input) => {
     }
     return { timerString, name, deleteVal, inputString };
   } catch (e) {
-    (0, import_logging.errorLogging)({ text: "Error in filterInfo", error: e, _this });
+    (0, import_logging.errorLogger)("Error in filterInfo", e, _this);
     return { timerString: "", name: "", deleteVal: 0, inputString: "" };
   }
   function hasMinutes(timerString) {

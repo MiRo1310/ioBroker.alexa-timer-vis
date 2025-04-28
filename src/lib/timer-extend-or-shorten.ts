@@ -4,7 +4,7 @@ import { filterInfo } from './filter-info';
 import { findTimer } from './find-timer';
 import { timerObject } from '../config/timer-data';
 import { timeToString } from './global';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const extendOrShortTimer = async ({
     voiceInput,
@@ -42,7 +42,7 @@ export const extendOrShortTimer = async ({
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
         }
     } catch (e: any) {
-        errorLogging({ text: 'Error in extendOrShortTimer', error: e, _this });
+        errorLogger('Error in extendOrShortTimer', e, _this);
     }
 };
 

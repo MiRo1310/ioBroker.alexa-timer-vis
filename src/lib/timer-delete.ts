@@ -2,7 +2,7 @@ import { delTimer } from './delete-timer';
 import { findTimer } from './find-timer';
 import { oneOfMultiTimerDelete } from './one-timer-to-delete';
 import { useStore } from '../store/store';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const timerDelete = async (
     decomposeName: string,
@@ -43,7 +43,7 @@ export const timerDelete = async (
                 oneOfMultiTimerDelete(value, sec, name, inputDevice);
             }
         } catch (e: any) {
-            errorLogging({ text: 'Error in timerDelete', error: e, _this });
+            errorLogger('Error in timerDelete', e, _this);
         }
     });
 };

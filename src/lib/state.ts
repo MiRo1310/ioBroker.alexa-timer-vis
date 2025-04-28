@@ -1,5 +1,6 @@
 import { useStore } from '../store/store';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
+
 export const createState = async (value: number): Promise<void> => {
     const store = useStore();
     const _this = store._this;
@@ -204,6 +205,6 @@ export const createState = async (value: number): Promise<void> => {
             _this.subscribeForeignStates(id);
         }
     } catch (e: any) {
-        errorLogging({ text: 'Error in createState', error: e, _this });
+        errorLogger('Error in createState', e, _this);
     }
 };

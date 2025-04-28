@@ -21,7 +21,7 @@ __export(write_state_exports, {
   writeState: () => writeState
 });
 module.exports = __toCommonJS(write_state_exports);
-var import_timer_data = require("./timer-data");
+var import_timer_data = require("../config/timer-data");
 var import_global = require("./global");
 var import_reset = require("./reset");
 var import_store = require("../store/store");
@@ -63,7 +63,7 @@ async function writeState({ reset }) {
       _this.setStateChanged("all_Timer.alive", alive, true);
     }
   } catch (e) {
-    (0, import_logging.errorLogging)({ text: "Error in writeState", error: e, _this });
+    (0, import_logging.errorLogger)("Error in writeState", e, _this);
   }
   function getJson(timer) {
     const copy = (0, import_object.deepCopy)(timer);

@@ -5,7 +5,7 @@ import { firstLetterToUpperCase } from './global';
 import { resetValues } from './reset';
 import { useStore } from '../store/store';
 import { deepCopy } from './object';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export async function writeState({ reset }: { reset: boolean }): Promise<void> {
     const store = useStore();
@@ -47,7 +47,7 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
             _this.setStateChanged('all_Timer.alive', alive, true);
         }
     } catch (e: any) {
-        errorLogging({ text: 'Error in writeState', error: e, _this });
+        errorLogger('Error in writeState', e, _this);
     }
 
     function getJson(timer: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {

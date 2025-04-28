@@ -4,7 +4,7 @@ import { resetValues } from './reset';
 import type { Timer, TimerSelector } from '../types/types';
 import { timerObject } from '../config/timer-data';
 import { useStore } from '../store/store';
-import { errorLogging } from './logging';
+import { errorLogger } from './logging';
 
 export const interval = (
     sec: number,
@@ -46,7 +46,7 @@ export const interval = (
             timerObject.timerActive.timerCount--;
 
             resetValues(timer, timerBlock).catch((e: any) => {
-                errorLogging({ text: 'Error in interval', error: e, _this });
+                errorLogger('Error in interval', e, _this);
             });
 
             _this.log.debug('Timer stopped');
