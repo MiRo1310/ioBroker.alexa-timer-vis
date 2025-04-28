@@ -1,6 +1,6 @@
 {
   "name": "iobroker.alexa-timer-vis",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "description": "Alexa Timer ausgeben um in der Vis anzuzeigen",
   "author": {
     "name": "Michael Roling",
@@ -20,7 +20,7 @@
     "url": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3"
