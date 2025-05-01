@@ -41,7 +41,7 @@
     "rimraf": "^3.0.2",
     "sinon": "^20.0.0",
     "sinon-chai": "^3.7.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "main": "build/main.js",
   "files": [
