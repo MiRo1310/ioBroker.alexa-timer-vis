@@ -33,6 +33,7 @@ const decomposeInputValue = (voiceString) => {
     const { timerString, name, deleteVal, inputString } = (0, import_filter_info.filterInfo)(inputDecomposed);
     return { name, timerSec: eval(timerString), deleteVal, inputString };
   } catch (e) {
+    _this.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceString}`);
     (0, import_logging.errorLogger)("Error in decomposeInputValue: ", e, _this);
     return { name: "", timerSec: 0, deleteVal: 0, inputString: "" };
   }
