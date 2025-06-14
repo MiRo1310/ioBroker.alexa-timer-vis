@@ -69,6 +69,10 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+- FIX: Add alarm clock to ignored words
+
 ### 2.1.1 (2025-04-28)
 
 - FEAT: #141 Activate sentry

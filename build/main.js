@@ -46,6 +46,7 @@ var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
 var import_timer_name = require("./lib/timer-name");
 var import_write_state = require("./lib/write-state");
 var import_store = require("./store/store");
+var import_abort = require("./app/abort");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -107,9 +108,7 @@ class AlexaTimerVis extends utils.Adapter {
             voiceInput = res == null ? void 0 : res.val;
             this.log.debug(`VoiceInput: ${voiceInput}`);
           }
-          if (import_timer_data.timerObject.timerActive.data.abortWords.find(
-            (word) => voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase())
-          )) {
+          if ((0, import_abort.isAbortWord)(voiceInput, this)) {
             this.log.debug("AbortWord found");
             return;
           }

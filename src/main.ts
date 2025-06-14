@@ -18,6 +18,7 @@ import { getNewTimerName } from './lib/timer-name';
 import { writeState } from './lib/write-state';
 import type { Store, Timer, TimerCondition, Timers } from './types/types';
 import { useStore } from './store/store';
+import { isAbortWord } from './app/abort';
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
@@ -92,11 +93,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                         voiceInput = res?.val as string;
                         this.log.debug(`VoiceInput: ${voiceInput}`);
                     }
-                    if (
-                        timerObject.timerActive.data.abortWords.find(word =>
-                            voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase()),
-                        )
-                    ) {
+                    if (isAbortWord(voiceInput, this)) {
                         this.log.debug('AbortWord found');
                         return;
                     }
