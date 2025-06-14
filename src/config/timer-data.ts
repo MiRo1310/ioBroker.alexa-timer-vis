@@ -33,7 +33,7 @@ export const timerObject: TimerObject = {
             hour: ['stunde', 'stunden', 'hour', 'hours'], // Wörter für Stunden, dient als Multiplikator
             minute: ['minute', 'minuten', 'minute', 'minutes'], // Wörter für Minuten, dient als Multiplikator
             second: ['sekunde', 'sekunden', 'second', 'seconds'], // Wörter für Sekunden
-            abortWords: ['wecker, uhr'],
+            abortWords: ['wecker', 'uhr'],
         },
         timer: {
             // Liste mit Timern, zeigt den aktuellen Zustand

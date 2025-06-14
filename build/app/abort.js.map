@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/app/abort.ts"],
+  "sourcesContent": ["import { timerObject } from '../config/timer-data';\nimport type AlexaTimerVis from '../main';\n\nexport const isAbortWord = (voiceInput: string, _this: AlexaTimerVis): boolean => {\n    const input = voiceInput.toLocaleLowerCase();\n\n    const result = timerObject.timerActive.data.abortWords.find(word => {\n        return input.includes(word.toLocaleLowerCase());\n    });\n    return !!result;\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAGrB,MAAM,cAAc,CAAC,YAAoB,UAAkC;AAC9E,QAAM,QAAQ,WAAW,kBAAkB;AAE3C,QAAM,SAAS,8BAAY,YAAY,KAAK,WAAW,KAAK,UAAQ;AAChE,WAAO,MAAM,SAAS,KAAK,kBAAkB,CAAC;AAAA,EAClD,CAAC;AACD,SAAO,CAAC,CAAC;AACb;",
+  "names": []
+}
