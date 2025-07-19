@@ -28,6 +28,7 @@ var import_store = require("../store/store");
 var import_object = require("./object");
 var import_logging = require("./logging");
 async function writeState({ reset }) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
   const store = (0, import_store.useStore)();
   const _this = store._this;
   const timers = import_timer_data.timerObject.timerActive.timer;
@@ -47,17 +48,17 @@ async function writeState({ reset }) {
         import_timer_data.timerObject.timerActive.timer[element],
         true
       );
-      _this.setStateChanged(`${element}.hour`, timer.hour, true);
-      _this.setStateChanged(`${element}.minute`, timer.minute, true);
-      _this.setStateChanged(`${element}.second`, timer.second, true);
-      _this.setStateChanged(`${element}.string`, timer.stringTimer, true);
-      _this.setStateChanged(`${element}.string_2`, timer.stringTimer2, true);
-      _this.setStateChanged(`${element}.TimeStart`, timer.startTimeString, true);
-      _this.setStateChanged(`${element}.TimeEnd`, timer.endTimeString, true);
-      _this.setStateChanged(`${element}.InputDeviceName`, timer.inputDevice, true);
-      _this.setStateChanged(`${element}.lengthTimer`, timer.lengthTimer, true);
-      _this.setStateChanged(`${element}.percent2`, timer.percent2, true);
-      _this.setStateChanged(`${element}.percent`, timer.percent, true);
+      _this.setStateChanged(`${element}.hour`, (_a = timer.hour) != null ? _a : "", true);
+      _this.setStateChanged(`${element}.minute`, (_b = timer.minute) != null ? _b : "", true);
+      _this.setStateChanged(`${element}.second`, (_c = timer.second) != null ? _c : "", true);
+      _this.setStateChanged(`${element}.string`, (_d = timer.stringTimer) != null ? _d : "", true);
+      _this.setStateChanged(`${element}.string_2`, (_e = timer.stringTimer2) != null ? _e : "", true);
+      _this.setStateChanged(`${element}.TimeStart`, (_f = timer.startTimeString) != null ? _f : "", true);
+      _this.setStateChanged(`${element}.TimeEnd`, (_g = timer.endTimeString) != null ? _g : "", true);
+      _this.setStateChanged(`${element}.InputDeviceName`, (_h = timer.inputDevice) != null ? _h : "", true);
+      _this.setStateChanged(`${element}.lengthTimer`, (_i = timer.lengthTimer) != null ? _i : "", true);
+      _this.setStateChanged(`${element}.percent2`, (_j = timer.percent2) != null ? _j : 0, true);
+      _this.setStateChanged(`${element}.percent`, (_k = timer.percent) != null ? _k : 0, true);
       _this.setStateChanged(`${element}.name`, getTimerName(timer), true);
       _this.setStateChanged(`${element}.json`, getJson(timer), true);
       _this.setStateChanged("all_Timer.alive", alive, true);
@@ -75,7 +76,7 @@ function getTimerName(timer) {
   if (timer.alexaTimerName) {
     return (0, import_global.firstLetterToUpperCase)(`${timer.alexaTimerName} Timer`);
   }
-  if (timer.name !== "Timer") {
+  if (timer.name && timer.name !== "Timer") {
     return `${(0, import_global.firstLetterToUpperCase)(timer.name)} Timer`;
   }
   return "Timer";
