@@ -31,17 +31,17 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
                 true,
             );
 
-            _this.setStateChanged(`${element}.hour`, timer.hour, true);
-            _this.setStateChanged(`${element}.minute`, timer.minute, true);
-            _this.setStateChanged(`${element}.second`, timer.second, true);
-            _this.setStateChanged(`${element}.string`, timer.stringTimer, true);
-            _this.setStateChanged(`${element}.string_2`, timer.stringTimer2, true);
-            _this.setStateChanged(`${element}.TimeStart`, timer.startTimeString, true);
-            _this.setStateChanged(`${element}.TimeEnd`, timer.endTimeString, true);
-            _this.setStateChanged(`${element}.InputDeviceName`, timer.inputDevice, true);
-            _this.setStateChanged(`${element}.lengthTimer`, timer.lengthTimer, true);
-            _this.setStateChanged(`${element}.percent2`, timer.percent2, true);
-            _this.setStateChanged(`${element}.percent`, timer.percent, true);
+            _this.setStateChanged(`${element}.hour`, timer.hour ?? '', true);
+            _this.setStateChanged(`${element}.minute`, timer.minute ?? '', true);
+            _this.setStateChanged(`${element}.second`, timer.second ?? '', true);
+            _this.setStateChanged(`${element}.string`, timer.stringTimer ?? '', true);
+            _this.setStateChanged(`${element}.string_2`, timer.stringTimer2 ?? '', true);
+            _this.setStateChanged(`${element}.TimeStart`, timer.startTimeString ?? '', true);
+            _this.setStateChanged(`${element}.TimeEnd`, timer.endTimeString ?? '', true);
+            _this.setStateChanged(`${element}.InputDeviceName`, timer.inputDevice ?? '', true);
+            _this.setStateChanged(`${element}.lengthTimer`, timer.lengthTimer ?? '', true);
+            _this.setStateChanged(`${element}.percent2`, timer.percent2 ?? 0, true);
+            _this.setStateChanged(`${element}.percent`, timer.percent ?? 0, true);
             _this.setStateChanged(`${element}.name`, getTimerName(timer), true);
             _this.setStateChanged(`${element}.json`, getJson(timer), true);
             _this.setStateChanged('all_Timer.alive', alive, true);
@@ -62,7 +62,7 @@ function getTimerName(timer: Timer): string {
         return firstLetterToUpperCase(`${timer.alexaTimerName} Timer`);
     }
 
-    if (timer.name !== 'Timer') {
+    if (timer.name && timer.name !== 'Timer') {
         return `${firstLetterToUpperCase(timer.name)} Timer`;
     }
 
