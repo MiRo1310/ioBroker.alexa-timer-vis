@@ -93,6 +93,12 @@ function includedHours(valSec) {
   return { hourInSec, hour };
 }
 function firstLetterToUpperCase(name) {
+  if (name.length === 0) {
+    return "";
+  }
+  if (name.length === 1) {
+    return name.toUpperCase();
+  }
   return name.slice(0, 1).toUpperCase() + name.slice(1);
 }
 function timeToString(milliseconds) {

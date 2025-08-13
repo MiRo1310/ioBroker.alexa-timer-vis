@@ -89,6 +89,13 @@ function includedHours(valSec: number): { hourInSec: number; hour: number } {
 }
 
 export function firstLetterToUpperCase(name: string): string {
+    if (name.length === 0) {
+        return '';
+    }
+    if (name.length === 1) {
+        return name.toUpperCase();
+    }
+
     return name.slice(0, 1).toUpperCase() + name.slice(1); // Erster Buchstabe in Groß + ReststartTimer
 }
 
