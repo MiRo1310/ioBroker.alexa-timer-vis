@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "news": {
+      "2.1.2": {
+        "en": "FIX: Errors reported by Sentry\nFIX: Add alarm clock to ignored words",
+        "de": "FIX: Fehler, die von Sentry gemeldet wurden\nFIX: Alarmuhr hinzufügen, um Wörter zu ignorieren",
+        "ru": "FIX: Ошибки, о которых сообщает Sentry\nДобавьте будильник к проигнорированным словам",
+        "pt": "FIX: Erros relatados pelo Sentry\nFIX: Adicionar o despertador às palavras ignoradas",
+        "nl": "FIX: Fouten gemeld door Sentry\nFIX: Wekker toevoegen aan genegeerde woorden",
+        "fr": "FIX : Erreurs signalées par Sentry\nFIX: Ajouter un réveil aux mots ignorés",
+        "it": "FIX: Errori segnalati da Sentry\nFIX: Aggiungi orologio di allarme per le parole ignorate",
+        "es": "FIX: Errores reportados por Sentry\nFIX: Agregue el reloj de alarma para las palabras ignoradas",
+        "pl": "FIX: Błędy zgłoszone przez Sentry\nFIX: Dodaj budzik do ignorowanych słów",
+        "uk": "FIX: Помилки, що повідомляються Sentry\nFIX: Додати годинник сигналізації для ігнорування слів",
+        "zh-cn": "FIX:哨兵报告的错误\nFIX: 在忽略的单词中添加提醒钟"
+      },
       "2.1.1": {
         "en": "FEAT: #141 Activate sentry",
         "de": "FEAT: #141 Aktivieren Sie die Sendung",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 142 Błąd timeout\nFIX: # 137 Reset timer name\nFEAT: Dodaj stan json",
         "uk": "FIX: #142 Похибка часу\nFIX: #137 Ім'я таймера\nFEAT: Додати стан джсону",
         "zh-cn": "FIX: #142 超时错误\nFIX: # 137 重置计时器名称\nFEAT: 添加 json 状态"
-      },
-      "2.0.4": {
-        "en": "FIX: #132 Second timer button reset deletes timer one\nFIX: #137 Reset timer name",
-        "de": "FIX: #132 Zweite Timer-Taste zurücksetzen Löscht Timer ein\nFIX: #137 Timer zurücksetzen",
-        "ru": "FIX: #132 Вторая кнопка таймера удаляет таймер один\nFIX: #137",
-        "pt": "FIX: #132 Segundo temporizador botão reset exclui temporizador um\nFIX: #137 Repor nome do temporizador",
-        "nl": "FIX: #132 Tweede timer knop reset verwijdert timer een\nFIX: #137 Timernaam resetten",
-        "fr": "FIX: #132 Deuxième bouton minuterie réinitialise supprime timer un\nFIX: #137 Réinitialiser le nom du minuteur",
-        "it": "FIX: #132 Ripristino del secondo timer cancella il timer uno\nFIX: #137 Reset timer name",
-        "es": "FIX: #132 El reinicio del botón del temporizador segundo elimina el temporizador uno\nFIX: #137 Nombre del cronómetro",
-        "pl": "FIX: # 132 Drugi przycisk timer reset usuwa timer jeden\nFIX: # 137 Reset timer name",
-        "uk": "FIX: #132 Другий таймер кнопка скидання видаляє таймер один\nFIX: #137 Ім'я таймера",
-        "zh-cn": "FIX: # 132 第二计时器按钮重置删除定时器 1\nFIX: # 137 重置计时器名称"
       }
     },
     "titleLang": {
