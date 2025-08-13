@@ -108,8 +108,9 @@ class AlexaTimerVis extends utils.Adapter {
             voiceInput = res == null ? void 0 : res.val;
             this.log.debug(`VoiceInput: ${voiceInput}`);
           }
-          if ((0, import_abort.isAbortWord)(voiceInput, this)) {
-            this.log.debug("AbortWord found");
+          const abortWord = (0, import_abort.getAbortWord)(voiceInput, this);
+          if (abortWord) {
+            this.log.debug(`Found abort word: ${abortWord}`);
             return;
           }
           if (import_timer_data.timerObject.timerActive.data.notNotedSentence.find((el) => el === voiceInput)) {
