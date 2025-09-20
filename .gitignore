@@ -24,3 +24,5 @@ admin/custom_m.html
 
 # Dev Server
 .dev-server
+
+.commitinfo

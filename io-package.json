@@ -157,58 +157,58 @@
     },
     "dependencies": [
       {
-        "js-controller": ">=5.0.19"
+        "js-controller": ">=6.0.11"
       }
     ],
     "globalDependencies": [
       {
         "alexa2": ">=3.11.2",
-        "admin": ">=7.4.10"
+        "admin": ">=7.6.17"
+      }
+    ],
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<0.3.0",
+            "newVersion>=0.3.1"
+          ]
+        },
+        "title": {
+          "en": "Important notice!",
+          "de": "Wichtiger Hinweis!",
+          "ru": "Важное замечание!",
+          "pt": "Notícia importante!",
+          "nl": "Belangrijke mededeling!",
+          "fr": "Avis important!",
+          "it": "Avviso IMPORTANTE!",
+          "es": "Noticia importante!",
+          "pl": "Ważna uwaga!",
+          "zh-cn": "重要通知!",
+          "uk": "Важливе повідомлення!"
+        },
+        "text": {
+          "en": "Breaking change!!! At least NodeJs 18 is required",
+          "de": "Wechseln!!! Mindestens NodeJs 18 ist erforderlich",
+          "ru": "Разрыв изменения!!! По крайней мере NodeJs 18 требуется",
+          "pt": "Mudança de ruptura!!! Pelo menos NodeJs 18 é necessário",
+          "nl": "Breek verandering!!! Ten minste NodeJs 18 is vereist",
+          "fr": "Briser le changement!!! Au moins NodeJs 18 est nécessaire",
+          "it": "Cambiamento di rottura!!! Almeno NodeJs 18 è richiesto",
+          "es": "Cambio de ruptura! Por lo menos NodeJs 18 es necesario",
+          "pl": "Łamanie drobnych! Co najmniej NodeJs 18 jest wymagane",
+          "uk": "Змінити зміни! При найменшому NodeJs 18 потрібно",
+          "zh-cn": "突破变化! 至少需要节点Js 18"
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
       }
     ]
   },
-  "messages": [
-    {
-      "condition": {
-        "operand": "and",
-        "rules": [
-          "oldVersion<0.3.0",
-          "newVersion>=0.3.1"
-        ]
-      },
-      "title": {
-        "en": "Important notice!",
-        "de": "Wichtiger Hinweis!",
-        "ru": "Важное замечание!",
-        "pt": "Notícia importante!",
-        "nl": "Belangrijke mededeling!",
-        "fr": "Avis important!",
-        "it": "Avviso IMPORTANTE!",
-        "es": "Noticia importante!",
-        "pl": "Ważna uwaga!",
-        "zh-cn": "重要通知!",
-        "uk": "Важливе повідомлення!"
-      },
-      "text": {
-        "en": "Breaking change!!! At least NodeJs 18 is required",
-        "de": "Wechseln!!! Mindestens NodeJs 18 ist erforderlich",
-        "ru": "Разрыв изменения!!! По крайней мере NodeJs 18 требуется",
-        "pt": "Mudança de ruptura!!! Pelo menos NodeJs 18 é necessário",
-        "nl": "Breek verandering!!! Ten minste NodeJs 18 is vereist",
-        "fr": "Briser le changement!!! Au moins NodeJs 18 est nécessaire",
-        "it": "Cambiamento di rottura!!! Almeno NodeJs 18 è richiesto",
-        "es": "Cambio de ruptura! Por lo menos NodeJs 18 es necesario",
-        "pl": "Łamanie drobnych! Co najmniej NodeJs 18 jest wymagane",
-        "uk": "Змінити зміни! При найменшому NodeJs 18 потрібно",
-        "zh-cn": "突破变化! 至少需要节点Js 18"
-      },
-      "level": "warn",
-      "buttons": [
-        "agree",
-        "cancel"
-      ]
-    }
-  ],
   "native": {
     "alexa": "alexa2.0",
     "intervall1": 1,
