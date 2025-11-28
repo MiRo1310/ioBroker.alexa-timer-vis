@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "news": {
+      "2.1.3": {
+        "en": "CHORE: Update dependecies",
+        "de": "CHORE: Aktualisieren von Abhängigkeiten",
+        "ru": "Источник: Update Dependes",
+        "pt": "CHORE: Atualizar dependências",
+        "nl": "CHORE: Update afhankelijkheden",
+        "fr": "CHORE : Mise à jour des dépendances",
+        "it": "CHORE: dipendenze di aggiornamento",
+        "es": "CHORE: Actualizar dependencias",
+        "pl": "CHORE: Aktualizacja zależności",
+        "uk": "CHORE: Оновлення залежності",
+        "zh-cn": "CHORE: 更新依赖性"
+      },
       "2.1.2": {
         "en": "FIX: Errors reported by Sentry\nFIX: Add alarm clock to ignored words",
         "de": "FIX: Fehler, die von Sentry gemeldet wurden\nFIX: Alarmuhr hinzufügen, um Wörter zu ignorieren",
@@ -80,19 +93,6 @@
         "pl": "FEAT: # 151 Responsive Design",
         "uk": "FEAT: #151 Відповідальний дизайн",
         "zh-cn": "FEAT: #151 反应设计"
-      },
-      "2.0.5": {
-        "en": "FIX: #142 Timeout error\nFIX: #137 Reset timer name\nFEAT: Add json state",
-        "de": "FIX: #142 Timeout Fehler\nFIX: #137 Timer zurücksetzen\nFEAT: json state hinzufügen",
-        "ru": "FIX: #142\nFIX: #137\nFEAT: Добавить состояние json",
-        "pt": "FIX: #142 Erro de timeout\nFIX: #137 Repor nome do temporizador\nFEAT: Adicionar estado json",
-        "nl": "FIX: #142 Timeout-fout\nFIX: #137 Timernaam resetten\nFEAT: Voeg json status toe",
-        "fr": "FIXE: #142 Erreur de délai\nFIX: #137 Réinitialiser le nom du minuteur\nFEUILLE: Ajouter l'état de json",
-        "it": "FIX: #142 Errore di timeout\nFIX: #137 Reset timer name\nFEAT: Aggiungere lo stato di json",
-        "es": "FIX: #142 Timeout error\nFIX: #137 Nombre del cronómetro\nFEAT: Add json state",
-        "pl": "FIX: # 142 Błąd timeout\nFIX: # 137 Reset timer name\nFEAT: Dodaj stan json",
-        "uk": "FIX: #142 Похибка часу\nFIX: #137 Ім'я таймера\nFEAT: Додати стан джсону",
-        "zh-cn": "FIX: #142 超时错误\nFIX: # 137 重置计时器名称\nFEAT: 添加 json 状态"
       }
     },
     "titleLang": {
