@@ -23,43 +23,37 @@ __export(generate_values_exports, {
 module.exports = __toCommonJS(generate_values_exports);
 var import_store = require("../store/store");
 var import_global = require("./global");
-const generateValues = (timer, sec, timerIndex, inputString, name) => {
+const generateValues = (timer, sec, index, inputString, name) => {
   const store = (0, import_store.useStore)();
-  const timeLeft = timer.endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
-  const timeLeftSec = Math.round(timeLeft / 1e3);
-  const result = (0, import_global.secToHourMinSec)(timeLeftSec, true);
+  const timeLeft = timer.getOutputProperties().endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
+  const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
+  const result = (0, import_global.secToHourMinSec)(remainingTimeInSeconds, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
-  const timeString1 = `${hour}:${minutes}:${seconds}${getTimeUnit(timeLeftSec, store)}`;
-  const { timeString } = isShorterThanAMinute(
+  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds, store)}`;
+  const { timeString: stringTimer2 } = isShorterThanAMinute(
     isShorterThanSixtyMinutes(
       isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store))
     )
   );
-  if (!timer.extendOrShortenTimer) {
-    timer.voiceInputAsSeconds = sec;
+  if (!timer.isExtendOrShortenTimer()) {
+    timer.setVoiceInputAsSeconds(sec);
   }
   ({ hour, minutes, seconds } = resetSuperiorValue(hour, minutes, seconds));
-  timer.hour = hour;
-  timer.minute = minutes;
-  timer.second = seconds;
-  timer.stringTimer = timeString1;
-  timer.stringTimer2 = timeString;
-  timer.remainingTimeInSeconds = timeLeftSec;
-  timer.index = timerIndex;
-  timer.inputString = inputString;
-  timer.percent = Math.round(timeLeftSec / timer.voiceInputAsSeconds * 100);
-  timer.percent2 = 100 - Math.round(timeLeftSec / timer.voiceInputAsSeconds * 100);
-  timer.lengthTimer = lengthTimer;
-  timer.name = setTimerNameIfNotExist(name);
-  return timeLeftSec;
+  timer.setOutputProperties({
+    hours: hour,
+    minutes,
+    seconds,
+    stringTimer1,
+    stringTimer2,
+    remainingTimeInSeconds,
+    index,
+    inputString,
+    lengthTimer,
+    name
+  });
+  return remainingTimeInSeconds;
 };
-function setTimerNameIfNotExist(name) {
-  if (name == "" || !name) {
-    return "Timer";
-  }
-  return name;
-}
 function resetSuperiorValue(hour, minutes, seconds) {
   if (hour === "00") {
     hour = "";

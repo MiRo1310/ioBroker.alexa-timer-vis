@@ -26,7 +26,6 @@ var import_store = require("../store/store");
 var import_filter_info = require("./filter-info");
 var import_find_timer = require("./find-timer");
 var import_timer_data = require("../config/timer-data");
-var import_global = require("./global");
 var import_logging = require("./logging");
 const extendOrShortTimer = async ({
   voiceInput,
@@ -67,12 +66,8 @@ function getMultiplikatorForAddOrSub(store2) {
 }
 function extendTimer(timers2, sec, addOrSub2, timerObject2) {
   timers2.forEach((timer) => {
-    const timerSeconds = sec;
     if (timerObject2.timerActive.timer[timer]) {
-      timerObject2.timer[timer].extendOrShortenTimer = true;
-      timerObject2.timer[timer].endTimeNumber += timerSeconds * 1e3 * addOrSub2;
-      timerObject2.timer[timer].endTimeString = (0, import_global.timeToString)(timerObject2.timer[timer].endTimeNumber);
-      timerObject2.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub2;
+      timerObject2.timer[timer].extendTimer(sec, addOrSub2);
     }
   });
 }

@@ -18,8 +18,7 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_name_exports = {};
 __export(timer_name_exports, {
-  getNewTimerName: () => getNewTimerName,
-  registerIdToGetTimerName: () => registerIdToGetTimerName
+  getNewTimerName: () => getNewTimerName
 });
 module.exports = __toCommonJS(timer_name_exports);
 var import_store = require("../store/store");
@@ -33,32 +32,17 @@ const getNewTimerName = (jsonString, timerSelector) => {
     if ((0, import_global.isIobrokerValue)(jsonString)) {
       json = JSON.parse(jsonString.val);
     }
+    const timer = import_timer_data.timerObject.timer[timerSelector];
     if (json.length === 1) {
-      saveLabelAndId(json[0], timerSelector);
+      saveLabelAndId(json[0], timer);
       return;
     }
     const timerWithUniqueId = getTimerWithUniqueId(json);
     if (timerWithUniqueId) {
-      saveLabelAndId(timerWithUniqueId, timerSelector);
+      saveLabelAndId(timerWithUniqueId, timer);
     }
   } catch (e) {
     (0, import_logging.errorLogger)("Error in getNewTimerName", e, _this);
-  }
-};
-const registerIdToGetTimerName = async (timerSelector) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
-  try {
-    const serial = store.deviceSerialNumber;
-    if (!serial) {
-      return;
-    }
-    const foreignId = `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
-    store.lastTimer = { timerSerial: serial, timerSelector, id: foreignId };
-    await _this.subscribeForeignStatesAsync(foreignId);
-    _this.log.debug(`Subscribed to ${foreignId}`);
-  } catch (e) {
-    (0, import_logging.errorLogger)("Error in registerIdToGetTimerName", e, _this);
   }
 };
 function getTimerWithUniqueId(json) {
@@ -68,7 +52,7 @@ function getTimerWithUniqueId(json) {
       break;
     }
     for (const timer in import_timer_data.timerObject.timer) {
-      if (import_timer_data.timerObject.timer[timer].id === json[i].id) {
+      if (import_timer_data.timerObject.timer[timer].getId() === json[i].id) {
         timerWithUniqueId = null;
         break;
       }
@@ -77,13 +61,12 @@ function getTimerWithUniqueId(json) {
   }
   return timerWithUniqueId;
 }
-function saveLabelAndId({ id, label }, timerSelector) {
-  import_timer_data.timerObject.timer[timerSelector].alexaTimerName = label || "";
-  import_timer_data.timerObject.timer[timerSelector].id = id || "";
+function saveLabelAndId({ id, label }, timer) {
+  timer.setId(id);
+  timer.setAlexaTimerName(label != null ? label : "");
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  getNewTimerName,
-  registerIdToGetTimerName
+  getNewTimerName
 });
 //# sourceMappingURL=timer-name.js.map

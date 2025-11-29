@@ -1,9 +1,8 @@
-import type { Store, TimerName, TimerObject } from '../types/types';
+import type { Store, TimerIndex, TimerObject } from '../types/types';
 import { useStore } from '../store/store';
 import { filterInfo } from './filter-info';
 import { findTimer } from './find-timer';
 import { timerObject } from '../config/timer-data';
-import { timeToString } from './global';
 import { errorLogger } from './logging';
 
 export const extendOrShortTimer = async ({
@@ -53,17 +52,10 @@ function getMultiplikatorForAddOrSub(store: Store): 1 | -1 {
     return 1;
 }
 
-export function extendTimer(timers: TimerName[], sec: number, addOrSub: number, timerObject: TimerObject): void {
+export function extendTimer(timers: TimerIndex[], sec: number, addOrSub: number, timerObject: TimerObject): void {
     timers.forEach(timer => {
-        const timerSeconds = sec;
-
         if (timerObject.timerActive.timer[timer]) {
-            timerObject.timer[timer].extendOrShortenTimer = true;
-
-            timerObject.timer[timer].endTimeNumber += timerSeconds * 1000 * addOrSub;
-
-            timerObject.timer[timer].endTimeString = timeToString(timerObject.timer[timer].endTimeNumber);
-            timerObject.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub;
+            timerObject.timer[timer].extendTimer(sec, addOrSub);
         }
     });
 }

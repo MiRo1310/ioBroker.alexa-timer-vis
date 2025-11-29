@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
 import { decomposeInputValue } from './lib/decompose-input-value';
-import { delTimer, removeTimerInLastTimers as resetLastTimer } from './lib/delete-timer';
+import { delTimer, removeTimerInLastTimers } from './lib/delete-timer';
 import {
     doesAlexaSendAQuestion,
     isAlexaSummaryStateChanged as isAlexaStateToListenToChanged,
@@ -16,9 +16,10 @@ import { timerDelete } from './lib/timer-delete';
 import { extendOrShortTimer } from './lib/timer-extend-or-shorten';
 import { getNewTimerName } from './lib/timer-name';
 import { writeState } from './lib/write-state';
-import type { Store, Timer, TimerCondition, Timers } from './types/types';
+import type { TimerCondition } from './types/types';
 import { useStore } from './store/store';
 import { getAbortWord } from './app/abort';
+import { Timer } from './app/timer';
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
@@ -51,6 +52,10 @@ export default class AlexaTimerVis extends utils.Adapter {
         if (this.adapterConfig && '_id' in this.adapterConfig) {
             store.alexaTimerVisInstance = this.adapterConfig?._id.replace('system.adapter.', '');
         }
+        timerObject.timer.timer1 = new Timer({ store: useStore() });
+        timerObject.timer.timer2 = new Timer({ store: useStore() });
+        timerObject.timer.timer3 = new Timer({ store: useStore() });
+        timerObject.timer.timer4 = new Timer({ store: useStore() });
 
         store.pathAlexaStateToListenTo = `${this.config.alexa}.History.intent`;
         store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
@@ -130,15 +135,11 @@ export default class AlexaTimerVis extends utils.Adapter {
                     return;
                 }
                 if (isAlexaTimerVisResetButton(state, id)) {
-                    const timer = id.split('.')[2] as keyof Timers;
-                    const timerObj = timerObject.timer[timer];
+                    const timerIndex = id.split('.')[2];
+                    const timer = timerObject.timer[timerIndex];
+                    timer.stopTimerInAlexa();
 
-                    this.setForeignState(
-                        getAlexaTextToCommandState(store, timerObj),
-                        buildTextCommand(timerObj),
-                        false,
-                    );
-                    delTimer(timer);
+                    delTimer(timerIndex);
                 }
 
                 async function checkForTimerName(_this: AlexaTimerVis, id: string): Promise<void> {
@@ -146,10 +147,10 @@ export default class AlexaTimerVis extends utils.Adapter {
                         return;
                     }
                     const lastTimer = store.lastTimer;
-                    if (lastTimer.id === id) {
-                        resetLastTimer();
+                    if (lastTimer.id === id && lastTimer.timerIndex !== '') {
+                        removeTimerInLastTimers();
 
-                        getNewTimerName(state, lastTimer.timerSelector);
+                        getNewTimerName(state, lastTimer.timerIndex);
                         await _this.unsubscribeForeignStatesAsync(id);
                     }
                 }
@@ -195,24 +196,14 @@ export default class AlexaTimerVis extends utils.Adapter {
 
 let adapter;
 if (require.main !== module) {
-    // Export the constructor in compact mode
     adapter = (options: Partial<utils.AdapterOptions> | undefined): AlexaTimerVis => new AlexaTimerVis(options);
 } else {
-    // otherwise start the instance directly
     (() => new AlexaTimerVis())();
 }
 export { adapter };
 
-function getAlexaTextToCommandState(store: Store, timerObj: Timer): string {
-    return `alexa2.${store.getAlexaInstanceObject().instance}.Echo-Devices.${timerObj.serialNumber}.Commands.textCommand`;
-}
-
 function isAlexaTimerVisResetButton(state: ioBroker.State | null | undefined, id: string): boolean {
     return !!(isIobrokerValue(state) && state.val && id.includes('Reset'));
-}
-
-function buildTextCommand(timerOb: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
-    return `stoppe ${timerOb.alexaTimerName && timerOb.alexaTimerName !== '' ? timerOb.alexaTimerName : timerOb.name !== 'Timer' ? timerOb.name.replace('Timer', '') : timerOb.inputString} Timer`;
 }
 
 function isTimerAction(state: ioBroker.State | null | undefined): boolean {

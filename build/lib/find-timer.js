@@ -56,18 +56,19 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
       const timerName = element;
       if (deleteTimerIndex == 1) {
         if (!store.questionAlexa) {
+          const voiceInputAsSeconds = import_timer_data.timerObject.timer[timerName].getVoiceInputAsSeconds();
           if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[timerName]) {
             timerFound.timer.push(timerName);
-          } else if (countMatchingTime == 1 && import_timer_data.timerObject.timer[timerName].voiceInputAsSeconds == sec && sec !== 0) {
+          } else if (countMatchingTime == 1 && voiceInputAsSeconds == sec && sec !== 0) {
             timerFound.timer.push(timerName);
           } else if (
             // _this.log.debug("Wenn nur einer gestellt ist mit der der gewünschten Zeit");
-            countMatchingTime == 1 && import_timer_data.timerObject.timer[timerName].voiceInputAsSeconds == sec
+            countMatchingTime == 1 && voiceInputAsSeconds == sec
           ) {
             timerFound.timer.push(timerName);
           } else if (
             // Einer, mit genauem Namen
-            import_timer_data.timerObject.timer[timerName].name == name && name !== "" && countMatchingName == 1
+            import_timer_data.timerObject.timer[timerName].getName() == name && name !== "" && countMatchingName == 1
           ) {
             timerFound.timer.push(timerName);
           }
@@ -77,7 +78,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
           timerFound.timer.push(timerName);
         } else {
           if (countMatchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("nein") != -1) {
-            if (import_timer_data.timerObject.timer[timerName].inputDevice == inputDevice) {
+            if (import_timer_data.timerObject.timer[timerName].getInputDevice() == inputDevice) {
               timerFound.timer.push(timerName);
             }
           } else if (
@@ -98,20 +99,20 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     return { oneOfMultiTimer: {}, timer: [] };
   }
 };
-function findTimerWithExactSameInputDevice(element, inputDevice, countMatchingInputDevice) {
-  if (import_timer_data.timerObject.timer[element].inputDevice == inputDevice) {
+function findTimerWithExactSameInputDevice(timerName, inputDevice, countMatchingInputDevice) {
+  if (import_timer_data.timerObject.timer[timerName].getInputDevice() === inputDevice) {
     countMatchingInputDevice++;
   }
   return countMatchingInputDevice;
 }
-function findTimerWithExactSameName(element, countMatchingName, name) {
-  if (import_timer_data.timerObject.timer[element].name.trim() == name) {
+function findTimerWithExactSameName(timerName, countMatchingName, name) {
+  if (import_timer_data.timerObject.timer[timerName].getName() == name) {
     countMatchingName++;
   }
   return countMatchingName;
 }
 function findTimerWithExactSameSec(element, countMatchingTime, sec) {
-  if (import_timer_data.timerObject.timer[element].voiceInputAsSeconds == sec) {
+  if (import_timer_data.timerObject.timer[element].getVoiceInputAsSeconds() == sec) {
     countMatchingTime++;
   }
   return countMatchingTime;

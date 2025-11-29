@@ -27,33 +27,11 @@ var import_logging = require("./logging");
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("./write-state");
 const resetValues = async (timer, index) => {
-  const { _this, getAlexaTimerVisInstance, valHourForZero, valMinuteForZero, valSecondForZero } = (0, import_store.useStore)();
+  const { _this, getAlexaTimerVisInstance } = (0, import_store.useStore)();
   try {
     import_timer_data.timerObject.timerActive.timer[index] = false;
     _this.log.debug(JSON.stringify(import_timer_data.timerObject.timerActive));
-    timer.hour = valHourForZero || "";
-    timer.minute = valMinuteForZero || "";
-    timer.second = valSecondForZero || "";
-    timer.stringTimer = "00:00:00 h";
-    timer.stringTimer2 = "";
-    timer.voiceInputAsSeconds = 0;
-    timer.remainingTimeInSeconds = 0;
-    timer.index = void 0;
-    timer.name = "";
-    timer.alexaTimerName = "";
-    timer.startTimeString = "00:00:00";
-    timer.endTimeString = "00:00:00";
-    timer.inputDevice = "";
-    timer.timerInterval = 0;
-    timer.lengthTimer = "";
-    timer.percent = 0;
-    timer.percent2 = 0;
-    timer.extendOrShortenTimer = false;
-    timer.id = "";
-    timer.serialNumber = "";
-    timer.inputString = "";
-    timer.startTimeNumber = 0;
-    timer.endTimeNumber = 0;
+    timer.reset();
     await _this.setObject(getAlexaTimerVisInstance() + index, {
       type: "device",
       common: { name: `` },

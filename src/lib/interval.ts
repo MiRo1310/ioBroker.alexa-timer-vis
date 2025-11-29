@@ -1,10 +1,11 @@
 import { generateValues } from './generate-values';
 import { secToHourMinSec } from './global';
 import { resetValues } from './reset';
-import type { Timer, TimerSelector } from '../types/types';
+import type { TimerSelector } from '../types/types';
 import { timerObject } from '../config/timer-data';
 import { useStore } from '../store/store';
 import { errorLogger } from './logging';
+import type { Timer } from '../app/timer';
 
 export const interval = (
     sec: number,
@@ -21,7 +22,7 @@ export const interval = (
     generateValues(timer, sec, timerBlock, inputString, name);
 
     const { string } = secToHourMinSec(sec, false);
-    timer.lengthTimer = string;
+    timer.setLengthTimer(string);
 
     if (!timerBlock) {
         return;
@@ -39,7 +40,7 @@ export const interval = (
                 );
             }
 
-            interval(sec, timerBlock, inputString, name, timer, timerObject.timer[timerBlock].timerInterval, true);
+            interval(sec, timerBlock, inputString, name, timer, timerObject.timer[timerBlock].getInterval(), true);
         }
 
         if (timeLeftSec <= 0 || !timerObject.timerActive.timer[timerBlock]) {

@@ -36,13 +36,14 @@ const oneOfMultiTimerDelete = (input, timeSec, name, inputDevice) => {
     }
   }
   let sortable = [];
-  for (const element in import_timer_data.timerObject.timer) {
+  for (const timerName in import_timer_data.timerObject.timer) {
+    const timer = import_timer_data.timerObject.timer[timerName];
     sortable.push([
-      element,
-      import_timer_data.timerObject.timer[element].voiceInputAsSeconds,
-      import_timer_data.timerObject.timer[element].remainingTimeInSeconds,
-      import_timer_data.timerObject.timer[element].name,
-      import_timer_data.timerObject.timer[element].inputDevice
+      timerName,
+      timer.getVoiceInputAsSeconds(),
+      timer.getRemainingTimeInSeconds(),
+      timer.getName(),
+      timer.getInputDevice()
     ]);
   }
   sortable = (0, import_global.sortArray)(sortable);

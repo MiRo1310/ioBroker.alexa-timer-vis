@@ -28,7 +28,7 @@ var import_store = require("../store/store");
 var import_logging = require("./logging");
 const removeTimerInLastTimers = () => {
   const store = (0, import_store.useStore)();
-  store.lastTimer = { id: "", timerSelector: "", timerSerial: "" };
+  store.lastTimer = { id: "", timerIndex: "", timerSerial: "" };
 };
 const delTimer = (timer) => {
   (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer], timer).catch((e) => {

@@ -128,10 +128,8 @@ export function isString(str?: string | number | boolean | object | null): str i
     return typeof str == 'string';
 }
 
-export function isIobrokerValue(obj: ioBroker.State | null | undefined): obj is ioBroker.State {
-    const result = obj && obj.val !== null && obj.val !== undefined;
-    return !!result;
-}
+export const isIobrokerValue = (obj: ioBroker.State | null | undefined): obj is ioBroker.State =>
+    !!obj && obj.val !== null && obj.val !== undefined;
 
 export function sortArray(array: any[]): any[] {
     return array.sort(function (a: any[], b: any[]) {

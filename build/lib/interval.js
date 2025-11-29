@@ -32,7 +32,7 @@ const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) 
   const _this = store._this;
   (0, import_generate_values.generateValues)(timer, sec, timerBlock, inputString, name);
   const { string } = (0, import_global.secToHourMinSec)(sec, false);
-  timer.lengthTimer = string;
+  timer.setLengthTimer(string);
   if (!timerBlock) {
     return;
   }
@@ -45,7 +45,7 @@ const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) 
           import_timer_data.timerObject.interval[timerBlock]
         );
       }
-      interval(sec, timerBlock, inputString, name, timer, import_timer_data.timerObject.timer[timerBlock].timerInterval, true);
+      interval(sec, timerBlock, inputString, name, timer, import_timer_data.timerObject.timer[timerBlock].getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerBlock]) {
       import_timer_data.timerObject.timerActive.timerCount--;

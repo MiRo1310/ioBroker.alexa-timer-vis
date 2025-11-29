@@ -18,49 +18,59 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var start_timer_exports = {};
 __export(start_timer_exports, {
+  getAlexaParsedAlexaJson: () => getAlexaParsedAlexaJson,
   startTimer: () => startTimer
 });
 module.exports = __toCommonJS(start_timer_exports);
 var import_timer_data = require("../config/timer-data");
 var import_store = require("../store/store");
 var import_global = require("./global");
-var import_get_input_device = require("./get-input-device");
 var import_interval = require("./interval");
-var import_timer_name = require("./timer-name");
 var import_logging = require("./logging");
+const isMoreThanAMinute = (sec) => sec > 60;
 const startTimer = async (sec, name, inputString) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
-    const timerSelector = selectAvailableTimer(_this);
-    await (0, import_get_input_device.getInputDevice)(import_timer_data.timerObject.timer[timerSelector]);
-    await (0, import_timer_name.registerIdToGetTimerName)(timerSelector);
-    const jsonAlexa = await _this.getForeignStateAsync(`alexa2.0.History.json`);
-    const startTimer2 = getStartTimerValue(jsonAlexa);
-    const start_Time = (0, import_global.timeToString)(startTimer2);
-    const timerMilliseconds = sec * 1e3;
-    const endTimeMilliseconds = startTimer2 + timerMilliseconds;
-    const endTimeString = (0, import_global.timeToString)(endTimeMilliseconds);
-    saveToObject(timerSelector, endTimeMilliseconds, endTimeString, start_Time, startTimer2);
-    await setDeviceNameInStateName(timerSelector, _this, store);
-    const timer = import_timer_data.timerObject.timer[timerSelector];
-    if (isMoreThanAMinute(sec)) {
-      (0, import_interval.interval)(sec, timerSelector, inputString, name, timer, store.intervalMore60 * 1e3, false);
+    const timerIndex = getAvailableTimerIndex(_this);
+    if (!timerIndex) {
       return;
     }
-    import_timer_data.timerObject.timer.timer1.timerInterval = store.intervalLess60 * 1e3;
-    (0, import_interval.interval)(sec, timerSelector, inputString, name, timer, store.intervalLess60 * 1e3, true);
+    const alexaJson = await getAlexaParsedAlexaJson(_this);
+    if (!alexaJson) {
+      return;
+    }
+    const creationTime = alexaJson.creationTime;
+    const startTimeString = (0, import_global.timeToString)(creationTime);
+    const timerMilliseconds = sec * 1e3;
+    const endTimeNumber = creationTime + timerMilliseconds;
+    const endTimeString = (0, import_global.timeToString)(endTimeNumber);
+    const timer = import_timer_data.timerObject.timer[timerIndex];
+    await timer.init();
+    timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
+    await timer.setIdFromEcoDeviceTimerList();
+    if (isMoreThanAMinute(sec)) {
+      (0, import_interval.interval)(sec, timerIndex, inputString, name, timer, store.intervalMore60 * 1e3, false);
+      return;
+    }
+    import_timer_data.timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1e3);
+    (0, import_interval.interval)(sec, timerIndex, inputString, name, timer, store.intervalLess60 * 1e3, true);
   } catch (e) {
     (0, import_logging.errorLogger)("Error in startTimer", e, _this);
   }
 };
-function getStartTimerValue(jsonAlexa) {
-  if ((0, import_global.isString)(jsonAlexa == null ? void 0 : jsonAlexa.val)) {
-    return JSON.parse(jsonAlexa.val).creationTime;
+async function getAlexaParsedAlexaJson(alexaTimerVis) {
+  const instance = (0, import_store.useStore)().getAlexaInstanceObject().instance;
+  const jsonAlexa = await alexaTimerVis.getForeignStateAsync(`alexa2.${instance}.History.json`);
+  try {
+    if ((0, import_global.isString)(jsonAlexa == null ? void 0 : jsonAlexa.val)) {
+      return JSON.parse(jsonAlexa.val);
+    }
+  } catch {
+    return;
   }
-  return (/* @__PURE__ */ new Date()).getTime();
 }
-function selectAvailableTimer(_this) {
+function getAvailableTimerIndex(_this) {
   for (let i = 0; i < Object.keys(import_timer_data.timerObject.timerActive.timer).length; i++) {
     const key = Object.keys(import_timer_data.timerObject.timerActive.timer)[i];
     if (!import_timer_data.timerObject.timerActive.timer[key]) {
@@ -69,28 +79,9 @@ function selectAvailableTimer(_this) {
     }
   }
 }
-async function setDeviceNameInStateName(timerBlock, _this, store) {
-  if ((0, import_global.isString)(timerBlock)) {
-    await _this.setObjectAsync(`alexa-timer-vis.0.${timerBlock}`, {
-      type: "device",
-      common: { name: `${store.deviceName}` },
-      native: {}
-    });
-  }
-}
-function isMoreThanAMinute(sec) {
-  return sec > 60;
-}
-function saveToObject(timerBlock, endTimeNumber, endTimeString, start_Time, startTimeNumber) {
-  if (timerBlock) {
-    import_timer_data.timerObject.timer[timerBlock].endTimeNumber = endTimeNumber;
-    import_timer_data.timerObject.timer[timerBlock].endTimeString = endTimeString;
-    import_timer_data.timerObject.timer[timerBlock].startTimeString = start_Time;
-    import_timer_data.timerObject.timer[timerBlock].startTimeNumber = startTimeNumber;
-  }
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  getAlexaParsedAlexaJson,
   startTimer
 });
 //# sourceMappingURL=start-timer.js.map

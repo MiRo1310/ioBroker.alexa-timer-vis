@@ -30,7 +30,7 @@ export function useStore(): Store {
             interval: null,
             deviceSerialNumber: null,
             deviceName: null,
-            lastTimer: { id: '', timerSelector: '', timerSerial: '' },
+            lastTimer: { id: '', timerIndex: '', timerSerial: '' },
             oldAlexaTimerObject: [],
             alexaTimerVisInstance: '',
             getAlexaInstanceObject: () => {

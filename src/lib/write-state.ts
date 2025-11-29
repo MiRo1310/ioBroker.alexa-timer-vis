@@ -1,10 +1,6 @@
-import type { Timer, TimerSelector } from '../types/types';
-
 import { timerObject } from '../config/timer-data';
-import { firstLetterToUpperCase } from './global';
 import { resetValues } from './reset';
 import { useStore } from '../store/store';
-import { deepCopy } from './object';
 import { errorLogger } from './logging';
 
 export async function writeState({ reset }: { reset: boolean }): Promise<void> {
@@ -12,8 +8,8 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
     const _this = store._this;
     const timers = timerObject.timerActive.timer;
     try {
-        for (const element in timers) {
-            const timer = timerObject.timer[element as keyof typeof timerObject.timer];
+        for (const timerName in timers) {
+            const timer = timerObject.timer[timerName];
 
             if (!timer) {
                 return;
@@ -21,50 +17,40 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
 
             let alive = true;
             if (reset) {
-                await resetValues(timer, element as TimerSelector);
+                await resetValues(timer, timerName);
                 alive = false;
             }
 
-            _this.setStateChanged(
-                `${element}.alive`,
-                timerObject.timerActive.timer[element as keyof typeof timerObject.timer],
-                true,
-            );
-
-            _this.setStateChanged(`${element}.hour`, timer.hour ?? '', true);
-            _this.setStateChanged(`${element}.minute`, timer.minute ?? '', true);
-            _this.setStateChanged(`${element}.second`, timer.second ?? '', true);
-            _this.setStateChanged(`${element}.string`, timer.stringTimer ?? '', true);
-            _this.setStateChanged(`${element}.string_2`, timer.stringTimer2 ?? '', true);
-            _this.setStateChanged(`${element}.TimeStart`, timer.startTimeString ?? '', true);
-            _this.setStateChanged(`${element}.TimeEnd`, timer.endTimeString ?? '', true);
-            _this.setStateChanged(`${element}.InputDeviceName`, timer.inputDevice ?? '', true);
-            _this.setStateChanged(`${element}.lengthTimer`, timer.lengthTimer ?? '', true);
-            _this.setStateChanged(`${element}.percent2`, timer.percent2 ?? 0, true);
-            _this.setStateChanged(`${element}.percent`, timer.percent ?? 0, true);
-            _this.setStateChanged(`${element}.name`, getTimerName(timer), true);
-            _this.setStateChanged(`${element}.json`, getJson(timer), true);
+            _this.setStateChanged(`${timerName}.alive`, timerObject.timerActive.timer[timerName], true);
+            const {
+                hours,
+                minutes,
+                seconds,
+                stringTimer1,
+                stringTimer2,
+                startTimeString,
+                endTimeString,
+                inputDevice,
+                lengthTimer,
+                percent,
+                percent2,
+            } = timer.getOutputProperties();
+            _this.setStateChanged(`${timerName}.hour`, hours, true);
+            _this.setStateChanged(`${timerName}.minute`, minutes, true);
+            _this.setStateChanged(`${timerName}.second`, seconds, true);
+            _this.setStateChanged(`${timerName}.string`, stringTimer1, true);
+            _this.setStateChanged(`${timerName}.string_2`, stringTimer2, true);
+            _this.setStateChanged(`${timerName}.TimeStart`, startTimeString, true);
+            _this.setStateChanged(`${timerName}.TimeEnd`, endTimeString, true);
+            _this.setStateChanged(`${timerName}.InputDeviceName`, inputDevice, true);
+            _this.setStateChanged(`${timerName}.lengthTimer`, lengthTimer, true);
+            _this.setStateChanged(`${timerName}.percent2`, percent2, true);
+            _this.setStateChanged(`${timerName}.percent`, percent, true);
+            _this.setStateChanged(`${timerName}.name`, timer.outPutTimerName(), true);
+            _this.setStateChanged(`${timerName}.json`, timer.getDataAsJson(), true);
             _this.setStateChanged('all_Timer.alive', alive, true);
         }
     } catch (e: any) {
         errorLogger('Error in writeState', e, _this);
     }
-
-    function getJson(timer: Timer): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
-        const copy = deepCopy(timer);
-        delete (copy as any).extendOrShortenTimer;
-        return JSON.stringify(copy);
-    }
-}
-
-function getTimerName(timer: Timer): string {
-    if (timer.alexaTimerName) {
-        return firstLetterToUpperCase(`${timer.alexaTimerName} Timer`);
-    }
-
-    if (timer.name && timer.name !== 'Timer') {
-        return `${firstLetterToUpperCase(timer.name)} Timer`;
-    }
-
-    return 'Timer';
 }

@@ -1,4 +1,5 @@
 import type AlexaTimerVis from '../main';
+import type { Timer } from '../app/timer';
 
 export interface GenerateTimeStringObject {
     timeString: string;
@@ -14,7 +15,7 @@ export interface AlexaActiveTimerList {
     triggerTime: number;
 }
 
-export type TimerSelector = keyof Timers | undefined;
+export type TimerSelector = keyof Timers;
 
 export type TimerCondition =
     | 'ShortenNotificationIntent'
@@ -22,35 +23,9 @@ export type TimerCondition =
     | 'RemoveNotificationIntent'
     | 'SetNotificationIntent';
 
-export interface Timer {
-    hour: string;
-    minute: string;
-    second: string;
-    stringTimer: string;
-    stringTimer2: string;
-    voiceInputAsSeconds: number;
-    index: TimerSelector;
-    name: string;
-    alexaTimerName: string | null;
-    startTimeNumber: number;
-    startTimeString: string;
-    endTimeNumber: number;
-    endTimeString: string;
-    inputDevice: string;
-    inputString: string;
-    serialNumber: string;
-    timerInterval: number;
-    lengthTimer: string;
-    percent: number;
-    percent2: number;
-    extendOrShortenTimer: boolean;
-    remainingTimeInSeconds: number;
-    id: string;
-}
+export type TimerIndex = string;
 
-export type TimerName = 'timer1' | 'timer2' | 'timer3' | 'timer4';
-
-export type Timers = Record<TimerName, Timer>;
+export type Timers = Record<TimerIndex, Timer>;
 
 export interface TimerObject {
     timerActive: {
@@ -192,14 +167,14 @@ export interface Store {
     getAlexaTimerVisInstance: () => string;
 }
 
-interface AlexaInstanceObject {
+export interface AlexaInstanceObject {
     adapter: string;
     instance: string;
     channel_history: string;
 }
 
 interface LastTimer {
-    timerSelector: string;
+    timerIndex: TimerIndex;
     timerSerial: string;
     id: string;
 }
@@ -209,4 +184,10 @@ export interface OneOfMultiTimer {
     sec: number;
     name: string;
     inputDevice: string;
+}
+
+export interface AlexaActiveTimerList {
+    id: string;
+    label: string | null;
+    triggerTime: number;
 }

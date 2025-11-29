@@ -122,10 +122,7 @@ const isStringEmpty = (str) => {
 function isString(str) {
   return typeof str == "string";
 }
-function isIobrokerValue(obj) {
-  const result = obj && obj.val !== null && obj.val !== void 0;
-  return !!result;
-}
+const isIobrokerValue = (obj) => !!obj && obj.val !== null && obj.val !== void 0;
 function sortArray(array) {
   return array.sort(function(a, b) {
     return a[2] - b[2];

@@ -20,14 +20,14 @@ export const oneOfMultiTimerDelete = (input: string, timeSec: number, name: stri
     }
 
     let sortable = [];
-    for (const element in timerObject.timer) {
+    for (const timerName in timerObject.timer) {
+        const timer = timerObject.timer[timerName];
         sortable.push([
-            element,
-
-            timerObject.timer[element as keyof typeof timerObject.timer].voiceInputAsSeconds,
-            timerObject.timer[element as keyof typeof timerObject.timer].remainingTimeInSeconds,
-            timerObject.timer[element as keyof typeof timerObject.timer].name,
-            timerObject.timer[element as keyof typeof timerObject.timer].inputDevice,
+            timerName,
+            timer.getVoiceInputAsSeconds(),
+            timer.getRemainingTimeInSeconds(),
+            timer.getName(),
+            timer.getInputDevice(),
         ]);
     }
 
@@ -38,23 +38,23 @@ export const oneOfMultiTimerDelete = (input: string, timeSec: number, name: stri
     for (const element of sortable) {
         if (element[1] == timeSec && timerNumber == i) {
             // Auf Zeit überprüfen
-            timerObject.timerActive.timer[element[0] as keyof typeof timerObject.timerActive.timer] = false;
+            timerObject.timerActive.timer[element[0]] = false;
             break;
         } else if (element[3] == name && timerNumber == i) {
             // Auf Name überprüfen
-            timerObject.timerActive.timer[element[0] as keyof typeof timerObject.timerActive.timer] = false;
+            timerObject.timerActive.timer[element[0]] = false;
             break;
         } else if (element[3] == name && timerNumber == 0) {
             // Auf Name überprüfen, wenn der Name in der Antwort vor kam
-            timerObject.timerActive.timer[element[0] as keyof typeof timerObject.timerActive.timer] = false;
+            timerObject.timerActive.timer[element[0]] = false;
             break;
         } else if (element[4] == inputDevice && timerNumber == i) {
             // Auf Device überprüfen
-            timerObject.timerActive.timer[element[0] as keyof typeof timerObject.timerActive.timer] = false;
+            timerObject.timerActive.timer[element[0]] = false;
             break;
         } else if (inputDevice == '' && timeSec == 0 && name == '' && timerNumber == i) {
             // Wenn kein Angaben vor liegen
-            timerObject.timerActive.timer[element[0] as keyof typeof timerObject.timerActive.timer] = false;
+            timerObject.timerActive.timer[element[0]] = false;
             break;
         } else {
             i++;

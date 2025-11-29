@@ -28,14 +28,20 @@ var import_write_state_interval = require("./write-state-interval");
 var import_global = require("./global");
 var import_logging = require("./logging");
 var import_store = require("../store/store");
+var import_timer = require("../app/timer");
+function addNewRawTimer(timerIndex) {
+  import_timer_data.timerObject.timerActive.timer[timerIndex] = false;
+  import_timer_data.timerObject.timer[timerIndex] = new import_timer.Timer({
+    store: (0, import_store.useStore)()
+  });
+}
 const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
-  var _a;
   const { _this } = (0, import_store.useStore)();
   const name = decomposeName;
   if (timerSec && timerSec != 0) {
     let nameExist = false;
     for (const element in import_timer_data.timerObject.timer) {
-      if (((_a = import_timer_data.timerObject.timer[element]) == null ? void 0 : _a.name) == name && !(0, import_global.isStringEmpty)(name)) {
+      if (import_timer_data.timerObject.timer[element].getName() == name && !(0, import_global.isStringEmpty)(name)) {
         nameExist = true;
         break;
       }
@@ -45,10 +51,9 @@ const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
       (0, import_state.createState)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
         (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
       });
-      const timer = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
-      if (import_timer_data.timerObject.timerActive.timer[timer] === void 0) {
-        import_timer_data.timerObject.timerActive.timer[timer] = false;
-        import_timer_data.timerObject.timer[timer] = {};
+      const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
+      if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
+        addNewRawTimer(timerIndex);
       }
       (0, import_start_timer.startTimer)(timerSec, name, decomposeInputString).catch((e) => {
         (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
