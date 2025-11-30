@@ -1,10 +1,10 @@
-import type { TimerIndex } from '../types/types';
-import { timerObject } from '../config/timer-data';
-import { useStore } from '../store/store';
-import { isString, timeToString } from './global';
-import { interval } from './interval';
-import type AlexaTimerVis from '../main';
-import { errorLogger } from './logging';
+import type { TimerIndex } from '@/types/types';
+import { timerObject } from '@/config/timer-data';
+import { useStore } from '@/store/store';
+import { isString, timeToString } from '@/lib/global';
+import { interval } from '@/lib/interval';
+import type AlexaTimerVis from '@/main';
+import { errorLogger } from '@/lib/logging';
 
 const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 

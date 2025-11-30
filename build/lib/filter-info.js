@@ -21,80 +21,102 @@ __export(filter_info_exports, {
   filterInfo: () => filterInfo
 });
 module.exports = __toCommonJS(filter_info_exports);
-var import_store = require("../store/store");
-var import_global = require("./global");
-var import_logging = require("./logging");
-var import_timer_data = require("../config/timer-data");
+var import_global = require("@/lib/global");
+var import_logging = require("@/lib/logging");
+var import_timer_data = require("@/config/timer-data");
+var import_store = require("@/store/store");
 const filterInfo = (input) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
     let timerString = "";
-    let inputString = "";
+    let inputString = [];
     let name = "";
     let deleteVal = 0;
-    input.forEach((element) => {
-      const data = import_timer_data.timerObject.timerActive.data;
-      if (data.notNoted.indexOf(element) >= 0) {
-        return;
+    for (let i = 0; i < input.length; i++) {
+      const element = input[i];
+      const { connector, notNoted, stopAll, hour, minute, second } = import_timer_data.timerObject.timerActive.data;
+      if (notNoted.indexOf(element) >= 0) {
+        continue;
       }
-      if (store.isDeleteTimer()) {
+      if (store.isDeleteTimer() || stopAll.indexOf(element) >= 0) {
         deleteVal++;
-      } else if (data.stopAll.indexOf(element) >= 0) {
-        deleteVal++;
-      } else if (data.connector.indexOf(element) >= 0) {
+        continue;
+      }
+      if (connector.indexOf(element) >= 0) {
         if (timerString.charAt(timerString.length - 1) !== "+") {
           timerString += "+";
-          inputString += "und ";
+          inputString = addToInputString(inputString, "und");
         }
-      } else if (data.hour.indexOf(element) >= 0) {
+        continue;
+      }
+      if (hour.indexOf(element) >= 0) {
         timerString += ")*3600+";
-        inputString += `${(0, import_global.firstLetterToUpperCase)(element)} `;
-      } else if (data.minute.indexOf(element) >= 0) {
+        inputString = addToInputString(inputString, (0, import_global.firstLetterToUpperCase)(element));
+        continue;
+      }
+      if (minute.indexOf(element) >= 0) {
         timerString += ")*60+";
-        inputString += "Minuten ";
-      } else if (data.second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ")") {
+        inputString = addToInputString(inputString, "Minuten");
+        continue;
+      }
+      if (second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ")") {
         timerString += ")";
-        inputString += "Sekunden ";
-      } else if (import_timer_data.timerObject.brueche1[element]) {
+        inputString = addToInputString(inputString, "Sekunden");
+        continue;
+      }
+      const elBrueche1 = import_timer_data.timerObject.brueche1[element];
+      if (elBrueche1) {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
         }
-        timerString += `*${import_timer_data.timerObject.brueche1[element]})*60`;
-      } else if (import_timer_data.timerObject.brueche2[element] > 0) {
+        timerString += `*${elBrueche1})*60`;
+        continue;
+      }
+      const elBrueche2 = import_timer_data.timerObject.brueche2[element];
+      if (elBrueche2 > 0) {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
         }
-        timerString += `*${import_timer_data.timerObject.brueche2[element]})*3600`;
-      } else if (import_timer_data.timerObject.zahlen[element] > 0) {
+        timerString += `*${elBrueche2})*3600`;
+        continue;
+      }
+      const elNumber = import_timer_data.timerObject.zahlen[element];
+      if (elNumber > 0) {
         if (import_timer_data.timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
           if ((timerString.charAt(timerString.length - 1) != "*3600+" || timerString.charAt(timerString.length - 1) != "*60+") && timerString.charAt(timerString.length - 3) != "(") {
-            timerString += `(${import_timer_data.timerObject.zahlen[element]}`;
+            timerString += `(${elNumber}`;
           } else {
-            timerString += import_timer_data.timerObject.zahlen[element];
+            timerString += elNumber;
           }
-          inputString += `${import_timer_data.timerObject.zahlen[element]} `;
-        } else if (element == "hundert") {
-          timerString += `*${import_timer_data.timerObject.zahlen[element]}`;
-          inputString += `${import_timer_data.timerObject.zahlen[element]} `;
-        } else {
-          timerString += `+${import_timer_data.timerObject.zahlen[element]}`;
-          inputString += `${import_timer_data.timerObject.zahlen[element]} `;
+          inputString = addToInputString(inputString, elNumber);
+          continue;
         }
-      } else if (parseInt(element)) {
-        const number = parseInt(element);
+        if (element == "hundert") {
+          timerString += `*${elNumber}`;
+          inputString = addToInputString(inputString, elNumber);
+          continue;
+        }
+        timerString += `+${elNumber}`;
+        inputString = addToInputString(inputString, elNumber);
+        continue;
+      }
+      const elementAsNumber = parseInt(element);
+      if (!isNaN(elementAsNumber)) {
         if (timerString == "") {
           timerString = "(";
         }
         if (timerString.endsWith("+")) {
           timerString += "(";
         }
-        timerString += number;
-        inputString += number;
-      } else if (!(store.isShortenTimer() || store.isExtendTimer())) {
+        timerString += elementAsNumber;
+        inputString = addToInputString(inputString, elementAsNumber);
+        continue;
+      }
+      if (!(store.isShortenTimer() || store.isExtendTimer())) {
         name = element.trim();
       }
-    });
+    }
     if (timerString.charAt(timerString.length - 1) == "+") {
       timerString = timerString.slice(0, timerString.length - 1);
     }
@@ -105,26 +127,30 @@ const filterInfo = (input) => {
     if ((0, import_global.countOccurrences)(timerString, ")") > (0, import_global.countOccurrences)(timerString, "(")) {
       timerString = `(${timerString}`;
     }
-    return { timerString, name, deleteVal, inputString };
+    return { timerString, name, deleteVal, inputString: inputString.join(" ") };
   } catch (e) {
     (0, import_logging.errorLogger)("Error in filterInfo", e, _this);
     return { timerString: "", name: "", deleteVal: 0, inputString: "" };
   }
-  function hasMinutes(timerString) {
-    if (timerString.includes("*3600")) {
-      if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
-        timerString += ")*60";
-      }
-    }
-    return timerString;
-  }
-  function checkFirstChart(timerString) {
-    if (timerString.charAt(0) == ")") {
-      timerString = timerString.slice(2, timerString.length);
-    }
-    return timerString;
-  }
 };
+function addToInputString(inputString, element) {
+  inputString.push(String(element).trim());
+  return inputString;
+}
+function hasMinutes(timerString) {
+  if (timerString.includes("*3600")) {
+    if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {
+      timerString += ")*60";
+    }
+  }
+  return timerString;
+}
+function checkFirstChart(timerString) {
+  if (timerString.charAt(0) == ")") {
+    timerString = timerString.slice(2, timerString.length);
+  }
+  return timerString;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   filterInfo

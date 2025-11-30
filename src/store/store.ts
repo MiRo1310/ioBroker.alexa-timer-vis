@@ -1,5 +1,5 @@
-import type AlexaTimerVis from '../main';
-import type { Store } from '../types/types';
+import type AlexaTimerVis from '@/main';
+import type { Store } from '@/types/types';
 
 let store: Store;
 

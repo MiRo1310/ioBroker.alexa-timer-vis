@@ -1,9 +1,9 @@
-import type { Store, TimerIndex, TimerObject } from '../types/types';
-import { useStore } from '../store/store';
-import { filterInfo } from './filter-info';
-import { findTimer } from './find-timer';
-import { timerObject } from '../config/timer-data';
-import { errorLogger } from './logging';
+import type { Store, TimerIndex, TimerObject } from '@/types/types';
+import { useStore } from '@/store/store';
+import { timerObject } from '@/config/timer-data';
+import { filterInfo } from '@/lib/filter-info';
+import { findTimer } from '@/lib/find-timer';
+import { errorLogger } from '@/lib/logging';
 
 export const extendOrShortTimer = async ({
     voiceInput,

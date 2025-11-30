@@ -34,11 +34,11 @@
         "@iobroker/eslint-config": "^2.2.0",
         "@iobroker/testing": "^5.2.2",
         "@tsconfig/node18": "^18.2.6",
-        "rimraf": "^6.1.2",
-        "typescript": "^5.9.3",
         "@types/node": "^24.10.1",
+        "rimraf": "^6.1.2",
         "ts-node": "^10.9.2",
-        "tsconfig-paths": "^4.2.0"
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.9.3"
     },
     "main": "build/main.js",
     "files": [

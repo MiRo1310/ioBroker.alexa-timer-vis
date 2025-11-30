@@ -44,19 +44,35 @@ describe('Timer', () => {
         expect(timerString).to.equal('(3)*3600+(3+30)*60+(7+40)');
         expect(deleteVal).to.equal(0);
     });
+    it('should Name another timer with name and values', () => {
+        const input = ['timer', 'fünf', 'stunden', 'neun', 'und', 'fünfzig', 'minuten', 'dreizehn', 'sekunden'];
+        const { name, inputString, timerString, deleteVal } = filterInfo(input);
+        expect(name).to.equal('');
+        expect(inputString).to.equal('5 Stunden 9 und 50 Minuten 13 Sekunden');
+        expect(timerString).to.equal('(5)*3600+(9+50)*60+(13)');
+        expect(deleteVal).to.equal(0);
+    });
+    it('should Name another timer with name and values', () => {
+        const input = ['timer', 'hundert', 'und', 'zwanzig', 'minuten', 'zwölf', 'sekunden'];
+        const { name, inputString, timerString, deleteVal } = filterInfo(input);
+        expect(name).to.equal('');
+        expect(inputString).to.equal('100 und 20 Minuten 12 Sekunden');
+        expect(timerString).to.equal('(100+(20)*60+(12)');
+        expect(deleteVal).to.equal(0);
+    });
 
-    // it.only('remove one timer', () => {
-    //     sinon.stub(storeModule, 'useStore').returns({
-    //         isDeleteTimer: () => true,
-    //     } as Store);
-    //
-    //     const input = ['stop', 'pommes', 'timer'];
-    //     const { name, inputString, timerString, deleteVal } = filterInfo(input);
-    //     // expect(name).to.equal('pommes');
-    //     expect(inputString).to.equal('');
-    //     expect(timerString).to.equal('');
-    //     expect(deleteVal).to.equal(0);
-    //
-    //     sinon.restore();
-    // });
+    it.only('remove one timer', () => {
+        sinon.stub(storeModule, 'useStore').returns({
+            isDeleteTimer: () => true,
+        } as Store);
+
+        const input = ['stop', 'pommes', 'timer'];
+        const { name, inputString, timerString, deleteVal } = filterInfo(input);
+        expect(name).to.equal('');
+        expect(inputString).to.equal('');
+        expect(timerString).to.equal('');
+        expect(deleteVal).to.equal(0);
+
+        sinon.restore();
+    });
 });

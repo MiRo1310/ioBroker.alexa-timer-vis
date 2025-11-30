@@ -23,12 +23,12 @@ __export(timer_add_exports, {
 module.exports = __toCommonJS(timer_add_exports);
 var import_start_timer = require("./start-timer");
 var import_state = require("./state");
-var import_timer_data = require("../config/timer-data");
+var import_timer_data = require("@/config/timer-data");
 var import_write_state_interval = require("./write-state-interval");
 var import_global = require("./global");
 var import_logging = require("./logging");
-var import_store = require("../store/store");
-var import_timer = require("../app/timer");
+var import_store = require("@/store/store");
+var import_timer = require("@/app/timer");
 function addNewRawTimer(timerIndex) {
   import_timer_data.timerObject.timerActive.timer[timerIndex] = false;
   import_timer_data.timerObject.timer[timerIndex] = new import_timer.Timer({

@@ -1,24 +1,24 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
-import { decomposeInputValue } from './lib/decompose-input-value';
-import { delTimer } from './lib/delete-timer';
+import { decomposeInputValue } from '@/lib/decompose-input-value';
+import { delTimer } from '@/lib/delete-timer';
 import {
     doesAlexaSendAQuestion,
     isAlexaSummaryStateChanged as isAlexaStateToListenToChanged,
     isIobrokerValue,
-} from './lib/global';
-import { errorLogger } from './lib/logging';
-import { resetAllTimerValuesAndState } from './lib/reset';
-import { setAdapterStatusAndInitStateCreation } from './lib/set-adapter-status';
-import { timerAdd } from './lib/timer-add';
-import { timerObject } from './config/timer-data';
-import { timerDelete } from './lib/timer-delete';
-import { extendOrShortTimer } from './lib/timer-extend-or-shorten';
-import { writeState } from './lib/write-state';
-import type { TimerCondition } from './types/types';
-import { useStore } from './store/store';
-import { getAbortWord } from './app/abort';
-import { Timer } from './app/timer';
+} from '@/lib/global';
+import { errorLogger } from '@/lib/logging';
+import { resetAllTimerValuesAndState } from '@/lib/reset';
+import { setAdapterStatusAndInitStateCreation } from '@/lib/set-adapter-status';
+import { timerAdd } from '@/lib/timer-add';
+import { timerObject } from '@/config/timer-data';
+import { Timer } from '@/app/timer';
+import { useStore } from '@/store/store';
+import type { TimerCondition } from '@/types/types';
+import { getAbortWord } from '@/app/abort';
+import { timerDelete } from '@/lib/timer-delete';
+import { extendOrShortTimer } from '@/lib/timer-extend-or-shorten';
+import { writeState } from '@/lib/write-state';
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
