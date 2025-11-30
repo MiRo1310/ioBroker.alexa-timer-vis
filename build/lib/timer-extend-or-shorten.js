@@ -22,11 +22,11 @@ __export(timer_extend_or_shorten_exports, {
   extendTimer: () => extendTimer
 });
 module.exports = __toCommonJS(timer_extend_or_shorten_exports);
-var import_store = require("@/store/store");
-var import_timer_data = require("@/config/timer-data");
-var import_filter_info = require("@/lib/filter-info");
-var import_find_timer = require("@/lib/find-timer");
-var import_logging = require("@/lib/logging");
+var import_store = require("../store/store");
+var import_timer_data = require("../config/timer-data");
+var import_filter_info = require("../lib/filter-info");
+var import_find_timer = require("../lib/find-timer");
+var import_logging = require("../lib/logging");
 const extendOrShortTimer = async ({
   voiceInput,
   decomposeName

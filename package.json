@@ -37,6 +37,7 @@
         "@types/node": "^24.10.1",
         "rimraf": "^6.1.2",
         "ts-node": "^10.9.2",
+        "tsc-alias": "^1.8.16",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.9.3"
     },
@@ -52,6 +53,7 @@
     "scripts": {
         "prebuild": "npm run lint && rimraf build",
         "build": "build-adapter ts",
+        "postbuild": "tsc-alias -p tsconfig.build.json",
         "watch": "build-adapter ts --watch",
         "prebuild:ts": "rimraf build",
         "build:ts": "build-adapter ts",

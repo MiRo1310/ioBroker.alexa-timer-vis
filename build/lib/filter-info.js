@@ -21,10 +21,10 @@ __export(filter_info_exports, {
   filterInfo: () => filterInfo
 });
 module.exports = __toCommonJS(filter_info_exports);
-var import_global = require("@/lib/global");
-var import_logging = require("@/lib/logging");
-var import_timer_data = require("@/config/timer-data");
-var import_store = require("@/store/store");
+var import_global = require("../lib/global");
+var import_logging = require("../lib/logging");
+var import_timer_data = require("../config/timer-data");
+var import_store = require("../store/store");
 const filterInfo = (input) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;

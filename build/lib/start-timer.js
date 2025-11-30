@@ -22,11 +22,11 @@ __export(start_timer_exports, {
   startTimer: () => startTimer
 });
 module.exports = __toCommonJS(start_timer_exports);
-var import_timer_data = require("@/config/timer-data");
-var import_store = require("@/store/store");
-var import_global = require("@/lib/global");
-var import_interval = require("@/lib/interval");
-var import_logging = require("@/lib/logging");
+var import_timer_data = require("../config/timer-data");
+var import_store = require("../store/store");
+var import_global = require("../lib/global");
+var import_interval = require("../lib/interval");
+var import_logging = require("../lib/logging");
 const isMoreThanAMinute = (sec) => sec > 60;
 const startTimer = async (sec, name, inputString) => {
   const store = (0, import_store.useStore)();
