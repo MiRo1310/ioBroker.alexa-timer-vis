@@ -43,7 +43,6 @@ var import_timer_add = require("./lib/timer-add");
 var import_timer_data = require("./config/timer-data");
 var import_timer_delete = require("./lib/timer-delete");
 var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
-var import_timer_name = require("./lib/timer-name");
 var import_write_state = require("./lib/write-state");
 var import_store = require("./store/store");
 var import_abort = require("./app/abort");
@@ -101,7 +100,6 @@ class AlexaTimerVis extends utils.Adapter {
     let voiceInput;
     this.on("stateChange", async (id, state) => {
       try {
-        await checkForTimerName(this, id);
         if ((0, import_global.isAlexaSummaryStateChanged)({ state, id }) && isTimerAction(state)) {
           this.log.debug("Alexa state changed");
           let doNothingByNotNotedElement = false;
@@ -150,17 +148,6 @@ class AlexaTimerVis extends utils.Adapter {
           const timer = import_timer_data.timerObject.timer[timerIndex];
           timer.stopTimerInAlexa();
           (0, import_delete_timer.delTimer)(timerIndex);
-        }
-        async function checkForTimerName(_this, id2) {
-          if (!(0, import_global.isIobrokerValue)(state) || state.val === "[]") {
-            return;
-          }
-          const lastTimer = store.lastTimer;
-          if (lastTimer.id === id2 && lastTimer.timerIndex !== "") {
-            (0, import_delete_timer.removeTimerInLastTimers)();
-            (0, import_timer_name.getNewTimerName)(state, lastTimer.timerIndex);
-            await _this.unsubscribeForeignStatesAsync(id2);
-          }
         }
       } catch (e) {
         (0, import_logging.errorLogger)("Error in stateChange", e, this);
