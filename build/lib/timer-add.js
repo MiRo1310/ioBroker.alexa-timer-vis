@@ -35,7 +35,7 @@ function addNewRawTimer(timerIndex) {
     store: (0, import_store.useStore)()
   });
 }
-const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
+const timerAdd = (decomposeName, timerSec) => {
   const { _this } = (0, import_store.useStore)();
   const name = decomposeName;
   if (timerSec && timerSec != 0) {
@@ -55,7 +55,7 @@ const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
       if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
         addNewRawTimer(timerIndex);
       }
-      (0, import_start_timer.startTimer)(timerSec, name, decomposeInputString).catch((e) => {
+      (0, import_start_timer.startTimer)(timerSec, name).catch((e) => {
         (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
       });
       (0, import_write_state_interval.writeStateIntervall)();

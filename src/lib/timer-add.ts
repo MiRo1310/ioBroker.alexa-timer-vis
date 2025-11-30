@@ -15,7 +15,7 @@ function addNewRawTimer(timerIndex: string): void {
     });
 }
 
-export const timerAdd = (decomposeName: string, timerSec: number, decomposeInputString: string): void => {
+export const timerAdd = (decomposeName: string, timerSec: number): void => {
     const { _this } = useStore();
     const name = decomposeName;
 
@@ -43,7 +43,7 @@ export const timerAdd = (decomposeName: string, timerSec: number, decomposeInput
                 addNewRawTimer(timerIndex);
             }
 
-            startTimer(timerSec, name, decomposeInputString).catch((e: any) => {
+            startTimer(timerSec, name).catch((e: any) => {
                 errorLogger('Error in timerAdd', e, _this);
             });
 

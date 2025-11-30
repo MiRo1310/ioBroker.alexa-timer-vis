@@ -28,7 +28,7 @@ var import_global = require("../lib/global");
 var import_interval = require("../lib/interval");
 var import_logging = require("../lib/logging");
 const isMoreThanAMinute = (sec) => sec > 60;
-const startTimer = async (sec, name, inputString) => {
+const startTimer = async (sec, name) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
@@ -50,11 +50,11 @@ const startTimer = async (sec, name, inputString) => {
     timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
     await timer.setIdFromEcoDeviceTimerList();
     if (isMoreThanAMinute(sec)) {
-      (0, import_interval.interval)(sec, timerIndex, inputString, name, timer, store.intervalMore60 * 1e3, false);
+      (0, import_interval.interval)(sec, timerIndex, name, timer, store.intervalMore60 * 1e3, false);
       return;
     }
     import_timer_data.timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1e3);
-    (0, import_interval.interval)(sec, timerIndex, inputString, name, timer, store.intervalLess60 * 1e3, true);
+    (0, import_interval.interval)(sec, timerIndex, name, timer, store.intervalLess60 * 1e3, true);
   } catch (e) {
     (0, import_logging.errorLogger)("Error in startTimer", e, _this);
   }

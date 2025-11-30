@@ -8,7 +8,7 @@ import { errorLogger } from '@/lib/logging';
 
 const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 
-export const startTimer = async (sec: number, name: string, inputString: string): Promise<void> => {
+export const startTimer = async (sec: number, name: string): Promise<void> => {
     const store = useStore();
     const _this = store._this;
     try {
@@ -32,13 +32,13 @@ export const startTimer = async (sec: number, name: string, inputString: string)
         await timer.setIdFromEcoDeviceTimerList();
 
         if (isMoreThanAMinute(sec)) {
-            interval(sec, timerIndex, inputString, name, timer, store.intervalMore60 * 1000, false);
+            interval(sec, timerIndex, name, timer, store.intervalMore60 * 1000, false);
             return;
         }
 
         timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1000);
 
-        interval(sec, timerIndex, inputString, name, timer, store.intervalLess60 * 1000, true);
+        interval(sec, timerIndex, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {
         errorLogger('Error in startTimer', e, _this);
     }

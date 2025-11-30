@@ -22,8 +22,8 @@ __export(generate_values_exports, {
 });
 module.exports = __toCommonJS(generate_values_exports);
 var import_store = require("../store/store");
-var import_global = require("./global");
-const generateValues = (timer, sec, index, inputString, name) => {
+var import_global = require("../lib/global");
+const generateValues = (timer, sec, index, name) => {
   const store = (0, import_store.useStore)();
   const timeLeft = timer.getOutputProperties().endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
   const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
@@ -48,7 +48,6 @@ const generateValues = (timer, sec, index, inputString, name) => {
     stringTimer2,
     remainingTimeInSeconds,
     index,
-    inputString,
     lengthTimer,
     name
   });

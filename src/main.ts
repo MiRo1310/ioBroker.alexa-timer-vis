@@ -85,7 +85,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 
         this.on('stateChange', async (id, state) => {
             try {
-                // await checkForTimerName(this, id);
                 if (isAlexaStateToListenToChanged({ state: state, id: id }) && isTimerAction(state)) {
                     this.log.debug('Alexa state changed');
                     let doNothingByNotNotedElement = false; // Bestimmte Aufrufe dürfen keine Aktion ausführen, wenn mehrere Geräte zuhören. #12 und #14 .
@@ -107,12 +106,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                         doNothingByNotNotedElement = true;
                     }
 
-                    const {
-                        name: decomposeName,
-                        timerSec,
-                        deleteVal,
-                        inputString: decomposeInputString,
-                    } = decomposeInputValue(voiceInput);
+                    const { name: decomposeName, timerSec, deleteVal } = decomposeInputValue(voiceInput);
 
                     if (!doNothingByNotNotedElement || store.isDeleteTimer()) {
                         doesAlexaSendAQuestion(voiceInput);
@@ -122,7 +116,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                             return;
                         }
                         if (store.isAddTimer()) {
-                            timerAdd(decomposeName, timerSec, decomposeInputString);
+                            timerAdd(decomposeName, timerSec);
                             return;
                         }
                         if (store.isExtendTimer() || store.isShortenTimer()) {
@@ -140,19 +134,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 
                     delTimer(timerIndex);
                 }
-
-                // async function checkForTimerName(_this: AlexaTimerVis, id: string): Promise<void> {
-                //     if (!isIobrokerValue(state) || state.val === '[]') {
-                //         return;
-                //     }
-                //     const lastTimer = store.lastTimer;
-                //     if (lastTimer.id === id && lastTimer.timerIndex !== '') {
-                //         removeTimerInLastTimers();
-                //
-                //         getNewTimerName(state, lastTimer.timerIndex);
-                //         await _this.unsubscribeForeignStatesAsync(id);
-                //     }
-                // }
             } catch (e) {
                 errorLogger('Error in stateChange', e, this);
             }

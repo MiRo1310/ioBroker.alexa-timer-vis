@@ -21,31 +21,31 @@ __export(interval_exports, {
   interval: () => interval
 });
 module.exports = __toCommonJS(interval_exports);
-var import_generate_values = require("./generate-values");
-var import_global = require("./global");
-var import_reset = require("./reset");
 var import_timer_data = require("../config/timer-data");
 var import_store = require("../store/store");
-var import_logging = require("./logging");
-const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) => {
+var import_logging = require("../lib/logging");
+var import_generate_values = require("../lib/generate-values");
+var import_global = require("../lib/global");
+var import_reset = require("../lib/reset");
+const interval = (sec, timerBlock, name, timer, int, onlyOneTimer) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
-  (0, import_generate_values.generateValues)(timer, sec, timerBlock, inputString, name);
+  (0, import_generate_values.generateValues)(timer, sec, timerBlock, name);
   const { string } = (0, import_global.secToHourMinSec)(sec, false);
   timer.setLengthTimer(string);
   if (!timerBlock) {
     return;
   }
   import_timer_data.timerObject.interval[timerBlock] = _this.setInterval(() => {
-    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, timerBlock, inputString, name);
-    if (timeLeftSec <= 60 && onlyOneTimer == false) {
+    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, timerBlock, name);
+    if (timeLeftSec <= 60 && !onlyOneTimer) {
       onlyOneTimer = true;
       if (import_timer_data.timerObject.interval) {
         _this.clearInterval(
           import_timer_data.timerObject.interval[timerBlock]
         );
       }
-      interval(sec, timerBlock, inputString, name, timer, import_timer_data.timerObject.timer[timerBlock].getInterval(), true);
+      interval(sec, timerBlock, name, timer, import_timer_data.timerObject.timer[timerBlock].getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerBlock]) {
       import_timer_data.timerObject.timerActive.timerCount--;

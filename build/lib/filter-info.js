@@ -30,7 +30,6 @@ const filterInfo = (input) => {
   const _this = store._this;
   try {
     let timerString = "";
-    let inputString = [];
     let name = "";
     let deleteVal = 0;
     for (let i = 0; i < input.length; i++) {
@@ -46,23 +45,19 @@ const filterInfo = (input) => {
       if (connector.indexOf(element) >= 0) {
         if (timerString.charAt(timerString.length - 1) !== "+") {
           timerString += "+";
-          inputString = addToInputString(inputString, "und");
         }
         continue;
       }
       if (hour.indexOf(element) >= 0) {
         timerString += ")*3600+";
-        inputString = addToInputString(inputString, (0, import_global.firstLetterToUpperCase)(element));
         continue;
       }
       if (minute.indexOf(element) >= 0) {
         timerString += ")*60+";
-        inputString = addToInputString(inputString, "Minuten");
         continue;
       }
       if (second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ")") {
         timerString += ")";
-        inputString = addToInputString(inputString, "Sekunden");
         continue;
       }
       const elBrueche1 = import_timer_data.timerObject.brueche1[element];
@@ -89,16 +84,13 @@ const filterInfo = (input) => {
           } else {
             timerString += elNumber;
           }
-          inputString = addToInputString(inputString, elNumber);
           continue;
         }
         if (element == "hundert") {
           timerString += `*${elNumber}`;
-          inputString = addToInputString(inputString, elNumber);
           continue;
         }
         timerString += `+${elNumber}`;
-        inputString = addToInputString(inputString, elNumber);
         continue;
       }
       const elementAsNumber = parseInt(element);
@@ -110,7 +102,6 @@ const filterInfo = (input) => {
           timerString += "(";
         }
         timerString += elementAsNumber;
-        inputString = addToInputString(inputString, elementAsNumber);
         continue;
       }
       if (!(store.isShortenTimer() || store.isExtendTimer())) {
@@ -127,16 +118,12 @@ const filterInfo = (input) => {
     if ((0, import_global.countOccurrences)(timerString, ")") > (0, import_global.countOccurrences)(timerString, "(")) {
       timerString = `(${timerString}`;
     }
-    return { timerString, name, deleteVal, inputString: inputString.join(" ") };
+    return { timerString, name, deleteVal };
   } catch (e) {
     (0, import_logging.errorLogger)("Error in filterInfo", e, _this);
-    return { timerString: "", name: "", deleteVal: 0, inputString: "" };
+    return { timerString: "", name: "", deleteVal: 0 };
   }
 };
-function addToInputString(inputString, element) {
-  inputString.push(String(element).trim());
-  return inputString;
-}
 function hasMinutes(timerString) {
   if (timerString.includes("*3600")) {
     if (!timerString.includes("*60") && timerString.slice(timerString.length - 5, timerString.length) != "*3600" && timerString.charAt(timerString.length - 1) != ")") {

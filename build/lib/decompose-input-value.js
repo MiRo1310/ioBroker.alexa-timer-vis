@@ -22,20 +22,20 @@ __export(decompose_input_value_exports, {
 });
 module.exports = __toCommonJS(decompose_input_value_exports);
 var import_store = require("../store/store");
-var import_filter_info = require("./filter-info");
-var import_logging = require("./logging");
+var import_filter_info = require("../lib/filter-info");
+var import_logging = require("../lib/logging");
 const decomposeInputValue = (voiceString) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
     let inputDecomposed = voiceString.split(",");
     inputDecomposed = inputDecomposed[0].split(" ");
-    const { timerString, name, deleteVal, inputString } = (0, import_filter_info.filterInfo)(inputDecomposed);
-    return { name, timerSec: eval(timerString), deleteVal, inputString };
+    const { timerString, name, deleteVal } = (0, import_filter_info.filterInfo)(inputDecomposed);
+    return { name, timerSec: eval(timerString), deleteVal };
   } catch (e) {
     _this.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceString}`);
     (0, import_logging.errorLogger)("Error in decomposeInputValue: ", e, _this);
-    return { name: "", timerSec: 0, deleteVal: 0, inputString: "" };
+    return { name: "", timerSec: 0, deleteVal: 0 };
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

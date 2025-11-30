@@ -120,12 +120,7 @@ class AlexaTimerVis extends utils.Adapter {
             this.log.debug("NotNotedSentence found");
             doNothingByNotNotedElement = true;
           }
-          const {
-            name: decomposeName,
-            timerSec,
-            deleteVal,
-            inputString: decomposeInputString
-          } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
+          const { name: decomposeName, timerSec, deleteVal } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
           if (!doNothingByNotNotedElement || store.isDeleteTimer()) {
             (0, import_global.doesAlexaSendAQuestion)(voiceInput);
             if (store.isDeleteTimer()) {
@@ -133,7 +128,7 @@ class AlexaTimerVis extends utils.Adapter {
               return;
             }
             if (store.isAddTimer()) {
-              (0, import_timer_add.timerAdd)(decomposeName, timerSec, decomposeInputString);
+              (0, import_timer_add.timerAdd)(decomposeName, timerSec);
               return;
             }
             if (store.isExtendTimer() || store.isShortenTimer()) {

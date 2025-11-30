@@ -1,16 +1,15 @@
-import { generateValues } from './generate-values';
-import { secToHourMinSec } from './global';
-import { resetValues } from './reset';
-import type { TimerSelector } from '../types/types';
-import { timerObject } from '../config/timer-data';
-import { useStore } from '../store/store';
-import { errorLogger } from './logging';
-import type { Timer } from '../app/timer';
+import type { TimerSelector } from '@/types/types';
+import { timerObject } from '@/config/timer-data';
+import { useStore } from '@/store/store';
+import { errorLogger } from '@/lib//logging';
+import type { Timer } from '@/app/timer';
+import { generateValues } from '@/lib/generate-values';
+import { secToHourMinSec } from '@/lib/global';
+import { resetValues } from '@/lib/reset';
 
 export const interval = (
     sec: number,
     timerBlock: TimerSelector,
-    inputString: string,
     name: string,
     timer: Timer,
     int: number,
@@ -19,7 +18,7 @@ export const interval = (
     const store = useStore();
     const _this = store._this;
 
-    generateValues(timer, sec, timerBlock, inputString, name);
+    generateValues(timer, sec, timerBlock, name);
 
     const { string } = secToHourMinSec(sec, false);
     timer.setLengthTimer(string);
@@ -29,9 +28,9 @@ export const interval = (
     }
 
     timerObject.interval[timerBlock as keyof typeof timerObject.interval] = _this.setInterval(() => {
-        const timeLeftSec = generateValues(timer, sec, timerBlock, inputString, name);
+        const timeLeftSec = generateValues(timer, sec, timerBlock, name);
 
-        if (timeLeftSec <= 60 && onlyOneTimer == false) {
+        if (timeLeftSec <= 60 && !onlyOneTimer) {
             onlyOneTimer = true;
 
             if (timerObject.interval) {
@@ -40,7 +39,7 @@ export const interval = (
                 );
             }
 
-            interval(sec, timerBlock, inputString, name, timer, timerObject.timer[timerBlock].getInterval(), true);
+            interval(sec, timerBlock, name, timer, timerObject.timer[timerBlock].getInterval(), true);
         }
 
         if (timeLeftSec <= 0 || !timerObject.timerActive.timer[timerBlock]) {

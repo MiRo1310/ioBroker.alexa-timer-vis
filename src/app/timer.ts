@@ -1,7 +1,7 @@
-import type { AlexaActiveTimerList, Store, TimerIndex, TimerSelector } from '../types/types';
-import { firstLetterToUpperCase, isIobrokerValue } from '../lib/global';
-import { errorLogger } from '../lib/logging';
-import type AlexaTimerVis from '../main';
+import type { AlexaActiveTimerList, Store, TimerIndex, TimerSelector } from '@/types/types';
+import { firstLetterToUpperCase, isIobrokerValue } from '@/lib/global';
+import { errorLogger } from '@/lib/logging';
+import type AlexaTimerVis from '@/main';
 
 interface OutputProperties {
     hours: string;
@@ -22,7 +22,6 @@ interface InputProperties {
     remainingTimeInSeconds: number;
     name: string;
     index: TimerSelector;
-    inputString: string;
     hours: string;
     minutes: string;
     seconds: string;
@@ -53,7 +52,6 @@ export class Timer {
     private endTimeNumber: number;
     private endTimeString: string;
     private inputDeviceName: string;
-    private inputString: string;
     private deviceSerialNumber: string;
     private interval: number;
     private lengthTimer: string;
@@ -84,7 +82,6 @@ export class Timer {
         this.endTimeNumber = 0;
         this.endTimeString = '';
         this.inputDeviceName = '';
-        this.inputString = '';
         this.deviceSerialNumber = '';
         this.interval = 1000;
         this.lengthTimer = '';
@@ -105,9 +102,6 @@ export class Timer {
     }
     getAlexaTimerName(): string | null {
         return this.alexaTimerName;
-    }
-    getInputString(): string {
-        return this.inputString;
     }
     getOutputProperties(): OutputProperties {
         return {
@@ -169,7 +163,6 @@ export class Timer {
             endTimeNumber: this.endTimeNumber,
             endTimeString: this.endTimeString,
             inputDevice: this.inputDeviceName,
-            inputString: this.inputString,
             serialNumber: this.deviceSerialNumber,
             interval: this.interval,
             lengthTimer: this.lengthTimer,
@@ -270,7 +263,6 @@ export class Timer {
         this.stringTimer2 = props.stringTimer2;
         this.remainingTimeInSeconds = props.remainingTimeInSeconds;
         this.timerIndex = props.index;
-        this.inputString = props.inputString;
         this.lengthTimer = props.lengthTimer;
         this.setTimerName(props.name);
         this.mathPercent();
@@ -311,7 +303,6 @@ export class Timer {
         this.extendOrShortenTimer = false;
         this.timerId = '';
         this.deviceSerialNumber = '';
-        this.inputString = '';
         this.creationTime = 0;
         this.endTimeNumber = 0;
 

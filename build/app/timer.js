@@ -38,7 +38,6 @@ class Timer {
   endTimeNumber;
   endTimeString;
   inputDeviceName;
-  inputString;
   deviceSerialNumber;
   interval;
   lengthTimer;
@@ -68,7 +67,6 @@ class Timer {
     this.endTimeNumber = 0;
     this.endTimeString = "";
     this.inputDeviceName = "";
-    this.inputString = "";
     this.deviceSerialNumber = "";
     this.interval = 1e3;
     this.lengthTimer = "";
@@ -88,9 +86,6 @@ class Timer {
   }
   getAlexaTimerName() {
     return this.alexaTimerName;
-  }
-  getInputString() {
-    return this.inputString;
   }
   getOutputProperties() {
     return {
@@ -152,7 +147,6 @@ class Timer {
       endTimeNumber: this.endTimeNumber,
       endTimeString: this.endTimeString,
       inputDevice: this.inputDeviceName,
-      inputString: this.inputString,
       serialNumber: this.deviceSerialNumber,
       interval: this.interval,
       lengthTimer: this.lengthTimer,
@@ -245,7 +239,6 @@ class Timer {
     this.stringTimer2 = props.stringTimer2;
     this.remainingTimeInSeconds = props.remainingTimeInSeconds;
     this.timerIndex = props.index;
-    this.inputString = props.inputString;
     this.lengthTimer = props.lengthTimer;
     this.setTimerName(props.name);
     this.mathPercent();
@@ -286,7 +279,6 @@ class Timer {
     this.extendOrShortenTimer = false;
     this.timerId = "";
     this.deviceSerialNumber = "";
-    this.inputString = "";
     this.creationTime = 0;
     this.endTimeNumber = 0;
     this.resetForeignStateSubscription();
