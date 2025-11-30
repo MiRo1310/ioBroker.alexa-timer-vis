@@ -1,7 +1,7 @@
-import { useStore } from '../store/store';
+import { useStore } from '@/store/store';
 import { firstLetterToUpperCase, countOccurrences } from './global';
 import { errorLogger } from './logging';
-import { timerObject } from '../config/timer-data';
+import { timerObject } from '@/config/timer-data';
 
 export const filterInfo = (
     input: string[],
@@ -15,7 +15,7 @@ export const filterInfo = (
     const _this = store._this;
     try {
         let timerString = '';
-        let inputString = '';
+        let inputString: string[] = [];
         let name = '';
         let deleteVal = 0; // 1 = deleteTimer, 2 = stopAll
 
@@ -33,18 +33,18 @@ export const filterInfo = (
             } else if (data.connector.indexOf(element) >= 0) {
                 if (timerString.charAt(timerString.length - 1) !== '+') {
                     timerString += '+';
-                    inputString += 'und ';
+                    inputString = addToInputString(inputString, 'und');
                 }
             } else if (data.hour.indexOf(element) >= 0) {
                 timerString += ')*3600+';
-                inputString += `${firstLetterToUpperCase(element)} `;
+                inputString = addToInputString(inputString, firstLetterToUpperCase(element));
             } else if (data.minute.indexOf(element) >= 0) {
                 timerString += ')*60+';
-                inputString += 'Minuten ';
+                inputString = addToInputString(inputString, 'Minuten');
             } else if (data.second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ')') {
                 // Nach Sekunden suchen, um die Klammern zu schliessen( Wichtig für z.B. 120 Minuten), aber nur wenn als letztes nicht schon eine Klammer ist
                 timerString += ')';
-                inputString += 'Sekunden ';
+                inputString = addToInputString(inputString, 'Sekunden');
             } else if (timerObject.brueche1[element as keyof typeof timerObject.brueche1]) {
                 // Wenn als letztes vor dem Bruch nichts war, soll die eins hinzugefügt werden
                 if (timerString.charAt(timerString.length - 1) == '') {
@@ -71,16 +71,26 @@ export const filterInfo = (
                     } else {
                         timerString += timerObject.zahlen[element as keyof typeof timerObject.zahlen];
                     }
-                    inputString += `${timerObject.zahlen[element as keyof typeof timerObject.zahlen]} `;
+                    inputString = addToInputString(
+                        inputString,
+                        timerObject.zahlen[element as keyof typeof timerObject.zahlen],
+                    );
                     // Wenn das Element "Hundert" ist und das letzte Element eine Zahl war soll multipliziert werden( Zwei * hundert + vierzig)
                 } else if (element == 'hundert') {
                     timerString += `*${timerObject.zahlen[element as keyof typeof timerObject.zahlen]}`;
-                    inputString += `${timerObject.zahlen[element as keyof typeof timerObject.zahlen]} `;
+                    inputString = addToInputString(
+                        inputString,
+                        timerObject.zahlen[element as keyof typeof timerObject.zahlen],
+                    );
                 } else {
                     // Wenn nicht Hundert(eigentlich auch tausend usw.) dann nur addieren
 
                     timerString += `+${timerObject.zahlen[element as keyof typeof timerObject.zahlen]}`;
-                    inputString += `${timerObject.zahlen[element as keyof typeof timerObject.zahlen]} `;
+
+                    inputString = addToInputString(
+                        inputString,
+                        timerObject.zahlen[element as keyof typeof timerObject.zahlen],
+                    );
                 }
             } else if (parseInt(element)) {
                 const number = parseInt(element);
@@ -91,7 +101,7 @@ export const filterInfo = (
                     timerString += '(';
                 }
                 timerString += number;
-                inputString += number;
+                inputString = addToInputString(inputString, number);
             } else if (!(store.isShortenTimer() || store.isExtendTimer())) {
                 // Wenn nichts zutrifft, und der Wert auch nicht in extend und shorten gefunden wird,  kann es sich nur noch um den Namen des Timers handeln
                 name = element.trim();
@@ -108,29 +118,34 @@ export const filterInfo = (
             timerString = `(${timerString}`;
         }
 
-        return { timerString, name, deleteVal, inputString };
+        return { timerString, name, deleteVal, inputString: inputString.join(' ') };
     } catch (e: any) {
         errorLogger('Error in filterInfo', e, _this);
         return { timerString: '', name: '', deleteVal: 0, inputString: '' };
     }
-
-    function hasMinutes(timerString: string): string {
-        if (timerString.includes('*3600')) {
-            if (
-                !timerString.includes('*60') &&
-                timerString.slice(timerString.length - 5, timerString.length) != '*3600' &&
-                timerString.charAt(timerString.length - 1) != ')'
-            ) {
-                timerString += ')*60';
-            }
-        }
-        return timerString;
-    }
-
-    function checkFirstChart(timerString: string): string {
-        if (timerString.charAt(0) == ')') {
-            timerString = timerString.slice(2, timerString.length);
-        }
-        return timerString;
-    }
 };
+
+function addToInputString(inputString: string[], element: string | number): string[] {
+    inputString.push(String(element).trim());
+    return inputString;
+}
+
+function hasMinutes(timerString: string): string {
+    if (timerString.includes('*3600')) {
+        if (
+            !timerString.includes('*60') &&
+            timerString.slice(timerString.length - 5, timerString.length) != '*3600' &&
+            timerString.charAt(timerString.length - 1) != ')'
+        ) {
+            timerString += ')*60';
+        }
+    }
+    return timerString;
+}
+
+function checkFirstChart(timerString: string): string {
+    if (timerString.charAt(0) == ')') {
+        timerString = timerString.slice(2, timerString.length);
+    }
+    return timerString;
+}

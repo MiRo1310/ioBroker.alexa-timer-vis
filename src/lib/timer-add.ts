@@ -1,11 +1,11 @@
 import { startTimer } from './start-timer';
 import { createState } from './state';
-import { timerObject } from '../config/timer-data';
+import { timerObject } from '@/config/timer-data';
 import { writeStateIntervall } from './write-state-interval';
 import { isStringEmpty } from './global';
 import { errorLogger } from './logging';
-import { useStore } from '../store/store';
-import { Timer } from '../app/timer';
+import { useStore } from '@/store/store';
+import { Timer } from '@/app/timer';
 
 function addNewRawTimer(timerIndex: string): void {
     timerObject.timerActive.timer[timerIndex] = false;
