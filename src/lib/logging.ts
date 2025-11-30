@@ -1,11 +1,15 @@
 import type AlexaTimerVis from '../main';
 
 export const errorLogger = (title: string, e: any, adapter: AlexaTimerVis): void => {
-    if (adapter.supportsFeature && adapter.supportsFeature('PLUGINS')) {
+    if (adapter?.supportsFeature && adapter.supportsFeature('PLUGINS')) {
         const sentryInstance = adapter.getPluginInstance('sentry');
         if (sentryInstance) {
             sentryInstance.getSentryObject().captureException(e);
         }
+    }
+    if (!adapter || !adapter.log) {
+        console.log(title, e);
+        return;
     }
     adapter.log.error(title);
 

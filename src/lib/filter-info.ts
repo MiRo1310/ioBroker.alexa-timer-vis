@@ -4,7 +4,7 @@ import { timerObject } from '@/config/timer-data';
 import { useStore } from '@/store/store';
 
 export const filterInfo = (
-    input: string[],
+    inputs: string[],
 ): {
     timerString: string;
     name: string;
@@ -15,44 +15,44 @@ export const filterInfo = (
     try {
         let timerString = '';
         let name = '';
-        let deleteVal = 0; // 1 = deleteTimer, 2 = stopAll
 
-        for (let i = 0; i < input.length; i++) {
-            const element = input[i];
+        let deleteVal = store.isDeleteTimer() ? 1 : 0; // 1 = deleteTimer, 2 = stopAll
+
+        for (const input of inputs) {
             const { connector, notNoted, stopAll, hour, minute, second } = timerObject.timerActive.data;
 
-            if (notNoted.indexOf(element) >= 0) {
+            if (notNoted.indexOf(input) >= 0) {
                 continue;
             }
 
-            if (store.isDeleteTimer() || stopAll.indexOf(element) >= 0) {
+            if (stopAll.indexOf(input) >= 0) {
                 deleteVal++;
                 continue;
             }
 
-            if (connector.indexOf(element) >= 0) {
+            if (connector.indexOf(input) >= 0) {
                 if (timerString.charAt(timerString.length - 1) !== '+') {
                     timerString += '+';
                 }
                 continue;
             }
 
-            if (hour.indexOf(element) >= 0) {
+            if (hour.indexOf(input) >= 0) {
                 timerString += ')*3600+';
                 continue;
             }
 
-            if (minute.indexOf(element) >= 0) {
+            if (minute.indexOf(input) >= 0) {
                 timerString += ')*60+';
                 continue;
             }
 
-            if (second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ')') {
+            if (second.indexOf(input) >= 0 && timerString.charAt(timerString.length - 1) != ')') {
                 timerString += ')';
                 continue;
             }
 
-            const elBrueche1 = timerObject.brueche1[element as keyof typeof timerObject.brueche1];
+            const elBrueche1 = timerObject.brueche1[input as keyof typeof timerObject.brueche1];
             if (elBrueche1) {
                 if (timerString.charAt(timerString.length - 1) == '') {
                     timerString += '(1';
@@ -61,7 +61,7 @@ export const filterInfo = (
                 continue;
             }
 
-            const elBrueche2 = timerObject.brueche2[element as keyof typeof timerObject.brueche2];
+            const elBrueche2 = timerObject.brueche2[input as keyof typeof timerObject.brueche2];
             if (elBrueche2 > 0) {
                 if (timerString.charAt(timerString.length - 1) == '') {
                     timerString += '(1';
@@ -70,7 +70,7 @@ export const filterInfo = (
                 continue;
             }
 
-            const elNumber = timerObject.zahlen[element as keyof typeof timerObject.zahlen];
+            const elNumber = timerObject.zahlen[input as keyof typeof timerObject.zahlen];
             if (elNumber > 0) {
                 if (timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
                     if (
@@ -84,7 +84,7 @@ export const filterInfo = (
                     }
                     continue;
                 }
-                if (element == 'hundert') {
+                if (input == 'hundert') {
                     timerString += `*${elNumber}`;
                     continue;
                 }
@@ -93,7 +93,7 @@ export const filterInfo = (
                 continue;
             }
 
-            const elementAsNumber = parseInt(element);
+            const elementAsNumber = parseInt(input);
             if (!isNaN(elementAsNumber)) {
                 if (timerString == '') {
                     timerString = '(';
@@ -105,14 +105,14 @@ export const filterInfo = (
                 continue;
             }
             if (!(store.isShortenTimer() || store.isExtendTimer())) {
-                name = element.trim();
+                name = input.trim();
             }
         }
 
         if (timerString.charAt(timerString.length - 1) == '+') {
             timerString = timerString.slice(0, timerString.length - 1);
         }
-        if (input.length) {
+        if (inputs.length) {
             timerString = hasMinutes(timerString);
             timerString = checkFirstChart(timerString);
         }

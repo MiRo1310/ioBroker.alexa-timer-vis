@@ -62,10 +62,20 @@ describe('Timer', () => {
         } as Store);
 
         const input = ['stop', 'pommes', 'timer'];
-        const { name, timerString } = filterInfo(input);
+        const { name, timerString, deleteVal } = filterInfo(input);
         expect(name).to.equal('');
         expect(timerString).to.equal('');
-        // expect(deleteVal).to.equal(0);
+        expect(deleteVal).to.equal(2);
+
+        sinon.restore();
+    });
+
+    it('remove one timer', () => {
+        const input = ['stop', 'pommes', 'timer'];
+        const { name, timerString, deleteVal } = filterInfo(input);
+        expect(name).to.equal('');
+        expect(timerString).to.equal('');
+        expect(deleteVal).to.equal(1);
 
         sinon.restore();
     });
