@@ -18,8 +18,9 @@ export const filterInfo = (
 
         let deleteVal = store.isDeleteTimer() ? 1 : 0; // 1 = deleteTimer, 2 = stopAll
 
-        for (const input of inputs) {
+        for (const _input of inputs) {
             const { connector, notNoted, stopAll, hour, minute, second } = timerObject.timerActive.data;
+            const input = _input.toLowerCase().trim();
 
             if (notNoted.indexOf(input) >= 0) {
                 continue;
@@ -62,7 +63,7 @@ export const filterInfo = (
             }
 
             const elBrueche2 = timerObject.brueche2[input as keyof typeof timerObject.brueche2];
-            if (elBrueche2 > 0) {
+            if (elBrueche2 ?? 0 > 0) {
                 if (timerString.charAt(timerString.length - 1) == '') {
                     timerString += '(1';
                 }
@@ -71,11 +72,11 @@ export const filterInfo = (
             }
 
             const elNumber = timerObject.zahlen[input as keyof typeof timerObject.zahlen];
-            if (elNumber > 0) {
+            if (elNumber ?? 0 > 0) {
                 if (timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
                     if (
-                        (timerString.charAt(timerString.length - 1) != '*3600+' ||
-                            timerString.charAt(timerString.length - 1) != '*60+') &&
+                        // (timerString.charAt(timerString.length - 1) != '*3600+' ||
+                        //     timerString.charAt(timerString.length - 1) != '*60+') &&
                         timerString.charAt(timerString.length - 3) != '('
                     ) {
                         timerString += `(${elNumber}`;
@@ -120,7 +121,7 @@ export const filterInfo = (
             timerString = `(${timerString}`;
         }
 
-        return { timerString, name, deleteVal };
+        return { timerString, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
     } catch (e: any) {
         errorLogger('Error in filterInfo', e, _this);
         return { timerString: '', name: '', deleteVal: 0 };

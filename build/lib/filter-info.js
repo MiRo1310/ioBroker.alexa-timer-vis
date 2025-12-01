@@ -25,42 +25,42 @@ var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
 var import_timer_data = require("../config/timer-data");
 var import_store = require("../store/store");
-const filterInfo = (input) => {
+const filterInfo = (inputs) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
     let timerString = "";
     let name = "";
-    let deleteVal = 0;
-    for (let i = 0; i < input.length; i++) {
-      const element = input[i];
+    let deleteVal = store.isDeleteTimer() ? 1 : 0;
+    for (const _input of inputs) {
       const { connector, notNoted, stopAll, hour, minute, second } = import_timer_data.timerObject.timerActive.data;
-      if (notNoted.indexOf(element) >= 0) {
+      const input = _input.toLowerCase().trim();
+      if (notNoted.indexOf(input) >= 0) {
         continue;
       }
-      if (store.isDeleteTimer() || stopAll.indexOf(element) >= 0) {
+      if (stopAll.indexOf(input) >= 0) {
         deleteVal++;
         continue;
       }
-      if (connector.indexOf(element) >= 0) {
+      if (connector.indexOf(input) >= 0) {
         if (timerString.charAt(timerString.length - 1) !== "+") {
           timerString += "+";
         }
         continue;
       }
-      if (hour.indexOf(element) >= 0) {
+      if (hour.indexOf(input) >= 0) {
         timerString += ")*3600+";
         continue;
       }
-      if (minute.indexOf(element) >= 0) {
+      if (minute.indexOf(input) >= 0) {
         timerString += ")*60+";
         continue;
       }
-      if (second.indexOf(element) >= 0 && timerString.charAt(timerString.length - 1) != ")") {
+      if (second.indexOf(input) >= 0 && timerString.charAt(timerString.length - 1) != ")") {
         timerString += ")";
         continue;
       }
-      const elBrueche1 = import_timer_data.timerObject.brueche1[element];
+      const elBrueche1 = import_timer_data.timerObject.brueche1[input];
       if (elBrueche1) {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
@@ -68,32 +68,36 @@ const filterInfo = (input) => {
         timerString += `*${elBrueche1})*60`;
         continue;
       }
-      const elBrueche2 = import_timer_data.timerObject.brueche2[element];
-      if (elBrueche2 > 0) {
+      const elBrueche2 = import_timer_data.timerObject.brueche2[input];
+      if (elBrueche2 != null ? elBrueche2 : 0 > 0) {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
         }
         timerString += `*${elBrueche2})*3600`;
         continue;
       }
-      const elNumber = import_timer_data.timerObject.zahlen[element];
-      if (elNumber > 0) {
+      const elNumber = import_timer_data.timerObject.zahlen[input];
+      if (elNumber != null ? elNumber : 0 > 0) {
         if (import_timer_data.timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
-          if ((timerString.charAt(timerString.length - 1) != "*3600+" || timerString.charAt(timerString.length - 1) != "*60+") && timerString.charAt(timerString.length - 3) != "(") {
+          if (
+            // (timerString.charAt(timerString.length - 1) != '*3600+' ||
+            //     timerString.charAt(timerString.length - 1) != '*60+') &&
+            timerString.charAt(timerString.length - 3) != "("
+          ) {
             timerString += `(${elNumber}`;
           } else {
             timerString += elNumber;
           }
           continue;
         }
-        if (element == "hundert") {
+        if (input == "hundert") {
           timerString += `*${elNumber}`;
           continue;
         }
         timerString += `+${elNumber}`;
         continue;
       }
-      const elementAsNumber = parseInt(element);
+      const elementAsNumber = parseInt(input);
       if (!isNaN(elementAsNumber)) {
         if (timerString == "") {
           timerString = "(";
@@ -105,20 +109,20 @@ const filterInfo = (input) => {
         continue;
       }
       if (!(store.isShortenTimer() || store.isExtendTimer())) {
-        name = element.trim();
+        name = input.trim();
       }
     }
     if (timerString.charAt(timerString.length - 1) == "+") {
       timerString = timerString.slice(0, timerString.length - 1);
     }
-    if (input.length) {
+    if (inputs.length) {
       timerString = hasMinutes(timerString);
       timerString = checkFirstChart(timerString);
     }
     if ((0, import_global.countOccurrences)(timerString, ")") > (0, import_global.countOccurrences)(timerString, "(")) {
       timerString = `(${timerString}`;
     }
-    return { timerString, name, deleteVal };
+    return { timerString, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
   } catch (e) {
     (0, import_logging.errorLogger)("Error in filterInfo", e, _this);
     return { timerString: "", name: "", deleteVal: 0 };

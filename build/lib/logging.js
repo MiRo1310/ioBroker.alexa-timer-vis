@@ -23,11 +23,15 @@ __export(logging_exports, {
 module.exports = __toCommonJS(logging_exports);
 const errorLogger = (title, e, adapter) => {
   var _a, _b;
-  if (adapter.supportsFeature && adapter.supportsFeature("PLUGINS")) {
+  if ((adapter == null ? void 0 : adapter.supportsFeature) && adapter.supportsFeature("PLUGINS")) {
     const sentryInstance = adapter.getPluginInstance("sentry");
     if (sentryInstance) {
       sentryInstance.getSentryObject().captureException(e);
     }
+  }
+  if (!adapter || !adapter.log) {
+    console.log(title, e);
+    return;
   }
   adapter.log.error(title);
   adapter.log.error(`Error message: ${e.message}`);

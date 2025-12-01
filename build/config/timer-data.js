@@ -39,6 +39,8 @@ const timerObject = {
         "schalte",
         "setze",
         "setz",
+        "stop",
+        "stoppe",
         "stell",
         "stelle",
         "den",

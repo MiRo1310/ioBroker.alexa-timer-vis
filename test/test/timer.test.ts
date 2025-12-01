@@ -7,18 +7,32 @@ import type { Store } from '@/types/types';
 describe('Timer', () => {
     it('should correct simple timer', () => {
         const input = ['timer', '5', 'minuten'];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('');
-        expect(timerString).to.equal('(5)*60');
-        expect(deleteVal).to.equal(0);
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(5)*60', name: '', deleteVal: 0 });
+    });
+
+    it('should correct simple timer 2', () => {
+        const input = ['timer', '59', 'minuten'];
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(59)*60', name: '', deleteVal: 0 });
+    });
+
+    it('should correct simple timer 3', () => {
+        const input = ['timer', '1', 'stunde', '59', 'minuten'];
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(1)*3600+(59)*60', name: '', deleteVal: 0 });
+    });
+
+    it('should correct simple timer, with uppercase words', () => {
+        const input = ['Timer', '1', 'STUNDE', '59', 'minuTen'];
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(1)*3600+(59)*60', name: '', deleteVal: 0 });
     });
 
     it('should Name and timer values ', () => {
         const input = ['brot', 'timer', 'eine', 'stunde', 'zehn', 'minuten', 'fünf', 'und', 'dreißig', 'sekunden'];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('brot');
-        expect(timerString).to.equal('(1)*3600+(10)*60+(5+30)');
-        expect(deleteVal).to.equal(0);
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(1)*3600+(10)*60+(5+30)', name: 'brot', deleteVal: 0 });
     });
 
     it('should Name another timer with name and values', () => {
@@ -36,47 +50,53 @@ describe('Timer', () => {
             'vierzig',
             'sekunden',
         ];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('fleisch');
-        expect(timerString).to.equal('(3)*3600+(3+30)*60+(7+40)');
-        expect(deleteVal).to.equal(0);
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(3)*3600+(3+30)*60+(7+40)', name: 'fleisch', deleteVal: 0 });
     });
+
     it('should Name another timer with name and values', () => {
         const input = ['timer', 'fünf', 'stunden', 'neun', 'und', 'fünfzig', 'minuten', 'dreizehn', 'sekunden'];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('');
-        expect(timerString).to.equal('(5)*3600+(9+50)*60+(13)');
-        expect(deleteVal).to.equal(0);
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(5)*3600+(9+50)*60+(13)', name: '', deleteVal: 0 });
     });
+
     it('should Name another timer with name and values', () => {
         const input = ['timer', 'hundert', 'zwanzig', 'minuten', 'zwölf', 'sekunden'];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('');
-        expect(timerString).to.equal('(100+20)*60+(12)');
-        expect(deleteVal).to.equal(0);
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ timerString: '(100+20)*60+(12)', name: '', deleteVal: 0 });
+    });
+});
+
+describe('Timer with mock', () => {
+    let stub: sinon.SinonStub;
+
+    beforeEach(() => {
+        stub = sinon.stub(storeModule, 'useStore').returns({
+            isDeleteTimer: () => true,
+            isShortenTimer: () => false,
+            isExtendTimer: () => false,
+        } as Store);
+    });
+
+    afterEach(() => {
+        sinon.restore();
     });
 
     it('remove one timer', () => {
-        sinon.stub(storeModule, 'useStore').returns({
+        const input = ['stop', 'pommes', 'timer'];
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ name: 'pommes', timerString: '', deleteVal: 1 });
+    });
+
+    it('remove all timer', () => {
+        stub.returns({
             isDeleteTimer: () => true,
+            isShortenTimer: () => false,
+            isExtendTimer: () => false,
         } as Store);
 
-        const input = ['stop', 'pommes', 'timer'];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('');
-        expect(timerString).to.equal('');
-        expect(deleteVal).to.equal(2);
-
-        sinon.restore();
-    });
-
-    it('remove one timer', () => {
-        const input = ['stop', 'pommes', 'timer'];
-        const { name, timerString, deleteVal } = filterInfo(input);
-        expect(name).to.equal('');
-        expect(timerString).to.equal('');
-        expect(deleteVal).to.equal(1);
-
-        sinon.restore();
+        const input = ['stop', 'alle', 'timer'];
+        const res = filterInfo(input);
+        expect(res).to.be.deep.equal({ name: '', timerString: '', deleteVal: 2 });
     });
 });

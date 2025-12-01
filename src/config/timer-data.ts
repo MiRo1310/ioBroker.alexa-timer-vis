@@ -1,4 +1,4 @@
-import type { TimerObject } from '../types/types';
+import type { TimerObject } from '@/types/types';
 
 export const timerObject: TimerObject = {
     timerActive: {
@@ -17,6 +17,8 @@ export const timerObject: TimerObject = {
                 'schalte',
                 'setze',
                 'setz',
+                'stop',
+                'stoppe',
                 'stell',
                 'stelle',
                 'den',
