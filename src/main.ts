@@ -13,7 +13,7 @@ import { setAdapterStatusAndInitStateCreation } from '@/lib/set-adapter-status';
 import { timerAdd } from '@/lib/timer-add';
 import { timerObject } from '@/config/timer-data';
 import { Timer } from '@/app/timer';
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 import type { TimerCondition } from '@/types/types';
 import { getAbortWord } from '@/app/abort';
 import { timerDelete } from '@/lib/timer-delete';
@@ -44,42 +44,39 @@ export default class AlexaTimerVis extends utils.Adapter {
     }
 
     private async onReady(): Promise<void> {
-        const store = useStore();
-        store._this = this;
+        store.init({
+            adapter: this,
+            intervalMore60: this.config.intervall1,
+            intervalLess60: this.config.intervall2,
+            unitHour1: this.config.unitHour1,
+            unitHour2: this.config.unitHour2,
+            unitHour3: this.config.unitHour3,
+            unitMinute1: this.config.unitMinute1,
+            unitMinute2: this.config.unitMinute2,
+            unitMinute3: this.config.unitMinute3,
+            unitSecond1: this.config.unitSecond1,
+            unitSecond3: this.config.unitSecond3,
+            unitSecond2: this.config.unitSecond2,
+            valHourForZero: this.config.valHourForZero,
+            valMinuteForZero: this.config.valMinuteForZero,
+            valSecondForZero: this.config.valSecondForZero,
+            debounceTime: this.config.entprellZeit,
+            pathAlexaStateToListenTo: `${this.config.alexa}.History.intent`,
+            pathAlexaSummary: `${this.config.alexa}.History.summary`,
+        });
+        store.adapter = this;
 
         await this.setState('info.connection', false, true);
         if (this.adapterConfig && '_id' in this.adapterConfig) {
             store.alexaTimerVisInstance = this.adapterConfig?._id.replace('system.adapter.', '');
         }
-        timerObject.timer.timer1 = new Timer({ store: useStore() });
-        timerObject.timer.timer2 = new Timer({ store: useStore() });
-        timerObject.timer.timer3 = new Timer({ store: useStore() });
-        timerObject.timer.timer4 = new Timer({ store: useStore() });
-
-        store.pathAlexaStateToListenTo = `${this.config.alexa}.History.intent`;
-        store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
-
-        store.intervalMore60 = this.config.intervall1;
-        store.intervalLess60 = this.config.intervall2;
-
-        store.unitHour1 = this.config.unitHour1;
-        store.unitHour2 = this.config.unitHour2;
-        store.unitHour3 = this.config.unitHour3;
-        store.unitMinute1 = this.config.unitMinute1;
-        store.unitMinute2 = this.config.unitMinute2;
-        store.unitMinute3 = this.config.unitMinute3;
-        store.unitSecond1 = this.config.unitSecond1;
-        store.unitSecond3 = this.config.unitSecond3;
-        store.unitSecond2 = this.config.unitSecond2;
-
-        store.valHourForZero = this.config.valHourForZero;
-        store.valMinuteForZero = this.config.valMinuteForZero;
-        store.valSecondForZero = this.config.valSecondForZero;
-
-        store.debounceTime = this.config.entprellZeit;
+        timerObject.timer.timer1 = new Timer({ store });
+        timerObject.timer.timer2 = new Timer({ store });
+        timerObject.timer.timer3 = new Timer({ store });
+        timerObject.timer.timer4 = new Timer({ store });
 
         await setAdapterStatusAndInitStateCreation();
-        resetAllTimerValuesAndState(this);
+        resetAllTimerValuesAndState();
 
         let voiceInput: string;
 
@@ -91,6 +88,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                     if (isIobrokerValue(state)) {
                         store.timerAction = state.val as TimerCondition;
                     }
+
                     const res = await this.getForeignStateAsync(store.pathAlexaSummary);
                     if (isIobrokerValue(res)) {
                         voiceInput = res?.val as string;
@@ -131,11 +129,10 @@ export default class AlexaTimerVis extends utils.Adapter {
                     const timerIndex = id.split('.')[2];
                     const timer = timerObject.timer[timerIndex];
                     timer.stopTimerInAlexa();
-
                     delTimer(timerIndex);
                 }
             } catch (e) {
-                errorLogger('Error in stateChange', e, this);
+                errorLogger('Error in stateChange', e);
             }
         });
 
@@ -143,12 +140,11 @@ export default class AlexaTimerVis extends utils.Adapter {
     }
 
     onUnload(callback: () => void): void {
-        const store = useStore();
         try {
             this.log.info('Adapter shuts down');
 
             writeState({ reset: true }).catch((e: any) => {
-                errorLogger('Error in onUnload', e, this);
+                errorLogger('Error in onUnload', e);
             });
 
             this.clearTimeout(timeout_1);
@@ -168,7 +164,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
             callback();
         } catch (e) {
-            errorLogger('Error in onUnload', e, this);
+            errorLogger('Error in onUnload', e);
             callback();
         }
     }

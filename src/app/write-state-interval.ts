@@ -1,29 +1,28 @@
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
 import { writeState } from '@/app/write-state';
 import { errorLogger } from '@/lib/logging';
 
 export const writeStateIntervall = (): void => {
-    const store = useStore();
-    const { _this } = store;
+    const { adapter } = store;
     try {
         if (store.interval) {
             return;
         }
-        store.interval = _this.setInterval((): void => {
+        store.interval = adapter.setInterval((): void => {
             writeState({ reset: false }).catch((e: any) => {
-                errorLogger('Error in writeStateIntervall', e, _this);
+                errorLogger('Error in writeStateIntervall', e);
             });
 
             if (timerObject.timerActive.timerCount === 0) {
-                _this.setStateChanged('all_Timer.alive', false, true);
-                _this.clearInterval(store.interval);
+                adapter.setStateChanged('all_Timer.alive', false, true);
+                adapter.clearInterval(store.interval);
                 store.interval = null;
-                _this.log.debug('Intervall stopped!');
+                adapter.log.debug('Intervall stopped!');
             }
         }, timerObject.timerActive.data.interval);
     } catch (e: any) {
-        errorLogger('Error in writeStateIntervall', e, _this);
-        _this.clearInterval(store.interval);
+        errorLogger('Error in writeStateIntervall', e);
+        adapter.clearInterval(store.interval);
     }
 };

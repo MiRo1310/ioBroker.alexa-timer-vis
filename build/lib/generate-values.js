@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,25 +17,32 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var generate_values_exports = {};
 __export(generate_values_exports, {
   generateValues: () => generateValues
 });
 module.exports = __toCommonJS(generate_values_exports);
-var import_store = require("../store/store");
+var import_store = __toESM(require("../store/store"));
 var import_global = require("../lib/global");
 const generateValues = (timer, sec, index, name) => {
-  const store = (0, import_store.useStore)();
   const timeLeft = timer.getOutputProperties().endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
   const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
   const result = (0, import_global.secToHourMinSec)(remainingTimeInSeconds, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
-  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds, store)}`;
+  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds, import_store.default)}`;
   const { timeString: stringTimer2 } = isShorterThanAMinute(
     isShorterThanSixtyMinutes(
-      isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store))
+      isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, import_store.default))
     )
   );
   if (!timer.isExtendOrShortenTimer()) {
@@ -65,9 +74,9 @@ function resetSuperiorValue(hour, minutes, seconds) {
   }
   return { hour, minutes, seconds };
 }
-function isShorterThanAMinute({ minutes, seconds, store, timeString }) {
+function isShorterThanAMinute({ minutes, seconds, store: store2, timeString }) {
   if (parseInt(minutes) == 0) {
-    return { timeString: `${seconds} ${store.unitSecond3}` };
+    return { timeString: `${seconds} ${store2.unitSecond3}` };
   }
   return { timeString };
 }
@@ -75,43 +84,43 @@ function isShorterOrEqualToSixtyFiveMinutes({
   hour,
   minutes,
   seconds,
-  store,
+  store: store2,
   timeString
 }) {
   if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
-    const timeString2 = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
-    return { timeString: timeString2, hour, minutes, seconds, store };
+    const timeString2 = `${hour}:${minutes}:${seconds} ${store2.unitHour3}`;
+    return { timeString: timeString2, hour, minutes, seconds, store: store2 };
   }
-  return { timeString, hour, minutes, seconds, store };
+  return { timeString, hour, minutes, seconds, store: store2 };
 }
 function isShorterThanSixtyMinutes({
   hour,
   minutes,
   seconds,
-  store,
+  store: store2,
   timeString
 }) {
   if (parseInt(hour) == 0) {
-    const timeString2 = `${minutes}:${seconds} ${store.unitMinute3}`;
-    return { timeString: timeString2, hour, minutes, seconds, store };
+    const timeString2 = `${minutes}:${seconds} ${store2.unitMinute3}`;
+    return { timeString: timeString2, hour, minutes, seconds, store: store2 };
   }
-  return { timeString, hour, minutes, seconds, store };
+  return { timeString, hour, minutes, seconds, store: store2 };
 }
-function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store) {
+function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store2) {
   if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {
-    const timeString = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
-    return { timeString, hour, minutes, seconds, store };
+    const timeString = `${hour}:${minutes}:${seconds} ${store2.unitHour3}`;
+    return { timeString, hour, minutes, seconds, store: store2 };
   }
-  return { timeString: "", hour, minutes, seconds, store };
+  return { timeString: "", hour, minutes, seconds, store: store2 };
 }
-function getTimeUnit(timeLeftSec, store) {
+function getTimeUnit(timeLeftSec, store2) {
   if (timeLeftSec >= 3600) {
-    return ` ${store.unitHour3}`;
+    return ` ${store2.unitHour3}`;
   }
   if (timeLeftSec >= 60) {
-    return ` ${store.unitMinute3}`;
+    return ` ${store2.unitMinute3}`;
   }
-  return ` ${store.unitSecond3}`;
+  return ` ${store2.unitSecond3}`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

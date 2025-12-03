@@ -1,7 +1,7 @@
 import { countOccurrences } from '@/lib/global';
 import { errorLogger } from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 
 export const parseTimeInput = (
     inputs: string[],
@@ -10,8 +10,6 @@ export const parseTimeInput = (
     name: string;
     deleteVal: number;
 } => {
-    const store = useStore();
-    const _this = store._this;
     try {
         let timerString = '';
         let name = '';
@@ -133,7 +131,7 @@ export const parseTimeInput = (
 
         return { timerString, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
     } catch (e: any) {
-        errorLogger('Error in filterInfo', e, _this);
+        errorLogger('Error in filterInfo', e);
         return { timerString: '', name: '', deleteVal: 0 };
     }
 };

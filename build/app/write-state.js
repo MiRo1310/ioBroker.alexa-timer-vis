@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var write_state_exports = {};
 __export(write_state_exports, {
@@ -22,12 +32,11 @@ __export(write_state_exports, {
 });
 module.exports = __toCommonJS(write_state_exports);
 var import_timer_data = require("../config/timer-data");
-var import_store = require("../store/store");
 var import_reset = require("../app/reset");
 var import_logging = require("../lib/logging");
+var import_store = __toESM(require("../store/store"));
 async function writeState({ reset }) {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
+  const adapter = import_store.default.adapter;
   const timers = import_timer_data.timerObject.timerActive.timer;
   try {
     for (const timerIndex in timers) {
@@ -38,7 +47,7 @@ async function writeState({ reset }) {
       if (reset) {
         await (0, import_reset.resetValues)(timer);
       }
-      _this.setStateChanged(`${timerIndex}.alive`, timers[timerIndex], true);
+      adapter.setStateChanged(`${timerIndex}.alive`, timers[timerIndex], true);
       const {
         hours,
         minutes,
@@ -52,23 +61,23 @@ async function writeState({ reset }) {
         percent,
         percent2
       } = timer.getOutputProperties();
-      _this.setStateChanged(`${timerIndex}.hour`, hours, true);
-      _this.setStateChanged(`${timerIndex}.minute`, minutes, true);
-      _this.setStateChanged(`${timerIndex}.second`, seconds, true);
-      _this.setStateChanged(`${timerIndex}.string`, stringTimer1, true);
-      _this.setStateChanged(`${timerIndex}.string_2`, stringTimer2, true);
-      _this.setStateChanged(`${timerIndex}.TimeStart`, startTimeString, true);
-      _this.setStateChanged(`${timerIndex}.TimeEnd`, endTimeString, true);
-      _this.setStateChanged(`${timerIndex}.InputDeviceName`, inputDevice, true);
-      _this.setStateChanged(`${timerIndex}.lengthTimer`, lengthTimer, true);
-      _this.setStateChanged(`${timerIndex}.percent2`, percent2, true);
-      _this.setStateChanged(`${timerIndex}.percent`, percent, true);
-      _this.setStateChanged(`${timerIndex}.name`, timer.outPutTimerName(), true);
-      _this.setStateChanged(`${timerIndex}.json`, timer.getDataAsJson(), true);
-      _this.setStateChanged("all_Timer.alive", !reset, true);
+      adapter.setStateChanged(`${timerIndex}.hour`, hours, true);
+      adapter.setStateChanged(`${timerIndex}.minute`, minutes, true);
+      adapter.setStateChanged(`${timerIndex}.second`, seconds, true);
+      adapter.setStateChanged(`${timerIndex}.string`, stringTimer1, true);
+      adapter.setStateChanged(`${timerIndex}.string_2`, stringTimer2, true);
+      adapter.setStateChanged(`${timerIndex}.TimeStart`, startTimeString, true);
+      adapter.setStateChanged(`${timerIndex}.TimeEnd`, endTimeString, true);
+      adapter.setStateChanged(`${timerIndex}.InputDeviceName`, inputDevice, true);
+      adapter.setStateChanged(`${timerIndex}.lengthTimer`, lengthTimer, true);
+      adapter.setStateChanged(`${timerIndex}.percent2`, percent2, true);
+      adapter.setStateChanged(`${timerIndex}.percent`, percent, true);
+      adapter.setStateChanged(`${timerIndex}.name`, timer.outPutTimerName(), true);
+      adapter.setStateChanged(`${timerIndex}.json`, timer.getDataAsJson(), true);
+      adapter.setStateChanged("all_Timer.alive", !reset, true);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in writeState", e, _this);
+    (0, import_logging.errorLogger)("Error in writeState", e);
   }
 }
 // Annotate the CommonJS export names for ESM import in node:

@@ -1,8 +1,8 @@
-import { delTimer } from '../app/delete-timer';
-import { findTimer } from './find-timer';
-import { oneOfMultiTimerDelete } from './one-timer-to-delete';
-import { useStore } from '../store/store';
-import { errorLogger } from './logging';
+import { delTimer } from '@/app/delete-timer';
+import store from '@/store/store';
+import { findTimer } from '@/lib/find-timer';
+import { oneOfMultiTimerDelete } from '@/lib/one-timer-to-delete';
+import { errorLogger } from '@/lib/logging';
 
 export const timerDelete = async (
     decomposeName: string,
@@ -10,8 +10,6 @@ export const timerDelete = async (
     voiceInput: string,
     deleteVal: number,
 ): Promise<void> => {
-    const store = useStore();
-    const _this = store._this;
     let name = decomposeName;
     let timerAbortSec = 0;
     if (timerSec) {
@@ -28,7 +26,7 @@ export const timerDelete = async (
             deleteTimerIndex = deleteVal;
         }
 
-        _this.log.debug('Timer can be deleted');
+        store.adapter.log.debug('Timer can be deleted');
     }
 
     await findTimer(timerAbortSec, name, deleteTimerIndex, voiceInput).then(timers => {
@@ -43,7 +41,7 @@ export const timerDelete = async (
                 oneOfMultiTimerDelete(value, sec, name, inputDevice);
             }
         } catch (e: any) {
-            errorLogger('Error in timerDelete', e, _this);
+            errorLogger('Error in timerDelete', e);
         }
     });
 };

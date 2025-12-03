@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_exports = {};
 __export(timer_exports, {
@@ -23,6 +33,7 @@ __export(timer_exports, {
 module.exports = __toCommonJS(timer_exports);
 var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
+var import_store = __toESM(require("../store/store"));
 class Timer {
   hours;
   minutes;
@@ -46,13 +57,11 @@ class Timer {
   extendOrShortenTimer;
   remainingTimeInSeconds;
   timerId;
-  alexaTimerVis;
-  store;
+  adapter;
   foreignActiveTimerListId;
   alexaInstance;
   constructor({ store }) {
-    this.store = store;
-    this.alexaTimerVis = store._this;
+    this.adapter = store.adapter;
     this.hours = "";
     this.minutes = "";
     this.seconds = "";
@@ -153,12 +162,10 @@ class Timer {
   async init() {
     var _a;
     try {
-      const instance = this.store.getAlexaInstanceObject().instance;
+      const instance = import_store.default.getAlexaInstanceObject().instance;
       this.alexaInstance = instance;
-      const nameState = await this.alexaTimerVis.getForeignStateAsync(`alexa2.${instance}.History.name`);
-      const serialState = await this.alexaTimerVis.getForeignStateAsync(
-        `alexa2.${instance}.History.serialNumber`
-      );
+      const nameState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.name`);
+      const serialState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.serialNumber`);
       if ((0, import_global.isIobrokerValue)(nameState)) {
         this.inputDeviceName = String(nameState.val);
       }
@@ -168,20 +175,20 @@ class Timer {
       const serial = this.deviceSerialNumber;
       const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
       await this.setForeignActiveTimerListSubscription(foreignId);
-      this.store.lastTimer = { timerSerial: serial, timerIndex: (_a = this.timerIndex) != null ? _a : "", id: foreignId };
+      import_store.default.lastTimer = { timerSerial: serial, timerIndex: (_a = this.timerIndex) != null ? _a : "", id: foreignId };
       this.foreignActiveTimerListId = foreignId;
       await this.setDeviceNameInStateName();
     } catch (error) {
-      (0, import_logging.errorLogger)("Error in getInputDevice", error, this.alexaTimerVis);
+      (0, import_logging.errorLogger)("Error in getInputDevice", error);
     }
   }
   async setForeignActiveTimerListSubscription(id) {
-    await this.alexaTimerVis.subscribeForeignStatesAsync(id);
-    this.alexaTimerVis.log.debug(`Subscribed: ${id}`);
+    await this.adapter.subscribeForeignStatesAsync(id);
+    this.adapter.log.debug(`Subscribed: ${id}`);
   }
   async setDeviceNameInStateName() {
     if (this.timerIndex) {
-      await this.alexaTimerVis.setObjectNotExistsAsync(this.timerIndex, {
+      await this.adapter.setObjectNotExistsAsync(this.timerIndex, {
         type: "device",
         common: { name: `${this.inputDeviceName}` },
         native: {}
@@ -197,7 +204,7 @@ class Timer {
   async setIdFromEcoDeviceTimerList() {
     try {
       const activeTimerListId = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.activeTimerList`;
-      const activeTimerListState = await this.alexaTimerVis.getForeignStateAsync(activeTimerListId);
+      const activeTimerListState = await this.adapter.getForeignStateAsync(activeTimerListId);
       const activeTimerList = (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
       const filteredList = activeTimerList.filter((t) => t.triggerTime >= this.endTimeNumber);
       const activeTimer = filteredList.reduce((previousValue, t) => {
@@ -207,7 +214,7 @@ class Timer {
         this.timerId = activeTimer.id;
       }
     } catch (error) {
-      (0, import_logging.errorLogger)("Error in setIdFromEcoDeviceTimerList", error, this.alexaTimerVis);
+      (0, import_logging.errorLogger)("Error in setIdFromEcoDeviceTimerList", error);
     }
   }
   setInterval(interval) {
@@ -244,12 +251,12 @@ class Timer {
       return;
     }
     const id = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.stopTimerId`;
-    this.alexaTimerVis.setForeignState(id, this.timerId, false);
+    this.adapter.setForeignState(id, this.timerId, false);
   }
   reset() {
-    this.hours = this.store.valHourForZero;
-    this.minutes = this.store.valMinuteForZero;
-    this.seconds = this.store.valSecondForZero;
+    this.hours = import_store.default.valHourForZero;
+    this.minutes = import_store.default.valMinuteForZero;
+    this.seconds = import_store.default.valSecondForZero;
     this.stringTimer1 = "00:00:00 h";
     this.stringTimer2 = "";
     this.voiceInputAsSeconds = 0;
@@ -273,8 +280,8 @@ class Timer {
   }
   resetForeignStateSubscription() {
     if (this.foreignActiveTimerListId) {
-      this.alexaTimerVis.unsubscribeForeignStates(this.foreignActiveTimerListId);
-      this.alexaTimerVis.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
+      this.adapter.unsubscribeForeignStates(this.foreignActiveTimerListId);
+      this.adapter.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
     }
   }
 }

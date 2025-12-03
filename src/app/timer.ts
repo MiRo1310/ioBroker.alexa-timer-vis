@@ -3,12 +3,12 @@ import type {
     InputProperties,
     OutputProperties,
     StartAndEndTime,
-    Store,
     TimerIndex,
 } from '@/types/types';
 import { firstLetterToUpperCase, isIobrokerValue } from '@/lib/global';
 import { errorLogger } from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
+import Store from '@/store/store';
 
 export class Timer {
     private hours: string;
@@ -33,14 +33,12 @@ export class Timer {
     private extendOrShortenTimer: boolean;
     private remainingTimeInSeconds: number;
     private timerId: string;
-    private readonly alexaTimerVis: AlexaTimerVis;
-    private store: Store;
+    private readonly adapter: AlexaTimerVis;
     private foreignActiveTimerListId: string | null;
     private alexaInstance: string | null;
 
-    constructor({ store }: { store: Store }) {
-        this.store = store;
-        this.alexaTimerVis = store._this;
+    constructor({ store }: { store: typeof Store }) {
+        this.adapter = store.adapter;
         this.hours = '';
         this.minutes = '';
         this.seconds = '';
@@ -142,13 +140,11 @@ export class Timer {
 
     async init(): Promise<void> {
         try {
-            const instance = this.store.getAlexaInstanceObject().instance;
+            const instance = Store.getAlexaInstanceObject().instance;
             this.alexaInstance = instance;
 
-            const nameState = await this.alexaTimerVis.getForeignStateAsync(`alexa2.${instance}.History.name`);
-            const serialState = await this.alexaTimerVis.getForeignStateAsync(
-                `alexa2.${instance}.History.serialNumber`,
-            );
+            const nameState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.name`);
+            const serialState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.serialNumber`);
 
             if (isIobrokerValue(nameState)) {
                 this.inputDeviceName = String(nameState.val);
@@ -161,21 +157,21 @@ export class Timer {
 
             const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
             await this.setForeignActiveTimerListSubscription(foreignId);
-            this.store.lastTimer = { timerSerial: serial, timerIndex: this.timerIndex ?? '', id: foreignId };
+            Store.lastTimer = { timerSerial: serial, timerIndex: this.timerIndex ?? '', id: foreignId };
             this.foreignActiveTimerListId = foreignId;
 
             await this.setDeviceNameInStateName();
         } catch (error) {
-            errorLogger('Error in getInputDevice', error, this.alexaTimerVis);
+            errorLogger('Error in getInputDevice', error);
         }
     }
     async setForeignActiveTimerListSubscription(id: string): Promise<void> {
-        await this.alexaTimerVis.subscribeForeignStatesAsync(id);
-        this.alexaTimerVis.log.debug(`Subscribed: ${id}`);
+        await this.adapter.subscribeForeignStatesAsync(id);
+        this.adapter.log.debug(`Subscribed: ${id}`);
     }
     async setDeviceNameInStateName(): Promise<void> {
         if (this.timerIndex) {
-            await this.alexaTimerVis.setObjectNotExistsAsync(this.timerIndex, {
+            await this.adapter.setObjectNotExistsAsync(this.timerIndex, {
                 type: 'device',
                 common: { name: `${this.inputDeviceName}` },
                 native: {},
@@ -191,7 +187,7 @@ export class Timer {
     async setIdFromEcoDeviceTimerList(): Promise<void> {
         try {
             const activeTimerListId = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.activeTimerList`;
-            const activeTimerListState = await this.alexaTimerVis.getForeignStateAsync(activeTimerListId);
+            const activeTimerListState = await this.adapter.getForeignStateAsync(activeTimerListId);
             const activeTimerList = activeTimerListState?.val
                 ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[])
                 : [];
@@ -204,7 +200,7 @@ export class Timer {
                 this.timerId = activeTimer.id;
             }
         } catch (error) {
-            errorLogger('Error in setIdFromEcoDeviceTimerList', error, this.alexaTimerVis);
+            errorLogger('Error in setIdFromEcoDeviceTimerList', error);
         }
     }
     setInterval(interval: number): void {
@@ -241,12 +237,12 @@ export class Timer {
             return;
         }
         const id = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.stopTimerId`;
-        this.alexaTimerVis.setForeignState(id, this.timerId, false);
+        this.adapter.setForeignState(id, this.timerId, false);
     }
     reset(): void {
-        this.hours = this.store.valHourForZero;
-        this.minutes = this.store.valMinuteForZero;
-        this.seconds = this.store.valSecondForZero;
+        this.hours = Store.valHourForZero;
+        this.minutes = Store.valMinuteForZero;
+        this.seconds = Store.valSecondForZero;
         this.stringTimer1 = '00:00:00 h';
         this.stringTimer2 = '';
         this.voiceInputAsSeconds = 0;
@@ -271,8 +267,8 @@ export class Timer {
     }
     resetForeignStateSubscription(): void {
         if (this.foreignActiveTimerListId) {
-            this.alexaTimerVis.unsubscribeForeignStates(this.foreignActiveTimerListId);
-            this.alexaTimerVis.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
+            this.adapter.unsubscribeForeignStates(this.foreignActiveTimerListId);
+            this.adapter.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
         }
     }
 }

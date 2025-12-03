@@ -1,23 +1,22 @@
-import { startTimer } from './start-timer';
-import { createStates } from '../app/createStates';
+import { createStates } from '@/app/createStates';
 import { timerObject } from '@/config/timer-data';
-import { writeStateIntervall } from '../app/write-state-interval';
-import { isStringEmpty } from './global';
-import { errorLogger } from './logging';
-import { useStore } from '@/store/store';
+
+import store from '@/store/store';
 import { Timer } from '@/app/timer';
+import { isStringEmpty } from '@/lib/global';
+import { errorLogger } from '@/lib/logging';
+import { startTimer } from '@/lib/start-timer';
+import { writeStateIntervall } from '@/app/write-state-interval';
 
 function addNewRawTimer(timerIndex: string): void {
     timerObject.timerActive.timer[timerIndex] = false;
 
     timerObject.timer[timerIndex] = new Timer({
-        store: useStore(),
+        store,
     });
 }
 
 export const timerAdd = (name: string, timerSec: number): void => {
-    const { _this } = useStore();
-
     if (timerSec && timerSec != 0) {
         let nameExist = false;
 
@@ -33,7 +32,7 @@ export const timerAdd = (name: string, timerSec: number): void => {
             timerObject.timerActive.timerCount++;
 
             createStates(timerObject.timerActive.timerCount).catch((e: any) => {
-                errorLogger('Error in timerAdd', e, _this);
+                errorLogger('Error in timerAdd', e);
             });
 
             const timerIndex = `timer${timerObject.timerActive.timerCount}`;
@@ -43,7 +42,7 @@ export const timerAdd = (name: string, timerSec: number): void => {
             }
 
             startTimer(timerSec, name).catch((e: any) => {
-                errorLogger('Error in timerAdd', e, _this);
+                errorLogger('Error in timerAdd', e);
             });
 
             writeStateIntervall();

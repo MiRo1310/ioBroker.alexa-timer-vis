@@ -6,7 +6,7 @@ export interface GenerateTimeStringObject {
     hour: string;
     minutes: string;
     seconds: string;
-    store: Store;
+    store: StoreType;
 }
 
 export interface AlexaActiveTimerList {
@@ -135,9 +135,8 @@ export interface TimerObject {
     };
 }
 
-export interface Store {
-    _this: AlexaTimerVis;
-    token: string | null;
+export interface StoreType {
+    adapter: AlexaTimerVis;
     valHourForZero: string;
     valMinuteForZero: string;
     valSecondForZero: string;
@@ -155,32 +154,12 @@ export interface Store {
     unitSecond1: string;
     unitSecond2: string;
     unitSecond3: string;
-    timerAction: TimerCondition | null;
-    questionAlexa: boolean;
-    interval?: ioBroker.Interval;
-    deviceSerialNumber: string | null;
-    deviceName: string | null;
-    lastTimer: LastTimer;
-    oldAlexaTimerObject: AlexaActiveTimerList[];
-    alexaTimerVisInstance: string;
-    getAlexaInstanceObject: () => AlexaInstanceObject;
-    isAddTimer: () => boolean;
-    isShortenTimer: () => boolean;
-    isExtendTimer: () => boolean;
-    isDeleteTimer: () => boolean;
-    getAlexaTimerVisInstance: () => string;
 }
 
 export interface AlexaInstanceObject {
     adapter: string;
     instance: string;
     channel_history: string;
-}
-
-interface LastTimer {
-    timerIndex: TimerIndex;
-    timerSerial: string;
-    id: string;
 }
 
 export interface OneOfMultiTimer {

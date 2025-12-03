@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,29 +17,38 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var find_timer_exports = {};
 __export(find_timer_exports, {
   findTimer: () => findTimer
 });
 module.exports = __toCommonJS(find_timer_exports);
-var import_store = require("../store/store");
+var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
 var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
 const findTimer = async (sec, name, deleteTimerIndex, value) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
+  const adapter = import_store.default.adapter;
   try {
     name = name.trim();
     let inputDevice = "";
-    const obj = await _this.getForeignStateAsync(`alexa2.${store.getAlexaInstanceObject().instance}.History.name`);
+    const obj = await adapter.getForeignStateAsync(
+      `alexa2.${import_store.default.getAlexaInstanceObject().instance}.History.name`
+    );
     if ((0, import_global.isIobrokerValue)(obj) && (0, import_global.isString)(obj.val)) {
       inputDevice = obj.val;
     }
     const { matchingTime, matchingName, matchingInputDevice } = getMatchingTimerCounts(inputDevice, sec, name);
     const timerFound = { oneOfMultiTimer: {}, timer: [] };
-    if (store.questionAlexa) {
+    if (import_store.default.questionAlexa) {
       if (matchingName == 1) {
         timerFound.oneOfMultiTimer = { value: "", sec: 0, name, inputDevice };
       } else if (matchingTime > 1) {
@@ -50,7 +61,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     }
     for (const timerIndex in import_timer_data.timerObject.timer) {
       if (deleteTimerIndex == 1) {
-        if (!store.questionAlexa) {
+        if (!import_store.default.questionAlexa) {
           const voiceInputAsSeconds = import_timer_data.timerObject.timer[timerIndex].getVoiceInputAsSeconds();
           if (import_timer_data.timerObject.timerActive.timerCount == 1 && import_timer_data.timerObject.timerActive.timer[timerIndex]) {
             timerFound.timer.push(timerIndex);
@@ -69,7 +80,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
           }
         }
       } else if (deleteTimerIndex == 2) {
-        if (!store.questionAlexa) {
+        if (!import_store.default.questionAlexa) {
           timerFound.timer.push(timerIndex);
         } else {
           if (matchingInputDevice != import_timer_data.timerObject.timerActive.timerCount && value.indexOf("nein") != -1) {
@@ -82,7 +93,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
           ) {
             for (const element in import_timer_data.timerObject.timerActive.timer) {
               timerFound.timer.push(element);
-              _this.log.debug("Clear all");
+              adapter.log.debug("Clear all");
             }
           }
         }
@@ -90,7 +101,7 @@ const findTimer = async (sec, name, deleteTimerIndex, value) => {
     }
     return timerFound;
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in findTimer", e, _this);
+    (0, import_logging.errorLogger)("Error in findTimer", e);
     return { oneOfMultiTimer: {}, timer: [] };
   }
 };

@@ -1,9 +1,9 @@
-import type { Store, TimerIndex, TimerObject } from '@/types/types';
-import { useStore } from '@/store/store';
+import type { TimerIndex, TimerObject } from '@/types/types';
 import { timerObject } from '@/config/timer-data';
 import { parseTimeInput } from '@/lib/parse-time-input';
 import { findTimer } from '@/lib/find-timer';
 import { errorLogger } from '@/lib/logging';
+import store from '@/store/store';
 
 export const extendOrShortTimer = async ({
     voiceInput,
@@ -12,10 +12,8 @@ export const extendOrShortTimer = async ({
     voiceInput: string;
     decomposeName: string;
 }): Promise<void> => {
-    const store = useStore();
-    const _this = store._this;
     try {
-        const addOrSub = getMultiplikatorForAddOrSub(store);
+        const addOrSub = getMultiplikatorForAddOrSub();
 
         let firstPartOfValue, valueExtend;
         let extendTime = 0;
@@ -41,11 +39,11 @@ export const extendOrShortTimer = async ({
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
         }
     } catch (e: any) {
-        errorLogger('Error in extendOrShortTimer', e, _this);
+        errorLogger('Error in extendOrShortTimer', e);
     }
 };
 
-function getMultiplikatorForAddOrSub(store: Store): 1 | -1 {
+function getMultiplikatorForAddOrSub(): 1 | -1 {
     if (store.isShortenTimer()) {
         return -1;
     }

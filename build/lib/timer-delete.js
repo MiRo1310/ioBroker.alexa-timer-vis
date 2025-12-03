@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_delete_exports = {};
 __export(timer_delete_exports, {
@@ -22,27 +32,25 @@ __export(timer_delete_exports, {
 });
 module.exports = __toCommonJS(timer_delete_exports);
 var import_delete_timer = require("../app/delete-timer");
-var import_find_timer = require("./find-timer");
-var import_one_timer_to_delete = require("./one-timer-to-delete");
-var import_store = require("../store/store");
-var import_logging = require("./logging");
+var import_store = __toESM(require("../store/store"));
+var import_find_timer = require("../lib/find-timer");
+var import_one_timer_to_delete = require("../lib/one-timer-to-delete");
+var import_logging = require("../lib/logging");
 const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
   let name = decomposeName;
   let timerAbortSec = 0;
   if (timerSec) {
     timerAbortSec = timerSec;
   }
   let deleteTimerIndex = 0;
-  if (store.questionAlexa) {
+  if (import_store.default.questionAlexa) {
     deleteTimerIndex = 1;
     name = "";
   } else {
     if (deleteVal) {
       deleteTimerIndex = deleteVal;
     }
-    _this.log.debug("Timer can be deleted");
+    import_store.default.adapter.log.debug("Timer can be deleted");
   }
   await (0, import_find_timer.findTimer)(timerAbortSec, name, deleteTimerIndex, voiceInput).then((timers) => {
     try {
@@ -55,7 +63,7 @@ const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
         (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(value, sec, name2, inputDevice);
       }
     } catch (e) {
-      (0, import_logging.errorLogger)("Error in timerDelete", e, _this);
+      (0, import_logging.errorLogger)("Error in timerDelete", e);
     }
   });
 };

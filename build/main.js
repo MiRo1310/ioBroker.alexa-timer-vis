@@ -42,7 +42,7 @@ var import_set_adapter_status = require("./lib/set-adapter-status");
 var import_timer_add = require("./lib/timer-add");
 var import_timer_data = require("./config/timer-data");
 var import_timer = require("./app/timer");
-var import_store = require("./store/store");
+var import_store = __toESM(require("./store/store"));
 var import_abort = require("./app/abort");
 var import_timer_delete = require("./lib/timer-delete");
 var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
@@ -68,35 +68,37 @@ class AlexaTimerVis extends utils.Adapter {
   }
   async onReady() {
     var _a;
-    const store = (0, import_store.useStore)();
-    store._this = this;
+    import_store.default.init({
+      adapter: this,
+      intervalMore60: this.config.intervall1,
+      intervalLess60: this.config.intervall2,
+      unitHour1: this.config.unitHour1,
+      unitHour2: this.config.unitHour2,
+      unitHour3: this.config.unitHour3,
+      unitMinute1: this.config.unitMinute1,
+      unitMinute2: this.config.unitMinute2,
+      unitMinute3: this.config.unitMinute3,
+      unitSecond1: this.config.unitSecond1,
+      unitSecond3: this.config.unitSecond3,
+      unitSecond2: this.config.unitSecond2,
+      valHourForZero: this.config.valHourForZero,
+      valMinuteForZero: this.config.valMinuteForZero,
+      valSecondForZero: this.config.valSecondForZero,
+      debounceTime: this.config.entprellZeit,
+      pathAlexaStateToListenTo: `${this.config.alexa}.History.intent`,
+      pathAlexaSummary: `${this.config.alexa}.History.summary`
+    });
+    import_store.default.adapter = this;
     await this.setState("info.connection", false, true);
     if (this.adapterConfig && "_id" in this.adapterConfig) {
-      store.alexaTimerVisInstance = (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "");
+      import_store.default.alexaTimerVisInstance = (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "");
     }
-    import_timer_data.timerObject.timer.timer1 = new import_timer.Timer({ store: (0, import_store.useStore)() });
-    import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: (0, import_store.useStore)() });
-    import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: (0, import_store.useStore)() });
-    import_timer_data.timerObject.timer.timer4 = new import_timer.Timer({ store: (0, import_store.useStore)() });
-    store.pathAlexaStateToListenTo = `${this.config.alexa}.History.intent`;
-    store.pathAlexaSummary = `${this.config.alexa}.History.summary`;
-    store.intervalMore60 = this.config.intervall1;
-    store.intervalLess60 = this.config.intervall2;
-    store.unitHour1 = this.config.unitHour1;
-    store.unitHour2 = this.config.unitHour2;
-    store.unitHour3 = this.config.unitHour3;
-    store.unitMinute1 = this.config.unitMinute1;
-    store.unitMinute2 = this.config.unitMinute2;
-    store.unitMinute3 = this.config.unitMinute3;
-    store.unitSecond1 = this.config.unitSecond1;
-    store.unitSecond3 = this.config.unitSecond3;
-    store.unitSecond2 = this.config.unitSecond2;
-    store.valHourForZero = this.config.valHourForZero;
-    store.valMinuteForZero = this.config.valMinuteForZero;
-    store.valSecondForZero = this.config.valSecondForZero;
-    store.debounceTime = this.config.entprellZeit;
+    import_timer_data.timerObject.timer.timer1 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timerObject.timer.timer4 = new import_timer.Timer({ store: import_store.default });
     await (0, import_set_adapter_status.setAdapterStatusAndInitStateCreation)();
-    (0, import_reset.resetAllTimerValuesAndState)(this);
+    (0, import_reset.resetAllTimerValuesAndState)();
     let voiceInput;
     this.on("stateChange", async (id, state) => {
       try {
@@ -104,9 +106,9 @@ class AlexaTimerVis extends utils.Adapter {
           this.log.debug("Alexa state changed");
           let doNothingByNotNotedElement = false;
           if ((0, import_global.isIobrokerValue)(state)) {
-            store.timerAction = state.val;
+            import_store.default.timerAction = state.val;
           }
-          const res = await this.getForeignStateAsync(store.pathAlexaSummary);
+          const res = await this.getForeignStateAsync(import_store.default.pathAlexaSummary);
           if ((0, import_global.isIobrokerValue)(res)) {
             voiceInput = res == null ? void 0 : res.val;
             this.log.debug(`VoiceInput: ${voiceInput}`);
@@ -121,17 +123,17 @@ class AlexaTimerVis extends utils.Adapter {
             doNothingByNotNotedElement = true;
           }
           const { name: decomposeName, timerSec, deleteVal } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
-          if (!doNothingByNotNotedElement || store.isDeleteTimer()) {
+          if (!doNothingByNotNotedElement || import_store.default.isDeleteTimer()) {
             (0, import_global.doesAlexaSendAQuestion)(voiceInput);
-            if (store.isDeleteTimer()) {
+            if (import_store.default.isDeleteTimer()) {
               await (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
               return;
             }
-            if (store.isAddTimer()) {
+            if (import_store.default.isAddTimer()) {
               (0, import_timer_add.timerAdd)(decomposeName, timerSec);
               return;
             }
-            if (store.isExtendTimer() || store.isShortenTimer()) {
+            if (import_store.default.isExtendTimer() || import_store.default.isShortenTimer()) {
               await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, decomposeName });
               return;
             }
@@ -145,21 +147,20 @@ class AlexaTimerVis extends utils.Adapter {
           (0, import_delete_timer.delTimer)(timerIndex);
         }
       } catch (e) {
-        (0, import_logging.errorLogger)("Error in stateChange", e, this);
+        (0, import_logging.errorLogger)("Error in stateChange", e);
       }
     });
-    this.subscribeForeignStates(store.pathAlexaStateToListenTo);
+    this.subscribeForeignStates(import_store.default.pathAlexaStateToListenTo);
   }
   onUnload(callback) {
-    const store = (0, import_store.useStore)();
     try {
       this.log.info("Adapter shuts down");
       (0, import_write_state.writeState)({ reset: true }).catch((e) => {
-        (0, import_logging.errorLogger)("Error in onUnload", e, this);
+        (0, import_logging.errorLogger)("Error in onUnload", e);
       });
       this.clearTimeout(timeout_1);
       this.clearTimeout(debounceTimeout);
-      this.clearInterval(store.interval);
+      this.clearInterval(import_store.default.interval);
       if (!import_timer_data.timerObject.interval) {
         return;
       }
@@ -169,7 +170,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
-      (0, import_logging.errorLogger)("Error in onUnload", e, this);
+      (0, import_logging.errorLogger)("Error in onUnload", e);
       callback();
     }
   }

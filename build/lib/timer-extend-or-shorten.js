@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_extend_or_shorten_exports = {};
 __export(timer_extend_or_shorten_exports, {
@@ -22,19 +32,17 @@ __export(timer_extend_or_shorten_exports, {
   extendTimer: () => extendTimer
 });
 module.exports = __toCommonJS(timer_extend_or_shorten_exports);
-var import_store = require("../store/store");
 var import_timer_data = require("../config/timer-data");
 var import_parse_time_input = require("../lib/parse-time-input");
 var import_find_timer = require("../lib/find-timer");
 var import_logging = require("../lib/logging");
+var import_store = __toESM(require("../store/store"));
 const extendOrShortTimer = async ({
   voiceInput,
   decomposeName
 }) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
   try {
-    const addOrSub = getMultiplikatorForAddOrSub(store);
+    const addOrSub = getMultiplikatorForAddOrSub();
     let firstPartOfValue, valueExtend;
     let extendTime = 0;
     let extendTime2 = 0;
@@ -55,11 +63,11 @@ const extendOrShortTimer = async ({
       extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in extendOrShortTimer", e, _this);
+    (0, import_logging.errorLogger)("Error in extendOrShortTimer", e);
   }
 };
-function getMultiplikatorForAddOrSub(store2) {
-  if (store2.isShortenTimer()) {
+function getMultiplikatorForAddOrSub() {
+  if (import_store.default.isShortenTimer()) {
     return -1;
   }
   return 1;

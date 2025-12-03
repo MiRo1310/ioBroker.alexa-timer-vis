@@ -1,5 +1,5 @@
 import { timerObject } from '@/config/timer-data';
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 import { errorLogger } from '@/lib//logging';
 import type { Timer } from '@/app/timer';
 import { generateValues } from '@/lib/generate-values';
@@ -7,8 +7,7 @@ import { secToHourMinSec } from '@/lib/global';
 import { resetValues } from '@/app/reset';
 
 export const interval = (sec: number, name: string, timer: Timer, int: number, onlyOneTimer: boolean): void => {
-    const store = useStore();
-    const _this = store._this;
+    const adapter = store.adapter;
     const timerIndex = timer.getTimerIndex();
 
     if (!timerIndex) {
@@ -23,14 +22,14 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
         return;
     }
 
-    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = _this.setInterval(() => {
+    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = adapter.setInterval(() => {
         const timeLeftSec = generateValues(timer, sec, timerIndex, name);
         const ioBrokerInterval = timerObject.interval[timerIndex as keyof typeof timerObject.interval];
         if (timeLeftSec <= 60 && !onlyOneTimer) {
             onlyOneTimer = true;
 
             if (ioBrokerInterval) {
-                _this.clearInterval(ioBrokerInterval);
+                adapter.clearInterval(ioBrokerInterval);
             }
 
             interval(sec, name, timer, timerObject.timer[timerIndex].getInterval(), true);
@@ -40,13 +39,13 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
             timerObject.timerActive.timerCount--;
 
             resetValues(timer).catch((e: any) => {
-                errorLogger('Error in interval', e, _this);
+                errorLogger('Error in interval', e);
             });
 
-            _this.log.debug('Timer stopped');
+            adapter.log.debug('Timer stopped');
 
             if (ioBrokerInterval) {
-                _this.clearInterval(ioBrokerInterval);
+                adapter.clearInterval(ioBrokerInterval);
 
                 timerObject.interval[timerIndex as keyof typeof timerObject.interval] = null;
             }

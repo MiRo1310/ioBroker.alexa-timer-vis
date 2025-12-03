@@ -1,4 +1,4 @@
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
 import { isIobrokerValue, isString } from '@/lib/global';
 
@@ -12,13 +12,14 @@ export const findTimer = async (
     deleteTimerIndex: number,
     value: string,
 ): Promise<{ oneOfMultiTimer: OneOfMultiTimer; timer: TimerIndex[] }> => {
-    const store = useStore();
-    const _this = store._this;
+    const adapter = store.adapter;
     try {
         name = name.trim();
         let inputDevice = '';
 
-        const obj = await _this.getForeignStateAsync(`alexa2.${store.getAlexaInstanceObject().instance}.History.name`);
+        const obj = await adapter.getForeignStateAsync(
+            `alexa2.${store.getAlexaInstanceObject().instance}.History.name`,
+        );
 
         if (isIobrokerValue(obj) && isString(obj.val)) {
             inputDevice = obj.val;
@@ -96,7 +97,7 @@ export const findTimer = async (
                     ) {
                         for (const element in timerObject.timerActive.timer) {
                             timerFound.timer.push(element);
-                            _this.log.debug('Clear all');
+                            adapter.log.debug('Clear all');
                         }
                     }
                 }
@@ -104,7 +105,7 @@ export const findTimer = async (
         }
         return timerFound;
     } catch (e) {
-        errorLogger('Error in findTimer', e, _this);
+        errorLogger('Error in findTimer', e);
         return { oneOfMultiTimer: {} as OneOfMultiTimer, timer: [] };
     }
 };

@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var parse_time_input_exports = {};
 __export(parse_time_input_exports, {
@@ -24,14 +34,12 @@ module.exports = __toCommonJS(parse_time_input_exports);
 var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
 var import_timer_data = require("../config/timer-data");
-var import_store = require("../store/store");
+var import_store = __toESM(require("../store/store"));
 const parseTimeInput = (inputs) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
   try {
     let timerString = "";
     let name = "";
-    let deleteVal = store.isDeleteTimer() ? 1 : 0;
+    let deleteVal = import_store.default.isDeleteTimer() ? 1 : 0;
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i];
       const isElementOfSingleNumbers = input in import_timer_data.timerObject.singleNumbers;
@@ -112,7 +120,7 @@ const parseTimeInput = (inputs) => {
         continue;
       }
       const notAsName = [...notNoted, "stunde", "stunden", "minute", "minuten", "sekunde", "sekunden"];
-      if (!(store.isShortenTimer() || store.isExtendTimer()) && !notAsName.includes(input)) {
+      if (!(import_store.default.isShortenTimer() || import_store.default.isExtendTimer()) && !notAsName.includes(input)) {
         name = input.trim();
       }
     }
@@ -128,7 +136,7 @@ const parseTimeInput = (inputs) => {
     }
     return { timerString, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in filterInfo", e, _this);
+    (0, import_logging.errorLogger)("Error in filterInfo", e);
     return { timerString: "", name: "", deleteVal: 0 };
   }
 };

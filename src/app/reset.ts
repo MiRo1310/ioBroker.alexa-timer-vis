@@ -1,40 +1,39 @@
-import { useStore } from '@/store/store';
-import { errorLogger } from '../lib/logging';
+import store from '@/store/store';
+import { errorLogger } from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
 import type { Timer } from '@/app/timer';
-import type AlexaTimerVis from '@/main';
 import { writeState } from '@/app/write-state';
 
 export const resetValues = async (timer: Timer): Promise<void> => {
-    const { _this, getAlexaTimerVisInstance } = useStore();
+    const { adapter, getAlexaTimerVisInstance } = store;
     const index = timer.getTimerIndex();
     if (!index) {
         return;
     }
     try {
         timerObject.timerActive.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
-        _this.log.debug(JSON.stringify(timerObject.timerActive));
+        adapter.log.debug(JSON.stringify(timerObject.timerActive));
         timer.reset();
 
-        await _this.setObject(getAlexaTimerVisInstance() + index, {
+        await adapter.setObject(getAlexaTimerVisInstance() + index, {
             type: 'device',
             common: { name: `` },
             native: {},
         });
     } catch (e: any) {
-        errorLogger('Error in resetValues', e, _this);
+        errorLogger('Error in resetValues', e);
     }
 };
 
-export function resetAllTimerValuesAndState(_this: AlexaTimerVis): void {
+export function resetAllTimerValuesAndState(): void {
     Object.keys(timerObject.timer).forEach(el => {
         resetValues(timerObject.timer[el]).catch(e => {
-            errorLogger('Error in resetAllTimerValuesAndState', e, _this);
+            errorLogger('Error in resetAllTimerValuesAndState', e);
         });
 
         writeState({ reset: true }).catch(e => {
-            errorLogger('Error in resetAllTimerValuesAndState', e, _this);
+            errorLogger('Error in resetAllTimerValuesAndState', e);
         });
     });
-    _this.setStateChanged('all_Timer.alive', false, true);
+    store.adapter.setStateChanged('all_Timer.alive', false, true);
 }

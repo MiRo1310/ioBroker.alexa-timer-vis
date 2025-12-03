@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,24 +17,31 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var set_adapter_status_exports = {};
 __export(set_adapter_status_exports, {
   setAdapterStatusAndInitStateCreation: () => setAdapterStatusAndInitStateCreation
 });
 module.exports = __toCommonJS(set_adapter_status_exports);
-var import_store = require("../store/store");
+var import_store = __toESM(require("../store/store"));
 var import_createStates = require("../app/createStates");
 const setAdapterStatusAndInitStateCreation = async () => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
-  const result = await _this.getForeignObjectAsync(store.pathAlexaStateToListenTo);
+  const adapter = import_store.default.adapter;
+  const result = await adapter.getForeignObjectAsync(import_store.default.pathAlexaStateToListenTo);
   if (!result) {
-    _this.log.warn(`The State ${store.pathAlexaStateToListenTo} was not found!`);
+    adapter.log.warn(`The State ${import_store.default.pathAlexaStateToListenTo} was not found!`);
     return;
   }
-  _this.log.info("Alexa State was found");
-  await _this.setState("info.connection", true, true);
+  adapter.log.info("Alexa State was found");
+  await adapter.setState("info.connection", true, true);
   await (0, import_createStates.createStates)(4);
 };
 // Annotate the CommonJS export names for ESM import in node:

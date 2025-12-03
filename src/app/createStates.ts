@@ -1,12 +1,11 @@
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 import { errorLogger } from '@/lib/logging';
 
 export const createStates = async (value: number): Promise<void> => {
-    const store = useStore();
-    const _this = store._this;
+    const { adapter } = store;
     try {
         for (let i = 1; i <= value; i++) {
-            await _this.setObjectNotExistsAsync('all_Timer.alive', {
+            await adapter.setObjectNotExistsAsync('all_Timer.alive', {
                 type: 'state',
                 common: {
                     name: 'Is a Timer active?',
@@ -18,7 +17,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.percent`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.percent`, {
                 type: 'state',
                 common: {
                     name: 'Percent',
@@ -30,7 +29,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.percent2`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.percent2`, {
                 type: 'state',
                 common: {
                     name: 'Percent',
@@ -43,7 +42,7 @@ export const createStates = async (value: number): Promise<void> => {
                 native: {},
             });
 
-            await _this.setObjectNotExistsAsync(`timer${i}.alive`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.alive`, {
                 type: 'state',
                 common: {
                     name: 'Timer active',
@@ -55,7 +54,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.hour`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.hour`, {
                 type: 'state',
                 common: {
                     name: 'Hours',
@@ -67,7 +66,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.minute`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.minute`, {
                 type: 'state',
                 common: {
                     name: 'Minutes',
@@ -79,7 +78,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.second`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.second`, {
                 type: 'state',
                 common: {
                     name: 'Seconds',
@@ -91,7 +90,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.string`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.string`, {
                 type: 'state',
                 common: {
                     name: 'String',
@@ -103,7 +102,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.string_2`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.string_2`, {
                 type: 'state',
                 common: {
                     name: 'String_2',
@@ -115,7 +114,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.name`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.name`, {
                 type: 'state',
                 common: {
                     name: 'Name des Timers',
@@ -127,7 +126,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.TimeStart`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.TimeStart`, {
                 type: 'state',
                 common: {
                     name: 'Start Time',
@@ -139,7 +138,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.TimeEnd`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.TimeEnd`, {
                 type: 'state',
                 common: {
                     name: 'End Time',
@@ -151,7 +150,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.InputDeviceName`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.InputDeviceName`, {
                 type: 'state',
                 common: {
                     name: 'Input of Device',
@@ -163,7 +162,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.Reset`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.Reset`, {
                 type: 'state',
                 common: {
                     name: 'Reset Timer',
@@ -175,7 +174,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.lengthTimer`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.lengthTimer`, {
                 type: 'state',
                 common: {
                     name: 'Gestellter Timer',
@@ -187,7 +186,7 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-            await _this.setObjectNotExistsAsync(`timer${i}.json`, {
+            await adapter.setObjectNotExistsAsync(`timer${i}.json`, {
                 type: 'state',
                 common: {
                     name: 'json',
@@ -200,11 +199,11 @@ export const createStates = async (value: number): Promise<void> => {
                 native: {},
             });
 
-            const id = `alexa-timer-vis.${_this.instance}.timer${i}.Reset`;
+            const id = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
 
-            _this.subscribeForeignStates(id);
+            adapter.subscribeForeignStates(id);
         }
     } catch (e: any) {
-        errorLogger('Error in createState', e, _this);
+        errorLogger('Error in createState', e);
     }
 };

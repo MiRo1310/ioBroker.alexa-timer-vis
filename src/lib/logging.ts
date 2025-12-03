@@ -1,6 +1,7 @@
-import type AlexaTimerVis from '../main';
+import store from '@/store/store';
 
-export const errorLogger = (title: string, e: any, adapter: AlexaTimerVis): void => {
+export const errorLogger = (title: string, e: any): void => {
+    const adapter = store.adapter;
     if (adapter?.supportsFeature && adapter.supportsFeature('PLUGINS')) {
         const sentryInstance = adapter.getPluginInstance('sentry');
         if (sentryInstance) {

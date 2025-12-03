@@ -1,22 +1,19 @@
 import type { TimerIndex } from '@/types/types';
 import { timerObject } from '@/config/timer-data';
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 import { isString, timeToString } from '@/lib/global';
 import { interval } from '@/lib/interval';
-import type AlexaTimerVis from '@/main';
 import { errorLogger } from '@/lib/logging';
 
 const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 
 export const startTimer = async (sec: number, name: string): Promise<void> => {
-    const store = useStore();
-    const _this = store._this;
     try {
-        const timerIndex = getAvailableTimerIndex(_this);
+        const timerIndex = getAvailableTimerIndex();
         if (!timerIndex) {
             return;
         }
-        const alexaJson = await getAlexaParsedAlexaJson(_this);
+        const alexaJson = await getAlexaParsedAlexaJson();
         if (!alexaJson) {
             return;
         }
@@ -40,7 +37,7 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
 
         interval(sec, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {
-        errorLogger('Error in startTimer', e, _this);
+        errorLogger('Error in startTimer', e);
     }
 };
 
@@ -59,9 +56,9 @@ export interface AlexaJson {
     intent: string;
 }
 
-export async function getAlexaParsedAlexaJson(alexaTimerVis: AlexaTimerVis): Promise<AlexaJson | undefined> {
-    const instance = useStore().getAlexaInstanceObject().instance;
-    const jsonAlexa = await alexaTimerVis.getForeignStateAsync(`alexa2.${instance}.History.json`);
+export async function getAlexaParsedAlexaJson(): Promise<AlexaJson | undefined> {
+    const instance = store.getAlexaInstanceObject().instance;
+    const jsonAlexa = await store.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
     try {
         if (isString(jsonAlexa?.val)) {
             return JSON.parse(jsonAlexa.val);
@@ -71,7 +68,7 @@ export async function getAlexaParsedAlexaJson(alexaTimerVis: AlexaTimerVis): Pro
     }
 }
 
-function getAvailableTimerIndex(_this: AlexaTimerVis): TimerIndex | undefined {
+function getAvailableTimerIndex(): TimerIndex | undefined {
     for (let i = 0; i < Object.keys(timerObject.timerActive.timer).length; i++) {
         const key = Object.keys(timerObject.timerActive.timer)[i];
 

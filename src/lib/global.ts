@@ -1,5 +1,4 @@
-import type { Store } from '@/types/types';
-import { useStore } from '@/store/store';
+import store from '@/store/store';
 
 export const secToHourMinSec = (
     valSec: number,
@@ -10,38 +9,36 @@ export const secToHourMinSec = (
     seconds: string;
     string: string;
 } => {
-    const store = useStore();
-
     const { hourInSec, hour } = includedHours(valSec);
     const { minutesInSec, minutes } = includedMinutes(valSec, hourInSec);
     const seconds = includedSeconds(valSec, hourInSec, minutesInSec);
 
     const { hourString, minutesString, secondsString } = getDoubleIntValues(doubleInt, hour, minutes, seconds);
 
-    const hourUnit = getHourUnit(hour, store);
-    const minuteUnit = getMinuteUnit(minutes, store);
-    const secUnit = getSecondUnit(seconds, store);
+    const hourUnit = getHourUnit(hour);
+    const minuteUnit = getMinuteUnit(minutes);
+    const secUnit = getSecondUnit(seconds);
 
     const string = `${hour} ${hourUnit} ${minutes} ${minuteUnit} ${seconds} ${secUnit}`;
 
     return { hour: hourString, minutes: minutesString, seconds: secondsString, string: string.trim() };
 };
 
-function getSecondUnit(seconds: number, store: Store): string {
+function getSecondUnit(seconds: number): string {
     if (seconds && seconds > 1) {
         return store.unitSecond2;
     }
     return store.unitSecond1;
 }
 
-function getMinuteUnit(minutes: number, store: Store): string {
+function getMinuteUnit(minutes: number): string {
     if (minutes && minutes > 1) {
         return store.unitMinute2;
     }
     return store.unitMinute1;
 }
 
-function getHourUnit(hour: number, store: Store): string {
+function getHourUnit(hour: number): string {
     if (hour && hour > 1) {
         return store.unitHour2;
     }
@@ -111,12 +108,10 @@ export function isAlexaSummaryStateChanged({
     state?: ioBroker.State | null;
     id: string;
 }): boolean | null | undefined {
-    const store = useStore();
     return state && isString(state.val) && state.val !== '' && id === store.pathAlexaStateToListenTo;
 }
 
 export function doesAlexaSendAQuestion(voiceInput: string): void {
-    const store = useStore();
     store.questionAlexa = voiceInput.indexOf(',') != -1;
 }
 

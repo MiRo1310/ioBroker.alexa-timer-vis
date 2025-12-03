@@ -1,11 +1,9 @@
-import type { GenerateTimeStringObject, Store, TimerIndex } from '@/types/types';
-import { useStore } from '@/store/store';
+import type { GenerateTimeStringObject, StoreType, TimerIndex } from '@/types/types';
+import store from '@/store/store';
 import { secToHourMinSec } from '@/lib//global';
 import type { Timer } from '@/app/timer';
 
 export const generateValues = (timer: Timer, sec: number, index: TimerIndex, name: string): number => {
-    const store = useStore();
-
     const timeLeft = timer.getOutputProperties().endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec
     const remainingTimeInSeconds = Math.round(timeLeft / 1000); // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
     const result = secToHourMinSec(remainingTimeInSeconds, true);
@@ -99,7 +97,7 @@ function isGreaterThanSixtyFiveMinutes(
     hour: string,
     minutes: string,
     seconds: string,
-    store: Store,
+    store: StoreType,
 ): GenerateTimeStringObject {
     if (parseInt(hour) > 1 || (parseInt(hour) === 1 && parseInt(minutes) > 5)) {
         const timeString = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
@@ -108,7 +106,7 @@ function isGreaterThanSixtyFiveMinutes(
     return { timeString: '', hour, minutes, seconds, store };
 }
 
-function getTimeUnit(timeLeftSec: number, store: Store): string {
+function getTimeUnit(timeLeftSec: number, store: StoreType): string {
     if (timeLeftSec >= 3600) {
         return ` ${store.unitHour3}`;
     }

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { parseTimeInput } from '@/lib/parse-time-input';
 import * as storeModule from '@/store/store';
 import sinon from 'sinon';
-import type { Store } from '@/types/types';
+import type { StoreType } from '@/types/types';
 
 describe('Timer inputValue to evaluate string', () => {
     it('should correct simple timer', () => {
@@ -153,7 +153,7 @@ describe('Timer with mock', () => {
             isDeleteTimer: () => true,
             isShortenTimer: () => false,
             isExtendTimer: () => false,
-        } as Store);
+        } as StoreType);
     });
 
     afterEach(() => {
@@ -171,7 +171,7 @@ describe('Timer with mock', () => {
             isDeleteTimer: () => true,
             isShortenTimer: () => false,
             isExtendTimer: () => false,
-        } as Store);
+        } as StoreType);
 
         const input = ['stop', 'alle', 'timer'];
         const res = parseTimeInput(input);
