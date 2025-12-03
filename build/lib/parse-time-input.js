@@ -16,22 +16,37 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var filter_info_exports = {};
-__export(filter_info_exports, {
-  filterInfo: () => filterInfo
+var parse_time_input_exports = {};
+__export(parse_time_input_exports, {
+  parseTimeInput: () => parseTimeInput
 });
-module.exports = __toCommonJS(filter_info_exports);
+module.exports = __toCommonJS(parse_time_input_exports);
 var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
 var import_timer_data = require("../config/timer-data");
 var import_store = require("../store/store");
-const filterInfo = (inputs) => {
+const parseTimeInput = (inputs) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
     let timerString = "";
     let name = "";
     let deleteVal = store.isDeleteTimer() ? 1 : 0;
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      const isElementOfSingleNumbers = input in import_timer_data.timerObject.singleNumbers;
+      const singleNumberValue = import_timer_data.timerObject.singleNumbers[input];
+      if (isElementOfSingleNumbers && inputs[i + 1] in import_timer_data.timerObject.singleNumbers && inputs[i + 2] in import_timer_data.timerObject.fraction) {
+        timerString = `(${singleNumberValue}+${import_timer_data.timerObject.singleNumbers[inputs[i + 1]]}*${import_timer_data.timerObject.fraction[inputs[i + 2]]})*3600`;
+        inputs.splice(i, 3);
+        break;
+      }
+      if (isElementOfSingleNumbers && inputs[i + 1] && inputs[i + 1].includes("dreiviertel")) {
+        timerString = `(${singleNumberValue}+${import_timer_data.timerObject.fraction[inputs[i + 1]]})*3600`;
+        inputs.splice(i, 2);
+        break;
+      }
+    }
     for (const _input of inputs) {
       const { connector, notNoted, stopAll, hour, minute, second } = import_timer_data.timerObject.timerActive.data;
       const input = _input.toLowerCase().trim();
@@ -48,7 +63,7 @@ const filterInfo = (inputs) => {
         }
         continue;
       }
-      if (hour.indexOf(input) >= 0) {
+      if (hour.indexOf(input) >= 0 && !timerString.includes("*3600")) {
         timerString += ")*3600+";
         continue;
       }
@@ -60,30 +75,18 @@ const filterInfo = (inputs) => {
         timerString += ")";
         continue;
       }
-      const elBrueche1 = import_timer_data.timerObject.brueche1[input];
-      if (elBrueche1) {
+      const fractionElement = import_timer_data.timerObject.fraction[input];
+      if (fractionElement && !timerString.includes("*3600")) {
         if (timerString.charAt(timerString.length - 1) == "") {
           timerString += "(1";
         }
-        timerString += `*${elBrueche1})*60`;
+        timerString += `*${fractionElement})*3600`;
         continue;
       }
-      const elBrueche2 = import_timer_data.timerObject.brueche2[input];
-      if (elBrueche2 != null ? elBrueche2 : 0 > 0) {
-        if (timerString.charAt(timerString.length - 1) == "") {
-          timerString += "(1";
-        }
-        timerString += `*${elBrueche2})*3600`;
-        continue;
-      }
-      const elNumber = import_timer_data.timerObject.zahlen[input];
-      if (elNumber != null ? elNumber : 0 > 0) {
-        if (import_timer_data.timerObject.ziffern.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
-          if (
-            // (timerString.charAt(timerString.length - 1) != '*3600+' ||
-            //     timerString.charAt(timerString.length - 1) != '*60+') &&
-            timerString.charAt(timerString.length - 3) != "("
-          ) {
+      const elNumber = import_timer_data.timerObject.numbers[input];
+      if (elNumber) {
+        if (import_timer_data.timerObject.digits.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
+          if (timerString.charAt(timerString.length - 3) != "(") {
             timerString += `(${elNumber}`;
           } else {
             timerString += elNumber;
@@ -108,7 +111,8 @@ const filterInfo = (inputs) => {
         timerString += elementAsNumber;
         continue;
       }
-      if (!(store.isShortenTimer() || store.isExtendTimer())) {
+      const notAsName = [...notNoted, "stunde", "stunden", "minute", "minuten", "sekunde", "sekunden"];
+      if (!(store.isShortenTimer() || store.isExtendTimer()) && !notAsName.includes(input)) {
         name = input.trim();
       }
     }
@@ -117,7 +121,7 @@ const filterInfo = (inputs) => {
     }
     if (inputs.length) {
       timerString = hasMinutes(timerString);
-      timerString = checkFirstChart(timerString);
+      timerString = checkFirstChartForBracket(timerString);
     }
     if ((0, import_global.countOccurrences)(timerString, ")") > (0, import_global.countOccurrences)(timerString, "(")) {
       timerString = `(${timerString}`;
@@ -136,7 +140,7 @@ function hasMinutes(timerString) {
   }
   return timerString;
 }
-function checkFirstChart(timerString) {
+function checkFirstChartForBracket(timerString) {
   if (timerString.charAt(0) == ")") {
     timerString = timerString.slice(2, timerString.length);
   }
@@ -144,6 +148,6 @@ function checkFirstChart(timerString) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  filterInfo
+  parseTimeInput
 });
-//# sourceMappingURL=filter-info.js.map
+//# sourceMappingURL=parse-time-input.js.map

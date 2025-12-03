@@ -1,41 +1,14 @@
-import type { AlexaActiveTimerList, Store, TimerIndex, TimerSelector } from '@/types/types';
+import type {
+    AlexaActiveTimerList,
+    InputProperties,
+    OutputProperties,
+    StartAndEndTime,
+    Store,
+    TimerIndex,
+} from '@/types/types';
 import { firstLetterToUpperCase, isIobrokerValue } from '@/lib/global';
 import { errorLogger } from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
-
-interface OutputProperties {
-    hours: string;
-    minutes: string;
-    seconds: string;
-    stringTimer1: string;
-    stringTimer2: string;
-    startTimeString: string;
-    endTimeNumber: number;
-    endTimeString: string;
-    inputDevice: string;
-    lengthTimer: string;
-    percent: number;
-    percent2: number;
-}
-
-interface InputProperties {
-    remainingTimeInSeconds: number;
-    name: string;
-    index: TimerSelector;
-    hours: string;
-    minutes: string;
-    seconds: string;
-    stringTimer1: string;
-    stringTimer2: string;
-    lengthTimer: string;
-}
-
-interface StartAndEndTime {
-    creationTime: number;
-    startTimeString: string;
-    endTimeNumber: number;
-    endTimeString: string;
-}
 
 export class Timer {
     private hours: string;
@@ -97,11 +70,8 @@ export class Timer {
     getName(): string {
         return this.name;
     }
-    getSerialNumber(): string {
-        return this.deviceSerialNumber;
-    }
-    getAlexaTimerName(): string | null {
-        return this.alexaTimerName;
+    getTimerIndex(): TimerIndex | null {
+        return this.timerIndex;
     }
     getOutputProperties(): OutputProperties {
         return {
@@ -124,9 +94,6 @@ export class Timer {
     }
     getVoiceInputAsSeconds(): number {
         return this.voiceInputAsSeconds;
-    }
-    getId(): string {
-        return this.timerId;
     }
     getInterval(): number {
         return this.interval;
@@ -221,9 +188,6 @@ export class Timer {
     setLengthTimer(length: string): void {
         this.lengthTimer = length;
     }
-    setId(id: string): void {
-        this.timerId = id;
-    }
     async setIdFromEcoDeviceTimerList(): Promise<void> {
         try {
             const activeTimerListId = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.activeTimerList`;
@@ -245,9 +209,6 @@ export class Timer {
     }
     setInterval(interval: number): void {
         this.interval = interval;
-    }
-    setAlexaTimerName(name: string | null): void {
-        this.alexaTimerName = name;
     }
     setStartAndEndTime({ startTimeString, creationTime, endTimeString, endTimeNumber }: StartAndEndTime): void {
         this.creationTime = creationTime;

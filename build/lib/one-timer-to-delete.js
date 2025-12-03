@@ -28,8 +28,8 @@ const oneOfMultiTimerDelete = (input, timeSec, name, inputDevice) => {
   const separateInputArray = separateInput.split(" ");
   let timerNumber;
   for (const element of separateInputArray) {
-    if (import_timer_data.timerObject.zuweisung[element] > 0) {
-      timerNumber = import_timer_data.timerObject.zuweisung[element];
+    if (import_timer_data.timerObject.assignment[element] > 0) {
+      timerNumber = import_timer_data.timerObject.assignment[element];
     } else {
       name = separateInput.replace("timer", "").trim();
       timerNumber = 0;

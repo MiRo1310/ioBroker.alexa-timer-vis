@@ -26,38 +26,39 @@ var import_store = require("../store/store");
 var import_logging = require("../lib/logging");
 var import_generate_values = require("../lib/generate-values");
 var import_global = require("../lib/global");
-var import_reset = require("../lib/reset");
-const interval = (sec, timerBlock, name, timer, int, onlyOneTimer) => {
+var import_reset = require("../app/reset");
+const interval = (sec, name, timer, int, onlyOneTimer) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
-  (0, import_generate_values.generateValues)(timer, sec, timerBlock, name);
-  const { string } = (0, import_global.secToHourMinSec)(sec, false);
-  timer.setLengthTimer(string);
-  if (!timerBlock) {
+  const timerIndex = timer.getTimerIndex();
+  if (!timerIndex) {
     return;
   }
-  import_timer_data.timerObject.interval[timerBlock] = _this.setInterval(() => {
-    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, timerBlock, name);
+  (0, import_generate_values.generateValues)(timer, sec, timerIndex, name);
+  const { string } = (0, import_global.secToHourMinSec)(sec, false);
+  timer.setLengthTimer(string);
+  if (!timerIndex) {
+    return;
+  }
+  import_timer_data.timerObject.interval[timerIndex] = _this.setInterval(() => {
+    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, timerIndex, name);
+    const ioBrokerInterval = import_timer_data.timerObject.interval[timerIndex];
     if (timeLeftSec <= 60 && !onlyOneTimer) {
       onlyOneTimer = true;
-      if (import_timer_data.timerObject.interval) {
-        _this.clearInterval(
-          import_timer_data.timerObject.interval[timerBlock]
-        );
+      if (ioBrokerInterval) {
+        _this.clearInterval(ioBrokerInterval);
       }
-      interval(sec, timerBlock, name, timer, import_timer_data.timerObject.timer[timerBlock].getInterval(), true);
+      interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
     }
-    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerBlock]) {
+    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerIndex]) {
       import_timer_data.timerObject.timerActive.timerCount--;
-      (0, import_reset.resetValues)(timer, timerBlock).catch((e) => {
+      (0, import_reset.resetValues)(timer).catch((e) => {
         (0, import_logging.errorLogger)("Error in interval", e, _this);
       });
       _this.log.debug("Timer stopped");
-      if (import_timer_data.timerObject.interval) {
-        _this.clearInterval(
-          import_timer_data.timerObject.interval[timerBlock]
-        );
-        import_timer_data.timerObject.interval[timerBlock] = null;
+      if (ioBrokerInterval) {
+        _this.clearInterval(ioBrokerInterval);
+        import_timer_data.timerObject.interval[timerIndex] = null;
       }
     }
   }, int);

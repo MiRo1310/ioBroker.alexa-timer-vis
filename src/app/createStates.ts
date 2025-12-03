@@ -1,7 +1,7 @@
-import { useStore } from '../store/store';
-import { errorLogger } from './logging';
+import { useStore } from '@/store/store';
+import { errorLogger } from '@/lib/logging';
 
-export const createState = async (value: number): Promise<void> => {
+export const createStates = async (value: number): Promise<void> => {
     const store = useStore();
     const _this = store._this;
     try {

@@ -22,25 +22,23 @@ __export(write_state_exports, {
 });
 module.exports = __toCommonJS(write_state_exports);
 var import_timer_data = require("../config/timer-data");
-var import_reset = require("./reset");
 var import_store = require("../store/store");
-var import_logging = require("./logging");
+var import_reset = require("../app/reset");
+var import_logging = require("../lib/logging");
 async function writeState({ reset }) {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   const timers = import_timer_data.timerObject.timerActive.timer;
   try {
-    for (const timerName in timers) {
-      const timer = import_timer_data.timerObject.timer[timerName];
+    for (const timerIndex in timers) {
+      const timer = import_timer_data.timerObject.timer[timerIndex];
       if (!timer) {
         return;
       }
-      let alive = true;
       if (reset) {
-        await (0, import_reset.resetValues)(timer, timerName);
-        alive = false;
+        await (0, import_reset.resetValues)(timer);
       }
-      _this.setStateChanged(`${timerName}.alive`, import_timer_data.timerObject.timerActive.timer[timerName], true);
+      _this.setStateChanged(`${timerIndex}.alive`, timers[timerIndex], true);
       const {
         hours,
         minutes,
@@ -54,20 +52,20 @@ async function writeState({ reset }) {
         percent,
         percent2
       } = timer.getOutputProperties();
-      _this.setStateChanged(`${timerName}.hour`, hours, true);
-      _this.setStateChanged(`${timerName}.minute`, minutes, true);
-      _this.setStateChanged(`${timerName}.second`, seconds, true);
-      _this.setStateChanged(`${timerName}.string`, stringTimer1, true);
-      _this.setStateChanged(`${timerName}.string_2`, stringTimer2, true);
-      _this.setStateChanged(`${timerName}.TimeStart`, startTimeString, true);
-      _this.setStateChanged(`${timerName}.TimeEnd`, endTimeString, true);
-      _this.setStateChanged(`${timerName}.InputDeviceName`, inputDevice, true);
-      _this.setStateChanged(`${timerName}.lengthTimer`, lengthTimer, true);
-      _this.setStateChanged(`${timerName}.percent2`, percent2, true);
-      _this.setStateChanged(`${timerName}.percent`, percent, true);
-      _this.setStateChanged(`${timerName}.name`, timer.outPutTimerName(), true);
-      _this.setStateChanged(`${timerName}.json`, timer.getDataAsJson(), true);
-      _this.setStateChanged("all_Timer.alive", alive, true);
+      _this.setStateChanged(`${timerIndex}.hour`, hours, true);
+      _this.setStateChanged(`${timerIndex}.minute`, minutes, true);
+      _this.setStateChanged(`${timerIndex}.second`, seconds, true);
+      _this.setStateChanged(`${timerIndex}.string`, stringTimer1, true);
+      _this.setStateChanged(`${timerIndex}.string_2`, stringTimer2, true);
+      _this.setStateChanged(`${timerIndex}.TimeStart`, startTimeString, true);
+      _this.setStateChanged(`${timerIndex}.TimeEnd`, endTimeString, true);
+      _this.setStateChanged(`${timerIndex}.InputDeviceName`, inputDevice, true);
+      _this.setStateChanged(`${timerIndex}.lengthTimer`, lengthTimer, true);
+      _this.setStateChanged(`${timerIndex}.percent2`, percent2, true);
+      _this.setStateChanged(`${timerIndex}.percent`, percent, true);
+      _this.setStateChanged(`${timerIndex}.name`, timer.outPutTimerName(), true);
+      _this.setStateChanged(`${timerIndex}.json`, timer.getDataAsJson(), true);
+      _this.setStateChanged("all_Timer.alive", !reset, true);
     }
   } catch (e) {
     (0, import_logging.errorLogger)("Error in writeState", e, _this);

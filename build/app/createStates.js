@@ -16,14 +16,14 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var state_exports = {};
-__export(state_exports, {
-  createState: () => createState
+var createStates_exports = {};
+__export(createStates_exports, {
+  createStates: () => createStates
 });
-module.exports = __toCommonJS(state_exports);
+module.exports = __toCommonJS(createStates_exports);
 var import_store = require("../store/store");
-var import_logging = require("./logging");
-const createState = async (value) => {
+var import_logging = require("../lib/logging");
+const createStates = async (value) => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
   try {
@@ -229,6 +229,6 @@ const createState = async (value) => {
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  createState
+  createStates
 });
-//# sourceMappingURL=state.js.map
+//# sourceMappingURL=createStates.js.map

@@ -81,11 +81,8 @@ class Timer {
   getName() {
     return this.name;
   }
-  getSerialNumber() {
-    return this.deviceSerialNumber;
-  }
-  getAlexaTimerName() {
-    return this.alexaTimerName;
+  getTimerIndex() {
+    return this.timerIndex;
   }
   getOutputProperties() {
     return {
@@ -108,9 +105,6 @@ class Timer {
   }
   getVoiceInputAsSeconds() {
     return this.voiceInputAsSeconds;
-  }
-  getId() {
-    return this.timerId;
   }
   getInterval() {
     return this.interval;
@@ -200,9 +194,6 @@ class Timer {
   setLengthTimer(length) {
     this.lengthTimer = length;
   }
-  setId(id) {
-    this.timerId = id;
-  }
   async setIdFromEcoDeviceTimerList() {
     try {
       const activeTimerListId = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.activeTimerList`;
@@ -221,9 +212,6 @@ class Timer {
   }
   setInterval(interval) {
     this.interval = interval;
-  }
-  setAlexaTimerName(name) {
-    this.alexaTimerName = name;
   }
   setStartAndEndTime({ startTimeString, creationTime, endTimeString, endTimeNumber }) {
     this.creationTime = creationTime;

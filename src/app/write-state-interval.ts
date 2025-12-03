@@ -1,7 +1,7 @@
-import { useStore } from '../store/store';
-import { errorLogger } from './logging';
-import { timerObject } from '../config/timer-data';
-import { writeState } from './write-state';
+import { useStore } from '@/store/store';
+import { timerObject } from '@/config/timer-data';
+import { writeState } from '@/app/write-state';
+import { errorLogger } from '@/lib/logging';
 
 export const writeStateIntervall = (): void => {
     const store = useStore();

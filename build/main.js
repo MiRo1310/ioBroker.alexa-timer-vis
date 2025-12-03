@@ -33,11 +33,11 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_decompose_input_value = require("./lib/decompose-input-value");
-var import_delete_timer = require("./lib/delete-timer");
+var import_decompose_input_value = require("./app/decompose-input-value");
+var import_delete_timer = require("./app/delete-timer");
 var import_global = require("./lib/global");
 var import_logging = require("./lib/logging");
-var import_reset = require("./lib/reset");
+var import_reset = require("./app/reset");
 var import_set_adapter_status = require("./lib/set-adapter-status");
 var import_timer_add = require("./lib/timer-add");
 var import_timer_data = require("./config/timer-data");
@@ -46,7 +46,7 @@ var import_store = require("./store/store");
 var import_abort = require("./app/abort");
 var import_timer_delete = require("./lib/timer-delete");
 var import_timer_extend_or_shorten = require("./lib/timer-extend-or-shorten");
-var import_write_state = require("./lib/write-state");
+var import_write_state = require("./app/write-state");
 let timeout_1;
 let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
@@ -111,7 +111,7 @@ class AlexaTimerVis extends utils.Adapter {
             voiceInput = res == null ? void 0 : res.val;
             this.log.debug(`VoiceInput: ${voiceInput}`);
           }
-          const abortWord = (0, import_abort.getAbortWord)(voiceInput, this);
+          const abortWord = (0, import_abort.getAbortWord)(voiceInput);
           if (abortWord) {
             this.log.debug(`Found abort word: ${abortWord}`);
             return;

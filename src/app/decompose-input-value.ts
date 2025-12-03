@@ -1,5 +1,5 @@
 import { useStore } from '@/store/store';
-import { filterInfo } from '@/lib/filter-info';
+import { parseTimeInput } from '@/lib/parse-time-input';
 import { errorLogger } from '@/lib/logging';
 
 export const decomposeInputValue = (
@@ -16,7 +16,7 @@ export const decomposeInputValue = (
         let inputDecomposed = voiceString.split(',');
         inputDecomposed = inputDecomposed[0].split(' ');
 
-        const { timerString, name, deleteVal } = filterInfo(inputDecomposed);
+        const { timerString, name, deleteVal } = parseTimeInput(inputDecomposed);
         return { name, timerSec: eval(timerString), deleteVal };
     } catch (e: any) {
         _this.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceString}`);

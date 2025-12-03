@@ -9,10 +9,10 @@ export const oneOfMultiTimerDelete = (input: string, timeSec: number, name: stri
 
     // Über prüfen ob die Antwort eine Zahl ist oder ein Name
     for (const element of separateInputArray) {
-        if (timerObject.zuweisung[element as keyof typeof timerObject.zuweisung] > 0) {
+        if (timerObject.assignment[element as keyof typeof timerObject.assignment] > 0) {
             // Es handelt sich um eine Zahl die im Array gefunden wurde
 
-            timerNumber = timerObject.zuweisung[element as keyof typeof timerObject.zuweisung];
+            timerNumber = timerObject.assignment[element as keyof typeof timerObject.assignment];
         } else {
             name = separateInput.replace('timer', '').trim();
             timerNumber = 0;

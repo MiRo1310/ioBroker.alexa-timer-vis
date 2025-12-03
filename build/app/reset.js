@@ -23,11 +23,15 @@ __export(reset_exports, {
 });
 module.exports = __toCommonJS(reset_exports);
 var import_store = require("../store/store");
-var import_logging = require("./logging");
+var import_logging = require("../lib/logging");
 var import_timer_data = require("../config/timer-data");
-var import_write_state = require("./write-state");
-const resetValues = async (timer, index) => {
+var import_write_state = require("../app/write-state");
+const resetValues = async (timer) => {
   const { _this, getAlexaTimerVisInstance } = (0, import_store.useStore)();
+  const index = timer.getTimerIndex();
+  if (!index) {
+    return;
+  }
   try {
     import_timer_data.timerObject.timerActive.timer[index] = false;
     _this.log.debug(JSON.stringify(import_timer_data.timerObject.timerActive));
@@ -43,7 +47,7 @@ const resetValues = async (timer, index) => {
 };
 function resetAllTimerValuesAndState(_this) {
   Object.keys(import_timer_data.timerObject.timer).forEach((el) => {
-    resetValues(import_timer_data.timerObject.timer[el], el).catch((e) => {
+    resetValues(import_timer_data.timerObject.timer[el]).catch((e) => {
       (0, import_logging.errorLogger)("Error in resetAllTimerValuesAndState", e, _this);
     });
     (0, import_write_state.writeState)({ reset: true }).catch((e) => {

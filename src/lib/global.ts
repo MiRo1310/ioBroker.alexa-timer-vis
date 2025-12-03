@@ -1,5 +1,5 @@
-import type { Store } from '../types/types';
-import { useStore } from '../store/store';
+import type { Store } from '@/types/types';
+import { useStore } from '@/store/store';
 
 export const secToHourMinSec = (
     valSec: number,

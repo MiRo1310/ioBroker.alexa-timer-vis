@@ -15,8 +15,6 @@ export interface AlexaActiveTimerList {
     triggerTime: number;
 }
 
-export type TimerSelector = keyof Timers;
-
 export type TimerCondition =
     | 'ShortenNotificationIntent'
     | 'ExtendNotificationIntent'
@@ -26,6 +24,71 @@ export type TimerCondition =
 export type TimerIndex = string;
 
 export type Timers = Record<TimerIndex, Timer>;
+
+interface SingleNumbers {
+    eins: number;
+    ein: number;
+    one: number;
+    eine: number;
+    zwei: number;
+    zwo: number;
+    two: number;
+    drei: number;
+    three: number;
+    vier: number;
+    four: number;
+    fünf: number;
+    five: number;
+    sechs: number;
+    six: number;
+    sieben: number;
+    seven: number;
+    acht: number;
+    eight: number;
+    neun: number;
+    nine: number;
+}
+
+interface Numbers {
+    zehn: number;
+    ten: number;
+    elf: number;
+    eleven: number;
+    zwölf: number;
+    twelve: number;
+    dreizehn: number;
+    thirteen: number;
+    vierzehn: number;
+    fourteen: number;
+    fünfzehn: number;
+    fifteen: number;
+    sechzehn: number;
+    sixteen: number;
+    siebzehn: number;
+    seventeen: number;
+    achtzehn: number;
+    eighteen: number;
+    neunzehn: number;
+    nineteen: number;
+    zwanzig: number;
+    twenty: number;
+    dreißig: number;
+    thirty: number;
+    vierzig: number;
+    fourty: number;
+    fünfzig: number;
+    fifty: number;
+    sechzig: number;
+    sixty: number;
+    siebzig: number;
+    seventy: number;
+    achtzig: number;
+    eighty: number;
+    neunzig: number;
+    ninety: number;
+    hundert: number;
+    hundred: number;
+}
 
 export interface TimerObject {
     timerActive: {
@@ -44,77 +107,18 @@ export interface TimerObject {
         timer: Record<keyof Timers, boolean>;
     };
     timer: Timers;
-    brueche1: {
+    fraction: {
         halbe: number;
-        halb: string;
-    };
-    brueche2: {
+        halb: number;
         viertelstunde: number;
         dreiviertelstunde: number;
+        dreiviertel: number;
+        viertel: number;
     };
-    zahlen: {
-        eins: number;
-        ein: number;
-        one: number;
-        eine: number;
-        zwei: number;
-        zwo: number;
-        two: number;
-        drei: number;
-        three: number;
-        vier: number;
-        four: number;
-        fünf: number;
-        five: number;
-        sechs: number;
-        six: number;
-        sieben: number;
-        seven: number;
-        acht: number;
-        eight: number;
-        neun: number;
-        nine: number;
-        zehn: number;
-        ten: number;
-        elf: number;
-        eleven: number;
-        zwölf: number;
-        twelve: number;
-        dreizehn: number;
-        thirteen: number;
-        vierzehn: number;
-        fourteen: number;
-        fünfzehn: number;
-        fifteen: number;
-        sechzehn: number;
-        sixteen: number;
-        siebzehn: number;
-        seventeen: number;
-        achtzehn: number;
-        eighteen: number;
-        neunzehn: number;
-        nineteen: number;
-        zwanzig: number;
-        twenty: number;
-        dreißig: number;
-        thirty: number;
-        vierzig: number;
-        fourty: number;
-        fünfzig: number;
-        fifty: number;
-        sechzig: number;
-        sixty: number;
-        siebzig: number;
-        seventy: number;
-        achtzig: number;
-        eighty: number;
-        neunzig: number;
-        ninety: number;
-        hundert: number;
-        hundred: number;
-    };
-    ziffern: string[];
-    zuweisung: {
+    numbers: Numbers & SingleNumbers;
+    singleNumbers: SingleNumbers;
+    digits: string[];
+    assignment: {
         erster: number;
         eins: number;
         zweiter: number;
@@ -190,4 +194,38 @@ export interface AlexaActiveTimerList {
     id: string;
     label: string | null;
     triggerTime: number;
+}
+
+export interface OutputProperties {
+    hours: string;
+    minutes: string;
+    seconds: string;
+    stringTimer1: string;
+    stringTimer2: string;
+    startTimeString: string;
+    endTimeNumber: number;
+    endTimeString: string;
+    inputDevice: string;
+    lengthTimer: string;
+    percent: number;
+    percent2: number;
+}
+
+export interface InputProperties {
+    remainingTimeInSeconds: number;
+    name: string;
+    index: TimerIndex;
+    hours: string;
+    minutes: string;
+    seconds: string;
+    stringTimer1: string;
+    stringTimer2: string;
+    lengthTimer: string;
+}
+
+export interface StartAndEndTime {
+    creationTime: number;
+    startTimeString: string;
+    endTimeNumber: number;
+    endTimeString: string;
 }

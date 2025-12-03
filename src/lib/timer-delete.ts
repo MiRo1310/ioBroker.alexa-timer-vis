@@ -1,4 +1,4 @@
-import { delTimer } from './delete-timer';
+import { delTimer } from '../app/delete-timer';
 import { findTimer } from './find-timer';
 import { oneOfMultiTimerDelete } from './one-timer-to-delete';
 import { useStore } from '../store/store';
@@ -33,7 +33,7 @@ export const timerDelete = async (
 
     await findTimer(timerAbortSec, name, deleteTimerIndex, voiceInput).then(timers => {
         try {
-            if (timers.timer) {
+            if (timers.timer.length) {
                 timers.timer.forEach(element => {
                     delTimer(element);
                 });

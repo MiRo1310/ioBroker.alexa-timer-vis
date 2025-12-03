@@ -1,7 +1,7 @@
 import { startTimer } from './start-timer';
-import { createState } from './state';
+import { createStates } from '../app/createStates';
 import { timerObject } from '@/config/timer-data';
-import { writeStateIntervall } from './write-state-interval';
+import { writeStateIntervall } from '../app/write-state-interval';
 import { isStringEmpty } from './global';
 import { errorLogger } from './logging';
 import { useStore } from '@/store/store';
@@ -15,9 +15,8 @@ function addNewRawTimer(timerIndex: string): void {
     });
 }
 
-export const timerAdd = (decomposeName: string, timerSec: number): void => {
+export const timerAdd = (name: string, timerSec: number): void => {
     const { _this } = useStore();
-    const name = decomposeName;
 
     if (timerSec && timerSec != 0) {
         let nameExist = false;
@@ -33,7 +32,7 @@ export const timerAdd = (decomposeName: string, timerSec: number): void => {
         if (!nameExist) {
             timerObject.timerActive.timerCount++;
 
-            createState(timerObject.timerActive.timerCount).catch((e: any) => {
+            createStates(timerObject.timerActive.timerCount).catch((e: any) => {
                 errorLogger('Error in timerAdd', e, _this);
             });
 

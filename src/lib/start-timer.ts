@@ -32,13 +32,13 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
         await timer.setIdFromEcoDeviceTimerList();
 
         if (isMoreThanAMinute(sec)) {
-            interval(sec, timerIndex, name, timer, store.intervalMore60 * 1000, false);
+            interval(sec, name, timer, store.intervalMore60 * 1000, false);
             return;
         }
 
         timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1000);
 
-        interval(sec, timerIndex, name, timer, store.intervalLess60 * 1000, true);
+        interval(sec, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {
         errorLogger('Error in startTimer', e, _this);
     }

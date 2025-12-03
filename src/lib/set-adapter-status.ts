@@ -1,5 +1,5 @@
 import { useStore } from '../store/store';
-import { createState } from './state';
+import { createStates } from '../app/createStates';
 
 export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
     const store = useStore();
@@ -13,5 +13,5 @@ export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
     _this.log.info('Alexa State was found');
     await _this.setState('info.connection', true, true);
 
-    await createState(4);
+    await createStates(4);
 };

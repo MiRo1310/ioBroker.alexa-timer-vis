@@ -50,11 +50,11 @@ const startTimer = async (sec, name) => {
     timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
     await timer.setIdFromEcoDeviceTimerList();
     if (isMoreThanAMinute(sec)) {
-      (0, import_interval.interval)(sec, timerIndex, name, timer, store.intervalMore60 * 1e3, false);
+      (0, import_interval.interval)(sec, name, timer, store.intervalMore60 * 1e3, false);
       return;
     }
     import_timer_data.timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1e3);
-    (0, import_interval.interval)(sec, timerIndex, name, timer, store.intervalLess60 * 1e3, true);
+    (0, import_interval.interval)(sec, name, timer, store.intervalLess60 * 1e3, true);
   } catch (e) {
     (0, import_logging.errorLogger)("Error in startTimer", e, _this);
   }

@@ -22,7 +22,7 @@ __export(set_adapter_status_exports, {
 });
 module.exports = __toCommonJS(set_adapter_status_exports);
 var import_store = require("../store/store");
-var import_state = require("./state");
+var import_createStates = require("../app/createStates");
 const setAdapterStatusAndInitStateCreation = async () => {
   const store = (0, import_store.useStore)();
   const _this = store._this;
@@ -33,7 +33,7 @@ const setAdapterStatusAndInitStateCreation = async () => {
   }
   _this.log.info("Alexa State was found");
   await _this.setState("info.connection", true, true);
-  await (0, import_state.createState)(4);
+  await (0, import_createStates.createStates)(4);
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

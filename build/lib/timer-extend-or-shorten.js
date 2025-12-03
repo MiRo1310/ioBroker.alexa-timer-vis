@@ -24,7 +24,7 @@ __export(timer_extend_or_shorten_exports, {
 module.exports = __toCommonJS(timer_extend_or_shorten_exports);
 var import_store = require("../store/store");
 var import_timer_data = require("../config/timer-data");
-var import_filter_info = require("../lib/filter-info");
+var import_parse_time_input = require("../lib/parse-time-input");
 var import_find_timer = require("../lib/find-timer");
 var import_logging = require("../lib/logging");
 const extendOrShortTimer = async ({
@@ -41,9 +41,9 @@ const extendOrShortTimer = async ({
     if (voiceInput.includes("um")) {
       firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf("um")).split(" ");
       valueExtend = voiceInput.slice(voiceInput.indexOf("um") + 2).split(" ");
-      const { timerString } = (0, import_filter_info.filterInfo)(firstPartOfValue);
+      const { timerString } = (0, import_parse_time_input.parseTimeInput)(firstPartOfValue);
       extendTime = eval(timerString);
-      const { timerString: string2 } = (0, import_filter_info.filterInfo)(valueExtend);
+      const { timerString: string2 } = (0, import_parse_time_input.parseTimeInput)(valueExtend);
       extendTime2 = eval(string2);
     }
     const timers = await (0, import_find_timer.findTimer)(extendTime, decomposeName, 1, voiceInput);

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/app/delete-timer.ts"],
+  "sourcesContent": ["import { timerObject } from '@/config/timer-data';\nimport { resetValues } from '@/app/reset';\nimport { useStore } from '@/store/store';\nimport { errorLogger } from '@/lib/logging';\nimport type { TimerIndex } from '@/types/types';\n\nexport const removeTimerInLastTimers = (): void => {\n    const store = useStore();\n    store.lastTimer = { id: '', timerIndex: '', timerSerial: '' };\n};\n\nexport const delTimer = (timer: TimerIndex): void => {\n    resetValues(timerObject.timer[timer]).catch((e: any) => {\n        errorLogger('Error in delTimer', e, useStore()._this);\n    });\n    timerObject.timerActive.timer[timer] = false;\n    removeTimerInLastTimers();\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAC5B,mBAA4B;AAC5B,mBAAyB;AACzB,qBAA4B;AAGrB,MAAM,0BAA0B,MAAY;AAC/C,QAAM,YAAQ,uBAAS;AACvB,QAAM,YAAY,EAAE,IAAI,IAAI,YAAY,IAAI,aAAa,GAAG;AAChE;AAEO,MAAM,WAAW,CAAC,UAA4B;AACjD,gCAAY,8BAAY,MAAM,KAAK,CAAC,EAAE,MAAM,CAAC,MAAW;AACpD,oCAAY,qBAAqB,OAAG,uBAAS,EAAE,KAAK;AAAA,EACxD,CAAC;AACD,gCAAY,YAAY,MAAM,KAAK,IAAI;AACvC,0BAAwB;AAC5B;",
+  "names": []
+}

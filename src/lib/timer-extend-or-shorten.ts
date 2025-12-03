@@ -1,7 +1,7 @@
 import type { Store, TimerIndex, TimerObject } from '@/types/types';
 import { useStore } from '@/store/store';
 import { timerObject } from '@/config/timer-data';
-import { filterInfo } from '@/lib/filter-info';
+import { parseTimeInput } from '@/lib/parse-time-input';
 import { findTimer } from '@/lib/find-timer';
 import { errorLogger } from '@/lib/logging';
 
@@ -25,9 +25,9 @@ export const extendOrShortTimer = async ({
             firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf('um')).split(' ');
             valueExtend = voiceInput.slice(voiceInput.indexOf('um') + 2).split(' ');
 
-            const { timerString } = filterInfo(firstPartOfValue);
+            const { timerString } = parseTimeInput(firstPartOfValue);
             extendTime = eval(timerString);
-            const { timerString: string2 } = filterInfo(valueExtend);
+            const { timerString: string2 } = parseTimeInput(valueExtend);
             extendTime2 = eval(string2);
         }
 

@@ -23,15 +23,15 @@ __export(delete_timer_exports, {
 });
 module.exports = __toCommonJS(delete_timer_exports);
 var import_timer_data = require("../config/timer-data");
-var import_reset = require("./reset");
+var import_reset = require("../app/reset");
 var import_store = require("../store/store");
-var import_logging = require("./logging");
+var import_logging = require("../lib/logging");
 const removeTimerInLastTimers = () => {
   const store = (0, import_store.useStore)();
   store.lastTimer = { id: "", timerIndex: "", timerSerial: "" };
 };
 const delTimer = (timer) => {
-  (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer], timer).catch((e) => {
+  (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer]).catch((e) => {
     (0, import_logging.errorLogger)("Error in delTimer", e, (0, import_store.useStore)()._this);
   });
   import_timer_data.timerObject.timerActive.timer[timer] = false;

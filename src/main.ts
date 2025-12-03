@@ -1,14 +1,14 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
-import { decomposeInputValue } from '@/lib/decompose-input-value';
-import { delTimer } from '@/lib/delete-timer';
+import { decomposeInputValue } from '@/app/decompose-input-value';
+import { delTimer } from '@/app/delete-timer';
 import {
     doesAlexaSendAQuestion,
     isAlexaSummaryStateChanged as isAlexaStateToListenToChanged,
     isIobrokerValue,
 } from '@/lib/global';
 import { errorLogger } from '@/lib/logging';
-import { resetAllTimerValuesAndState } from '@/lib/reset';
+import { resetAllTimerValuesAndState } from '@/app/reset';
 import { setAdapterStatusAndInitStateCreation } from '@/lib/set-adapter-status';
 import { timerAdd } from '@/lib/timer-add';
 import { timerObject } from '@/config/timer-data';
@@ -18,7 +18,7 @@ import type { TimerCondition } from '@/types/types';
 import { getAbortWord } from '@/app/abort';
 import { timerDelete } from '@/lib/timer-delete';
 import { extendOrShortTimer } from '@/lib/timer-extend-or-shorten';
-import { writeState } from '@/lib/write-state';
+import { writeState } from '@/app/write-state';
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
@@ -96,7 +96,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                         voiceInput = res?.val as string;
                         this.log.debug(`VoiceInput: ${voiceInput}`);
                     }
-                    const abortWord = getAbortWord(voiceInput, this);
+                    const abortWord = getAbortWord(voiceInput);
                     if (abortWord) {
                         this.log.debug(`Found abort word: ${abortWord}`);
                         return;

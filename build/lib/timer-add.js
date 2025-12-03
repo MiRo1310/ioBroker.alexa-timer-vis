@@ -22,9 +22,9 @@ __export(timer_add_exports, {
 });
 module.exports = __toCommonJS(timer_add_exports);
 var import_start_timer = require("./start-timer");
-var import_state = require("./state");
+var import_createStates = require("../app/createStates");
 var import_timer_data = require("../config/timer-data");
-var import_write_state_interval = require("./write-state-interval");
+var import_write_state_interval = require("../app/write-state-interval");
 var import_global = require("./global");
 var import_logging = require("./logging");
 var import_store = require("../store/store");
@@ -35,9 +35,8 @@ function addNewRawTimer(timerIndex) {
     store: (0, import_store.useStore)()
   });
 }
-const timerAdd = (decomposeName, timerSec) => {
+const timerAdd = (name, timerSec) => {
   const { _this } = (0, import_store.useStore)();
-  const name = decomposeName;
   if (timerSec && timerSec != 0) {
     let nameExist = false;
     for (const element in import_timer_data.timerObject.timer) {
@@ -48,7 +47,7 @@ const timerAdd = (decomposeName, timerSec) => {
     }
     if (!nameExist) {
       import_timer_data.timerObject.timerActive.timerCount++;
-      (0, import_state.createState)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
+      (0, import_createStates.createStates)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
         (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
       });
       const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;

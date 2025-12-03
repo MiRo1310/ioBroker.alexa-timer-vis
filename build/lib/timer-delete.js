@@ -21,7 +21,7 @@ __export(timer_delete_exports, {
   timerDelete: () => timerDelete
 });
 module.exports = __toCommonJS(timer_delete_exports);
-var import_delete_timer = require("./delete-timer");
+var import_delete_timer = require("../app/delete-timer");
 var import_find_timer = require("./find-timer");
 var import_one_timer_to_delete = require("./one-timer-to-delete");
 var import_store = require("../store/store");
@@ -46,7 +46,7 @@ const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
   }
   await (0, import_find_timer.findTimer)(timerAbortSec, name, deleteTimerIndex, voiceInput).then((timers) => {
     try {
-      if (timers.timer) {
+      if (timers.timer.length) {
         timers.timer.forEach((element) => {
           (0, import_delete_timer.delTimer)(element);
         });

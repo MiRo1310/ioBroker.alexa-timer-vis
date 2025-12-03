@@ -1,9 +1,9 @@
-import type { GenerateTimeStringObject, Store, TimerSelector } from '@/types/types';
+import type { GenerateTimeStringObject, Store, TimerIndex } from '@/types/types';
 import { useStore } from '@/store/store';
 import { secToHourMinSec } from '@/lib//global';
 import type { Timer } from '@/app/timer';
 
-export const generateValues = (timer: Timer, sec: number, index: TimerSelector, name: string): number => {
+export const generateValues = (timer: Timer, sec: number, index: TimerIndex, name: string): number => {
     const store = useStore();
 
     const timeLeft = timer.getOutputProperties().endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec

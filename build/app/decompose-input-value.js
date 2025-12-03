@@ -22,7 +22,7 @@ __export(decompose_input_value_exports, {
 });
 module.exports = __toCommonJS(decompose_input_value_exports);
 var import_store = require("../store/store");
-var import_filter_info = require("../lib/filter-info");
+var import_parse_time_input = require("../lib/parse-time-input");
 var import_logging = require("../lib/logging");
 const decomposeInputValue = (voiceString) => {
   const store = (0, import_store.useStore)();
@@ -30,7 +30,7 @@ const decomposeInputValue = (voiceString) => {
   try {
     let inputDecomposed = voiceString.split(",");
     inputDecomposed = inputDecomposed[0].split(" ");
-    const { timerString, name, deleteVal } = (0, import_filter_info.filterInfo)(inputDecomposed);
+    const { timerString, name, deleteVal } = (0, import_parse_time_input.parseTimeInput)(inputDecomposed);
     return { name, timerSec: eval(timerString), deleteVal };
   } catch (e) {
     _this.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceString}`);

@@ -21,6 +21,29 @@ __export(timer_data_exports, {
   timerObject: () => timerObject
 });
 module.exports = __toCommonJS(timer_data_exports);
+const singleNumbers = {
+  eins: 1,
+  ein: 1,
+  one: 1,
+  eine: 1,
+  zwei: 2,
+  zwo: 2,
+  two: 2,
+  drei: 3,
+  three: 3,
+  vier: 4,
+  four: 4,
+  f\u00FCnf: 5,
+  five: 5,
+  sechs: 6,
+  six: 6,
+  sieben: 7,
+  seven: 7,
+  acht: 8,
+  eight: 8,
+  neun: 9,
+  nine: 9
+};
 const timerObject = {
   timerActive: {
     timerCount: 0,
@@ -74,37 +97,17 @@ const timerObject = {
     }
   },
   timer: {},
-  brueche1: {
+  fraction: {
     halbe: 0.5,
-    halb: "1+0.5"
-  },
-  brueche2: {
+    halb: 0.5,
     viertelstunde: 0.25,
-    dreiviertelstunde: 0.75
+    dreiviertelstunde: 0.75,
+    dreiviertel: 0.75,
+    viertel: 0.25
   },
-  zahlen: {
+  numbers: {
     // Zahl als Wort zu Zahl nummerisch
-    eins: 1,
-    ein: 1,
-    one: 1,
-    eine: 1,
-    zwei: 2,
-    zwo: 2,
-    two: 2,
-    drei: 3,
-    three: 3,
-    vier: 4,
-    four: 4,
-    f\u00FCnf: 5,
-    five: 5,
-    sechs: 6,
-    six: 6,
-    sieben: 7,
-    seven: 7,
-    acht: 8,
-    eight: 8,
-    neun: 9,
-    nine: 9,
+    ...singleNumbers,
     zehn: 10,
     ten: 10,
     elf: 11,
@@ -144,8 +147,9 @@ const timerObject = {
     hundert: 100,
     hundred: 100
   },
-  ziffern: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-  zuweisung: {
+  singleNumbers,
+  digits: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  assignment: {
     erster: 1,
     eins: 1,
     zweiter: 2,
