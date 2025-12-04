@@ -5,7 +5,7 @@ export const errorLogger = (title: string, e: any): void => {
     if (adapter?.supportsFeature && adapter.supportsFeature('PLUGINS')) {
         const sentryInstance = adapter.getPluginInstance('sentry');
         if (sentryInstance) {
-            sentryInstance.getSentryObject().captureException(e);
+            sentryInstance.getSentryObject()?.captureException(e);
         }
     }
     if (!adapter || !adapter.log) {

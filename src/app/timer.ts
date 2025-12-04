@@ -9,6 +9,7 @@ import { firstLetterToUpperCase, isIobrokerValue } from '@/lib/global';
 import { errorLogger } from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
+import { timerObject } from '@/config/timer-data';
 
 export class Timer {
     private hours: string;
@@ -45,7 +46,7 @@ export class Timer {
         this.stringTimer1 = '';
         this.stringTimer2 = '';
         this.voiceInputAsSeconds = 0;
-        this.timerIndex = null;
+        this.timerIndex = '';
         this.name = '';
         this.alexaTimerName = null;
         this.creationTime = 0;
@@ -138,7 +139,8 @@ export class Timer {
         });
     }
 
-    async init(): Promise<void> {
+    async init(timerIndex: TimerIndex): Promise<void> {
+        this.timerIndex = timerIndex;
         try {
             const instance = Store.getAlexaInstanceObject().instance;
             this.alexaInstance = instance;
@@ -157,7 +159,6 @@ export class Timer {
 
             const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
             await this.setForeignActiveTimerListSubscription(foreignId);
-            Store.lastTimer = { timerSerial: serial, timerIndex: this.timerIndex ?? '', id: foreignId };
             this.foreignActiveTimerListId = foreignId;
 
             await this.setDeviceNameInStateName();
@@ -191,13 +192,11 @@ export class Timer {
             const activeTimerList = activeTimerListState?.val
                 ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[])
                 : [];
-            const filteredList = activeTimerList.filter(t => t.triggerTime >= this.endTimeNumber);
-            const activeTimer = filteredList.reduce((previousValue, t) => {
-                return previousValue.triggerTime >= t.triggerTime ? t : previousValue;
-            }, filteredList[0]);
 
-            if (activeTimer) {
-                this.timerId = activeTimer.id;
+            const activeTimerId = Store.addNewActiveTimerId(activeTimerList);
+
+            if (activeTimerId) {
+                this.timerId = activeTimerId;
             }
         } catch (error) {
             errorLogger('Error in setIdFromEcoDeviceTimerList', error);
@@ -219,7 +218,6 @@ export class Timer {
         this.stringTimer1 = props.stringTimer1;
         this.stringTimer2 = props.stringTimer2;
         this.remainingTimeInSeconds = props.remainingTimeInSeconds;
-        this.timerIndex = props.index;
         this.lengthTimer = props.lengthTimer;
         this.setTimerName(props.name);
         this.mathPercent();
@@ -247,7 +245,6 @@ export class Timer {
         this.stringTimer2 = '';
         this.voiceInputAsSeconds = 0;
         this.remainingTimeInSeconds = 0;
-        this.timerIndex = null;
         this.name = '';
         this.alexaTimerName = '';
         this.creationTimeString = '00:00:00';
@@ -258,11 +255,15 @@ export class Timer {
         this.percent = 0;
         this.percent2 = 0;
         this.extendOrShortenTimer = false;
+        Store.removeActiveTimerId(this.timerId);
         this.timerId = '';
         this.deviceSerialNumber = '';
         this.creationTime = 0;
         this.endTimeNumber = 0;
-
+        if (this.timerIndex !== null) {
+            timerObject.timerActive.timer[this.timerIndex] = false;
+        }
+        this.timerIndex = null;
         this.resetForeignStateSubscription();
     }
     resetForeignStateSubscription(): void {

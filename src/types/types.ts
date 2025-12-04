@@ -1,12 +1,11 @@
-import type AlexaTimerVis from '../main';
-import type { Timer } from '../app/timer';
+import type AlexaTimerVis from '@/main';
+import type { Timer } from '@/app/timer';
 
 export interface GenerateTimeStringObject {
     timeString: string;
     hour: string;
     minutes: string;
     seconds: string;
-    store: StoreType;
 }
 
 export interface AlexaActiveTimerList {
@@ -137,23 +136,7 @@ export interface TimerObject {
 
 export interface StoreType {
     adapter: AlexaTimerVis;
-    valHourForZero: string;
-    valMinuteForZero: string;
-    valSecondForZero: string;
-    pathAlexaStateToListenTo: string;
-    pathAlexaSummary: string;
-    intervalMore60: number;
-    intervalLess60: number;
-    debounceTime: number;
-    unitHour1: string;
-    unitHour2: string;
-    unitHour3: string;
-    unitMinute1: string;
-    unitMinute2: string;
-    unitMinute3: string;
-    unitSecond1: string;
-    unitSecond2: string;
-    unitSecond3: string;
+    alexaTimerVisInstance: string;
 }
 
 export interface AlexaInstanceObject {
@@ -193,7 +176,6 @@ export interface OutputProperties {
 export interface InputProperties {
     remainingTimeInSeconds: number;
     name: string;
-    index: TimerIndex;
     hours: string;
     minutes: string;
     seconds: string;

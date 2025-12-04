@@ -63,36 +63,17 @@ class AlexaTimerVis extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
     AlexaTimerVis.instance = this;
   }
-  static getInstance() {
-    return AlexaTimerVis.instance;
-  }
   async onReady() {
     var _a;
-    import_store.default.init({
-      adapter: this,
-      intervalMore60: this.config.intervall1,
-      intervalLess60: this.config.intervall2,
-      unitHour1: this.config.unitHour1,
-      unitHour2: this.config.unitHour2,
-      unitHour3: this.config.unitHour3,
-      unitMinute1: this.config.unitMinute1,
-      unitMinute2: this.config.unitMinute2,
-      unitMinute3: this.config.unitMinute3,
-      unitSecond1: this.config.unitSecond1,
-      unitSecond3: this.config.unitSecond3,
-      unitSecond2: this.config.unitSecond2,
-      valHourForZero: this.config.valHourForZero,
-      valMinuteForZero: this.config.valMinuteForZero,
-      valSecondForZero: this.config.valSecondForZero,
-      debounceTime: this.config.entprellZeit,
-      pathAlexaStateToListenTo: `${this.config.alexa}.History.intent`,
-      pathAlexaSummary: `${this.config.alexa}.History.summary`
-    });
-    import_store.default.adapter = this;
-    await this.setState("info.connection", false, true);
     if (this.adapterConfig && "_id" in this.adapterConfig) {
-      import_store.default.alexaTimerVisInstance = (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "");
+      import_store.default.init({
+        adapter: this,
+        alexaTimerVisInstance: (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "")
+      });
+    } else {
+      return;
     }
+    await this.setState("info.connection", false, true);
     import_timer_data.timerObject.timer.timer1 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: import_store.default });

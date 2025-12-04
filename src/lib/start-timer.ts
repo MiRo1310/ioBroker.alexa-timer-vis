@@ -9,9 +9,11 @@ const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 
 export const startTimer = async (sec: number, name: string): Promise<void> => {
     try {
+        //TODO : Add test
         const timerIndex = getAvailableTimerIndex();
+
         if (!timerIndex) {
-            return;
+            throw new Error('TimerIndex was not found');
         }
         const alexaJson = await getAlexaParsedAlexaJson();
         if (!alexaJson) {
@@ -23,7 +25,8 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
         const endTimeNumber = creationTime + timerMilliseconds;
         const endTimeString = timeToString(endTimeNumber);
         const timer = timerObject.timer[timerIndex];
-        await timer.init();
+        await timer.init(timerIndex);
+        //TODO: mit in den init rein packen
         timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
 
         await timer.setIdFromEcoDeviceTimerList();

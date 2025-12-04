@@ -11,9 +11,8 @@ export const resetValues = async (timer: Timer): Promise<void> => {
         return;
     }
     try {
-        timerObject.timerActive.timer[index] = false; // Timer auf false setzen falls Zeit abgelaufen ist, ansonsten steht er schon auf false
-        adapter.log.debug(JSON.stringify(timerObject.timerActive));
         timer.reset();
+        adapter.log.debug(JSON.stringify(timerObject.timerActive));
 
         await adapter.setObject(getAlexaTimerVisInstance() + index, {
             type: 'device',

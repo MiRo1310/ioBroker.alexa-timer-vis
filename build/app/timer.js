@@ -34,6 +34,7 @@ module.exports = __toCommonJS(timer_exports);
 var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../store/store"));
+var import_timer_data = require("../config/timer-data");
 class Timer {
   hours;
   minutes;
@@ -68,7 +69,7 @@ class Timer {
     this.stringTimer1 = "";
     this.stringTimer2 = "";
     this.voiceInputAsSeconds = 0;
-    this.timerIndex = null;
+    this.timerIndex = "";
     this.name = "";
     this.alexaTimerName = null;
     this.creationTime = 0;
@@ -159,8 +160,8 @@ class Timer {
       timerId: this.timerId
     });
   }
-  async init() {
-    var _a;
+  async init(timerIndex) {
+    this.timerIndex = timerIndex;
     try {
       const instance = import_store.default.getAlexaInstanceObject().instance;
       this.alexaInstance = instance;
@@ -175,7 +176,6 @@ class Timer {
       const serial = this.deviceSerialNumber;
       const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
       await this.setForeignActiveTimerListSubscription(foreignId);
-      import_store.default.lastTimer = { timerSerial: serial, timerIndex: (_a = this.timerIndex) != null ? _a : "", id: foreignId };
       this.foreignActiveTimerListId = foreignId;
       await this.setDeviceNameInStateName();
     } catch (error) {
@@ -206,12 +206,9 @@ class Timer {
       const activeTimerListId = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.activeTimerList`;
       const activeTimerListState = await this.adapter.getForeignStateAsync(activeTimerListId);
       const activeTimerList = (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
-      const filteredList = activeTimerList.filter((t) => t.triggerTime >= this.endTimeNumber);
-      const activeTimer = filteredList.reduce((previousValue, t) => {
-        return previousValue.triggerTime >= t.triggerTime ? t : previousValue;
-      }, filteredList[0]);
-      if (activeTimer) {
-        this.timerId = activeTimer.id;
+      const activeTimerId = import_store.default.addNewActiveTimerId(activeTimerList);
+      if (activeTimerId) {
+        this.timerId = activeTimerId;
       }
     } catch (error) {
       (0, import_logging.errorLogger)("Error in setIdFromEcoDeviceTimerList", error);
@@ -233,7 +230,6 @@ class Timer {
     this.stringTimer1 = props.stringTimer1;
     this.stringTimer2 = props.stringTimer2;
     this.remainingTimeInSeconds = props.remainingTimeInSeconds;
-    this.timerIndex = props.index;
     this.lengthTimer = props.lengthTimer;
     this.setTimerName(props.name);
     this.mathPercent();
@@ -261,7 +257,6 @@ class Timer {
     this.stringTimer2 = "";
     this.voiceInputAsSeconds = 0;
     this.remainingTimeInSeconds = 0;
-    this.timerIndex = null;
     this.name = "";
     this.alexaTimerName = "";
     this.creationTimeString = "00:00:00";
@@ -272,10 +267,15 @@ class Timer {
     this.percent = 0;
     this.percent2 = 0;
     this.extendOrShortenTimer = false;
+    import_store.default.removeActiveTimerId(this.timerId);
     this.timerId = "";
     this.deviceSerialNumber = "";
     this.creationTime = 0;
     this.endTimeNumber = 0;
+    if (this.timerIndex !== null) {
+      import_timer_data.timerObject.timerActive.timer[this.timerIndex] = false;
+    }
+    this.timerIndex = null;
     this.resetForeignStateSubscription();
   }
   resetForeignStateSubscription() {

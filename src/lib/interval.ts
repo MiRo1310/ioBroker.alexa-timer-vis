@@ -11,19 +11,15 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
     const timerIndex = timer.getTimerIndex();
 
     if (!timerIndex) {
-        return;
+        throw new Error('TimerIndex was not set');
     }
-    generateValues(timer, sec, timerIndex, name);
+    generateValues(timer, sec, name);
 
     const { string } = secToHourMinSec(sec, false);
     timer.setLengthTimer(string);
 
-    if (!timerIndex) {
-        return;
-    }
-
     timerObject.interval[timerIndex as keyof typeof timerObject.interval] = adapter.setInterval(() => {
-        const timeLeftSec = generateValues(timer, sec, timerIndex, name);
+        const timeLeftSec = generateValues(timer, sec, name);
         const ioBrokerInterval = timerObject.interval[timerIndex as keyof typeof timerObject.interval];
         if (timeLeftSec <= 60 && !onlyOneTimer) {
             onlyOneTimer = true;

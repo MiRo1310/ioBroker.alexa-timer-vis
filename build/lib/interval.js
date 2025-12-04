@@ -41,16 +41,13 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
   if (!timerIndex) {
-    return;
+    throw new Error("TimerIndex was not set");
   }
-  (0, import_generate_values.generateValues)(timer, sec, timerIndex, name);
+  (0, import_generate_values.generateValues)(timer, sec, name);
   const { string } = (0, import_global.secToHourMinSec)(sec, false);
   timer.setLengthTimer(string);
-  if (!timerIndex) {
-    return;
-  }
   import_timer_data.timerObject.interval[timerIndex] = adapter.setInterval(() => {
-    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, timerIndex, name);
+    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, name);
     const ioBrokerInterval = import_timer_data.timerObject.interval[timerIndex];
     if (timeLeftSec <= 60 && !onlyOneTimer) {
       onlyOneTimer = true;

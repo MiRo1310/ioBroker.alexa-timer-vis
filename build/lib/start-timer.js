@@ -42,7 +42,7 @@ const startTimer = async (sec, name) => {
   try {
     const timerIndex = getAvailableTimerIndex();
     if (!timerIndex) {
-      return;
+      throw new Error("TimerIndex was not found");
     }
     const alexaJson = await getAlexaParsedAlexaJson();
     if (!alexaJson) {
@@ -54,7 +54,7 @@ const startTimer = async (sec, name) => {
     const endTimeNumber = creationTime + timerMilliseconds;
     const endTimeString = (0, import_global.timeToString)(endTimeNumber);
     const timer = import_timer_data.timerObject.timer[timerIndex];
-    await timer.init();
+    await timer.init(timerIndex);
     timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
     await timer.setIdFromEcoDeviceTimerList();
     if (isMoreThanAMinute(sec)) {

@@ -43,9 +43,8 @@ const resetValues = async (timer) => {
     return;
   }
   try {
-    import_timer_data.timerObject.timerActive.timer[index] = false;
-    adapter.log.debug(JSON.stringify(import_timer_data.timerObject.timerActive));
     timer.reset();
+    adapter.log.debug(JSON.stringify(import_timer_data.timerObject.timerActive));
     await adapter.setObject(getAlexaTimerVisInstance() + index, {
       type: "device",
       common: { name: `` },

@@ -23,11 +23,8 @@ class Store {
     timerAction: TimerCondition | null | undefined;
     questionAlexa: boolean;
     interval: ioBroker.Interval | null | undefined;
-    deviceSerialNumber: string | null;
-    deviceName: string | null;
-    lastTimer: { id: string; timerIndex: string; timerSerial: string };
-    oldAlexaTimerObject: AlexaActiveTimerList[];
     alexaTimerVisInstance: string;
+    private activeTimerIds: string[];
     constructor() {
         this.pathAlexaStateToListenTo = '';
         this.intervalLess60 = 0;
@@ -42,40 +39,57 @@ class Store {
         this.unitSecond1 = '';
         this.unitSecond2 = '';
         this.unitSecond3 = '';
-        this.lastTimer = { id: '', timerIndex: '', timerSerial: '' };
-        this.oldAlexaTimerObject = [];
+
         this.alexaTimerVisInstance = '';
         this.questionAlexa = false;
         this.interval = null;
-        this.deviceSerialNumber = null;
-        this.deviceName = null;
         this.pathAlexaSummary = '';
         this.adapter = {} as AlexaTimerVis;
         this.valHourForZero = '';
         this.valMinuteForZero = '';
         this.valSecondForZero = '';
         this.timerAction = null;
+        this.activeTimerIds = [];
     }
 
     init(store: StoreType): void {
         this.adapter = store.adapter;
-        this.valHourForZero = store.valHourForZero;
-        this.valMinuteForZero = store.valMinuteForZero;
-        this.valSecondForZero = store.valSecondForZero;
-        this.pathAlexaStateToListenTo = store.pathAlexaStateToListenTo;
-        this.pathAlexaSummary = store.pathAlexaSummary;
-        this.intervalMore60 = store.intervalMore60;
-        this.intervalLess60 = store.intervalLess60;
-        this.debounceTime = store.debounceTime;
-        this.unitHour1 = store.unitHour1;
-        this.unitHour2 = store.unitHour2;
-        this.unitHour3 = store.unitHour3;
-        this.unitMinute1 = store.unitMinute1;
-        this.unitMinute2 = store.unitMinute2;
-        this.unitMinute3 = store.unitMinute3;
-        this.unitSecond1 = store.unitSecond1;
-        this.unitSecond2 = store.unitSecond2;
-        this.unitSecond3 = store.unitSecond3;
+        const {
+            alexa,
+            valHourForZero,
+            valMinuteForZero,
+            valSecondForZero,
+            unitSecond3,
+            unitSecond2,
+            unitSecond1,
+            unitHour1,
+            unitHour2,
+            unitHour3,
+            unitMinute1,
+            unitMinute2,
+            unitMinute3,
+            intervall1,
+            intervall2,
+            entprellZeit,
+        } = store.adapter.config;
+        this.valHourForZero = valHourForZero;
+        this.valMinuteForZero = valMinuteForZero;
+        this.valSecondForZero = valSecondForZero;
+        this.pathAlexaStateToListenTo = `${alexa}.History.intent`;
+        this.pathAlexaSummary = `${alexa}.History.summary`;
+        this.intervalMore60 = intervall1;
+        this.intervalLess60 = intervall2;
+        this.debounceTime = entprellZeit;
+        this.unitHour1 = unitHour1;
+        this.unitHour2 = unitHour2;
+        this.unitHour3 = unitHour3;
+        this.unitMinute1 = unitMinute1;
+        this.unitMinute2 = unitMinute2;
+        this.unitMinute3 = unitMinute3;
+        this.unitSecond1 = unitSecond1;
+        this.unitSecond2 = unitSecond2;
+        this.unitSecond3 = unitSecond3;
+        this.alexaTimerVisInstance = store.alexaTimerVisInstance;
     }
     getAlexaInstanceObject(): AlexaInstanceObject {
         const dataPointArray = this.pathAlexaStateToListenTo.split('.');
@@ -99,6 +113,19 @@ class Store {
     }
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
+    }
+    addNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
+        const newestTimer = activeTimerLists.find(t => !this.includesActiveTimerId(t.id));
+        if (newestTimer) {
+            this.activeTimerIds.push(newestTimer.id);
+            return newestTimer.id;
+        }
+    }
+    removeActiveTimerId(id: string): void {
+        this.activeTimerIds = this.activeTimerIds.filter(activeId => activeId !== id);
+    }
+    includesActiveTimerId(id: string): boolean {
+        return this.activeTimerIds.includes(id);
     }
 }
 export default new Store();

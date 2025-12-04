@@ -33,12 +33,12 @@ __export(logging_exports, {
 module.exports = __toCommonJS(logging_exports);
 var import_store = __toESM(require("../store/store"));
 const errorLogger = (title, e) => {
-  var _a, _b;
+  var _a, _b, _c;
   const adapter = import_store.default.adapter;
   if ((adapter == null ? void 0 : adapter.supportsFeature) && adapter.supportsFeature("PLUGINS")) {
     const sentryInstance = adapter.getPluginInstance("sentry");
     if (sentryInstance) {
-      sentryInstance.getSentryObject().captureException(e);
+      (_a = sentryInstance.getSentryObject()) == null ? void 0 : _a.captureException(e);
     }
   }
   if (!adapter || !adapter.log) {
@@ -49,10 +49,10 @@ const errorLogger = (title, e) => {
   adapter.log.error(`Error message: ${e.message}`);
   adapter.log.error(`Error stack: ${e.stack}`);
   if (e == null ? void 0 : e.response) {
-    adapter.log.error(`Server response: ${(_a = e == null ? void 0 : e.response) == null ? void 0 : _a.status}`);
+    adapter.log.error(`Server response: ${(_b = e == null ? void 0 : e.response) == null ? void 0 : _b.status}`);
   }
   if (e == null ? void 0 : e.response) {
-    adapter.log.error(`Server status: ${(_b = e == null ? void 0 : e.response) == null ? void 0 : _b.statusText}`);
+    adapter.log.error(`Server status: ${(_c = e == null ? void 0 : e.response) == null ? void 0 : _c.statusText}`);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

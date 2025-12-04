@@ -39,37 +39,17 @@ export default class AlexaTimerVis extends utils.Adapter {
         AlexaTimerVis.instance = this;
     }
 
-    public static getInstance(): AlexaTimerVis {
-        return AlexaTimerVis.instance;
-    }
-
     private async onReady(): Promise<void> {
-        store.init({
-            adapter: this,
-            intervalMore60: this.config.intervall1,
-            intervalLess60: this.config.intervall2,
-            unitHour1: this.config.unitHour1,
-            unitHour2: this.config.unitHour2,
-            unitHour3: this.config.unitHour3,
-            unitMinute1: this.config.unitMinute1,
-            unitMinute2: this.config.unitMinute2,
-            unitMinute3: this.config.unitMinute3,
-            unitSecond1: this.config.unitSecond1,
-            unitSecond3: this.config.unitSecond3,
-            unitSecond2: this.config.unitSecond2,
-            valHourForZero: this.config.valHourForZero,
-            valMinuteForZero: this.config.valMinuteForZero,
-            valSecondForZero: this.config.valSecondForZero,
-            debounceTime: this.config.entprellZeit,
-            pathAlexaStateToListenTo: `${this.config.alexa}.History.intent`,
-            pathAlexaSummary: `${this.config.alexa}.History.summary`,
-        });
-        store.adapter = this;
+        if (this.adapterConfig && '_id' in this.adapterConfig) {
+            store.init({
+                adapter: this,
+                alexaTimerVisInstance: this.adapterConfig?._id.replace('system.adapter.', ''),
+            });
+        } else {
+            return;
+        }
 
         await this.setState('info.connection', false, true);
-        if (this.adapterConfig && '_id' in this.adapterConfig) {
-            store.alexaTimerVisInstance = this.adapterConfig?._id.replace('system.adapter.', '');
-        }
         timerObject.timer.timer1 = new Timer({ store });
         timerObject.timer.timer2 = new Timer({ store });
         timerObject.timer.timer3 = new Timer({ store });
