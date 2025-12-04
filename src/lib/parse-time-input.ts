@@ -6,12 +6,12 @@ import store from '@/store/store';
 export const parseTimeInput = (
     inputs: string[],
 ): {
-    timerString: string;
+    stringToEvaluate: string;
     name: string;
     deleteVal: number;
 } => {
     try {
-        let timerString = '';
+        let stringToEvaluate = '';
         let name = '';
 
         let deleteVal = store.isDeleteTimer() ? 1 : 0; // 1 = deleteTimer, 2 = stopAll
@@ -26,13 +26,13 @@ export const parseTimeInput = (
                 inputs[i + 1] in timerObject.singleNumbers &&
                 inputs[i + 2] in timerObject.fraction
             ) {
-                timerString = `(${singleNumberValue}+${timerObject.singleNumbers[inputs[i + 1] as keyof typeof timerObject.singleNumbers]}*${timerObject.fraction[inputs[i + 2] as keyof typeof timerObject.fraction]})*3600`;
+                stringToEvaluate = `(${singleNumberValue}+${timerObject.singleNumbers[inputs[i + 1] as keyof typeof timerObject.singleNumbers]}*${timerObject.fraction[inputs[i + 2] as keyof typeof timerObject.fraction]})*3600`;
 
                 inputs.splice(i, 3);
                 break;
             }
             if (isElementOfSingleNumbers && inputs[i + 1] && inputs[i + 1].includes('dreiviertel')) {
-                timerString = `(${singleNumberValue}+${timerObject.fraction[inputs[i + 1] as keyof typeof timerObject.fraction]})*3600`;
+                stringToEvaluate = `(${singleNumberValue}+${timerObject.fraction[inputs[i + 1] as keyof typeof timerObject.fraction]})*3600`;
                 inputs.splice(i, 2);
                 break;
             }
@@ -51,65 +51,65 @@ export const parseTimeInput = (
             }
 
             if (connector.indexOf(input) >= 0) {
-                if (timerString.charAt(timerString.length - 1) !== '+') {
-                    timerString += '+';
+                if (stringToEvaluate.charAt(stringToEvaluate.length - 1) !== '+') {
+                    stringToEvaluate += '+';
                 }
                 continue;
             }
 
-            if (hour.indexOf(input) >= 0 && !timerString.includes('*3600')) {
-                timerString += ')*3600+';
+            if (hour.indexOf(input) >= 0 && !stringToEvaluate.includes('*3600')) {
+                stringToEvaluate += ')*3600+';
                 continue;
             }
 
             if (minute.indexOf(input) >= 0) {
-                timerString += ')*60+';
+                stringToEvaluate += ')*60+';
                 continue;
             }
 
-            if (second.indexOf(input) >= 0 && timerString.charAt(timerString.length - 1) != ')') {
-                timerString += ')';
+            if (second.indexOf(input) >= 0 && stringToEvaluate.charAt(stringToEvaluate.length - 1) != ')') {
+                stringToEvaluate += ')';
                 continue;
             }
 
             const fractionElement = timerObject.fraction[input as keyof typeof timerObject.fraction];
 
-            if (fractionElement && !timerString.includes('*3600')) {
-                if (timerString.charAt(timerString.length - 1) == '') {
-                    timerString += '(1';
+            if (fractionElement && !stringToEvaluate.includes('*3600')) {
+                if (stringToEvaluate.charAt(stringToEvaluate.length - 1) == '') {
+                    stringToEvaluate += '(1';
                 }
-                timerString += `*${fractionElement})*3600`;
+                stringToEvaluate += `*${fractionElement})*3600`;
                 continue;
             }
 
             const elNumber: number | undefined = timerObject.numbers[input as keyof typeof timerObject.numbers];
             if (elNumber) {
-                if (timerObject.digits.indexOf(timerString.charAt(timerString.length - 1)) == -1) {
-                    if (timerString.charAt(timerString.length - 3) != '(') {
-                        timerString += `(${elNumber}`;
+                if (timerObject.digits.indexOf(stringToEvaluate.charAt(stringToEvaluate.length - 1)) == -1) {
+                    if (stringToEvaluate.charAt(stringToEvaluate.length - 3) != '(') {
+                        stringToEvaluate += `(${elNumber}`;
                     } else {
-                        timerString += elNumber;
+                        stringToEvaluate += elNumber;
                     }
                     continue;
                 }
                 if (input == 'hundert') {
-                    timerString += `*${elNumber}`;
+                    stringToEvaluate += `*${elNumber}`;
                     continue;
                 }
 
-                timerString += `+${elNumber}`;
+                stringToEvaluate += `+${elNumber}`;
                 continue;
             }
 
             const elementAsNumber = parseInt(input);
             if (!isNaN(elementAsNumber)) {
-                if (timerString == '') {
-                    timerString = '(';
+                if (stringToEvaluate == '') {
+                    stringToEvaluate = '(';
                 }
-                if (timerString.endsWith('+')) {
-                    timerString += '(';
+                if (stringToEvaluate.endsWith('+')) {
+                    stringToEvaluate += '(';
                 }
-                timerString += elementAsNumber;
+                stringToEvaluate += elementAsNumber;
                 continue;
             }
             const notAsName = [...notNoted, 'stunde', 'stunden', 'minute', 'minuten', 'sekunde', 'sekunden'];
@@ -118,21 +118,21 @@ export const parseTimeInput = (
             }
         }
 
-        if (timerString.charAt(timerString.length - 1) == '+') {
-            timerString = timerString.slice(0, timerString.length - 1);
+        if (stringToEvaluate.charAt(stringToEvaluate.length - 1) == '+') {
+            stringToEvaluate = stringToEvaluate.slice(0, stringToEvaluate.length - 1);
         }
         if (inputs.length) {
-            timerString = hasMinutes(timerString);
-            timerString = checkFirstChartForBracket(timerString);
+            stringToEvaluate = hasMinutes(stringToEvaluate);
+            stringToEvaluate = checkFirstChartForBracket(stringToEvaluate);
         }
-        if (countOccurrences(timerString, ')') > countOccurrences(timerString, '(')) {
-            timerString = `(${timerString}`;
+        if (countOccurrences(stringToEvaluate, ')') > countOccurrences(stringToEvaluate, '(')) {
+            stringToEvaluate = `(${stringToEvaluate}`;
         }
 
-        return { timerString, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
+        return { stringToEvaluate, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
     } catch (e: any) {
         errorLogger('Error in filterInfo', e);
-        return { timerString: '', name: '', deleteVal: 0 };
+        return { stringToEvaluate: '', name: '', deleteVal: 0 };
     }
 };
 

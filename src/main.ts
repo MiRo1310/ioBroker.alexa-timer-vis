@@ -84,21 +84,20 @@ export default class AlexaTimerVis extends utils.Adapter {
                         doNothingByNotNotedElement = true;
                     }
 
-                    const { name: decomposeName, timerSec, deleteVal } = decomposeInputValue(voiceInput);
-
                     if (!doNothingByNotNotedElement || store.isDeleteTimer()) {
+                        const { name, timerSec, deleteVal } = decomposeInputValue(voiceInput);
                         doesAlexaSendAQuestion(voiceInput);
 
                         if (store.isDeleteTimer()) {
-                            await timerDelete(decomposeName, timerSec, voiceInput, deleteVal);
+                            await timerDelete(name, timerSec, voiceInput, deleteVal);
                             return;
                         }
                         if (store.isAddTimer()) {
-                            timerAdd(decomposeName, timerSec);
+                            timerAdd(name, timerSec);
                             return;
                         }
                         if (store.isExtendTimer() || store.isShortenTimer()) {
-                            await extendOrShortTimer({ voiceInput, decomposeName });
+                            await extendOrShortTimer({ voiceInput, name });
                             return;
                         }
                     }

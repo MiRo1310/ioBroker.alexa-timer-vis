@@ -1,5 +1,6 @@
 import type AlexaTimerVis from '@/main';
 import type { AlexaActiveTimerList, AlexaInstanceObject, StoreType, TimerCondition } from '@/types/types';
+import type { CustomAdapterConfig } from '@/adapter-config';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -71,7 +72,7 @@ class Store {
             intervall1,
             intervall2,
             entprellZeit,
-        } = store.adapter.config;
+        } = store.adapter.config as CustomAdapterConfig;
         this.valHourForZero = valHourForZero;
         this.valMinuteForZero = valMinuteForZero;
         this.valSecondForZero = valSecondForZero;

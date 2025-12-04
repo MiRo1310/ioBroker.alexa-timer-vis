@@ -5,13 +5,7 @@ import { findTimer } from '@/lib/find-timer';
 import { errorLogger } from '@/lib/logging';
 import store from '@/store/store';
 
-export const extendOrShortTimer = async ({
-    voiceInput,
-    decomposeName,
-}: {
-    voiceInput: string;
-    decomposeName: string;
-}): Promise<void> => {
+export const extendOrShortTimer = async ({ voiceInput, name }: { voiceInput: string; name: string }): Promise<void> => {
     try {
         const addOrSub = getMultiplikatorForAddOrSub();
 
@@ -23,13 +17,13 @@ export const extendOrShortTimer = async ({
             firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf('um')).split(' ');
             valueExtend = voiceInput.slice(voiceInput.indexOf('um') + 2).split(' ');
 
-            const { timerString } = parseTimeInput(firstPartOfValue);
-            extendTime = eval(timerString);
-            const { timerString: string2 } = parseTimeInput(valueExtend);
+            const { stringToEvaluate } = parseTimeInput(firstPartOfValue);
+            extendTime = eval(stringToEvaluate);
+            const { stringToEvaluate: string2 } = parseTimeInput(valueExtend);
             extendTime2 = eval(string2);
         }
 
-        const timers = await findTimer(extendTime, decomposeName, 1, voiceInput);
+        const timers = await findTimer(extendTime, name, 1, voiceInput);
 
         if (timers.timer) {
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
