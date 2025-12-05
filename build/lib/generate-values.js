@@ -32,11 +32,11 @@ __export(generate_values_exports, {
 });
 module.exports = __toCommonJS(generate_values_exports);
 var import_store = __toESM(require("../store/store"));
-var import_global = require("../lib/global");
+var import_time = require("../lib/time");
 const generateValues = (timer, sec, name) => {
   const timeLeft = timer.getOutputProperties().endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
   const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
-  const result = (0, import_global.secToHourMinSec)(remainingTimeInSeconds, true);
+  const result = (0, import_time.secToHourMinSec)(remainingTimeInSeconds, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
   const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds)}`;

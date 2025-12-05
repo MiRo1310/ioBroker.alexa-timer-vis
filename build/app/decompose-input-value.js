@@ -38,8 +38,8 @@ const decomposeInputValue = (voiceString) => {
   try {
     let inputDecomposed = voiceString.split(",");
     inputDecomposed = inputDecomposed[0].split(" ");
-    const { timerString, name, deleteVal } = (0, import_parse_time_input.parseTimeInput)(inputDecomposed);
-    return { name, timerSec: eval(timerString), deleteVal };
+    const { stringToEvaluate, name, deleteVal } = (0, import_parse_time_input.parseTimeInput)(inputDecomposed);
+    return { name, timerSec: eval(stringToEvaluate), deleteVal };
   } catch (e) {
     import_store.default.adapter.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceString}`);
     (0, import_logging.errorLogger)("Error in decomposeInputValue: ", e);

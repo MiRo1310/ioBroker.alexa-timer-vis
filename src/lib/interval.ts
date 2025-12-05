@@ -3,8 +3,8 @@ import store from '@/store/store';
 import { errorLogger } from '@/lib//logging';
 import type { Timer } from '@/app/timer';
 import { generateValues } from '@/lib/generate-values';
-import { secToHourMinSec } from '@/lib/global';
 import { resetValues } from '@/app/reset';
+import { secToHourMinSec } from '@/lib/time';
 
 export const interval = (sec: number, name: string, timer: Timer, int: number, onlyOneTimer: boolean): void => {
     const adapter = store.adapter;

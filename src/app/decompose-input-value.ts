@@ -21,7 +21,3 @@ export const decomposeInputValue = (
         return { name: '', timerSec: 0, deleteVal: 0 };
     }
 };
-
-function stringToEvaluteToStringWithUnits(input: string): string {
-    return input;
-}

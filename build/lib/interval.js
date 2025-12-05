@@ -35,8 +35,8 @@ var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_logging = require("../lib/logging");
 var import_generate_values = require("../lib/generate-values");
-var import_global = require("../lib/global");
 var import_reset = require("../app/reset");
+var import_time = require("../lib/time");
 const interval = (sec, name, timer, int, onlyOneTimer) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
@@ -44,7 +44,7 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
     throw new Error("TimerIndex was not set");
   }
   (0, import_generate_values.generateValues)(timer, sec, name);
-  const { string } = (0, import_global.secToHourMinSec)(sec, false);
+  const { string } = (0, import_time.secToHourMinSec)(sec, false);
   timer.setLengthTimer(string);
   import_timer_data.timerObject.interval[timerIndex] = adapter.setInterval(() => {
     const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, name);

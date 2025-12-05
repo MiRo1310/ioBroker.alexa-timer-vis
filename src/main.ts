@@ -44,6 +44,7 @@ export default class AlexaTimerVis extends utils.Adapter {
             store.init({
                 adapter: this,
                 alexaTimerVisInstance: this.adapterConfig?._id.replace('system.adapter.', ''),
+                ...this.config,
             });
         } else {
             return;

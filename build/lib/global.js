@@ -35,72 +35,11 @@ __export(global_exports, {
   isIobrokerValue: () => isIobrokerValue,
   isString: () => isString,
   isStringEmpty: () => isStringEmpty,
-  secToHourMinSec: () => secToHourMinSec,
   sortArray: () => sortArray,
   timeToString: () => timeToString
 });
 module.exports = __toCommonJS(global_exports);
 var import_store = __toESM(require("../store/store"));
-const secToHourMinSec = (valSec, doubleInt) => {
-  const { hourInSec, hour } = includedHours(valSec);
-  const { minutesInSec, minutes } = includedMinutes(valSec, hourInSec);
-  const seconds = includedSeconds(valSec, hourInSec, minutesInSec);
-  const { hourString, minutesString, secondsString } = getDoubleIntValues(doubleInt, hour, minutes, seconds);
-  const hourUnit = getHourUnit(hour);
-  const minuteUnit = getMinuteUnit(minutes);
-  const secUnit = getSecondUnit(seconds);
-  const string = `${hour} ${hourUnit} ${minutes} ${minuteUnit} ${seconds} ${secUnit}`;
-  return { hour: hourString, minutes: minutesString, seconds: secondsString, string: string.trim() };
-};
-function getSecondUnit(seconds) {
-  if (seconds && seconds > 1) {
-    return import_store.default.unitSecond2;
-  }
-  return import_store.default.unitSecond1;
-}
-function getMinuteUnit(minutes) {
-  if (minutes && minutes > 1) {
-    return import_store.default.unitMinute2;
-  }
-  return import_store.default.unitMinute1;
-}
-function getHourUnit(hour) {
-  if (hour && hour > 1) {
-    return import_store.default.unitHour2;
-  }
-  return import_store.default.unitHour1;
-}
-function getDoubleIntValues(doubleInt, hour, minutes, seconds) {
-  if (doubleInt) {
-    return {
-      hourString: `0${hour}`.slice(-2),
-      minutesString: `0${minutes}`.slice(-2),
-      secondsString: `0${seconds}`.slice(-2)
-    };
-  }
-  return {
-    hourString: (hour == null ? void 0 : hour.toString()) || "",
-    minutesString: (minutes == null ? void 0 : minutes.toString()) || "",
-    secondsString: (seconds == null ? void 0 : seconds.toString()) || ""
-  };
-}
-function includedSeconds(valSec, hourInSec, minutesInSec) {
-  let seconds = valSec - hourInSec - minutesInSec;
-  seconds = Math.round(seconds);
-  return seconds;
-}
-function includedMinutes(valSec, hourInSec) {
-  let minutes = (valSec - hourInSec) / 60;
-  minutes = Math.floor(minutes);
-  const minutesInSec = minutes * 60;
-  return { minutesInSec, minutes };
-}
-function includedHours(valSec) {
-  let hour = valSec / (60 * 60);
-  hour = Math.floor(hour);
-  const hourInSec = hour * 60 * 60;
-  return { hourInSec, hour };
-}
 function firstLetterToUpperCase(name) {
   if (name.length === 0) {
     return "";
@@ -147,7 +86,6 @@ function countOccurrences(str, char) {
   isIobrokerValue,
   isString,
   isStringEmpty,
-  secToHourMinSec,
   sortArray,
   timeToString
 });

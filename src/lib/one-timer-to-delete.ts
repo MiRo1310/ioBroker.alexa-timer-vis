@@ -1,5 +1,5 @@
-import { timerObject } from '../config/timer-data';
-import { sortArray } from './global';
+import { timerObject } from '@/config/timer-data';
+import { sortArray } from '@/lib/global';
 
 export const oneOfMultiTimerDelete = (input: string, timeSec: number, name: string, inputDevice: string): void => {
     const separateInput = input.slice(input.indexOf(',') + 2, input.length);

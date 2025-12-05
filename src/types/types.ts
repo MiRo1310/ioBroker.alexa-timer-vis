@@ -137,6 +137,22 @@ export interface TimerObject {
 export interface StoreType {
     adapter: AlexaTimerVis;
     alexaTimerVisInstance: string;
+    alexa: string;
+    intervall1: number;
+    intervall2: number;
+    unitHour1: string;
+    unitHour2: string;
+    unitHour3: string;
+    unitMinute1: string;
+    unitMinute2: string;
+    unitMinute3: string;
+    unitSecond1: string;
+    unitSecond2: string;
+    unitSecond3: string;
+    valHourForZero: string;
+    valMinuteForZero: string;
+    valSecondForZero: string;
+    entprellZeit: number;
 }
 
 export interface AlexaInstanceObject {
@@ -189,4 +205,12 @@ export interface StartAndEndTime {
     startTimeString: string;
     endTimeNumber: number;
     endTimeString: string;
+}
+
+export interface SecToHourMinSecReturn {
+    hour: string;
+    minutes: string;
+    seconds: string;
+    string: string;
+    initialString: string;
 }

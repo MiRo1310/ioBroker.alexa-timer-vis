@@ -50,14 +50,14 @@ class Store {
     this.intervalLess60 = 0;
     this.intervalMore60 = 0;
     this.debounceTime = 0;
-    this.unitHour1 = "";
-    this.unitHour2 = "";
+    this.unitHour1 = "Stunde";
+    this.unitHour2 = "Stunden";
     this.unitHour3 = "";
-    this.unitMinute1 = "";
-    this.unitMinute2 = "";
+    this.unitMinute1 = "Minute";
+    this.unitMinute2 = "Minuten";
     this.unitMinute3 = "";
-    this.unitSecond1 = "";
-    this.unitSecond2 = "";
+    this.unitSecond1 = "Sekunde";
+    this.unitSecond2 = "Sekunden";
     this.unitSecond3 = "";
     this.alexaTimerVisInstance = "";
     this.questionAlexa = false;
@@ -88,8 +88,9 @@ class Store {
       unitMinute3,
       intervall1,
       intervall2,
-      entprellZeit
-    } = store.adapter.config;
+      entprellZeit,
+      alexaTimerVisInstance
+    } = store;
     this.valHourForZero = valHourForZero;
     this.valMinuteForZero = valMinuteForZero;
     this.valSecondForZero = valSecondForZero;
@@ -107,7 +108,7 @@ class Store {
     this.unitSecond1 = unitSecond1;
     this.unitSecond2 = unitSecond2;
     this.unitSecond3 = unitSecond3;
-    this.alexaTimerVisInstance = store.alexaTimerVisInstance;
+    this.alexaTimerVisInstance = alexaTimerVisInstance;
   }
   getAlexaInstanceObject() {
     const dataPointArray = this.pathAlexaStateToListenTo.split(".");

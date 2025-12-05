@@ -68,7 +68,8 @@ class AlexaTimerVis extends utils.Adapter {
     if (this.adapterConfig && "_id" in this.adapterConfig) {
       import_store.default.init({
         adapter: this,
-        alexaTimerVisInstance: (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", "")
+        alexaTimerVisInstance: (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", ""),
+        ...this.config
       });
     } else {
       return;
@@ -103,19 +104,19 @@ class AlexaTimerVis extends utils.Adapter {
             this.log.debug("NotNotedSentence found");
             doNothingByNotNotedElement = true;
           }
-          const { name: decomposeName, timerSec, deleteVal } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
           if (!doNothingByNotNotedElement || import_store.default.isDeleteTimer()) {
+            const { name, timerSec, deleteVal } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
             (0, import_global.doesAlexaSendAQuestion)(voiceInput);
             if (import_store.default.isDeleteTimer()) {
-              await (0, import_timer_delete.timerDelete)(decomposeName, timerSec, voiceInput, deleteVal);
+              await (0, import_timer_delete.timerDelete)(name, timerSec, voiceInput, deleteVal);
               return;
             }
             if (import_store.default.isAddTimer()) {
-              (0, import_timer_add.timerAdd)(decomposeName, timerSec);
+              (0, import_timer_add.timerAdd)(name, timerSec);
               return;
             }
             if (import_store.default.isExtendTimer() || import_store.default.isShortenTimer()) {
-              await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, decomposeName });
+              await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, name });
               return;
             }
           }

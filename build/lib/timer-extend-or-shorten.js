@@ -6,8 +6,8 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
+  for (var name2 in all)
+    __defProp(target, name2, { get: all[name2], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -37,10 +37,7 @@ var import_parse_time_input = require("../lib/parse-time-input");
 var import_find_timer = require("../lib/find-timer");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../store/store"));
-const extendOrShortTimer = async ({
-  voiceInput,
-  decomposeName
-}) => {
+const extendOrShortTimer = async ({ voiceInput, name }) => {
   try {
     const addOrSub = getMultiplikatorForAddOrSub();
     let firstPartOfValue, valueExtend;
@@ -49,12 +46,12 @@ const extendOrShortTimer = async ({
     if (voiceInput.includes("um")) {
       firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf("um")).split(" ");
       valueExtend = voiceInput.slice(voiceInput.indexOf("um") + 2).split(" ");
-      const { timerString } = (0, import_parse_time_input.parseTimeInput)(firstPartOfValue);
-      extendTime = eval(timerString);
-      const { timerString: string2 } = (0, import_parse_time_input.parseTimeInput)(valueExtend);
+      const { stringToEvaluate } = (0, import_parse_time_input.parseTimeInput)(firstPartOfValue);
+      extendTime = eval(stringToEvaluate);
+      const { stringToEvaluate: string2 } = (0, import_parse_time_input.parseTimeInput)(valueExtend);
       extendTime2 = eval(string2);
     }
-    const timers = await (0, import_find_timer.findTimer)(extendTime, decomposeName, 1, voiceInput);
+    const timers = await (0, import_find_timer.findTimer)(extendTime, name, 1, voiceInput);
     if (timers.timer) {
       extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
       return;
