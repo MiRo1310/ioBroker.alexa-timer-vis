@@ -57,7 +57,8 @@ const generateValues = (timer, sec, name) => {
     stringTimer2,
     remainingTimeInSeconds,
     lengthTimer,
-    name
+    name,
+    initialTimer: result.initialString
   });
   return remainingTimeInSeconds;
 };

@@ -54,6 +54,18 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
+            await adapter.setObjectNotExistsAsync(`timer${i}.initialTimer`, {
+                type: 'state',
+                common: {
+                    name: 'Initial Timer',
+                    type: 'string',
+                    role: 'value',
+                    read: true,
+                    write: false,
+                    def: '',
+                },
+                native: {},
+            });
             await adapter.setObjectNotExistsAsync(`timer${i}.hour`, {
                 type: 'state',
                 common: {

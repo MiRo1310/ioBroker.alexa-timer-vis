@@ -10,7 +10,7 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
         for (const timerIndex in timers) {
             const timer = timerObject.timer[timerIndex];
 
-            if (!timer) {
+            if (!timer.isActive) {
                 return;
             }
             if (reset) {
@@ -30,6 +30,7 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
                 lengthTimer,
                 percent,
                 percent2,
+                initialTimer,
             } = timer.getOutputProperties();
             adapter.setStateChanged(`${timerIndex}.hour`, hours, true);
             adapter.setStateChanged(`${timerIndex}.minute`, minutes, true);
@@ -42,6 +43,7 @@ export async function writeState({ reset }: { reset: boolean }): Promise<void> {
             adapter.setStateChanged(`${timerIndex}.lengthTimer`, lengthTimer, true);
             adapter.setStateChanged(`${timerIndex}.percent2`, percent2, true);
             adapter.setStateChanged(`${timerIndex}.percent`, percent, true);
+            adapter.setStateChanged(`${timerIndex}.initialTimer`, initialTimer, true);
             adapter.setStateChanged(`${timerIndex}.name`, timer.outPutTimerName(), true);
             adapter.setStateChanged(`${timerIndex}.json`, timer.getDataAsJson(), true);
             adapter.setStateChanged('all_Timer.alive', !reset, true);

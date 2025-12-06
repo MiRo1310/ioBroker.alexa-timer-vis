@@ -5,7 +5,7 @@ import type { Timer } from '@/app/timer';
 import { writeState } from '@/app/write-state';
 
 export const resetValues = async (timer: Timer): Promise<void> => {
-    const { adapter, getAlexaTimerVisInstance } = store;
+    const { adapter } = store;
     const index = timer.getTimerIndex();
     if (!index) {
         return;
@@ -14,7 +14,7 @@ export const resetValues = async (timer: Timer): Promise<void> => {
         timer.reset();
         adapter.log.debug(JSON.stringify(timerObject.timerActive));
 
-        await adapter.setObject(getAlexaTimerVisInstance() + index, {
+        await adapter.setObject(store.getAlexaTimerVisInstance() + index, {
             type: 'device',
             common: { name: `` },
             native: {},

@@ -41,7 +41,7 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
   if (!timerIndex) {
-    throw new Error("TimerIndex was not set");
+    return;
   }
   (0, import_generate_values.generateValues)(timer, sec, name);
   const { string } = (0, import_time.secToHourMinSec)(sec, false);

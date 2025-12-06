@@ -1,4 +1,4 @@
-import type { TimerIndex } from '@/types/types';
+import type { AlexaJson, TimerIndex } from '@/types/types';
 import { timerObject } from '@/config/timer-data';
 import store from '@/store/store';
 import { isString, timeToString } from '@/lib/global';
@@ -9,27 +9,21 @@ const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 
 export const startTimer = async (sec: number, name: string): Promise<void> => {
     try {
-        //TODO : Add test
         const timerIndex = getAvailableTimerIndex();
+        timerObject.timerActive.timer[timerIndex] = true;
 
-        if (!timerIndex) {
-            throw new Error('TimerIndex was not found');
-        }
-        const alexaJson = await getAlexaParsedAlexaJson();
+        const alexaJson = await getParsedAlexaJson();
         if (!alexaJson) {
             return;
         }
+
         const creationTime = alexaJson.creationTime;
         const startTimeString = timeToString(creationTime);
         const timerMilliseconds = sec * 1000;
         const endTimeNumber = creationTime + timerMilliseconds;
         const endTimeString = timeToString(endTimeNumber);
         const timer = timerObject.timer[timerIndex];
-        await timer.init(timerIndex);
-        //TODO: mit in den init rein packen
-        timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
-
-        await timer.setIdFromEcoDeviceTimerList();
+        await timer.init({ timerIndex, creationTime, startTimeString, endTimeNumber, endTimeString });
 
         if (isMoreThanAMinute(sec)) {
             interval(sec, name, timer, store.intervalMore60 * 1000, false);
@@ -44,40 +38,26 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
     }
 };
 
-export interface AlexaJson {
-    name: string;
-    serialNumber: string;
-    summary: string;
-    creationTime: number;
-    domainApplicationId: string;
-    domainApplicationName: string;
-    cardContent: string;
-    card: string;
-    answerText: string;
-    utteranceType: string;
-    domain: string;
-    intent: string;
-}
-
-export async function getAlexaParsedAlexaJson(): Promise<AlexaJson | undefined> {
+export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
     const instance = store.getAlexaInstanceObject().instance;
     const jsonAlexa = await store.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
     try {
         if (isString(jsonAlexa?.val)) {
             return JSON.parse(jsonAlexa.val);
         }
-    } catch {
-        return;
+    } catch (e) {
+        errorLogger('Error in getParsedAlexaJson', e);
     }
 }
 
-function getAvailableTimerIndex(): TimerIndex | undefined {
-    for (let i = 0; i < Object.keys(timerObject.timerActive.timer).length; i++) {
-        const key = Object.keys(timerObject.timerActive.timer)[i];
+export function getAvailableTimerIndex(): TimerIndex {
+    const keys = Object.keys(timerObject.timerActive.timer);
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
 
         if (!timerObject.timerActive.timer[key]) {
-            timerObject.timerActive.timer[key] = true;
             return key;
         }
     }
+    return `timer${keys.length + 1}`;
 }

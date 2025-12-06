@@ -7,6 +7,7 @@ export const generateValues = (timer: Timer, sec: number, name: string): number 
     const timeLeft = timer.getOutputProperties().endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec
     const remainingTimeInSeconds = Math.round(timeLeft / 1000); // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
     const result = secToHourMinSec(remainingTimeInSeconds, true);
+
     let { hour, minutes, seconds } = result;
     const { string: lengthTimer } = result;
 
@@ -33,6 +34,7 @@ export const generateValues = (timer: Timer, sec: number, name: string): number 
         remainingTimeInSeconds,
         lengthTimer,
         name,
+        initialTimer: result.initialString,
     });
 
     return remainingTimeInSeconds;

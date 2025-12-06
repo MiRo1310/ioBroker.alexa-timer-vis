@@ -37,7 +37,7 @@ var import_logging = require("../lib/logging");
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
 const resetValues = async (timer) => {
-  const { adapter, getAlexaTimerVisInstance } = import_store.default;
+  const { adapter } = import_store.default;
   const index = timer.getTimerIndex();
   if (!index) {
     return;
@@ -45,7 +45,7 @@ const resetValues = async (timer) => {
   try {
     timer.reset();
     adapter.log.debug(JSON.stringify(import_timer_data.timerObject.timerActive));
-    await adapter.setObject(getAlexaTimerVisInstance() + index, {
+    await adapter.setObject(import_store.default.getAlexaTimerVisInstance() + index, {
       type: "device",
       common: { name: `` },
       native: {}

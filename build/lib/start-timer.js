@@ -28,7 +28,8 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var start_timer_exports = {};
 __export(start_timer_exports, {
-  getAlexaParsedAlexaJson: () => getAlexaParsedAlexaJson,
+  getAvailableTimerIndex: () => getAvailableTimerIndex,
+  getParsedAlexaJson: () => getParsedAlexaJson,
   startTimer: () => startTimer
 });
 module.exports = __toCommonJS(start_timer_exports);
@@ -41,10 +42,8 @@ const isMoreThanAMinute = (sec) => sec > 60;
 const startTimer = async (sec, name) => {
   try {
     const timerIndex = getAvailableTimerIndex();
-    if (!timerIndex) {
-      throw new Error("TimerIndex was not found");
-    }
-    const alexaJson = await getAlexaParsedAlexaJson();
+    import_timer_data.timerObject.timerActive.timer[timerIndex] = true;
+    const alexaJson = await getParsedAlexaJson();
     if (!alexaJson) {
       return;
     }
@@ -54,9 +53,7 @@ const startTimer = async (sec, name) => {
     const endTimeNumber = creationTime + timerMilliseconds;
     const endTimeString = (0, import_global.timeToString)(endTimeNumber);
     const timer = import_timer_data.timerObject.timer[timerIndex];
-    await timer.init(timerIndex);
-    timer.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
-    await timer.setIdFromEcoDeviceTimerList();
+    await timer.init({ timerIndex, creationTime, startTimeString, endTimeNumber, endTimeString });
     if (isMoreThanAMinute(sec)) {
       (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
       return;
@@ -67,29 +64,31 @@ const startTimer = async (sec, name) => {
     (0, import_logging.errorLogger)("Error in startTimer", e);
   }
 };
-async function getAlexaParsedAlexaJson() {
+async function getParsedAlexaJson() {
   const instance = import_store.default.getAlexaInstanceObject().instance;
   const jsonAlexa = await import_store.default.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
   try {
     if ((0, import_global.isString)(jsonAlexa == null ? void 0 : jsonAlexa.val)) {
       return JSON.parse(jsonAlexa.val);
     }
-  } catch {
-    return;
+  } catch (e) {
+    (0, import_logging.errorLogger)("Error in getParsedAlexaJson", e);
   }
 }
 function getAvailableTimerIndex() {
-  for (let i = 0; i < Object.keys(import_timer_data.timerObject.timerActive.timer).length; i++) {
-    const key = Object.keys(import_timer_data.timerObject.timerActive.timer)[i];
+  const keys = Object.keys(import_timer_data.timerObject.timerActive.timer);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
     if (!import_timer_data.timerObject.timerActive.timer[key]) {
-      import_timer_data.timerObject.timerActive.timer[key] = true;
       return key;
     }
   }
+  return `timer${keys.length + 1}`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  getAlexaParsedAlexaJson,
+  getAvailableTimerIndex,
+  getParsedAlexaJson,
   startTimer
 });
 //# sourceMappingURL=start-timer.js.map

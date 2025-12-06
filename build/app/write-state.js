@@ -41,7 +41,7 @@ async function writeState({ reset }) {
   try {
     for (const timerIndex in timers) {
       const timer = import_timer_data.timerObject.timer[timerIndex];
-      if (!timer) {
+      if (!timer.isActive) {
         return;
       }
       if (reset) {
@@ -59,7 +59,8 @@ async function writeState({ reset }) {
         inputDevice,
         lengthTimer,
         percent,
-        percent2
+        percent2,
+        initialTimer
       } = timer.getOutputProperties();
       adapter.setStateChanged(`${timerIndex}.hour`, hours, true);
       adapter.setStateChanged(`${timerIndex}.minute`, minutes, true);
@@ -72,6 +73,7 @@ async function writeState({ reset }) {
       adapter.setStateChanged(`${timerIndex}.lengthTimer`, lengthTimer, true);
       adapter.setStateChanged(`${timerIndex}.percent2`, percent2, true);
       adapter.setStateChanged(`${timerIndex}.percent`, percent, true);
+      adapter.setStateChanged(`${timerIndex}.initialTimer`, initialTimer, true);
       adapter.setStateChanged(`${timerIndex}.name`, timer.outPutTimerName(), true);
       adapter.setStateChanged(`${timerIndex}.json`, timer.getDataAsJson(), true);
       adapter.setStateChanged("all_Timer.alive", !reset, true);

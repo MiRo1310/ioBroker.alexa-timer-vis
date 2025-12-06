@@ -61,6 +61,8 @@ class Timer {
   adapter;
   foreignActiveTimerListId;
   alexaInstance;
+  initialTimer;
+  isActive = false;
   constructor({ store }) {
     this.adapter = store.adapter;
     this.hours = "";
@@ -87,6 +89,7 @@ class Timer {
     this.timerId = "";
     this.foreignActiveTimerListId = null;
     this.alexaInstance = null;
+    this.initialTimer = "";
   }
   getName() {
     return this.name;
@@ -107,7 +110,8 @@ class Timer {
       inputDevice: this.inputDeviceName,
       lengthTimer: this.lengthTimer,
       percent: this.percent,
-      percent2: this.percent2
+      percent2: this.percent2,
+      initialTimer: this.initialTimer
     };
   }
   isExtendOrShortenTimer() {
@@ -160,7 +164,7 @@ class Timer {
       timerId: this.timerId
     });
   }
-  async init(timerIndex) {
+  async init({ timerIndex, creationTime, startTimeString, endTimeString, endTimeNumber }) {
     this.timerIndex = timerIndex;
     try {
       const instance = import_store.default.getAlexaInstanceObject().instance;
@@ -178,6 +182,8 @@ class Timer {
       await this.setForeignActiveTimerListSubscription(foreignId);
       this.foreignActiveTimerListId = foreignId;
       await this.setDeviceNameInStateName();
+      this.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
+      await this.setIdFromEcoDeviceTimerList();
     } catch (error) {
       (0, import_logging.errorLogger)("Error in getInputDevice", error);
     }
@@ -231,8 +237,10 @@ class Timer {
     this.stringTimer2 = props.stringTimer2;
     this.remainingTimeInSeconds = props.remainingTimeInSeconds;
     this.lengthTimer = props.lengthTimer;
+    this.initialTimer = props.initialTimer;
     this.setTimerName(props.name);
     this.mathPercent();
+    this.isActive = true;
   }
   mathPercent() {
     const percent = Math.round(this.remainingTimeInSeconds / this.voiceInputAsSeconds * 100);
@@ -276,6 +284,7 @@ class Timer {
       import_timer_data.timerObject.timerActive.timer[this.timerIndex] = false;
     }
     this.timerIndex = null;
+    this.isActive = false;
     this.resetForeignStateSubscription();
   }
   resetForeignStateSubscription() {

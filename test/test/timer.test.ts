@@ -3,6 +3,8 @@ import { parseTimeInput } from '@/lib/parse-time-input';
 import sinon from 'sinon';
 import store from '@/store/store';
 import { secToHourMinSec } from '@/lib/time';
+import { getAvailableTimerIndex } from '@/lib/start-timer';
+import * as timerData from '@/config/timer-data'; // import namespace, damit wir exportierte Werte ändern können
 
 describe('Timer inputValue to evaluate string', () => {
     it('should correct simple timer', () => {
@@ -341,5 +343,49 @@ describe('Timer evaluate string to Output string with units', () => {
         it(`should be valid for Index ${index} with double int, and 0 values are ignored`, () => {
             expect(secToHourMinSec(eval(test.s), true).initialString).to.be.equal(test.doubleInitial);
         });
+    });
+});
+
+describe('startTimer (mit stubbed timerObject)', () => {
+    let originalTimers: any;
+
+    beforeEach(() => {
+        originalTimers = (timerData as any).timerObject.timerActive.timer;
+    });
+
+    afterEach(() => {
+        // Rücksetzen
+        (timerData as any).timerObject.timerActive.timer = originalTimers;
+        sinon.restore();
+    });
+
+    it.only('should get a free timerIndex 1', () => {
+        (timerData as any).timerObject.timerActive.timer = {
+            timer1: false,
+            timer2: true,
+            timer3: true,
+            timer4: true,
+        };
+        expect(getAvailableTimerIndex()).to.be.equal('timer1');
+    });
+
+    it.only('should get a free timerIndex 2', () => {
+        (timerData as any).timerObject.timerActive.timer = {
+            timer1: true,
+            timer2: false,
+            timer3: true,
+            timer4: false,
+        };
+        expect(getAvailableTimerIndex()).to.be.equal('timer2');
+    });
+
+    it.only('should get a free timerIndex 3', () => {
+        (timerData as any).timerObject.timerActive.timer = {
+            timer1: true,
+            timer2: true,
+            timer3: true,
+            timer4: true,
+        };
+        expect(getAvailableTimerIndex()).to.be.equal('timer5');
     });
 });

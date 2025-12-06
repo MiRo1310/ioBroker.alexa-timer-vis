@@ -22,6 +22,14 @@ export type TimerCondition =
 
 export type TimerIndex = string;
 
+export interface TimerInit {
+    timerIndex: TimerIndex;
+    creationTime: number;
+    startTimeString: string;
+    endTimeNumber: number;
+    endTimeString: string;
+}
+
 export type Timers = Record<TimerIndex, Timer>;
 
 interface SingleNumbers {
@@ -174,7 +182,7 @@ export interface AlexaActiveTimerList {
     triggerTime: number;
 }
 
-export interface OutputProperties {
+export interface GetOutputProperties {
     hours: string;
     minutes: string;
     seconds: string;
@@ -187,9 +195,10 @@ export interface OutputProperties {
     lengthTimer: string;
     percent: number;
     percent2: number;
+    initialTimer: string;
 }
 
-export interface InputProperties {
+export interface SetOutputProperties {
     remainingTimeInSeconds: number;
     name: string;
     hours: string;
@@ -198,6 +207,7 @@ export interface InputProperties {
     stringTimer1: string;
     stringTimer2: string;
     lengthTimer: string;
+    initialTimer: string;
 }
 
 export interface StartAndEndTime {
@@ -213,4 +223,19 @@ export interface SecToHourMinSecReturn {
     seconds: string;
     string: string;
     initialString: string;
+}
+
+export interface AlexaJson {
+    name: string;
+    serialNumber: string;
+    summary: string;
+    creationTime: number;
+    domainApplicationId: string;
+    domainApplicationName: string;
+    cardContent: string;
+    card: string;
+    answerText: string;
+    utteranceType: string;
+    domain: string;
+    intent: string;
 }

@@ -11,7 +11,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
     const timerIndex = timer.getTimerIndex();
 
     if (!timerIndex) {
-        throw new Error('TimerIndex was not set');
+        return;
     }
     generateValues(timer, sec, name);
 
