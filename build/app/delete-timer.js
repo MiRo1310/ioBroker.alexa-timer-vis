@@ -25,7 +25,7 @@ var import_timer_data = require("../config/timer-data");
 var import_reset = require("../app/reset");
 var import_logging = require("../lib/logging");
 const delTimer = (timer) => {
-  (0, import_reset.resetValues)(import_timer_data.timerObject.timer[timer]).catch((e) => {
+  (0, import_reset.resetTimer)(import_timer_data.timerObject.timer[timer]).catch((e) => {
     (0, import_logging.errorLogger)("Error in delTimer", e);
   });
   import_timer_data.timerObject.timerActive.timer[timer] = false;

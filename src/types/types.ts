@@ -28,6 +28,7 @@ export interface TimerInit {
     startTimeString: string;
     endTimeNumber: number;
     endTimeString: string;
+    initialTimerString: string;
 }
 
 export type Timers = Record<TimerIndex, Timer>;
@@ -207,7 +208,6 @@ export interface SetOutputProperties {
     stringTimer1: string;
     stringTimer2: string;
     lengthTimer: string;
-    initialTimer: string;
 }
 
 export interface StartAndEndTime {

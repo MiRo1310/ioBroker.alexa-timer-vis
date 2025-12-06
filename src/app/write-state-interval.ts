@@ -14,7 +14,7 @@ export const writeStateIntervall = (): void => {
                 errorLogger('Error in writeStateIntervall', e);
             });
 
-            if (timerObject.timerActive.timerCount === 0) {
+            if (!Object.keys(timerObject.timer)?.find(t => timerObject.timer[t].isActive)) {
                 adapter.setStateChanged('all_Timer.alive', false, true);
                 adapter.clearInterval(store.interval);
                 store.interval = null;

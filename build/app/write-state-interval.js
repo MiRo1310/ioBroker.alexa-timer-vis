@@ -42,10 +42,11 @@ const writeStateIntervall = () => {
       return;
     }
     import_store.default.interval = adapter.setInterval(() => {
+      var _a;
       (0, import_write_state.writeState)({ reset: false }).catch((e) => {
         (0, import_logging.errorLogger)("Error in writeStateIntervall", e);
       });
-      if (import_timer_data.timerObject.timerActive.timerCount === 0) {
+      if (!((_a = Object.keys(import_timer_data.timerObject.timer)) == null ? void 0 : _a.find((t) => import_timer_data.timerObject.timer[t].isActive))) {
         adapter.setStateChanged("all_Timer.alive", false, true);
         adapter.clearInterval(import_store.default.interval);
         import_store.default.interval = null;

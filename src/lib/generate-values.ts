@@ -34,7 +34,6 @@ export const generateValues = (timer: Timer, sec: number, name: string): number 
         remainingTimeInSeconds,
         lengthTimer,
         name,
-        initialTimer: result.initialString,
     });
 
     return remainingTimeInSeconds;

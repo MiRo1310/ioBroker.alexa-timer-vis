@@ -46,29 +46,35 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
   (0, import_generate_values.generateValues)(timer, sec, name);
   const { string } = (0, import_time.secToHourMinSec)(sec, false);
   timer.setLengthTimer(string);
+  if (import_timer_data.timerObject.interval[timerIndex] || !timer.isActive) {
+    return;
+  }
   import_timer_data.timerObject.interval[timerIndex] = adapter.setInterval(() => {
     const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, name);
-    const ioBrokerInterval = import_timer_data.timerObject.interval[timerIndex];
     if (timeLeftSec <= 60 && !onlyOneTimer) {
       onlyOneTimer = true;
-      if (ioBrokerInterval) {
-        adapter.clearInterval(ioBrokerInterval);
+      if (import_timer_data.timerObject.interval[timerIndex]) {
+        clearIntervalByTimerIndex(timerIndex, timer);
       }
       interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerIndex]) {
       import_timer_data.timerObject.timerActive.timerCount--;
-      (0, import_reset.resetValues)(timer).catch((e) => {
+      (0, import_reset.resetTimer)(timer).catch((e) => {
         (0, import_logging.errorLogger)("Error in interval", e);
       });
       adapter.log.debug("Timer stopped");
-      if (ioBrokerInterval) {
-        adapter.clearInterval(ioBrokerInterval);
-        import_timer_data.timerObject.interval[timerIndex] = null;
+      if (import_timer_data.timerObject.interval[timerIndex]) {
+        clearIntervalByTimerIndex(timerIndex, timer);
       }
     }
   }, int);
 };
+function clearIntervalByTimerIndex(timerIndex, timer) {
+  import_store.default.adapter.clearInterval(import_timer_data.timerObject.interval[timerIndex]);
+  timer.isActive = false;
+  import_timer_data.timerObject.interval[timerIndex] = null;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   interval

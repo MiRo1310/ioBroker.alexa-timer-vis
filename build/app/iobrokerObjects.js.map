@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/app/iobrokerObjects.ts"],
+  "sourcesContent": ["import type { TimerIndex } from '@/types/types';\nimport store from '@/store/store';\nimport { errorLogger } from '@/lib/logging';\n\nexport const setDeviceNameInObject = async (index: TimerIndex, val: string): Promise<void> => {\n    const pathArray = [store.getAlexaTimerVisInstance(), index];\n    const { adapter } = store;\n    try {\n        await adapter.setObject(pathArray.join('.'), {\n            type: 'device',\n            common: { name: val },\n            native: {},\n        });\n    } catch (e: any) {\n        errorLogger('Error setDeviceNameInObject', e);\n    }\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,mBAAkB;AAClB,qBAA4B;AAErB,MAAM,wBAAwB,OAAO,OAAmB,QAA+B;AAC1F,QAAM,YAAY,CAAC,aAAAA,QAAM,yBAAyB,GAAG,KAAK;AAC1D,QAAM,EAAE,QAAQ,IAAI,aAAAA;AACpB,MAAI;AACA,UAAM,QAAQ,UAAU,UAAU,KAAK,GAAG,GAAG;AAAA,MACzC,MAAM;AAAA,MACN,QAAQ,EAAE,MAAM,IAAI;AAAA,MACpB,QAAQ,CAAC;AAAA,IACb,CAAC;AAAA,EACL,SAAS,GAAQ;AACb,oCAAY,+BAA+B,CAAC;AAAA,EAChD;AACJ;",
+  "names": ["store"]
+}

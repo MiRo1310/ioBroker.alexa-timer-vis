@@ -38,6 +38,7 @@ var import_store = __toESM(require("../store/store"));
 var import_global = require("../lib/global");
 var import_interval = require("../lib/interval");
 var import_logging = require("../lib/logging");
+var import_time = require("../lib/time");
 const isMoreThanAMinute = (sec) => sec > 60;
 const startTimer = async (sec, name) => {
   try {
@@ -53,7 +54,15 @@ const startTimer = async (sec, name) => {
     const endTimeNumber = creationTime + timerMilliseconds;
     const endTimeString = (0, import_global.timeToString)(endTimeNumber);
     const timer = import_timer_data.timerObject.timer[timerIndex];
-    await timer.init({ timerIndex, creationTime, startTimeString, endTimeNumber, endTimeString });
+    const result = (0, import_time.secToHourMinSec)(sec, true);
+    await timer.init({
+      timerIndex,
+      creationTime,
+      startTimeString,
+      endTimeNumber,
+      endTimeString,
+      initialTimerString: result.initialString
+    });
     if (isMoreThanAMinute(sec)) {
       (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
       return;

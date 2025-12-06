@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/app/delete-timer.ts"],
-  "sourcesContent": ["import { timerObject } from '@/config/timer-data';\nimport { resetValues } from '@/app/reset';\n\nimport { errorLogger } from '@/lib/logging';\nimport type { TimerIndex } from '@/types/types';\n\nexport const delTimer = (timer: TimerIndex): void => {\n    resetValues(timerObject.timer[timer]).catch((e: any) => {\n        errorLogger('Error in delTimer', e);\n    });\n    timerObject.timerActive.timer[timer] = false;\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAC5B,mBAA4B;AAE5B,qBAA4B;AAGrB,MAAM,WAAW,CAAC,UAA4B;AACjD,gCAAY,8BAAY,MAAM,KAAK,CAAC,EAAE,MAAM,CAAC,MAAW;AACpD,oCAAY,qBAAqB,CAAC;AAAA,EACtC,CAAC;AACD,gCAAY,YAAY,MAAM,KAAK,IAAI;AAC3C;",
+  "sourcesContent": ["import { timerObject } from '@/config/timer-data';\nimport { resetTimer } from '@/app/reset';\n\nimport { errorLogger } from '@/lib/logging';\nimport type { TimerIndex } from '@/types/types';\n\nexport const delTimer = (timer: TimerIndex): void => {\n    resetTimer(timerObject.timer[timer]).catch((e: any) => {\n        errorLogger('Error in delTimer', e);\n    });\n    timerObject.timerActive.timer[timer] = false;\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAC5B,mBAA2B;AAE3B,qBAA4B;AAGrB,MAAM,WAAW,CAAC,UAA4B;AACjD,+BAAW,8BAAY,MAAM,KAAK,CAAC,EAAE,MAAM,CAAC,MAAW;AACnD,oCAAY,qBAAqB,CAAC;AAAA,EACtC,CAAC;AACD,gCAAY,YAAY,MAAM,KAAK,IAAI;AAC3C;",
   "names": []
 }

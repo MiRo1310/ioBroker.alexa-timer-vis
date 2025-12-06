@@ -26,39 +26,28 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var reset_exports = {};
-__export(reset_exports, {
-  resetAllTimerValuesAndState: () => resetAllTimerValuesAndState,
-  resetTimer: () => resetTimer
+var iobrokerObjects_exports = {};
+__export(iobrokerObjects_exports, {
+  setDeviceNameInObject: () => setDeviceNameInObject
 });
-module.exports = __toCommonJS(reset_exports);
+module.exports = __toCommonJS(iobrokerObjects_exports);
 var import_store = __toESM(require("../store/store"));
 var import_logging = require("../lib/logging");
-var import_timer_data = require("../config/timer-data");
-var import_write_state = require("../app/write-state");
-var import_iobrokerObjects = require("../app/iobrokerObjects");
-const resetTimer = async (timer) => {
-  const index = timer.getTimerIndex();
-  if (!index) {
-    return;
+const setDeviceNameInObject = async (index, val) => {
+  const pathArray = [import_store.default.getAlexaTimerVisInstance(), index];
+  const { adapter } = import_store.default;
+  try {
+    await adapter.setObject(pathArray.join("."), {
+      type: "device",
+      common: { name: val },
+      native: {}
+    });
+  } catch (e) {
+    (0, import_logging.errorLogger)("Error setDeviceNameInObject", e);
   }
-  timer.reset();
-  await (0, import_iobrokerObjects.setDeviceNameInObject)(index, "");
 };
-function resetAllTimerValuesAndState() {
-  Object.keys(import_timer_data.timerObject.timer).forEach((el) => {
-    resetTimer(import_timer_data.timerObject.timer[el]).catch((e) => {
-      (0, import_logging.errorLogger)("Error in resetAllTimerValuesAndState", e);
-    });
-    (0, import_write_state.writeState)({ reset: true }).catch((e) => {
-      (0, import_logging.errorLogger)("Error in resetAllTimerValuesAndState", e);
-    });
-  });
-  import_store.default.adapter.setStateChanged("all_Timer.alive", false, true);
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  resetAllTimerValuesAndState,
-  resetTimer
+  setDeviceNameInObject
 });
-//# sourceMappingURL=reset.js.map
+//# sourceMappingURL=iobrokerObjects.js.map

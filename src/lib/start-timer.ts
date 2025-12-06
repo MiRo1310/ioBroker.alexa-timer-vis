@@ -4,6 +4,7 @@ import store from '@/store/store';
 import { isString, timeToString } from '@/lib/global';
 import { interval } from '@/lib/interval';
 import { errorLogger } from '@/lib/logging';
+import { secToHourMinSec } from '@/lib/time';
 
 const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 
@@ -23,7 +24,15 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
         const endTimeNumber = creationTime + timerMilliseconds;
         const endTimeString = timeToString(endTimeNumber);
         const timer = timerObject.timer[timerIndex];
-        await timer.init({ timerIndex, creationTime, startTimeString, endTimeNumber, endTimeString });
+        const result = secToHourMinSec(sec, true);
+        await timer.init({
+            timerIndex,
+            creationTime,
+            startTimeString,
+            endTimeNumber,
+            endTimeString,
+            initialTimerString: result.initialString,
+        });
 
         if (isMoreThanAMinute(sec)) {
             interval(sec, name, timer, store.intervalMore60 * 1000, false);

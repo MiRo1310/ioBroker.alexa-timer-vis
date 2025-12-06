@@ -3,30 +3,20 @@ import { errorLogger } from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
 import type { Timer } from '@/app/timer';
 import { writeState } from '@/app/write-state';
+import { setDeviceNameInObject } from '@/app/iobrokerObjects';
 
-export const resetValues = async (timer: Timer): Promise<void> => {
-    const { adapter } = store;
+export const resetTimer = async (timer: Timer): Promise<void> => {
     const index = timer.getTimerIndex();
     if (!index) {
         return;
     }
-    try {
-        timer.reset();
-        adapter.log.debug(JSON.stringify(timerObject.timerActive));
-
-        await adapter.setObject(store.getAlexaTimerVisInstance() + index, {
-            type: 'device',
-            common: { name: `` },
-            native: {},
-        });
-    } catch (e: any) {
-        errorLogger('Error in resetValues', e);
-    }
+    timer.reset();
+    await setDeviceNameInObject(index, '');
 };
 
 export function resetAllTimerValuesAndState(): void {
     Object.keys(timerObject.timer).forEach(el => {
-        resetValues(timerObject.timer[el]).catch(e => {
+        resetTimer(timerObject.timer[el]).catch(e => {
             errorLogger('Error in resetAllTimerValuesAndState', e);
         });
 
