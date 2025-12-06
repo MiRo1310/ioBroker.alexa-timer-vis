@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,43 +17,54 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_add_exports = {};
 __export(timer_add_exports, {
   timerAdd: () => timerAdd
 });
 module.exports = __toCommonJS(timer_add_exports);
-var import_start_timer = require("./start-timer");
-var import_state = require("./state");
+var import_createStates = require("../app/createStates");
 var import_timer_data = require("../config/timer-data");
-var import_write_state_interval = require("./write-state-interval");
-var import_global = require("./global");
-var import_logging = require("./logging");
-var import_store = require("../store/store");
-const timerAdd = (decomposeName, timerSec, decomposeInputString) => {
-  var _a;
-  const { _this } = (0, import_store.useStore)();
-  const name = decomposeName;
+var import_store = __toESM(require("../store/store"));
+var import_timer = require("../app/timer");
+var import_global = require("../lib/global");
+var import_logging = require("../lib/logging");
+var import_start_timer = require("../lib/start-timer");
+var import_write_state_interval = require("../app/write-state-interval");
+function addNewRawTimer(timerIndex) {
+  import_timer_data.timerObject.timerActive.timer[timerIndex] = false;
+  import_timer_data.timerObject.timer[timerIndex] = new import_timer.Timer({
+    store: import_store.default
+  });
+}
+const timerAdd = (name, timerSec) => {
   if (timerSec && timerSec != 0) {
     let nameExist = false;
     for (const element in import_timer_data.timerObject.timer) {
-      if (((_a = import_timer_data.timerObject.timer[element]) == null ? void 0 : _a.name) == name && !(0, import_global.isStringEmpty)(name)) {
+      if (import_timer_data.timerObject.timer[element].getName() == name && !(0, import_global.isStringEmpty)(name)) {
         nameExist = true;
         break;
       }
     }
     if (!nameExist) {
       import_timer_data.timerObject.timerActive.timerCount++;
-      (0, import_state.createState)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
-        (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
+      (0, import_createStates.createStates)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
+        (0, import_logging.errorLogger)("Error in timerAdd", e);
       });
-      const timer = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
-      if (import_timer_data.timerObject.timerActive.timer[timer] === void 0) {
-        import_timer_data.timerObject.timerActive.timer[timer] = false;
-        import_timer_data.timerObject.timer[timer] = {};
+      const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
+      if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
+        addNewRawTimer(timerIndex);
       }
-      (0, import_start_timer.startTimer)(timerSec, name, decomposeInputString).catch((e) => {
-        (0, import_logging.errorLogger)("Error in timerAdd", e, _this);
+      (0, import_start_timer.startTimer)(timerSec, name).catch((e) => {
+        (0, import_logging.errorLogger)("Error in timerAdd", e);
       });
       (0, import_write_state_interval.writeStateIntervall)();
     }

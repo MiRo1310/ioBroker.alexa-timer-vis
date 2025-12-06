@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var global_exports = {};
 __export(global_exports, {
@@ -25,73 +35,11 @@ __export(global_exports, {
   isIobrokerValue: () => isIobrokerValue,
   isString: () => isString,
   isStringEmpty: () => isStringEmpty,
-  secToHourMinSec: () => secToHourMinSec,
   sortArray: () => sortArray,
   timeToString: () => timeToString
 });
 module.exports = __toCommonJS(global_exports);
-var import_store = require("../store/store");
-const secToHourMinSec = (valSec, doubleInt) => {
-  const store = (0, import_store.useStore)();
-  const { hourInSec, hour } = includedHours(valSec);
-  const { minutesInSec, minutes } = includedMinutes(valSec, hourInSec);
-  const seconds = includedSeconds(valSec, hourInSec, minutesInSec);
-  const { hourString, minutesString, secondsString } = getDoubleIntValues(doubleInt, hour, minutes, seconds);
-  const hourUnit = getHourUnit(hour, store);
-  const minuteUnit = getMinuteUnit(minutes, store);
-  const secUnit = getSecondUnit(seconds, store);
-  const string = `${hour} ${hourUnit} ${minutes} ${minuteUnit} ${seconds} ${secUnit}`;
-  return { hour: hourString, minutes: minutesString, seconds: secondsString, string: string.trim() };
-};
-function getSecondUnit(seconds, store) {
-  if (seconds && seconds > 1) {
-    return store.unitSecond2;
-  }
-  return store.unitSecond1;
-}
-function getMinuteUnit(minutes, store) {
-  if (minutes && minutes > 1) {
-    return store.unitMinute2;
-  }
-  return store.unitMinute1;
-}
-function getHourUnit(hour, store) {
-  if (hour && hour > 1) {
-    return store.unitHour2;
-  }
-  return store.unitHour1;
-}
-function getDoubleIntValues(doubleInt, hour, minutes, seconds) {
-  if (doubleInt) {
-    return {
-      hourString: `0${hour}`.slice(-2),
-      minutesString: `0${minutes}`.slice(-2),
-      secondsString: `0${seconds}`.slice(-2)
-    };
-  }
-  return {
-    hourString: (hour == null ? void 0 : hour.toString()) || "",
-    minutesString: (minutes == null ? void 0 : minutes.toString()) || "",
-    secondsString: (seconds == null ? void 0 : seconds.toString()) || ""
-  };
-}
-function includedSeconds(valSec, hourInSec, minutesInSec) {
-  let seconds = valSec - hourInSec - minutesInSec;
-  seconds = Math.round(seconds);
-  return seconds;
-}
-function includedMinutes(valSec, hourInSec) {
-  let minutes = (valSec - hourInSec) / 60;
-  minutes = Math.floor(minutes);
-  const minutesInSec = minutes * 60;
-  return { minutesInSec, minutes };
-}
-function includedHours(valSec) {
-  let hour = valSec / (60 * 60);
-  hour = Math.floor(hour);
-  const hourInSec = hour * 60 * 60;
-  return { hourInSec, hour };
-}
+var import_store = __toESM(require("../store/store"));
 function firstLetterToUpperCase(name) {
   if (name.length === 0) {
     return "";
@@ -109,12 +57,10 @@ function isAlexaSummaryStateChanged({
   state,
   id
 }) {
-  const store = (0, import_store.useStore)();
-  return state && isString(state.val) && state.val !== "" && id === store.pathAlexaStateToListenTo;
+  return state && isString(state.val) && state.val !== "" && id === import_store.default.pathAlexaStateToListenTo;
 }
 function doesAlexaSendAQuestion(voiceInput) {
-  const store = (0, import_store.useStore)();
-  store.questionAlexa = voiceInput.indexOf(",") != -1;
+  import_store.default.questionAlexa = voiceInput.indexOf(",") != -1;
 }
 const isStringEmpty = (str) => {
   return str === "";
@@ -122,10 +68,7 @@ const isStringEmpty = (str) => {
 function isString(str) {
   return typeof str == "string";
 }
-function isIobrokerValue(obj) {
-  const result = obj && obj.val !== null && obj.val !== void 0;
-  return !!result;
-}
+const isIobrokerValue = (obj) => !!obj && obj.val !== null && obj.val !== void 0;
 function sortArray(array) {
   return array.sort(function(a, b) {
     return a[2] - b[2];
@@ -143,7 +86,6 @@ function countOccurrences(str, char) {
   isIobrokerValue,
   isString,
   isStringEmpty,
-  secToHourMinSec,
   sortArray,
   timeToString
 });

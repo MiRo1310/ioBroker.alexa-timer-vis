@@ -1,10 +1,6 @@
-import { timerObject } from '../config/timer-data';
-import type AlexaTimerVis from '../main';
+import { timerObject } from '@/config/timer-data';
 
-export const getAbortWord = (voiceInput: string, _this: AlexaTimerVis): string | undefined => {
-    const input = voiceInput.toLocaleLowerCase();
-
-    return timerObject.timerActive.data.abortWords.find(word => {
-        return input.includes(word.toLocaleLowerCase());
-    });
-};
+export const getAbortWord = (voiceInput: string): string | undefined =>
+    timerObject.timerActive.data.abortWords.find(word =>
+        voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase()),
+    );

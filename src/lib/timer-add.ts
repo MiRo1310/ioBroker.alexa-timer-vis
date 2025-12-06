@@ -1,20 +1,27 @@
-import { startTimer } from './start-timer';
-import { createState } from './state';
-import { timerObject } from '../config/timer-data';
-import { writeStateIntervall } from './write-state-interval';
-import { isStringEmpty } from './global';
-import { errorLogger } from './logging';
-import { useStore } from '../store/store';
+import { createStates } from '@/app/createStates';
+import { timerObject } from '@/config/timer-data';
 
-export const timerAdd = (decomposeName: string, timerSec: number, decomposeInputString: string): void => {
-    const { _this } = useStore();
-    const name = decomposeName;
+import store from '@/store/store';
+import { Timer } from '@/app/timer';
+import { isStringEmpty } from '@/lib/global';
+import { errorLogger } from '@/lib/logging';
+import { startTimer } from '@/lib/start-timer';
+import { writeStateIntervall } from '@/app/write-state-interval';
 
+function addNewRawTimer(timerIndex: string): void {
+    timerObject.timerActive.timer[timerIndex] = false;
+
+    timerObject.timer[timerIndex] = new Timer({
+        store,
+    });
+}
+
+export const timerAdd = (name: string, timerSec: number): void => {
     if (timerSec && timerSec != 0) {
         let nameExist = false;
 
         for (const element in timerObject.timer) {
-            if (timerObject.timer[element as keyof typeof timerObject.timer]?.name == name && !isStringEmpty(name)) {
+            if (timerObject.timer[element].getName() == name && !isStringEmpty(name)) {
                 nameExist = true;
                 //FIXME: Break evtl entfernen
                 break;
@@ -24,20 +31,18 @@ export const timerAdd = (decomposeName: string, timerSec: number, decomposeInput
         if (!nameExist) {
             timerObject.timerActive.timerCount++;
 
-            createState(timerObject.timerActive.timerCount).catch((e: any) => {
-                errorLogger('Error in timerAdd', e, _this);
+            createStates(timerObject.timerActive.timerCount).catch((e: any) => {
+                errorLogger('Error in timerAdd', e);
             });
 
-            const timer = `timer${timerObject.timerActive.timerCount}`;
+            const timerIndex = `timer${timerObject.timerActive.timerCount}`;
 
-            if (timerObject.timerActive.timer[timer as keyof typeof timerObject.timerActive.timer] === undefined) {
-                timerObject.timerActive.timer[timer as keyof typeof timerObject.timerActive.timer] = false;
-
-                timerObject.timer[timer as keyof typeof timerObject.timer] = {} as (typeof timerObject.timer)['timer1'];
+            if (!timerObject.timerActive.timer[timerIndex]) {
+                addNewRawTimer(timerIndex);
             }
 
-            startTimer(timerSec, name, decomposeInputString).catch((e: any) => {
-                errorLogger('Error in timerAdd', e, _this);
+            startTimer(timerSec, name).catch((e: any) => {
+                errorLogger('Error in timerAdd', e);
             });
 
             writeStateIntervall();

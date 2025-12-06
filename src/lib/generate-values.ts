@@ -1,58 +1,43 @@
-import type { GenerateTimeStringObject, Store, Timer, TimerSelector } from '../types/types';
-import { useStore } from '../store/store';
-import { secToHourMinSec } from './global';
+import type { GenerateTimeStringObject } from '@/types/types';
+import store from '@/store/store';
+import type { Timer } from '@/app/timer';
+import { secToHourMinSec } from '@/lib/time';
 
-export const generateValues = (
-    timer: Timer,
-    sec: number,
-    timerIndex: TimerSelector,
-    inputString: string,
-    name: string,
-): number => {
-    const store = useStore();
+export const generateValues = (timer: Timer, sec: number, name: string): number => {
+    const timeLeft = timer.getOutputProperties().endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec
+    const remainingTimeInSeconds = Math.round(timeLeft / 1000); // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
+    const result = secToHourMinSec(remainingTimeInSeconds, true);
 
-    const timeLeft = timer.endTimeNumber - new Date().getTime(); // Restlaufzeit errechnen in millisec
-    const timeLeftSec = Math.round(timeLeft / 1000); // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
-    const result = secToHourMinSec(timeLeftSec, true);
     let { hour, minutes, seconds } = result;
     const { string: lengthTimer } = result;
 
-    const timeString1 = `${hour}:${minutes}:${seconds}${getTimeUnit(timeLeftSec, store)}`;
+    const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds)}`;
 
-    const { timeString } = isShorterThanAMinute(
+    const { timeString: stringTimer2 } = isShorterThanAMinute(
         isShorterThanSixtyMinutes(
-            isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds, store)),
+            isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds)),
         ),
     );
 
-    if (!timer.extendOrShortenTimer) {
-        timer.voiceInputAsSeconds = sec;
+    if (!timer.isExtendOrShortenTimer()) {
+        timer.setVoiceInputAsSeconds(sec);
     }
 
     ({ hour, minutes, seconds } = resetSuperiorValue(hour, minutes, seconds));
 
-    timer.hour = hour;
-    timer.minute = minutes;
-    timer.second = seconds;
-    timer.stringTimer = timeString1;
-    timer.stringTimer2 = timeString;
-    timer.remainingTimeInSeconds = timeLeftSec;
-    timer.index = timerIndex;
-    timer.inputString = inputString;
-    timer.percent = Math.round((timeLeftSec / timer.voiceInputAsSeconds) * 100);
-    timer.percent2 = 100 - Math.round((timeLeftSec / timer.voiceInputAsSeconds) * 100);
-    timer.lengthTimer = lengthTimer;
-    timer.name = setTimerNameIfNotExist(name);
+    timer.setOutputProperties({
+        hours: hour,
+        minutes,
+        seconds,
+        stringTimer1,
+        stringTimer2,
+        remainingTimeInSeconds,
+        lengthTimer,
+        name,
+    });
 
-    return timeLeftSec;
+    return remainingTimeInSeconds;
 };
-
-function setTimerNameIfNotExist(name?: string | null): string {
-    if (name == '' || !name) {
-        return 'Timer';
-    }
-    return name;
-}
 
 function resetSuperiorValue(
     hour: string,
@@ -71,7 +56,7 @@ function resetSuperiorValue(
     return { hour, minutes, seconds };
 }
 
-function isShorterThanAMinute({ minutes, seconds, store, timeString }: GenerateTimeStringObject): {
+function isShorterThanAMinute({ minutes, seconds, timeString }: GenerateTimeStringObject): {
     timeString: string;
 } {
     if (parseInt(minutes) == 0) {
@@ -84,44 +69,37 @@ function isShorterOrEqualToSixtyFiveMinutes({
     hour,
     minutes,
     seconds,
-    store,
     timeString,
 }: GenerateTimeStringObject): GenerateTimeStringObject {
     if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
         const timeString = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
-        return { timeString, hour, minutes, seconds, store };
+        return { timeString, hour, minutes, seconds };
     }
-    return { timeString, hour, minutes, seconds, store };
+    return { timeString, hour, minutes, seconds };
 }
 
 function isShorterThanSixtyMinutes({
     hour,
     minutes,
     seconds,
-    store,
     timeString,
 }: GenerateTimeStringObject): GenerateTimeStringObject {
     if (parseInt(hour) == 0) {
         const timeString = `${minutes}:${seconds} ${store.unitMinute3}`;
-        return { timeString, hour, minutes, seconds, store };
+        return { timeString, hour, minutes, seconds };
     }
-    return { timeString, hour, minutes, seconds, store };
+    return { timeString, hour, minutes, seconds };
 }
 
-function isGreaterThanSixtyFiveMinutes(
-    hour: string,
-    minutes: string,
-    seconds: string,
-    store: Store,
-): GenerateTimeStringObject {
+function isGreaterThanSixtyFiveMinutes(hour: string, minutes: string, seconds: string): GenerateTimeStringObject {
     if (parseInt(hour) > 1 || (parseInt(hour) === 1 && parseInt(minutes) > 5)) {
         const timeString = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
-        return { timeString, hour, minutes, seconds, store };
+        return { timeString, hour, minutes, seconds };
     }
-    return { timeString: '', hour, minutes, seconds, store };
+    return { timeString: '', hour, minutes, seconds };
 }
 
-function getTimeUnit(timeLeftSec: number, store: Store): string {
+function getTimeUnit(timeLeftSec: number): string {
     if (timeLeftSec >= 3600) {
         return ` ${store.unitHour3}`;
     }

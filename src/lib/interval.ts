@@ -1,63 +1,57 @@
-import { generateValues } from './generate-values';
-import { secToHourMinSec } from './global';
-import { resetValues } from './reset';
-import type { Timer, TimerSelector } from '../types/types';
-import { timerObject } from '../config/timer-data';
-import { useStore } from '../store/store';
-import { errorLogger } from './logging';
+import { timerObject } from '@/config/timer-data';
+import store from '@/store/store';
+import { errorLogger } from '@/lib//logging';
+import type { Timer } from '@/app/timer';
+import { generateValues } from '@/lib/generate-values';
+import { resetTimer } from '@/app/reset';
+import { secToHourMinSec } from '@/lib/time';
 
-export const interval = (
-    sec: number,
-    timerBlock: TimerSelector,
-    inputString: string,
-    name: string,
-    timer: Timer,
-    int: number,
-    onlyOneTimer: boolean,
-): void => {
-    const store = useStore();
-    const _this = store._this;
+export const interval = (sec: number, name: string, timer: Timer, int: number, onlyOneTimer: boolean): void => {
+    const adapter = store.adapter;
+    const timerIndex = timer.getTimerIndex();
 
-    generateValues(timer, sec, timerBlock, inputString, name);
+    if (!timerIndex) {
+        return;
+    }
+    generateValues(timer, sec, name);
 
     const { string } = secToHourMinSec(sec, false);
-    timer.lengthTimer = string;
-
-    if (!timerBlock) {
+    timer.setLengthTimer(string);
+    if (timerObject.interval[timerIndex as keyof typeof timerObject.interval] || !timer.isActive) {
         return;
     }
 
-    timerObject.interval[timerBlock as keyof typeof timerObject.interval] = _this.setInterval(() => {
-        const timeLeftSec = generateValues(timer, sec, timerBlock, inputString, name);
+    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = adapter.setInterval(() => {
+        const timeLeftSec = generateValues(timer, sec, name);
 
-        if (timeLeftSec <= 60 && onlyOneTimer == false) {
+        if (timeLeftSec <= 60 && !onlyOneTimer) {
             onlyOneTimer = true;
 
-            if (timerObject.interval) {
-                _this.clearInterval(
-                    timerObject.interval[timerBlock as keyof typeof timerObject.interval] as ioBroker.Interval,
-                );
+            if (timerObject.interval[timerIndex as keyof typeof timerObject.interval]) {
+                clearIntervalByTimerIndex(timerIndex, timer);
             }
 
-            interval(sec, timerBlock, inputString, name, timer, timerObject.timer[timerBlock].timerInterval, true);
+            interval(sec, name, timer, timerObject.timer[timerIndex].getInterval(), true);
         }
 
-        if (timeLeftSec <= 0 || !timerObject.timerActive.timer[timerBlock]) {
+        if (timeLeftSec <= 0 || !timerObject.timerActive.timer[timerIndex]) {
             timerObject.timerActive.timerCount--;
 
-            resetValues(timer, timerBlock).catch((e: any) => {
-                errorLogger('Error in interval', e, _this);
+            resetTimer(timer).catch((e: any) => {
+                errorLogger('Error in interval', e);
             });
 
-            _this.log.debug('Timer stopped');
+            adapter.log.debug('Timer stopped');
 
-            if (timerObject.interval) {
-                _this.clearInterval(
-                    timerObject.interval[timerBlock as keyof typeof timerObject.interval] as ioBroker.Interval,
-                );
-
-                timerObject.interval[timerBlock as keyof typeof timerObject.interval] = null;
+            if (timerObject.interval[timerIndex as keyof typeof timerObject.interval]) {
+                clearIntervalByTimerIndex(timerIndex, timer);
             }
         }
     }, int);
 };
+
+function clearIntervalByTimerIndex(timerIndex: string, timer: Timer): void {
+    store.adapter.clearInterval(timerObject.interval[timerIndex as keyof typeof timerObject.interval]);
+    timer.isActive = false;
+    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = null;
+}

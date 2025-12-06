@@ -22,12 +22,9 @@ __export(abort_exports, {
 });
 module.exports = __toCommonJS(abort_exports);
 var import_timer_data = require("../config/timer-data");
-const getAbortWord = (voiceInput, _this) => {
-  const input = voiceInput.toLocaleLowerCase();
-  return import_timer_data.timerObject.timerActive.data.abortWords.find((word) => {
-    return input.includes(word.toLocaleLowerCase());
-  });
-};
+const getAbortWord = (voiceInput) => import_timer_data.timerObject.timerActive.data.abortWords.find(
+  (word) => voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase())
+);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   getAbortWord

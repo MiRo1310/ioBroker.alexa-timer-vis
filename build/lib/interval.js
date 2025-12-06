@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,53 +17,64 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var interval_exports = {};
 __export(interval_exports, {
   interval: () => interval
 });
 module.exports = __toCommonJS(interval_exports);
-var import_generate_values = require("./generate-values");
-var import_global = require("./global");
-var import_reset = require("./reset");
 var import_timer_data = require("../config/timer-data");
-var import_store = require("../store/store");
-var import_logging = require("./logging");
-const interval = (sec, timerBlock, inputString, name, timer, int, onlyOneTimer) => {
-  const store = (0, import_store.useStore)();
-  const _this = store._this;
-  (0, import_generate_values.generateValues)(timer, sec, timerBlock, inputString, name);
-  const { string } = (0, import_global.secToHourMinSec)(sec, false);
-  timer.lengthTimer = string;
-  if (!timerBlock) {
+var import_store = __toESM(require("../store/store"));
+var import_logging = require("../lib/logging");
+var import_generate_values = require("../lib/generate-values");
+var import_reset = require("../app/reset");
+var import_time = require("../lib/time");
+const interval = (sec, name, timer, int, onlyOneTimer) => {
+  const adapter = import_store.default.adapter;
+  const timerIndex = timer.getTimerIndex();
+  if (!timerIndex) {
     return;
   }
-  import_timer_data.timerObject.interval[timerBlock] = _this.setInterval(() => {
-    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, timerBlock, inputString, name);
-    if (timeLeftSec <= 60 && onlyOneTimer == false) {
+  (0, import_generate_values.generateValues)(timer, sec, name);
+  const { string } = (0, import_time.secToHourMinSec)(sec, false);
+  timer.setLengthTimer(string);
+  if (import_timer_data.timerObject.interval[timerIndex] || !timer.isActive) {
+    return;
+  }
+  import_timer_data.timerObject.interval[timerIndex] = adapter.setInterval(() => {
+    const timeLeftSec = (0, import_generate_values.generateValues)(timer, sec, name);
+    if (timeLeftSec <= 60 && !onlyOneTimer) {
       onlyOneTimer = true;
-      if (import_timer_data.timerObject.interval) {
-        _this.clearInterval(
-          import_timer_data.timerObject.interval[timerBlock]
-        );
+      if (import_timer_data.timerObject.interval[timerIndex]) {
+        clearIntervalByTimerIndex(timerIndex, timer);
       }
-      interval(sec, timerBlock, inputString, name, timer, import_timer_data.timerObject.timer[timerBlock].timerInterval, true);
+      interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
     }
-    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerBlock]) {
+    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerIndex]) {
       import_timer_data.timerObject.timerActive.timerCount--;
-      (0, import_reset.resetValues)(timer, timerBlock).catch((e) => {
-        (0, import_logging.errorLogger)("Error in interval", e, _this);
+      (0, import_reset.resetTimer)(timer).catch((e) => {
+        (0, import_logging.errorLogger)("Error in interval", e);
       });
-      _this.log.debug("Timer stopped");
-      if (import_timer_data.timerObject.interval) {
-        _this.clearInterval(
-          import_timer_data.timerObject.interval[timerBlock]
-        );
-        import_timer_data.timerObject.interval[timerBlock] = null;
+      adapter.log.debug("Timer stopped");
+      if (import_timer_data.timerObject.interval[timerIndex]) {
+        clearIntervalByTimerIndex(timerIndex, timer);
       }
     }
   }, int);
 };
+function clearIntervalByTimerIndex(timerIndex, timer) {
+  import_store.default.adapter.clearInterval(import_timer_data.timerObject.interval[timerIndex]);
+  timer.isActive = false;
+  import_timer_data.timerObject.interval[timerIndex] = null;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   interval

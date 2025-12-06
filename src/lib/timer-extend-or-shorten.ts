@@ -1,22 +1,13 @@
-import type { Store, TimerName, TimerObject } from '../types/types';
-import { useStore } from '../store/store';
-import { filterInfo } from './filter-info';
-import { findTimer } from './find-timer';
-import { timerObject } from '../config/timer-data';
-import { timeToString } from './global';
-import { errorLogger } from './logging';
+import type { TimerIndex, TimerObject } from '@/types/types';
+import { timerObject } from '@/config/timer-data';
+import { parseTimeInput } from '@/lib/parse-time-input';
+import { findTimer } from '@/lib/find-timer';
+import { errorLogger } from '@/lib/logging';
+import store from '@/store/store';
 
-export const extendOrShortTimer = async ({
-    voiceInput,
-    decomposeName,
-}: {
-    voiceInput: string;
-    decomposeName: string;
-}): Promise<void> => {
-    const store = useStore();
-    const _this = store._this;
+export const extendOrShortTimer = async ({ voiceInput, name }: { voiceInput: string; name: string }): Promise<void> => {
     try {
-        const addOrSub = getMultiplikatorForAddOrSub(store);
+        const addOrSub = getMultiplikatorForAddOrSub();
 
         let firstPartOfValue, valueExtend;
         let extendTime = 0;
@@ -26,13 +17,13 @@ export const extendOrShortTimer = async ({
             firstPartOfValue = voiceInput.slice(0, voiceInput.indexOf('um')).split(' ');
             valueExtend = voiceInput.slice(voiceInput.indexOf('um') + 2).split(' ');
 
-            const { timerString } = filterInfo(firstPartOfValue);
-            extendTime = eval(timerString);
-            const { timerString: string2 } = filterInfo(valueExtend);
+            const { stringToEvaluate } = parseTimeInput(firstPartOfValue);
+            extendTime = eval(stringToEvaluate);
+            const { stringToEvaluate: string2 } = parseTimeInput(valueExtend);
             extendTime2 = eval(string2);
         }
 
-        const timers = await findTimer(extendTime, decomposeName, 1, voiceInput);
+        const timers = await findTimer(extendTime, name, 1, voiceInput);
 
         if (timers.timer) {
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
@@ -42,28 +33,21 @@ export const extendOrShortTimer = async ({
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
         }
     } catch (e: any) {
-        errorLogger('Error in extendOrShortTimer', e, _this);
+        errorLogger('Error in extendOrShortTimer', e);
     }
 };
 
-function getMultiplikatorForAddOrSub(store: Store): 1 | -1 {
+function getMultiplikatorForAddOrSub(): 1 | -1 {
     if (store.isShortenTimer()) {
         return -1;
     }
     return 1;
 }
 
-export function extendTimer(timers: TimerName[], sec: number, addOrSub: number, timerObject: TimerObject): void {
+export function extendTimer(timers: TimerIndex[], sec: number, addOrSub: number, timerObject: TimerObject): void {
     timers.forEach(timer => {
-        const timerSeconds = sec;
-
         if (timerObject.timerActive.timer[timer]) {
-            timerObject.timer[timer].extendOrShortenTimer = true;
-
-            timerObject.timer[timer].endTimeNumber += timerSeconds * 1000 * addOrSub;
-
-            timerObject.timer[timer].endTimeString = timeToString(timerObject.timer[timer].endTimeNumber);
-            timerObject.timer[timer].voiceInputAsSeconds += timerSeconds * addOrSub;
+            timerObject.timer[timer].extendTimer(sec, addOrSub);
         }
     });
 }

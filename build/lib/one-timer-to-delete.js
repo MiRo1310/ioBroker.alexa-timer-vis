@@ -22,27 +22,28 @@ __export(one_timer_to_delete_exports, {
 });
 module.exports = __toCommonJS(one_timer_to_delete_exports);
 var import_timer_data = require("../config/timer-data");
-var import_global = require("./global");
+var import_global = require("../lib/global");
 const oneOfMultiTimerDelete = (input, timeSec, name, inputDevice) => {
   const separateInput = input.slice(input.indexOf(",") + 2, input.length);
   const separateInputArray = separateInput.split(" ");
   let timerNumber;
   for (const element of separateInputArray) {
-    if (import_timer_data.timerObject.zuweisung[element] > 0) {
-      timerNumber = import_timer_data.timerObject.zuweisung[element];
+    if (import_timer_data.timerObject.assignment[element] > 0) {
+      timerNumber = import_timer_data.timerObject.assignment[element];
     } else {
       name = separateInput.replace("timer", "").trim();
       timerNumber = 0;
     }
   }
   let sortable = [];
-  for (const element in import_timer_data.timerObject.timer) {
+  for (const timerName in import_timer_data.timerObject.timer) {
+    const timer = import_timer_data.timerObject.timer[timerName];
     sortable.push([
-      element,
-      import_timer_data.timerObject.timer[element].voiceInputAsSeconds,
-      import_timer_data.timerObject.timer[element].remainingTimeInSeconds,
-      import_timer_data.timerObject.timer[element].name,
-      import_timer_data.timerObject.timer[element].inputDevice
+      timerName,
+      timer.getVoiceInputAsSeconds(),
+      timer.getRemainingTimeInSeconds(),
+      timer.getName(),
+      timer.getInputDevice()
     ]);
   }
   sortable = (0, import_global.sortArray)(sortable);
