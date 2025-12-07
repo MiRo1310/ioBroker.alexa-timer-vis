@@ -41,7 +41,6 @@ export const createStates = async (value: number): Promise<void> => {
                 },
                 native: {},
             });
-
             await adapter.setObjectNotExistsAsync(`timer${i}.alive`, {
                 type: 'state',
                 common: {

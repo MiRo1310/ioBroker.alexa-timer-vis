@@ -28,20 +28,20 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var write_state_exports = {};
 __export(write_state_exports, {
-  resetStatesByTimerIndex: () => resetStatesByTimerIndex,
-  writeState: () => writeState
+  writeStates: () => writeStates,
+  writeStatesByTimerIndex: () => writeStatesByTimerIndex
 });
 module.exports = __toCommonJS(write_state_exports);
 var import_timer_data = require("../config/timer-data");
 var import_reset = require("../app/reset");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../store/store"));
-const resetStatesByTimerIndex = async (timerIndex, reset) => {
+const writeStatesByTimerIndex = async (timerIndex, reset) => {
   const adapter = import_store.default.adapter;
-  if (!timerIndex) {
+  const timer = import_timer_data.timerObject.timer[timerIndex];
+  if (!timer) {
     return;
   }
-  const timer = import_timer_data.timerObject.timer[timerIndex];
   if (reset) {
     await (0, import_reset.resetTimer)(timer);
   }
@@ -76,11 +76,10 @@ const resetStatesByTimerIndex = async (timerIndex, reset) => {
   adapter.setStateChanged(`${timerIndex}.json`, timer.isActive ? timer.getDataAsJson() : "{}", true);
   adapter.setStateChanged("all_Timer.alive", !reset, true);
 };
-async function writeState({ reset }) {
-  const timers = import_timer_data.timerObject.timerActive.timer;
+async function writeStates({ reset }) {
   try {
-    for (const timerIndex in timers) {
-      await resetStatesByTimerIndex(timerIndex, reset);
+    for (const timerIndex in import_timer_data.timerObject.timerActive.timer) {
+      await writeStatesByTimerIndex(timerIndex, reset);
     }
   } catch (e) {
     (0, import_logging.errorLogger)("Error in writeState", e);
@@ -88,7 +87,7 @@ async function writeState({ reset }) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  resetStatesByTimerIndex,
-  writeState
+  writeStates,
+  writeStatesByTimerIndex
 });
 //# sourceMappingURL=write-state.js.map

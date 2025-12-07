@@ -18,15 +18,18 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var abort_exports = {};
 __export(abort_exports, {
-  getAbortWord: () => getAbortWord
+  getAbortWord: () => getAbortWord,
+  isAbortSentence: () => isAbortSentence
 });
 module.exports = __toCommonJS(abort_exports);
 var import_timer_data = require("../config/timer-data");
 const getAbortWord = (voiceInput) => import_timer_data.timerObject.timerActive.data.abortWords.find(
   (word) => voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase())
 );
+const isAbortSentence = (voiceInput) => import_timer_data.timerObject.timerActive.data.notNotedSentence.some((sentence) => sentence === voiceInput);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  getAbortWord
+  getAbortWord,
+  isAbortSentence
 });
 //# sourceMappingURL=abort.js.map

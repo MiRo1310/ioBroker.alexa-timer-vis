@@ -73,3 +73,30 @@ function includedHours(valSec: number): { hourInSec: number; hour: number } {
     const hourInSec = hour * 60 * 60;
     return { hourInSec, hour };
 }
+
+export const isMoreThanAMinute = (sec: number): boolean => sec > 60;
+
+export function resetSuperiorValue(
+    hour: string,
+    minutes: string,
+    seconds: string,
+): { hour: string; minutes: string; seconds: string } {
+    if (hour === '00') {
+        hour = '';
+        if (minutes === '00') {
+            minutes = '';
+            if (seconds === '00') {
+                seconds = '';
+            }
+        }
+    }
+    return { hour, minutes, seconds };
+}
+
+/**
+ * Convert milliseconds to time in milliseconds to string => HH:MM:SS
+ *
+ * @param milliseconds - The time in milliseconds
+ */
+export const timeToString = (milliseconds: number): string =>
+    new Date(milliseconds).toString().split(' ').slice(4, 5).toString();

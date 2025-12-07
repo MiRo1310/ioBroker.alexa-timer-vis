@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/state.ts"],
+  "sourcesContent": ["import { isDefined } from '@/lib/object';\n\nexport const isIobrokerValue = (obj: ioBroker.State | null | undefined): obj is ioBroker.State => isDefined(obj?.val);\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,oBAA0B;AAEnB,MAAM,kBAAkB,CAAC,YAAkE,yBAAU,2BAAK,GAAG;",
+  "names": []
+}

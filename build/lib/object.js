@@ -18,14 +18,24 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var object_exports = {};
 __export(object_exports, {
-  deepCopy: () => deepCopy
+  deepCopy: () => deepCopy,
+  isDefined: () => isDefined,
+  sortArray: () => sortArray
 });
 module.exports = __toCommonJS(object_exports);
 const deepCopy = (obj) => {
   return JSON.parse(JSON.stringify(obj));
 };
+function sortArray(array) {
+  return array.sort(function(a, b) {
+    return a[2] - b[2];
+  });
+}
+const isDefined = (value) => value !== void 0 && value !== null;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  deepCopy
+  deepCopy,
+  isDefined,
+  sortArray
 });
 //# sourceMappingURL=object.js.map

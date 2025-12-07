@@ -1,5 +1,5 @@
 import store from '@/store/store';
-import { parseTimeInput } from '@/lib/parse-time-input';
+import { timerParseTimeInput } from '@/app/timer-parse-time-input';
 import { errorLogger } from '@/lib/logging';
 
 export const decomposeInputValue = (
@@ -13,7 +13,7 @@ export const decomposeInputValue = (
         let inputDecomposed = voiceString.split(',');
         inputDecomposed = inputDecomposed[0].split(' ');
 
-        const { stringToEvaluate, name, deleteVal } = parseTimeInput(inputDecomposed);
+        const { stringToEvaluate, name, deleteVal } = timerParseTimeInput(inputDecomposed);
         return { name, timerSec: eval(stringToEvaluate), deleteVal };
     } catch (e: any) {
         store.adapter.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceString}`);

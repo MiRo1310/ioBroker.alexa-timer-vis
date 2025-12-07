@@ -31,11 +31,12 @@ __export(timer_exports, {
   Timer: () => Timer
 });
 module.exports = __toCommonJS(timer_exports);
-var import_global = require("../lib/global");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
-var import_iobrokerObjects = require("../app/iobrokerObjects");
+var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
+var import_string = require("../lib/string");
+var import_state = require("../lib/state");
 class Timer {
   hours;
   minutes;
@@ -132,7 +133,7 @@ class Timer {
   }
   outPutTimerName() {
     const name = this.name;
-    return this.alexaTimerName || !["Timer", ""].includes(name) ? `${(0, import_global.firstLetterToUpperCase)(name)} Timer` : "Timer";
+    return this.alexaTimerName || !["Timer", ""].includes(name) ? `${(0, import_string.firstLetterToUpperCase)(name)} Timer` : "Timer";
   }
   extendTimer(sec, addOrSub) {
     this.extendOrShortenTimer = true;
@@ -180,17 +181,17 @@ class Timer {
       this.alexaInstance = instance;
       const nameState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.name`);
       const serialState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.serialNumber`);
-      if ((0, import_global.isIobrokerValue)(nameState)) {
+      if ((0, import_state.isIobrokerValue)(nameState)) {
         this.inputDeviceName = String(nameState.val);
       }
-      if ((0, import_global.isIobrokerValue)(serialState)) {
+      if ((0, import_state.isIobrokerValue)(serialState)) {
         this.deviceSerialNumber = String(serialState.val);
       }
       const serial = this.deviceSerialNumber;
       const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
       await this.setForeignActiveTimerListSubscription(foreignId);
       this.foreignActiveTimerListId = foreignId;
-      await (0, import_iobrokerObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
+      await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
       this.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
       await this.setIdFromEcoDeviceTimerList();
     } catch (error) {

@@ -28,7 +28,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var time_exports = {};
 __export(time_exports, {
-  secToHourMinSec: () => secToHourMinSec
+  isMoreThanAMinute: () => isMoreThanAMinute,
+  resetSuperiorValue: () => resetSuperiorValue,
+  secToHourMinSec: () => secToHourMinSec,
+  timeToString: () => timeToString
 });
 module.exports = __toCommonJS(time_exports);
 var import_store = __toESM(require("../store/store"));
@@ -89,8 +92,25 @@ function includedHours(valSec) {
   const hourInSec = hour * 60 * 60;
   return { hourInSec, hour };
 }
+const isMoreThanAMinute = (sec) => sec > 60;
+function resetSuperiorValue(hour, minutes, seconds) {
+  if (hour === "00") {
+    hour = "";
+    if (minutes === "00") {
+      minutes = "";
+      if (seconds === "00") {
+        seconds = "";
+      }
+    }
+  }
+  return { hour, minutes, seconds };
+}
+const timeToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  secToHourMinSec
+  isMoreThanAMinute,
+  resetSuperiorValue,
+  secToHourMinSec,
+  timeToString
 });
 //# sourceMappingURL=time.js.map

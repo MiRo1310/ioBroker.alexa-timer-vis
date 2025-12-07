@@ -6,12 +6,13 @@ import type {
     TimerIndex,
     TimerInit,
 } from '@/types/types';
-import { firstLetterToUpperCase, isIobrokerValue } from '@/lib/global';
 import { errorLogger } from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
-import { setDeviceNameInObject } from '@/app/iobrokerObjects';
+import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
+import { firstLetterToUpperCase } from '@/lib/string';
+import { isIobrokerValue } from '@/lib/state';
 
 export class Timer {
     private hours: string;

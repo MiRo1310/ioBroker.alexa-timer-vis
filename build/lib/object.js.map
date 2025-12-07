@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/lib/object.ts"],
-  "sourcesContent": ["export const deepCopy = <T>(obj: T): T => {\n    return JSON.parse(JSON.stringify(obj));\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,MAAM,WAAW,CAAI,QAAc;AACtC,SAAO,KAAK,MAAM,KAAK,UAAU,GAAG,CAAC;AACzC;",
+  "sourcesContent": ["/**\n * Deep copy an object\n *\n * @param obj - The object to deep copy\n */\nexport const deepCopy = <T>(obj: T): T => {\n    return JSON.parse(JSON.stringify(obj));\n};\n\n/**\n * Sort an array based on the third element of its sub-arrays\n *\n * @param array - The array to sort\n */\nexport function sortArray(array: any[]): any[] {\n    return array.sort(function (a: any[], b: any[]) {\n        return a[2] - b[2];\n    });\n}\n\nexport const isDefined = <T>(value: T | undefined | null): value is T => value !== undefined && value !== null;\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAKO,MAAM,WAAW,CAAI,QAAc;AACtC,SAAO,KAAK,MAAM,KAAK,UAAU,GAAG,CAAC;AACzC;AAOO,SAAS,UAAU,OAAqB;AAC3C,SAAO,MAAM,KAAK,SAAU,GAAU,GAAU;AAC5C,WAAO,EAAE,CAAC,IAAI,EAAE,CAAC;AAAA,EACrB,CAAC;AACL;AAEO,MAAM,YAAY,CAAI,UAA4C,UAAU,UAAa,UAAU;",
   "names": []
 }

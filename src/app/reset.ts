@@ -1,9 +1,8 @@
 import store from '@/store/store';
-import { errorLogger } from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
 import type { Timer } from '@/app/timer';
-import { writeState } from '@/app/write-state';
-import { setDeviceNameInObject } from '@/app/iobrokerObjects';
+import { writeStates } from '@/app/write-state';
+import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 
 export const resetTimer = async (timer: Timer): Promise<void> => {
     const index = timer.getTimerIndex();
@@ -14,15 +13,11 @@ export const resetTimer = async (timer: Timer): Promise<void> => {
     await setDeviceNameInObject(index, '');
 };
 
-export function resetAllTimerValuesAndState(): void {
-    Object.keys(timerObject.timer).forEach(el => {
-        resetTimer(timerObject.timer[el]).catch(e => {
-            errorLogger('Error in resetAllTimerValuesAndState', e);
-        });
+export async function resetAllTimerValuesAndStateValues(): Promise<void> {
+    for (const timerIndex in timerObject.timer) {
+        await resetTimer(timerObject.timer[timerIndex]);
 
-        writeState({ reset: true }).catch(e => {
-            errorLogger('Error in resetAllTimerValuesAndState', e);
-        });
-    });
+        await writeStates({ reset: true });
+    }
     store.adapter.setStateChanged('all_Timer.alive', false, true);
 }
