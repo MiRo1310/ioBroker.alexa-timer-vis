@@ -13,6 +13,7 @@ import { timerObject } from '@/config/timer-data';
 import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 import { firstLetterToUpperCase } from '@/lib/string';
 import { isIobrokerValue } from '@/lib/state';
+import { timeToString } from '@/lib/time';
 
 export class Timer {
     private hours: string;
@@ -117,8 +118,9 @@ export class Timer {
     extendTimer(sec: number, addOrSub: number): void {
         this.extendOrShortenTimer = true;
         this.endTimeNumber += sec * 1000 * addOrSub;
-        this.endTimeString = String(this.endTimeNumber);
-        this.voiceInputAsSeconds = sec * addOrSub;
+        this.remainingTimeInSeconds += sec * addOrSub;
+        this.endTimeString = timeToString(this.endTimeNumber);
+        this.voiceInputAsSeconds += sec * addOrSub;
     }
     getDataAsJson(): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
         return JSON.stringify({

@@ -37,6 +37,7 @@ var import_timer_data = require("../config/timer-data");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 var import_string = require("../lib/string");
 var import_state = require("../lib/state");
+var import_time = require("../lib/time");
 class Timer {
   hours;
   minutes;
@@ -138,8 +139,9 @@ class Timer {
   extendTimer(sec, addOrSub) {
     this.extendOrShortenTimer = true;
     this.endTimeNumber += sec * 1e3 * addOrSub;
-    this.endTimeString = String(this.endTimeNumber);
-    this.voiceInputAsSeconds = sec * addOrSub;
+    this.remainingTimeInSeconds += sec * addOrSub;
+    this.endTimeString = (0, import_time.timeToString)(this.endTimeNumber);
+    this.voiceInputAsSeconds += sec * addOrSub;
   }
   getDataAsJson() {
     return JSON.stringify({
