@@ -72,6 +72,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 
 - FIX: #246 Error in time reset
 - FIX: Wrong objects created
+- FEAT: Add initial timer state
 
 ### 2.1.3 (2025-11-28)
 
@@ -79,7 +80,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 
 ### 2.1.2 (2025-08-13)
 
-- FIX: Errors reported by Sentry
+- FIX: Errors reported by sentry
 - FIX: Add alarm clock to ignored words
 
 ### 2.1.1 (2025-04-28)
