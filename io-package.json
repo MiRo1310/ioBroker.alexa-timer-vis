@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.1.3",
+    "version": "2.2.0",
     "news": {
+      "2.2.0": {
+        "en": "FIX: #246 Error in time reset\nFIX: Wrong objects created\nFEAT: Add initial timer state",
+        "de": "FIX: #246 Fehler in der Zeitrückstellung\nFIX: Falsche Objekte erstellt\nFEAT: Anfangs-Timer-Zustand hinzufügen",
+        "ru": "FIX: #246 Ошибка сброса времени\nFIX: Неправильные объекты\nFEAT: Добавить начальное состояние таймера",
+        "pt": "FIX: # 246 Erro no tempo reset\nFIX: Objetos errados criados\nFEAT: Adicionar o estado inicial do timer",
+        "nl": "FIX: #246 Fout in tijdherstel\nFIX: Verkeerde objecten aangemaakt\nFEAT: Eerste timerstatus toevoegen",
+        "fr": "FIX: #246 Erreur lors de la réinitialisation du temps\nFIX : Les mauvais objets créés\nVIANDE: Ajouter l'état initial du minuteur",
+        "it": "FIX: #246 Errore nel ripristino del tempo\nFIX: Oggetti sbagliati creati\nFEAT: Aggiungere lo stato del timer iniziale",
+        "es": "FIX: #246 Error en el restablecimiento de tiempo\nFIX: objetos errados creados\nFEAT: Add initial timer state",
+        "pl": "FIX: # 246 Błąd w resecie czasu\nFIX: Utworzono niewłaściwe obiekty\nFEAT: Dodaj początkowy stan timera",
+        "uk": "FIX: #246 Помилка в часі скидання\nFIX: Створені об'єкти Wrong\nFEAT: Додати початковий стан таймера",
+        "zh-cn": "FIX: # 246 时间重置错误\nFIX: 创建错误的对象\nFEAT: 添加初始计时器状态"
+      },
       "2.1.3": {
         "en": "CHORE: Update dependecies",
         "de": "CHORE: Aktualisieren von Abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 157 Dodaj atrybut rozmiar xl dla tekstu w jsonConfig\nFIX: # 156 Błąd w dekomposeInputValue",
         "uk": "FIX: #157 Додати атрибут розмірів xl для тексту в jsonConfig\nFIX: #156 Помилка в decomposeInputValue",
         "zh-cn": "FIX: # 157 在jsonConfig中文本添加大小属性 xl\nFIX: #156 解析输入值错误"
-      },
-      "2.0.6": {
-        "en": "FEAT: #151 Responsive Design",
-        "de": "FEAT: #151 Responsive Design",
-        "ru": "#151 Ответственный дизайн",
-        "pt": "FEAT: #151 Design responsivo",
-        "nl": "FEAT: #151 Responsive Design",
-        "fr": "VIANDE: #151 Conception sensible",
-        "it": "FEAT: #151 Responsive Design",
-        "es": "FEAT: #151 Diseño responsable",
-        "pl": "FEAT: # 151 Responsive Design",
-        "uk": "FEAT: #151 Відповідальний дизайн",
-        "zh-cn": "FEAT: #151 反应设计"
       }
     },
     "titleLang": {

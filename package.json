@@ -1,77 +1,77 @@
 {
-    "name": "iobroker.alexa-timer-vis",
-    "version": "2.1.3",
-    "description": "Alexa Timer ausgeben um in der Vis anzuzeigen",
-    "author": {
-        "name": "Michael Roling",
-        "email": "michael.roling@gmx.de"
-    },
-    "homepage": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis",
-    "license": "MIT",
-    "keywords": [
-        "ioBroker",
-        "Alexa",
-        "Vis",
-        "Smart Home",
-        "home automation"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis"
-    },
-    "engines": {
-        "node": ">= 20"
-    },
-    "dependencies": {
-        "@iobroker/adapter-core": "^3.3.2"
-    },
-    "devDependencies": {
-        "@alcalzone/release-script": "^5.0.0",
-        "@alcalzone/release-script-plugin-iobroker": "^4.0.0",
-        "@alcalzone/release-script-plugin-license": "^4.0.0",
-        "@alcalzone/release-script-plugin-manual-review": "^4.0.0",
-        "@iobroker/adapter-dev": "^1.5.0",
-        "@iobroker/eslint-config": "^2.2.0",
-        "@iobroker/testing": "^5.2.2",
-        "@tsconfig/node18": "^18.2.6",
-        "@types/node": "^24.10.1",
-        "rimraf": "^6.1.2",
-        "ts-node": "^10.9.2",
-        "tsc-alias": "^1.8.16",
-        "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.9.3"
-    },
-    "main": "build/main.js",
-    "files": [
-        "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
-        "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
-        "build/",
-        "www/",
-        "io-package.json",
-        "LICENSE"
-    ],
-    "scripts": {
-        "prebuild": "npm run lint && rimraf build",
-        "build": "build-adapter ts",
-        "postbuild": "tsc-alias -p tsconfig.build.json",
-        "watch": "build-adapter ts --watch",
-        "prebuild:ts": "rimraf build",
-        "build:ts": "build-adapter ts",
-        "watch:ts": "build-adapter ts --watch",
-        "test:ts": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.test.ts\" --config test/mocharc.custom.json",
-        "test:ts:watch": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.test.ts\" --config test/mocharc.custom.json --watch --watch-files src/**/*.ts",
-        "test:ts:debug": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.test.ts\" --config test/mocharc.custom.json --inspect-brk",
-        "test:package": "mocha test/package --exit",
-        "test:integration": "mocha test/integration --exit",
-        "test": "npm run test:ts && npm run test:package",
-        "check": "tsc --noEmit",
-        "lint": "eslint -c eslint.config.mjs .",
-        "lint:fix": "eslint -c eslint.config.mjs . --fix",
-        "translate": "translate-adapter",
-        "release": "release-script"
-    },
-    "bugs": {
-        "url": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/issues"
-    },
-    "readmeFilename": "README.md"
+  "name": "iobroker.alexa-timer-vis",
+  "version": "2.2.0",
+  "description": "Alexa Timer ausgeben um in der Vis anzuzeigen",
+  "author": {
+    "name": "Michael Roling",
+    "email": "michael.roling@gmx.de"
+  },
+  "homepage": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis",
+  "license": "MIT",
+  "keywords": [
+    "ioBroker",
+    "Alexa",
+    "Vis",
+    "Smart Home",
+    "home automation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis"
+  },
+  "engines": {
+    "node": ">= 20"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.3.2"
+  },
+  "devDependencies": {
+    "@alcalzone/release-script": "^5.0.0",
+    "@alcalzone/release-script-plugin-iobroker": "^4.0.0",
+    "@alcalzone/release-script-plugin-license": "^4.0.0",
+    "@alcalzone/release-script-plugin-manual-review": "^4.0.0",
+    "@iobroker/adapter-dev": "^1.5.0",
+    "@iobroker/eslint-config": "^2.2.0",
+    "@iobroker/testing": "^5.2.2",
+    "@tsconfig/node18": "^18.2.6",
+    "@types/node": "^24.10.1",
+    "rimraf": "^6.1.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
+  },
+  "main": "build/main.js",
+  "files": [
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "build/",
+    "www/",
+    "io-package.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prebuild": "npm run lint && rimraf build",
+    "build": "build-adapter ts",
+    "postbuild": "tsc-alias -p tsconfig.build.json",
+    "watch": "build-adapter ts --watch",
+    "prebuild:ts": "rimraf build",
+    "build:ts": "build-adapter ts",
+    "watch:ts": "build-adapter ts --watch",
+    "test:ts": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.test.ts\" --config test/mocharc.custom.json",
+    "test:ts:watch": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.test.ts\" --config test/mocharc.custom.json --watch --watch-files src/**/*.ts",
+    "test:ts:debug": "mocha -r ts-node/register -r tsconfig-paths/register \"test/**/*.test.ts\" --config test/mocharc.custom.json --inspect-brk",
+    "test:package": "mocha test/package --exit",
+    "test:integration": "mocha test/integration --exit",
+    "test": "npm run test:ts && npm run test:package",
+    "check": "tsc --noEmit",
+    "lint": "eslint -c eslint.config.mjs .",
+    "lint:fix": "eslint -c eslint.config.mjs . --fix",
+    "translate": "translate-adapter",
+    "release": "release-script"
+  },
+  "bugs": {
+    "url": "https://github.com/MiRo1310/ioBroker.alexa-timer-vis/issues"
+  },
+  "readmeFilename": "README.md"
 }
