@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/lib/set-adapter-status.ts"],
-  "sourcesContent": ["import { useStore } from '../store/store';\nimport { createState } from './state';\n\nexport const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {\n    const store = useStore();\n    const _this = store._this;\n\n    const result = await _this.getForeignObjectAsync(store.pathAlexaStateToListenTo);\n    if (!result) {\n        _this.log.warn(`The State ${store.pathAlexaStateToListenTo} was not found!`);\n        return;\n    }\n    _this.log.info('Alexa State was found');\n    await _this.setState('info.connection', true, true);\n\n    await createState(4);\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,mBAAyB;AACzB,mBAA4B;AAErB,MAAM,uCAAuC,YAA2B;AAC3E,QAAM,YAAQ,uBAAS;AACvB,QAAM,QAAQ,MAAM;AAEpB,QAAM,SAAS,MAAM,MAAM,sBAAsB,MAAM,wBAAwB;AAC/E,MAAI,CAAC,QAAQ;AACT,UAAM,IAAI,KAAK,aAAa,MAAM,wBAAwB,iBAAiB;AAC3E;AAAA,EACJ;AACA,QAAM,IAAI,KAAK,uBAAuB;AACtC,QAAM,MAAM,SAAS,mBAAmB,MAAM,IAAI;AAElD,YAAM,0BAAY,CAAC;AACvB;",
-  "names": []
-}

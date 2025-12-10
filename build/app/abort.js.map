@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/app/abort.ts"],
-  "sourcesContent": ["import { timerObject } from '../config/timer-data';\nimport type AlexaTimerVis from '../main';\n\nexport const getAbortWord = (voiceInput: string, _this: AlexaTimerVis): string | undefined => {\n    const input = voiceInput.toLocaleLowerCase();\n\n    return timerObject.timerActive.data.abortWords.find(word => {\n        return input.includes(word.toLocaleLowerCase());\n    });\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAGrB,MAAM,eAAe,CAAC,YAAoB,UAA6C;AAC1F,QAAM,QAAQ,WAAW,kBAAkB;AAE3C,SAAO,8BAAY,YAAY,KAAK,WAAW,KAAK,UAAQ;AACxD,WAAO,MAAM,SAAS,KAAK,kBAAkB,CAAC;AAAA,EAClD,CAAC;AACL;",
+  "sourcesContent": ["import { timerObject } from '@/config/timer-data';\n\nexport const getAbortWord = (voiceInput: string): string | undefined =>\n    timerObject.timerActive.data.abortWords.find(word =>\n        voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase()),\n    );\n\nexport const isAbortSentence = (voiceInput: string): boolean =>\n    timerObject.timerActive.data.notNotedSentence.some(sentence => sentence === voiceInput);\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAErB,MAAM,eAAe,CAAC,eACzB,8BAAY,YAAY,KAAK,WAAW;AAAA,EAAK,UACzC,WAAW,kBAAkB,EAAE,SAAS,KAAK,kBAAkB,CAAC;AACpE;AAEG,MAAM,kBAAkB,CAAC,eAC5B,8BAAY,YAAY,KAAK,iBAAiB,KAAK,cAAY,aAAa,UAAU;",
   "names": []
 }

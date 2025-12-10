@@ -4,6 +4,10 @@
   // https://github.com/tsconfig/bases#node-18-tsconfigjson
   "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
+      "baseUrl": ".", // Dies muss gesetzt sein!
+      "paths": {       
+          "@/*": ["src/*"],        
+      },
     // do not compile anything, this file is just to configure type checking
     // the compilation is configured in tsconfig.build.json
     "noEmit": true,
