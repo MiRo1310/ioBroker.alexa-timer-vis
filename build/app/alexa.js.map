@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/app/alexa.ts"],
-  "sourcesContent": ["import store from '@/store/store';\n\nexport function doesAlexaSendAQuestion(voiceInput: string): void {\n    store.questionAlexa = voiceInput.indexOf(',') != -1;\n}\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,mBAAkB;AAEX,SAAS,uBAAuB,YAA0B;AAC7D,eAAAA,QAAM,gBAAgB,WAAW,QAAQ,GAAG,KAAK;AACrD;",
-  "names": ["store"]
-}

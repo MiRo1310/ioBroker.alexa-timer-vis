@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/app/abort.ts"],
-  "sourcesContent": ["import { timerObject } from '@/config/timer-data';\n\nexport const getAbortWord = (voiceInput: string): string | undefined =>\n    timerObject.timerActive.data.abortWords.find(word =>\n        voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase()),\n    );\n\nexport const isAbortSentence = (voiceInput: string): boolean =>\n    timerObject.timerActive.data.notNotedSentence.some(sentence => sentence === voiceInput);\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,wBAA4B;AAErB,MAAM,eAAe,CAAC,eACzB,8BAAY,YAAY,KAAK,WAAW;AAAA,EAAK,UACzC,WAAW,kBAAkB,EAAE,SAAS,KAAK,kBAAkB,CAAC;AACpE;AAEG,MAAM,kBAAkB,CAAC,eAC5B,8BAAY,YAAY,KAAK,iBAAiB,KAAK,cAAY,aAAa,UAAU;",
-  "names": []
-}

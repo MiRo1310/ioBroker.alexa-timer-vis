@@ -37,17 +37,19 @@ var import_timer_parse_time_input = require("../app/timer-parse-time-input");
 var import_find_timer = require("../app/find-timer");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../store/store"));
-const getMultiplikatorForAddOrSub = () => import_store.default.isShortenTimer() ? -1 : 1;
-const extendOrShortTimer = async ({ voiceInput, name }) => {
+const getMultiplicatorForAddOrSub = () => import_store.default.isShortenTimer() ? -1 : 1;
+const extendOrShortTimer = async ({
+  voiceInput,
+  name
+}) => {
   try {
-    const addOrSub = getMultiplikatorForAddOrSub();
+    const addOrSub = getMultiplicatorForAddOrSub();
     let firstPartOfValue, valueExtend;
     let extendTime = 0;
     let extendTime2 = 0;
-    if (voiceInput.includes("um")) {
-      const indexOfUm = voiceInput.indexOf("um");
-      firstPartOfValue = voiceInput.slice(0, indexOfUm).split(" ");
-      valueExtend = voiceInput.slice(indexOfUm + 2).split(" ");
+    if (voiceInput.isExtendOrShortenSentence()) {
+      firstPartOfValue = voiceInput.getValueExtendBefore();
+      valueExtend = voiceInput.getValueExtend();
       const { stringToEvaluate } = (0, import_timer_parse_time_input.timerParseTimeInput)(firstPartOfValue);
       extendTime = eval(stringToEvaluate);
       const { stringToEvaluate: string2 } = (0, import_timer_parse_time_input.timerParseTimeInput)(valueExtend);
@@ -62,7 +64,7 @@ const extendOrShortTimer = async ({ voiceInput, name }) => {
       extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in extendOrShortTimer", e);
+    (0, import_logging.errorLogger)("Error in extendOrShortTimer", e, voiceInput);
   }
 };
 function extendTimer(timers2, sec, addOrSub2, timerObject2) {

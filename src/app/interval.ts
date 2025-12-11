@@ -1,9 +1,7 @@
 import { timerObject } from '@/config/timer-data';
 import store from '@/store/store';
-import { errorLogger } from '@/lib/logging';
 import type { Timer } from '@/app/timer';
 import { generateTimerValues } from '@/app/generate-timer-values';
-import { resetTimer } from '@/app/reset';
 import { secToHourMinSec } from '@/lib/time';
 
 export const interval = (sec: number, name: string, timer: Timer, int: number, onlyOneTimer: boolean): void => {
@@ -21,7 +19,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
         return;
     }
 
-    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = adapter.setInterval(() => {
+    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = adapter.setInterval(async () => {
         const timeLeftSec = generateTimerValues(timer, sec, name);
 
         if (timeLeftSec <= 60 && !onlyOneTimer) {
@@ -36,10 +34,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
 
         if (timeLeftSec <= 0 || !timerObject.timerActive.timer[timerIndex]) {
             timerObject.timerActive.timerCount--;
-
-            resetTimer(timer).catch((e: any) => {
-                errorLogger('Error in interval', e);
-            });
+            await timer.reset();
 
             adapter.log.debug('Timer stopped');
 

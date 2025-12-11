@@ -33,9 +33,7 @@ __export(interval_exports, {
 module.exports = __toCommonJS(interval_exports);
 var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
-var import_logging = require("../lib/logging");
 var import_generate_timer_values = require("../app/generate-timer-values");
-var import_reset = require("../app/reset");
 var import_time = require("../lib/time");
 const interval = (sec, name, timer, int, onlyOneTimer) => {
   const adapter = import_store.default.adapter;
@@ -49,7 +47,7 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
   if (import_timer_data.timerObject.interval[timerIndex] || !timer.isActive) {
     return;
   }
-  import_timer_data.timerObject.interval[timerIndex] = adapter.setInterval(() => {
+  import_timer_data.timerObject.interval[timerIndex] = adapter.setInterval(async () => {
     const timeLeftSec = (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
     if (timeLeftSec <= 60 && !onlyOneTimer) {
       onlyOneTimer = true;
@@ -60,9 +58,7 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
     }
     if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerActive.timer[timerIndex]) {
       import_timer_data.timerObject.timerActive.timerCount--;
-      (0, import_reset.resetTimer)(timer).catch((e) => {
-        (0, import_logging.errorLogger)("Error in interval", e);
-      });
+      await timer.reset();
       adapter.log.debug("Timer stopped");
       if (import_timer_data.timerObject.interval[timerIndex]) {
         clearIntervalByTimerIndex(timerIndex, timer);

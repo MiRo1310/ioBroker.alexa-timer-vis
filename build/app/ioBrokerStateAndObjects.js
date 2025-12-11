@@ -51,7 +51,7 @@ const setDeviceNameInObject = async (index, val) => {
       native: {}
     });
   } catch (e) {
-    (0, import_logging.errorLogger)("Error setDeviceNameInObject", e);
+    (0, import_logging.errorLogger)("Error setDeviceNameInObject", e, null);
   }
 };
 async function getParsedAlexaJson() {
@@ -62,7 +62,7 @@ async function getParsedAlexaJson() {
       return JSON.parse(jsonAlexa.val);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in getParsedAlexaJson", e);
+    (0, import_logging.errorLogger)("Error in getParsedAlexaJson", e, null);
   }
 }
 const setAdapterStatusAndInitStateCreation = async () => {

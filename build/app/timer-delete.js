@@ -35,7 +35,6 @@ var import_store = __toESM(require("../store/store"));
 var import_find_timer = require("../app/find-timer");
 var import_one_timer_to_delete = require("../app/one-timer-to-delete");
 var import_logging = require("../lib/logging");
-var import_reset = require("../app/reset");
 var import_timer_data = require("../config/timer-data");
 const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
   let name = decomposeName;
@@ -57,14 +56,14 @@ const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
     const result = await (0, import_find_timer.findTimer)(timerAbortSec, name, deleteTimerIndex, voiceInput);
     if (result.timer.length) {
       for (const element of result.timer) {
-        await (0, import_reset.resetTimer)(import_timer_data.timerObject.timer[element]);
+        await import_timer_data.timerObject.timer[element].reset();
       }
     } else if (result.oneOfMultiTimer) {
-      const { value, sec, name: name2, inputDevice } = result.oneOfMultiTimer;
-      (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(value, sec, name2, inputDevice);
+      const { sec, name: name2, inputDevice } = result.oneOfMultiTimer;
+      (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(voiceInput, sec, name2, inputDevice);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in timerDelete", e);
+    (0, import_logging.errorLogger)("Error in timerDelete", e, voiceInput);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

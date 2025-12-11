@@ -45,29 +45,29 @@ function addNewRawTimer(timerIndex) {
     store: import_store.default
   });
 }
-const timerAdd = (name, timerSec) => {
-  if (timerSec && timerSec != 0) {
-    let nameExist = false;
-    for (const element in import_timer_data.timerObject.timer) {
-      if (import_timer_data.timerObject.timer[element].getName() == name && !(0, import_string.isStringEmpty)(name)) {
-        nameExist = true;
-        break;
+const timerAdd = async (name, timerSec) => {
+  try {
+    if (timerSec && timerSec != 0) {
+      let nameExist = false;
+      for (const element in import_timer_data.timerObject.timer) {
+        if (import_timer_data.timerObject.timer[element].getName() == name && !(0, import_string.isStringEmpty)(name)) {
+          nameExist = true;
+          break;
+        }
+      }
+      if (!nameExist) {
+        import_timer_data.timerObject.timerActive.timerCount++;
+        await (0, import_createStates.createStates)(import_timer_data.timerObject.timerActive.timerCount);
+        const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
+        if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
+          addNewRawTimer(timerIndex);
+        }
+        await (0, import_timer_start.startTimer)(timerSec, name);
+        (0, import_write_state_interval.writeStateInterval)();
       }
     }
-    if (!nameExist) {
-      import_timer_data.timerObject.timerActive.timerCount++;
-      (0, import_createStates.createStates)(import_timer_data.timerObject.timerActive.timerCount).catch((e) => {
-        (0, import_logging.errorLogger)("Error in timerAdd", e);
-      });
-      const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
-      if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
-        addNewRawTimer(timerIndex);
-      }
-      (0, import_timer_start.startTimer)(timerSec, name).catch((e) => {
-        (0, import_logging.errorLogger)("Error in timerAdd", e);
-      });
-      (0, import_write_state_interval.writeStateIntervall)();
-    }
+  } catch (e) {
+    (0, import_logging.errorLogger)("Error in timerAdd", e, null);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

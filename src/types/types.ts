@@ -171,7 +171,6 @@ export interface AlexaInstanceObject {
 }
 
 export interface OneOfMultiTimer {
-    value: string;
     sec: number;
     name: string;
     inputDevice: string;
