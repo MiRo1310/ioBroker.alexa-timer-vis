@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "news": {
+      "2.2.1": {
+        "en": "FEAT: Add more information to sentry reports\nFIX: Errors reported by sentry",
+        "de": "FEAT: Weitere Informationen zu den Berichten hinzufügen\nFIX: Fehler, die von sentry gemeldet werden",
+        "ru": "FEAT: Добавьте больше информации в отчеты\nFIX: Ошибки, о которых сообщил часовой",
+        "pt": "FEAT: Adicione mais informações aos relatórios de sentinela\nFIX: Erros relatados pelo sentinela",
+        "nl": "FEAT: Voeg meer informatie toe aan wachtrapporten\nFIX: Fouten gemeld door de wachtdienst",
+        "fr": "FAT: Ajouter plus d'informations aux rapports de sentinelle\nFIX : Erreurs signalées par sentinelle",
+        "it": "FEAT: Aggiungi ulteriori informazioni ai report delle sentinelle\nFIX: Errori segnalati dalla sentinella",
+        "es": "FEAT: Agregue más información a los informes de centinelas\nFIX: Errores reportados por centinela",
+        "pl": "FEAT: Dodaj więcej informacji do raportów wartowniczych\nFIX: Błędy zgłaszane przez wartownika",
+        "uk": "FEAT: Додати більше інформації до звітів\nFIX: Помилки, які повідомляються відправником",
+        "zh-cn": "FEAT: 在哨兵报告增加更多信息\nFIX:哨兵报告的错误"
+      },
       "2.2.0": {
         "en": "FIX: #246 Error in time reset\nFIX: Wrong objects created\nFEAT: Add initial timer state",
         "de": "FIX: #246 Fehler in der Zeitrückstellung\nFIX: Falsche Objekte erstellt\nFEAT: Anfangs-Timer-Zustand hinzufügen",
@@ -80,19 +93,6 @@
         "pl": "CHORE: Uaktualnij zależności\nCHORE: Migracja do ESLint 9 i @ iobroker / eslint- config",
         "uk": "CHORE: Оновити залежності\nCHORE: Міграція до ESLint 9 і @iobroker/eslint-config",
         "zh-cn": "CHORE: 更新依赖性\nCHORE: 迁移到ESLint 9 和 @iobroster/eslint-config"
-      },
-      "2.0.7": {
-        "en": "FIX: #157 Add size attribute xl for text in jsonConfig\nFIX: #156 Error in decomposeInputValue",
-        "de": "FIX: #157 Größe Attribut xl für Text in jsonConfig hinzufügen\nFIX: #156 Fehler in decomposeInputValue",
-        "ru": "FIX: #157 Добавить атрибут xl для текста в jsonConfig\nFIX: #156 Ошибка в decomposeInputValue",
-        "pt": "FIX: #157 Adicionar atributo tamanho xl para texto em jsonConfig\nFIX: #156 Erro no decomposeInputValue",
-        "nl": "FIX: #157 Voeg grootte attribuut xl toe voor tekst in jsonConfig\nFIX: #156 Fout in decomposeInputValue",
-        "fr": "FIX: #157 Ajouter l'attribut taille xl pour le texte dans jsonConfig\nFIX: #156 Erreur lors de la décompositionInputValue",
-        "it": "FIX: #157 Aggiungi attributo di dimensione xl per testo in jsonConfig\nFIX: #156 Errore in decomposeValore di input",
-        "es": "FIX: #157 Atributo de talla xl para texto en jsonConfig\nFIX: #156 Error en descomposiciónInputValue",
-        "pl": "FIX: # 157 Dodaj atrybut rozmiar xl dla tekstu w jsonConfig\nFIX: # 156 Błąd w dekomposeInputValue",
-        "uk": "FIX: #157 Додати атрибут розмірів xl для тексту в jsonConfig\nFIX: #156 Помилка в decomposeInputValue",
-        "zh-cn": "FIX: # 157 在jsonConfig中文本添加大小属性 xl\nFIX: #156 解析输入值错误"
       }
     },
     "titleLang": {
