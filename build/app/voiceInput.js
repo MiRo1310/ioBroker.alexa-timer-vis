@@ -26,17 +26,52 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var alexa_exports = {};
-__export(alexa_exports, {
-  doesAlexaSendAQuestion: () => doesAlexaSendAQuestion
+var voiceInput_exports = {};
+__export(voiceInput_exports, {
+  VoiceInput: () => VoiceInput
 });
-module.exports = __toCommonJS(alexa_exports);
+module.exports = __toCommonJS(voiceInput_exports);
 var import_store = __toESM(require("../store/store"));
-function doesAlexaSendAQuestion(voiceInput) {
-  import_store.default.questionAlexa = voiceInput.indexOf(",") != -1;
+var import_timer_data = require("../config/timer-data");
+class VoiceInput {
+  voiceInput;
+  constructor(voiceInput) {
+    this.voiceInput = String(voiceInput);
+  }
+  get() {
+    return this.voiceInput;
+  }
+  doesAlexaSendAQuestion() {
+    const question = this.voiceInput.indexOf(",") != -1;
+    import_store.default.questionAlexa = question;
+    return question;
+  }
+  getAbortWord() {
+    return import_timer_data.timerObject.timerActive.data.abortWords.find(
+      (word) => this.voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase())
+    );
+  }
+  isAbortSentence() {
+    return import_timer_data.timerObject.timerActive.data.notNotedSentence.some((sentence) => sentence === this.voiceInput);
+  }
+  isExtendOrShortenSentence() {
+    return this.voiceInput.includes("um");
+  }
+  getIndexOfExtendWordTo() {
+    return this.voiceInput.indexOf("um");
+  }
+  getIndexOf(str) {
+    return this.voiceInput.indexOf(str);
+  }
+  getValueExtendBefore() {
+    return this.voiceInput.slice(0, this.getIndexOfExtendWordTo()).split(" ");
+  }
+  getValueExtend() {
+    return this.voiceInput.slice(this.getIndexOfExtendWordTo() + 2).split(" ");
+  }
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  doesAlexaSendAQuestion
+  VoiceInput
 });
-//# sourceMappingURL=alexa.js.map
+//# sourceMappingURL=voiceInput.js.map

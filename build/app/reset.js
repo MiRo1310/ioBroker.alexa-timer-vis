@@ -28,32 +28,22 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var reset_exports = {};
 __export(reset_exports, {
-  resetAllTimerValuesAndStateValues: () => resetAllTimerValuesAndStateValues,
-  resetTimer: () => resetTimer
+  resetAllTimerValuesAndStateValues: () => resetAllTimerValuesAndStateValues
 });
 module.exports = __toCommonJS(reset_exports);
 var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
-var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
-const resetTimer = async (timer) => {
-  const index = timer.getTimerIndex();
-  if (!index) {
-    return;
-  }
-  timer.reset();
-  await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(index, "");
-};
 async function resetAllTimerValuesAndStateValues() {
   for (const timerIndex in import_timer_data.timerObject.timer) {
-    await resetTimer(import_timer_data.timerObject.timer[timerIndex]);
+    const timer = import_timer_data.timerObject.timer[timerIndex];
+    await timer.reset();
     await (0, import_write_state.writeStates)({ reset: true });
   }
   import_store.default.adapter.setStateChanged("all_Timer.alive", false, true);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  resetAllTimerValuesAndStateValues,
-  resetTimer
+  resetAllTimerValuesAndStateValues
 });
 //# sourceMappingURL=reset.js.map

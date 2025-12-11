@@ -28,14 +28,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var write_state_interval_exports = {};
 __export(write_state_interval_exports, {
-  writeStateIntervall: () => writeStateIntervall
+  writeStateInterval: () => writeStateInterval
 });
 module.exports = __toCommonJS(write_state_interval_exports);
 var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
 var import_logging = require("../lib/logging");
-const writeStateIntervall = () => {
+const writeStateInterval = () => {
   const { adapter } = import_store.default;
   try {
     if (import_store.default.interval) {
@@ -44,22 +44,22 @@ const writeStateIntervall = () => {
     import_store.default.interval = adapter.setInterval(() => {
       var _a;
       (0, import_write_state.writeStates)({ reset: false }).catch((e) => {
-        (0, import_logging.errorLogger)("Error in writeStateIntervall", e);
+        (0, import_logging.errorLogger)("Error in writeStateInterval", e, null);
       });
       if (!((_a = Object.keys(import_timer_data.timerObject.timer)) == null ? void 0 : _a.find((t) => import_timer_data.timerObject.timer[t].isActive))) {
         adapter.setStateChanged("all_Timer.alive", false, true);
         adapter.clearInterval(import_store.default.interval);
         import_store.default.interval = null;
-        adapter.log.debug("Intervall stopped!");
+        adapter.log.debug("Interval stopped!");
       }
     }, import_timer_data.timerObject.timerActive.data.interval);
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in writeStateIntervall", e);
+    (0, import_logging.errorLogger)("Error in writeStateInterval", e, null);
     adapter.clearInterval(import_store.default.interval);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  writeStateIntervall
+  writeStateInterval
 });
 //# sourceMappingURL=write-state-interval.js.map

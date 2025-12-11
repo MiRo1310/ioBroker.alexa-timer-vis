@@ -1,8 +1,15 @@
 import { timerObject } from '@/config/timer-data';
 import { sortArray } from '@/lib/object';
+import type { VoiceInput } from '@/app/voiceInput';
 
-export const oneOfMultiTimerDelete = (input: string, timeSec: number, name: string, inputDevice: string): void => {
-    const separateInput = input.slice(input.indexOf(',') + 2, input.length);
+export const oneOfMultiTimerDelete = (
+    voiceInput: VoiceInput,
+    timeSec: number,
+    name: string,
+    inputDevice: string,
+): void => {
+    const voiceInputStr = voiceInput.get();
+    const separateInput = voiceInputStr?.slice(voiceInput.getIndexOf(',') + 2, voiceInputStr.length);
 
     const separateInputArray = separateInput.split(' ');
     let timerNumber;

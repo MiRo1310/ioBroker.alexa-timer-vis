@@ -23,8 +23,9 @@ __export(one_timer_to_delete_exports, {
 module.exports = __toCommonJS(one_timer_to_delete_exports);
 var import_timer_data = require("../config/timer-data");
 var import_object = require("../lib/object");
-const oneOfMultiTimerDelete = (input, timeSec, name, inputDevice) => {
-  const separateInput = input.slice(input.indexOf(",") + 2, input.length);
+const oneOfMultiTimerDelete = (voiceInput, timeSec, name, inputDevice) => {
+  const voiceInputStr = voiceInput.get();
+  const separateInput = voiceInputStr == null ? void 0 : voiceInputStr.slice(voiceInput.getIndexOf(",") + 2, voiceInputStr.length);
   const separateInputArray = separateInput.split(" ");
   let timerNumber;
   for (const element of separateInputArray) {

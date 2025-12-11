@@ -215,6 +215,6 @@ export const createStates = async (value: number): Promise<void> => {
             adapter.subscribeForeignStates(id);
         }
     } catch (e: any) {
-        errorLogger('Error in createState', e);
+        errorLogger('Error in createState', e, null);
     }
 };

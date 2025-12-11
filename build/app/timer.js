@@ -197,7 +197,7 @@ class Timer {
       this.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
       await this.setIdFromEcoDeviceTimerList();
     } catch (error) {
-      (0, import_logging.errorLogger)("Error in getInputDevice", error);
+      (0, import_logging.errorLogger)("Error in getInputDevice", error, null);
     }
   }
   async setForeignActiveTimerListSubscription(id) {
@@ -220,7 +220,7 @@ class Timer {
         this.timerId = activeTimerId;
       }
     } catch (error) {
-      (0, import_logging.errorLogger)("Error in setIdFromEcoDeviceTimerList", error);
+      (0, import_logging.errorLogger)("Error in setIdFromEcoDeviceTimerList", error, null);
     }
   }
   setInterval(interval) {
@@ -252,14 +252,15 @@ class Timer {
   setTimerName(name) {
     this.name = name == "" || !name ? "Timer" : name.trim();
   }
-  stopTimerInAlexa() {
+  async stopTimerInAlexa() {
     if (!this.alexaInstance) {
       return;
     }
     const id = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.stopTimerId`;
     this.adapter.setForeignState(id, this.timerId, false);
+    await this.reset();
   }
-  reset() {
+  async reset() {
     this.hours = import_store.default.valHourForZero;
     this.minutes = import_store.default.valMinuteForZero;
     this.seconds = import_store.default.valSecondForZero;
@@ -286,6 +287,7 @@ class Timer {
     this.initialTimer = "";
     if (this.timerIndex !== null) {
       import_timer_data.timerObject.timerActive.timer[this.timerIndex] = false;
+      await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, "");
     }
     this.isActive = false;
     this.resetForeignStateSubscription();

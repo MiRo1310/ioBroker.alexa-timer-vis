@@ -6,12 +6,13 @@ import { errorLogger } from '@/lib/logging';
 import type { Timer } from '@/app/timer';
 import { isIobrokerValue } from '@/lib/state';
 import { isString } from '@/lib/string';
+import type { VoiceInput } from '@/app/voiceInput';
 
 export const findTimer = async (
     sec: number,
     name: string,
     deleteTimerIndex: number,
-    value: string,
+    voiceInput: VoiceInput,
 ): Promise<{ oneOfMultiTimer: OneOfMultiTimer; timer: TimerIndex[] }> => {
     const adapter = store.adapter;
     try {
@@ -35,16 +36,16 @@ export const findTimer = async (
 
         if (store.questionAlexa) {
             if (matchingName == 1) {
-                timerFound.oneOfMultiTimer = { value: '', sec: 0, name, inputDevice };
+                timerFound.oneOfMultiTimer = { sec: 0, name, inputDevice };
             } else if (matchingTime > 1) {
                 // Einer, mit genauer Zeit, mehrmals vorhanden
-                timerFound.oneOfMultiTimer = { value, sec, name: '', inputDevice: '' };
+                timerFound.oneOfMultiTimer = { sec, name: '', inputDevice: '' };
             } else if (matchingInputDevice != timerObject.timerActive.timerCount) {
                 // Einer, mit genauer Zeit, mehrmals auf verschiedenen Geräten
 
-                timerFound.oneOfMultiTimer = { value, sec, name: '', inputDevice: '' };
+                timerFound.oneOfMultiTimer = { sec, name: '', inputDevice: '' };
             } else {
-                timerFound.oneOfMultiTimer = { value, sec: 0, name: '', inputDevice: '' };
+                timerFound.oneOfMultiTimer = { sec: 0, name: '', inputDevice: '' };
             }
         }
 
@@ -83,7 +84,10 @@ export const findTimer = async (
                     // }
                 } else {
                     // Alle, nur die vom eingabe Gerät
-                    if (matchingInputDevice != timerObject.timerActive.timerCount && value.indexOf('nein') != -1) {
+                    if (
+                        matchingInputDevice != timerObject.timerActive.timerCount &&
+                        voiceInput.getIndexOf('nein') != -1
+                    ) {
                         if (timerObject.timer[timerIndex].getInputDevice() == inputDevice) {
                             timerFound.timer.push(timerIndex);
                             // _this.log.debug("Only this device");
@@ -91,7 +95,7 @@ export const findTimer = async (
                     } else if (
                         // Alle, von allen Geräten
                         matchingInputDevice != timerObject.timerActive.timerCount &&
-                        value.indexOf('ja') != -1
+                        voiceInput.getIndexOf('ja') != -1
                     ) {
                         for (const element in timerObject.timerActive.timer) {
                             timerFound.timer.push(element);
@@ -103,7 +107,7 @@ export const findTimer = async (
         }
         return timerFound;
     } catch (e) {
-        errorLogger('Error in findTimer', e);
+        errorLogger('Error in findTimer', e, voiceInput);
         return { oneOfMultiTimer: {} as OneOfMultiTimer, timer: [] };
     }
 };

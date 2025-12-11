@@ -4,21 +4,27 @@ import { timerParseTimeInput } from '@/app/timer-parse-time-input';
 import { findTimer } from '@/app/find-timer';
 import { errorLogger } from '@/lib/logging';
 import store from '@/store/store';
+import type { VoiceInput } from '@/app/voiceInput';
 
-const getMultiplikatorForAddOrSub = (): 1 | -1 => (store.isShortenTimer() ? -1 : 1);
+const getMultiplicatorForAddOrSub = (): 1 | -1 => (store.isShortenTimer() ? -1 : 1);
 
-export const extendOrShortTimer = async ({ voiceInput, name }: { voiceInput: string; name: string }): Promise<void> => {
+export const extendOrShortTimer = async ({
+    voiceInput,
+    name,
+}: {
+    voiceInput: VoiceInput;
+    name: string;
+}): Promise<void> => {
     try {
-        const addOrSub = getMultiplikatorForAddOrSub();
+        const addOrSub = getMultiplicatorForAddOrSub();
 
         let firstPartOfValue, valueExtend;
         let extendTime = 0;
         let extendTime2 = 0;
 
-        if (voiceInput.includes('um')) {
-            const indexOfUm = voiceInput.indexOf('um');
-            firstPartOfValue = voiceInput.slice(0, indexOfUm).split(' ');
-            valueExtend = voiceInput.slice(indexOfUm + 2).split(' ');
+        if (voiceInput.isExtendOrShortenSentence()) {
+            firstPartOfValue = voiceInput.getValueExtendBefore();
+            valueExtend = voiceInput.getValueExtend();
 
             const { stringToEvaluate } = timerParseTimeInput(firstPartOfValue);
             extendTime = eval(stringToEvaluate);
@@ -36,7 +42,7 @@ export const extendOrShortTimer = async ({ voiceInput, name }: { voiceInput: str
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
         }
     } catch (e: any) {
-        errorLogger('Error in extendOrShortTimer', e);
+        errorLogger('Error in extendOrShortTimer', e, voiceInput);
     }
 };
 

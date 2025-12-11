@@ -1,11 +1,19 @@
 import store from '@/store/store';
+import type { VoiceInput } from '@/app/voiceInput';
 
-export const errorLogger = (title: string, e: any): void => {
+export const errorLogger = (title: string, e: any, voiceInput: VoiceInput | null): void => {
     const adapter = store.adapter;
     if (adapter?.supportsFeature && adapter.supportsFeature('PLUGINS')) {
         const sentryInstance = adapter.getPluginInstance('sentry');
         if (sentryInstance) {
-            sentryInstance.getSentryObject()?.captureException(e);
+            const Sentry = sentryInstance.getSentryObject();
+            Sentry?.captureException(e);
+            if (voiceInput && Sentry) {
+                Sentry.withScope((scope: any): void => {
+                    scope.setExtra('Additional Info', voiceInput.get());
+                    Sentry.captureException(e);
+                });
+            }
         }
     }
     if (!adapter || !adapter.log) {

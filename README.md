@@ -68,6 +68,11 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- FEAT: Add more information to sentry reports
+- FIX: Errors reported by sentry
+
 ### 2.2.0 (2025-12-10)
 
 - FIX: #246 Error in time reset

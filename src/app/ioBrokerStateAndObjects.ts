@@ -15,7 +15,7 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
             native: {},
         });
     } catch (e: any) {
-        errorLogger('Error setDeviceNameInObject', e);
+        errorLogger('Error setDeviceNameInObject', e, null);
     }
 };
 
@@ -27,7 +27,7 @@ export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
             return JSON.parse(jsonAlexa.val);
         }
     } catch (e) {
-        errorLogger('Error in getParsedAlexaJson', e);
+        errorLogger('Error in getParsedAlexaJson', e, null);
     }
 }
 

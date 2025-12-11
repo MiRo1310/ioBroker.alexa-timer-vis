@@ -1,16 +1,13 @@
 import { timerObject } from '@/config/timer-data';
-import { resetTimer } from '@/app/reset';
 import { errorLogger } from '@/lib/logging';
 import store from '@/store/store';
 
 export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean): Promise<void> => {
     const adapter = store.adapter;
     const timer = timerObject.timer[timerIndex];
-    if (!timer) {
-        return;
-    }
+
     if (reset) {
-        await resetTimer(timer);
+        await timer.reset();
     }
 
     adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
@@ -51,6 +48,6 @@ export async function writeStates({ reset }: { reset: boolean }): Promise<void> 
             await writeStatesByTimerIndex(timerIndex, reset);
         }
     } catch (e: any) {
-        errorLogger('Error in writeState', e);
+        errorLogger('Error in writeState', e, null);
     }
 }

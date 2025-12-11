@@ -6,7 +6,7 @@ import { errorLogger } from '@/lib/logging';
 /**
  * Starts an interval to periodically write the state of all active timers.
  */
-export const writeStateIntervall = (): void => {
+export const writeStateInterval = (): void => {
     const { adapter } = store;
     try {
         if (store.interval) {
@@ -14,7 +14,7 @@ export const writeStateIntervall = (): void => {
         }
         store.interval = adapter.setInterval((): void => {
             writeStates({ reset: false }).catch((e: any) => {
-                errorLogger('Error in writeStateIntervall', e);
+                errorLogger('Error in writeStateInterval', e, null);
             });
 
             if (!Object.keys(timerObject.timer)?.find(t => timerObject.timer[t].isActive)) {
@@ -22,11 +22,11 @@ export const writeStateIntervall = (): void => {
                 adapter.clearInterval(store.interval);
                 store.interval = null;
 
-                adapter.log.debug('Intervall stopped!');
+                adapter.log.debug('Interval stopped!');
             }
         }, timerObject.timerActive.data.interval);
     } catch (e: any) {
-        errorLogger('Error in writeStateIntervall', e);
+        errorLogger('Error in writeStateInterval', e, null);
         adapter.clearInterval(store.interval);
     }
 };

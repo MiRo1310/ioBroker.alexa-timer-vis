@@ -131,7 +131,7 @@ export const timerParseTimeInput = (
 
         return { stringToEvaluate, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
     } catch (e: any) {
-        errorLogger('Error in filterInfo', e);
+        errorLogger('Error in filterInfo', e, null);
         return { stringToEvaluate: '', name: '', deleteVal: 0 };
     }
 };

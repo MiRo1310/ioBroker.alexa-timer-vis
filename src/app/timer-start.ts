@@ -41,7 +41,7 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
 
         interval(sec, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {
-        errorLogger('Error in startTimer', e);
+        errorLogger('Error in startTimer', e, null);
     }
 };
 

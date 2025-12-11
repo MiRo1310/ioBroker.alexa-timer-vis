@@ -68,7 +68,7 @@ const startTimer = async (sec, name) => {
     import_timer_data.timerObject.timer[timerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
     (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in startTimer", e);
+    (0, import_logging.errorLogger)("Error in startTimer", e, null);
   }
 };
 function getAvailableTimerIndex() {

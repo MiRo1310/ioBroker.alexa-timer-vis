@@ -1,15 +1,13 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
 import { decomposeInputValue } from '@/app/decompose-input-value';
-import { doesAlexaSendAQuestion } from '@/app/alexa';
 import { errorLogger } from '@/lib/logging';
-import { resetAllTimerValuesAndStateValues, resetTimer } from '@/app/reset';
+import { resetAllTimerValuesAndStateValues } from '@/app/reset';
 import { timerAdd } from '@/app/timer-add';
 import { timerObject } from '@/config/timer-data';
 import { Timer } from '@/app/timer';
 import store from '@/store/store';
 import type { TimerCondition } from '@/types/types';
-import { getAbortWord, isAbortSentence } from '@/app/abort';
 import { timerDelete } from '@/app/timer-delete';
 import { extendOrShortTimer } from '@/app/timer-extend-or-shorten';
 import { writeStates } from '@/app/write-state';
@@ -20,9 +18,11 @@ import {
     isTimerAction,
     setAdapterStatusAndInitStateCreation,
 } from '@/app/ioBrokerStateAndObjects';
+import { VoiceInput } from '@/app/voiceInput';
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
+let voiceInput: VoiceInput;
 
 export default class AlexaTimerVis extends utils.Adapter {
     private static instance: AlexaTimerVis;
@@ -60,8 +60,6 @@ export default class AlexaTimerVis extends utils.Adapter {
         await setAdapterStatusAndInitStateCreation();
         await resetAllTimerValuesAndStateValues();
 
-        let voiceInput: string;
-
         this.on('stateChange', async (id, state) => {
             try {
                 if (isAlexaSummaryStateChanged({ state: state, id: id }) && isTimerAction(state)) {
@@ -72,30 +70,30 @@ export default class AlexaTimerVis extends utils.Adapter {
 
                     const res = await this.getForeignStateAsync(store.pathAlexaSummary);
                     if (isIobrokerValue(res)) {
-                        voiceInput = String(res.val);
-                        this.log.debug(`VoiceInput: ${voiceInput}`);
+                        voiceInput = new VoiceInput(res.val);
+                        this.log.debug(`VoiceInput: ${voiceInput.get()}`);
                     }
 
-                    const abortWord = getAbortWord(voiceInput);
+                    const abortWord = voiceInput.getAbortWord();
                     if (abortWord) {
                         this.log.debug(`This will be aborted because found "${abortWord}" in the voice input.`);
                         return;
                     }
 
-                    if (isAbortSentence(voiceInput) && !store.isDeleteTimer()) {
+                    if (voiceInput.isAbortSentence() && !store.isDeleteTimer()) {
                         this.log.debug('Input is an abort sentence. No action will be executed.');
                         return;
                     }
 
                     const { name, timerSec, deleteVal } = decomposeInputValue(voiceInput);
-                    doesAlexaSendAQuestion(voiceInput);
+                    voiceInput.doesAlexaSendAQuestion();
 
                     if (store.isDeleteTimer()) {
                         await timerDelete(name, timerSec, voiceInput, deleteVal);
                         return;
                     }
                     if (store.isAddTimer()) {
-                        timerAdd(name, timerSec);
+                        await timerAdd(name, timerSec);
                         return;
                     }
                     if (store.isExtendTimer() || store.isShortenTimer()) {
@@ -108,24 +106,21 @@ export default class AlexaTimerVis extends utils.Adapter {
                 if (isAlexaTimerVisResetButton(state, id)) {
                     const timerIndex = id.split('.')[2];
                     const timer = timerObject.timer[timerIndex];
-                    timer.stopTimerInAlexa();
-                    await resetTimer(timer);
+                    await timer.stopTimerInAlexa();
                 }
             } catch (e) {
-                errorLogger('Error in stateChange', e);
+                errorLogger('Error in stateChange', e, voiceInput);
             }
         });
 
         this.subscribeForeignStates(store.pathAlexaStateToListenTo);
     }
 
-    onUnload(callback: () => void): void {
+    async onUnload(callback: () => void): Promise<void> {
         try {
             this.log.info('Adapter shuts down');
 
-            writeStates({ reset: true }).catch((e: any) => {
-                errorLogger('Error in onUnload', e);
-            });
+            await writeStates({ reset: true });
 
             this.clearTimeout(timeout_1);
             this.clearTimeout(debounceTimeout);
@@ -140,7 +135,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
             callback();
         } catch (e) {
-            errorLogger('Error in onUnload', e);
+            errorLogger('Error in onUnload', e, voiceInput);
             callback();
         }
     }

@@ -245,7 +245,7 @@ const createStates = async (value) => {
       adapter.subscribeForeignStates(id);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in createState", e);
+    (0, import_logging.errorLogger)("Error in createState", e, null);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
