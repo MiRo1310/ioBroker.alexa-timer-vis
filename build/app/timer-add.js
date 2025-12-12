@@ -35,7 +35,7 @@ var import_createStates = require("../app/createStates");
 var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_timer = require("../app/timer");
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_timer_start = require("../app/timer-start");
 var import_write_state_interval = require("../app/write-state-interval");
 var import_string = require("../lib/string");
@@ -67,7 +67,7 @@ const timerAdd = async (name, timerSec) => {
       }
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in timerAdd", e, null);
+    import_logging.default.send({ title: "Error timerAdd", e });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

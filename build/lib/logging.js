@@ -28,42 +28,62 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var logging_exports = {};
 __export(logging_exports, {
-  errorLogger: () => errorLogger
+  default: () => logging_default
 });
 module.exports = __toCommonJS(logging_exports);
 var import_store = __toESM(require("../store/store"));
-const errorLogger = (title, e, voiceInput) => {
-  var _a, _b;
-  const adapter = import_store.default.adapter;
-  if ((adapter == null ? void 0 : adapter.supportsFeature) && adapter.supportsFeature("PLUGINS")) {
-    const sentryInstance = adapter.getPluginInstance("sentry");
-    if (sentryInstance) {
-      const Sentry = sentryInstance.getSentryObject();
-      Sentry == null ? void 0 : Sentry.captureException(e);
-      if (voiceInput && Sentry) {
-        Sentry.withScope((scope) => {
-          scope.setExtra("Additional Info", voiceInput.get());
-          Sentry.captureException(e);
-        });
+class ErrorLoggerClass {
+  Sentry;
+  adapter;
+  init() {
+    const { adapter } = import_store.default;
+    this.adapter = adapter;
+    if ((adapter == null ? void 0 : adapter.supportsFeature) && adapter.supportsFeature("PLUGINS")) {
+      const sentryInstance = adapter.getPluginInstance("sentry");
+      if (sentryInstance) {
+        this.Sentry = sentryInstance.getSentryObject();
       }
     }
   }
-  if (!adapter || !adapter.log) {
-    console.log(title, e);
-    return;
+  send({ title, e, additionalInfos, level = "error" }) {
+    if (additionalInfos) {
+      this.sendMessageToSentry(title, level, additionalInfos, e);
+    } else {
+      this.sendErrorToSentry(e);
+    }
+    this.iobrokerLogging(title, e);
   }
-  adapter.log.error(title);
-  adapter.log.error(`Error message: ${e.message}`);
-  adapter.log.error(`Error stack: ${e.stack}`);
-  if (e == null ? void 0 : e.response) {
-    adapter.log.error(`Server response: ${(_a = e == null ? void 0 : e.response) == null ? void 0 : _a.status}`);
+  sendErrorToSentry(e) {
+    var _a;
+    (_a = this.Sentry) == null ? void 0 : _a.captureException(e);
   }
-  if (e == null ? void 0 : e.response) {
-    adapter.log.error(`Server status: ${(_b = e == null ? void 0 : e.response) == null ? void 0 : _b.statusText}`);
+  sendMessageToSentry(title, level, infos, e) {
+    var _a;
+    (_a = this.Sentry) == null ? void 0 : _a.withScope((scope) => {
+      scope.setLevel(level);
+      for (const [label, value] of infos) {
+        scope.setExtra(label, value);
+      }
+      scope.setExtra("Exception", e);
+      this.Sentry.captureMessage(title, level);
+    });
   }
-};
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  errorLogger
-});
+  iobrokerLogging(title, e) {
+    var _a, _b, _c;
+    if (!((_a = this.adapter) == null ? void 0 : _a.log)) {
+      console.log(title, e);
+      return;
+    }
+    this.adapter.log.error(title);
+    this.adapter.log.error(`Error message: ${e.message}`);
+    this.adapter.log.error(`Error stack: ${e.stack}`);
+    if (e == null ? void 0 : e.response) {
+      this.adapter.log.error(`Server response: ${(_b = e == null ? void 0 : e.response) == null ? void 0 : _b.status}`);
+    }
+    if (e == null ? void 0 : e.response) {
+      this.adapter.log.error(`Server status: ${(_c = e == null ? void 0 : e.response) == null ? void 0 : _c.statusText}`);
+    }
+  }
+}
+var logging_default = new ErrorLoggerClass();
 //# sourceMappingURL=logging.js.map

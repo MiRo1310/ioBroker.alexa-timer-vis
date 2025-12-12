@@ -31,7 +31,7 @@ __export(timer_parse_time_input_exports, {
   timerParseTimeInput: () => timerParseTimeInput
 });
 module.exports = __toCommonJS(timer_parse_time_input_exports);
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_string = require("../lib/string");
@@ -136,7 +136,7 @@ const timerParseTimeInput = (inputs) => {
     }
     return { stringToEvaluate, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in filterInfo", e, null);
+    import_logging.default.send({ title: "Error filterInfo", e });
     return { stringToEvaluate: "", name: "", deleteVal: 0 };
   }
 };

@@ -34,7 +34,7 @@ module.exports = __toCommonJS(timer_delete_exports);
 var import_store = __toESM(require("../store/store"));
 var import_find_timer = require("../app/find-timer");
 var import_one_timer_to_delete = require("../app/one-timer-to-delete");
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_timer_data = require("../config/timer-data");
 const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
   let name = decomposeName;
@@ -63,7 +63,11 @@ const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
       (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(voiceInput, sec, name2, inputDevice);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in timerDelete", e, voiceInput);
+    import_logging.default.send({
+      title: "Error in timerDelete",
+      e,
+      additionalInfos: [["VoiceInput", voiceInput.get()]]
+    });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

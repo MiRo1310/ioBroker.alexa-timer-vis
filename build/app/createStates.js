@@ -32,7 +32,7 @@ __export(createStates_exports, {
 });
 module.exports = __toCommonJS(createStates_exports);
 var import_store = __toESM(require("../store/store"));
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 const createStates = async (value) => {
   const { adapter } = import_store.default;
   try {
@@ -245,7 +245,7 @@ const createStates = async (value) => {
       adapter.subscribeForeignStates(id);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in createState", e, null);
+    import_logging.default.send({ title: "Error in createState", e });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

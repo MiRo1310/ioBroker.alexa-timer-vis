@@ -3,7 +3,7 @@ import { timerObject } from '@/config/timer-data';
 
 import store from '@/store/store';
 import { Timer } from '@/app/timer';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
 import { isStringEmpty } from '@/lib/string';
@@ -46,6 +46,6 @@ export const timerAdd = async (name: string, timerSec: number): Promise<void> =>
             }
         }
     } catch (e: any) {
-        errorLogger('Error in timerAdd', e, null);
+        errorLogger.send({ title: 'Error timerAdd', e });
     }
 };

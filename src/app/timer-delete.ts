@@ -1,7 +1,7 @@
 import store from '@/store/store';
 import { findTimer } from '@/app/find-timer';
 import { oneOfMultiTimerDelete } from '@/app/one-timer-to-delete';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
 import type { VoiceInput } from '@/app/voiceInput';
 
@@ -42,6 +42,10 @@ export const timerDelete = async (
             oneOfMultiTimerDelete(voiceInput, sec, name, inputDevice);
         }
     } catch (e: any) {
-        errorLogger('Error in timerDelete', e, voiceInput);
+        errorLogger.send({
+            title: 'Error in timerDelete',
+            e,
+            additionalInfos: [['VoiceInput', voiceInput.get()]],
+        });
     }
 };

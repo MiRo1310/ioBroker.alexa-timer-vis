@@ -2,7 +2,7 @@ import type { TimerIndex } from '@/types/types';
 import { timerObject } from '@/config/timer-data';
 import store from '@/store/store';
 import { interval } from '@/app/interval';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import { isMoreThanAMinute, secToHourMinSec, timeToString } from '@/lib/time';
 import { getParsedAlexaJson } from '@/app/ioBrokerStateAndObjects';
 
@@ -41,7 +41,7 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
 
         interval(sec, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {
-        errorLogger('Error in startTimer', e, null);
+        errorLogger.send({ title: 'Error startTimer', e });
     }
 };
 

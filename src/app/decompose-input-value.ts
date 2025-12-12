@@ -1,6 +1,6 @@
 import store from '@/store/store';
 import { timerParseTimeInput } from '@/app/timer-parse-time-input';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import type { VoiceInput } from '@/app/voiceInput';
 
 export const decomposeInputValue = (
@@ -19,7 +19,12 @@ export const decomposeInputValue = (
         return { name, timerSec: eval(stringToEvaluate), deleteVal };
     } catch (e: any) {
         store.adapter.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceInput}`);
-        errorLogger('Error in decomposeInputValue: ', e, voiceInputClass);
+        errorLogger.send({
+            title: 'Error in decomposeInputValue',
+            e,
+            additionalInfos: [['VoiceInput', voiceInputClass.get()]],
+        });
+
         return { name: '', timerSec: 0, deleteVal: 0 };
     }
 };

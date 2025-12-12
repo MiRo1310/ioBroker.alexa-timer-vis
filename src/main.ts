@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
 import { decomposeInputValue } from '@/app/decompose-input-value';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
 import { timerAdd } from '@/app/timer-add';
 import { timerObject } from '@/config/timer-data';
@@ -50,6 +50,7 @@ export default class AlexaTimerVis extends utils.Adapter {
         } else {
             return;
         }
+        errorLogger.init();
 
         await this.setState('info.connection', false, true);
         timerObject.timer.timer1 = new Timer({ store });
@@ -109,7 +110,11 @@ export default class AlexaTimerVis extends utils.Adapter {
                     await timer.stopTimerInAlexa();
                 }
             } catch (e) {
-                errorLogger('Error in stateChange', e, voiceInput);
+                errorLogger.send({
+                    title: 'Error in stateChange',
+                    e,
+                    additionalInfos: [['VoiceInput', voiceInput.get()]],
+                });
             }
         });
 
@@ -135,7 +140,11 @@ export default class AlexaTimerVis extends utils.Adapter {
 
             callback();
         } catch (e) {
-            errorLogger('Error in onUnload', e, voiceInput);
+            errorLogger.send({
+                title: 'Error in onUnload',
+                e,
+                additionalInfos: [['VoiceInput', voiceInput.get()]],
+            });
             callback();
         }
     }

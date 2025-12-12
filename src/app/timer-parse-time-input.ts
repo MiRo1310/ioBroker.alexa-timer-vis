@@ -1,4 +1,4 @@
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
 import store from '@/store/store';
 import { countOccurrences } from '@/lib/string';
@@ -131,7 +131,7 @@ export const timerParseTimeInput = (
 
         return { stringToEvaluate, name, deleteVal: deleteVal > 2 ? 2 : deleteVal };
     } catch (e: any) {
-        errorLogger('Error in filterInfo', e, null);
+        errorLogger.send({ title: 'Error filterInfo', e });
         return { stringToEvaluate: '', name: '', deleteVal: 0 };
     }
 };
