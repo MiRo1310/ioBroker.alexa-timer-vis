@@ -1,10 +1,15 @@
 import { timerObject } from '@/config/timer-data';
 import { errorLogger } from '@/lib/logging';
 import store from '@/store/store';
+import { getTimerByIndex } from '@/app/timer';
 
 export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean): Promise<void> => {
     const adapter = store.adapter;
-    const timer = timerObject.timer[timerIndex];
+    const timer = getTimerByIndex(timerIndex);
+
+    if (!timer) {
+        return;
+    }
 
     if (reset) {
         await timer.reset();

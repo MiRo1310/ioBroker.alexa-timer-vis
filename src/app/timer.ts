@@ -290,3 +290,7 @@ export class Timer {
         }
     }
 }
+
+export function getTimerByIndex(timerIndex: TimerIndex): Timer | undefined {
+    return timerObject.timer[timerIndex];
+}

@@ -7,13 +7,24 @@ export const errorLogger = (title: string, e: any, voiceInput: VoiceInput | null
         const sentryInstance = adapter.getPluginInstance('sentry');
         if (sentryInstance) {
             const Sentry = sentryInstance.getSentryObject();
-            Sentry?.captureException(e);
-            if (voiceInput && Sentry) {
-                Sentry.withScope((scope: any): void => {
-                    scope.setExtra('Additional Info', voiceInput.get());
-                    Sentry.captureException(e);
-                });
+            if (!Sentry) {
+                return;
             }
+            if (!voiceInput) {
+                store.adapter.log.error('Additional Infos 2');
+                store.adapter.log.error(title);
+                Sentry &&
+                    Sentry.withScope((scope: any) => {
+                        scope.setLevel('error');
+                        scope.setExtra('voiceInput', '12345667');
+                        scope.setExtra('exception', e);
+                        Sentry.captureMessage('Event name', title ?? 'Test');
+                    });
+
+                // Sentry.captureException(e, { context: { additional: { voiceInput: 123445 } } });
+                // return;
+            }
+            // Sentry.captureException(e);
         }
     }
     if (!adapter || !adapter.log) {

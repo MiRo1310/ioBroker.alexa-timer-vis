@@ -28,7 +28,8 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_exports = {};
 __export(timer_exports, {
-  Timer: () => Timer
+  Timer: () => Timer,
+  getTimerByIndex: () => getTimerByIndex
 });
 module.exports = __toCommonJS(timer_exports);
 var import_logging = require("../lib/logging");
@@ -299,8 +300,12 @@ class Timer {
     }
   }
 }
+function getTimerByIndex(timerIndex) {
+  return import_timer_data.timerObject.timer[timerIndex];
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  Timer
+  Timer,
+  getTimerByIndex
 });
 //# sourceMappingURL=timer.js.map

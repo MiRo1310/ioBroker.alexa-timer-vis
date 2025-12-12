@@ -74,6 +74,12 @@ class AlexaTimerVis extends utils.Adapter {
     } else {
       return;
     }
+    try {
+      const test = "((3 sss+ 2 * 5)";
+      eval(test);
+    } catch (e) {
+      (0, import_logging.errorLogger)("Error in onReady", e, null);
+    }
     await this.setState("info.connection", false, true);
     import_timer_data.timerObject.timer.timer1 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: import_store.default });

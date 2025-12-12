@@ -35,9 +35,13 @@ module.exports = __toCommonJS(write_state_exports);
 var import_timer_data = require("../config/timer-data");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../store/store"));
+var import_timer = require("../app/timer");
 const writeStatesByTimerIndex = async (timerIndex, reset) => {
   const adapter = import_store.default.adapter;
-  const timer = import_timer_data.timerObject.timer[timerIndex];
+  const timer = (0, import_timer.getTimerByIndex)(timerIndex);
+  if (!timer) {
+    return;
+  }
   if (reset) {
     await timer.reset();
   }

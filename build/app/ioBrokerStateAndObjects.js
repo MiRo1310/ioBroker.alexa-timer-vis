@@ -44,6 +44,9 @@ var import_state = require("../lib/state");
 const setDeviceNameInObject = async (index, val) => {
   const pathArray = [import_store.default.getAlexaTimerVisInstance(), index];
   const { adapter } = import_store.default;
+  if (index === "") {
+    return;
+  }
   try {
     await adapter.setObject(pathArray.join("."), {
       type: "device",

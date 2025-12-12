@@ -8,6 +8,9 @@ import { isIobrokerValue } from '@/lib/state';
 export const setDeviceNameInObject = async (index: TimerIndex, val: string): Promise<void> => {
     const pathArray = [store.getAlexaTimerVisInstance(), index];
     const { adapter } = store;
+    if (index === '') {
+        return;
+    }
     try {
         await adapter.setObject(pathArray.join('.'), {
             type: 'device',

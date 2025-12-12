@@ -39,11 +39,17 @@ const errorLogger = (title, e, voiceInput) => {
     const sentryInstance = adapter.getPluginInstance("sentry");
     if (sentryInstance) {
       const Sentry = sentryInstance.getSentryObject();
-      Sentry == null ? void 0 : Sentry.captureException(e);
-      if (voiceInput && Sentry) {
-        Sentry.withScope((scope) => {
-          scope.setExtra("Additional Info", voiceInput.get());
-          Sentry.captureException(e);
+      if (!Sentry) {
+        return;
+      }
+      if (!voiceInput) {
+        import_store.default.adapter.log.error("Additional Infos 2");
+        import_store.default.adapter.log.error(title);
+        Sentry && Sentry.withScope((scope) => {
+          scope.setLevel("error");
+          scope.setExtra("voiceInput", "12345667");
+          scope.setExtra("exception", e);
+          Sentry.captureMessage("Event name", title != null ? title : "Test");
         });
       }
     }
