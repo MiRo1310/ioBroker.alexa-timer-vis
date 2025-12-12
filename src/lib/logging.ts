@@ -12,10 +12,10 @@ interface CaptureMessage {
 }
 
 class ErrorLoggerClass {
-    private readonly Sentry: any;
-    private readonly adapter: AlexaTimerVis;
+    private Sentry: any;
+    private adapter: AlexaTimerVis | undefined;
 
-    constructor() {
+    init(): void {
         const { adapter } = store;
         this.adapter = adapter;
         if (adapter?.supportsFeature && adapter.supportsFeature('PLUGINS')) {

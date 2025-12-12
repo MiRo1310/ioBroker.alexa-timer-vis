@@ -35,7 +35,7 @@ var import_store = __toESM(require("../store/store"));
 class ErrorLoggerClass {
   Sentry;
   adapter;
-  constructor() {
+  init() {
     const { adapter } = import_store.default;
     this.adapter = adapter;
     if ((adapter == null ? void 0 : adapter.supportsFeature) && adapter.supportsFeature("PLUGINS")) {
