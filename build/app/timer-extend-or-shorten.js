@@ -35,7 +35,7 @@ module.exports = __toCommonJS(timer_extend_or_shorten_exports);
 var import_timer_data = require("../config/timer-data");
 var import_timer_parse_time_input = require("../app/timer-parse-time-input");
 var import_find_timer = require("../app/find-timer");
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_store = __toESM(require("../store/store"));
 const getMultiplicatorForAddOrSub = () => import_store.default.isShortenTimer() ? -1 : 1;
 const extendOrShortTimer = async ({
@@ -64,7 +64,11 @@ const extendOrShortTimer = async ({
       extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in extendOrShortTimer", e, voiceInput);
+    import_logging.default.send({
+      title: "Error in extendOrShortenTimer",
+      e,
+      additionalInfos: [["VoiceInput", voiceInput.get()]]
+    });
   }
 };
 function extendTimer(timers2, sec, addOrSub2, timerObject2) {

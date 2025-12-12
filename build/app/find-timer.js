@@ -33,7 +33,7 @@ __export(find_timer_exports, {
 module.exports = __toCommonJS(find_timer_exports);
 var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_state = require("../lib/state");
 var import_string = require("../lib/string");
 const findTimer = async (sec, name, deleteTimerIndex, voiceInput) => {
@@ -102,7 +102,11 @@ const findTimer = async (sec, name, deleteTimerIndex, voiceInput) => {
     }
     return timerFound;
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in findTimer", e, voiceInput);
+    import_logging.default.send({
+      title: "Error in findTimer",
+      e,
+      additionalInfos: [["VoiceInput", voiceInput.get()]]
+    });
     return { oneOfMultiTimer: {}, timer: [] };
   }
 };

@@ -32,7 +32,7 @@ __export(timer_exports, {
   getTimerByIndex: () => getTimerByIndex
 });
 module.exports = __toCommonJS(timer_exports);
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
@@ -197,8 +197,8 @@ class Timer {
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
       this.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
       await this.setIdFromEcoDeviceTimerList();
-    } catch (error) {
-      (0, import_logging.errorLogger)("Error in getInputDevice", error, null);
+    } catch (e) {
+      import_logging.default.send({ title: "Error in getInputDevice", e });
     }
   }
   async setForeignActiveTimerListSubscription(id) {
@@ -220,8 +220,8 @@ class Timer {
       if (activeTimerId) {
         this.timerId = activeTimerId;
       }
-    } catch (error) {
-      (0, import_logging.errorLogger)("Error in setIdFromEcoDeviceTimerList", error, null);
+    } catch (e) {
+      import_logging.default.send({ title: "Error in setIdFromEcoDeviceTimerList", e });
     }
   }
   setInterval(interval) {

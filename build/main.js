@@ -34,7 +34,7 @@ __export(main_exports, {
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_decompose_input_value = require("./app/decompose-input-value");
-var import_logging = require("./lib/logging");
+var import_logging = __toESM(require("./lib/logging"));
 var import_reset = require("./app/reset");
 var import_timer_add = require("./app/timer-add");
 var import_timer_data = require("./config/timer-data");
@@ -78,7 +78,14 @@ class AlexaTimerVis extends utils.Adapter {
       const test = "((3 sss+ 2 * 5)";
       eval(test);
     } catch (e) {
-      (0, import_logging.errorLogger)("Error in onReady", e, null);
+      import_logging.default.send({
+        title: "Error in onReady",
+        e,
+        additionalInfos: [
+          ["key", 123123],
+          ["test", "TestNachricht"]
+        ]
+      });
     }
     await this.setState("info.connection", false, true);
     import_timer_data.timerObject.timer.timer1 = new import_timer.Timer({ store: import_store.default });
@@ -130,7 +137,11 @@ class AlexaTimerVis extends utils.Adapter {
           await timer.stopTimerInAlexa();
         }
       } catch (e) {
-        (0, import_logging.errorLogger)("Error in stateChange", e, voiceInput);
+        import_logging.default.send({
+          title: "Error in stateChange",
+          e,
+          additionalInfos: [["VoiceInput", voiceInput.get()]]
+        });
       }
     });
     this.subscribeForeignStates(import_store.default.pathAlexaStateToListenTo);
@@ -148,7 +159,11 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
-      (0, import_logging.errorLogger)("Error in onUnload", e, voiceInput);
+      import_logging.default.send({
+        title: "Error in onUnload",
+        e,
+        additionalInfos: [["VoiceInput", voiceInput.get()]]
+      });
       callback();
     }
   }

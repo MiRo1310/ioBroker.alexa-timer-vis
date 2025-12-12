@@ -6,7 +6,7 @@ import type {
     TimerIndex,
     TimerInit,
 } from '@/types/types';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
@@ -182,8 +182,8 @@ export class Timer {
             this.setStartAndEndTime({ creationTime, startTimeString, endTimeNumber, endTimeString });
 
             await this.setIdFromEcoDeviceTimerList();
-        } catch (error) {
-            errorLogger('Error in getInputDevice', error, null);
+        } catch (e) {
+            errorLogger.send({ title: 'Error in getInputDevice', e });
         }
     }
     async setForeignActiveTimerListSubscription(id: string): Promise<void> {
@@ -210,8 +210,8 @@ export class Timer {
             if (activeTimerId) {
                 this.timerId = activeTimerId;
             }
-        } catch (error) {
-            errorLogger('Error in setIdFromEcoDeviceTimerList', error, null);
+        } catch (e) {
+            errorLogger.send({ title: 'Error in setIdFromEcoDeviceTimerList', e });
         }
     }
     setInterval(interval: number): void {

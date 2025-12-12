@@ -34,7 +34,7 @@ module.exports = __toCommonJS(write_state_interval_exports);
 var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 const writeStateInterval = () => {
   const { adapter } = import_store.default;
   try {
@@ -44,7 +44,7 @@ const writeStateInterval = () => {
     import_store.default.interval = adapter.setInterval(() => {
       var _a;
       (0, import_write_state.writeStates)({ reset: false }).catch((e) => {
-        (0, import_logging.errorLogger)("Error in writeStateInterval", e, null);
+        import_logging.default.send({ title: "Error writeStateIntervall", e });
       });
       if (!((_a = Object.keys(import_timer_data.timerObject.timer)) == null ? void 0 : _a.find((t) => import_timer_data.timerObject.timer[t].isActive))) {
         adapter.setStateChanged("all_Timer.alive", false, true);
@@ -54,7 +54,7 @@ const writeStateInterval = () => {
       }
     }, import_timer_data.timerObject.timerActive.data.interval);
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in writeStateInterval", e, null);
+    import_logging.default.send({ title: "Error writeStateIntervall", e });
     adapter.clearInterval(import_store.default.interval);
   }
 };

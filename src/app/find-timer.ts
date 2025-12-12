@@ -1,8 +1,7 @@
 import store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
-
 import type { OneOfMultiTimer, TimerIndex } from '@/types/types';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import type { Timer } from '@/app/timer';
 import { isIobrokerValue } from '@/lib/state';
 import { isString } from '@/lib/string';
@@ -107,7 +106,12 @@ export const findTimer = async (
         }
         return timerFound;
     } catch (e) {
-        errorLogger('Error in findTimer', e, voiceInput);
+        errorLogger.send({
+            title: 'Error in findTimer',
+            e,
+            additionalInfos: [['VoiceInput', voiceInput.get()]],
+        });
+
         return { oneOfMultiTimer: {} as OneOfMultiTimer, timer: [] };
     }
 };

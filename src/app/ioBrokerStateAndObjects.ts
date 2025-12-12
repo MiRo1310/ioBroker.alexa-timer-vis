@@ -1,6 +1,6 @@
 import type { AlexaJson, TimerIndex } from '@/types/types';
 import store from '@/store/store';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import { isString } from '@/lib/string';
 import { createStates } from '@/app/createStates';
 import { isIobrokerValue } from '@/lib/state';
@@ -18,7 +18,7 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
             native: {},
         });
     } catch (e: any) {
-        errorLogger('Error setDeviceNameInObject', e, null);
+        errorLogger.send({ title: 'Error setDeviceNameInObject', e });
     }
 };
 
@@ -30,7 +30,7 @@ export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
             return JSON.parse(jsonAlexa.val);
         }
     } catch (e) {
-        errorLogger('Error in getParsedAlexaJson', e, null);
+        errorLogger.send({ title: 'Error in getParsedAlexaJson', e });
     }
 }
 

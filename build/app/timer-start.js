@@ -35,7 +35,7 @@ module.exports = __toCommonJS(timer_start_exports);
 var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_interval = require("../app/interval");
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_time = require("../lib/time");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async (sec, name) => {
@@ -68,7 +68,7 @@ const startTimer = async (sec, name) => {
     import_timer_data.timerObject.timer[timerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
     (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in startTimer", e, null);
+    import_logging.default.send({ title: "Error startTimer", e });
   }
 };
 function getAvailableTimerIndex() {

@@ -2,7 +2,7 @@ import type { TimerIndex, TimerObject } from '@/types/types';
 import { timerObject } from '@/config/timer-data';
 import { timerParseTimeInput } from '@/app/timer-parse-time-input';
 import { findTimer } from '@/app/find-timer';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 import store from '@/store/store';
 import type { VoiceInput } from '@/app/voiceInput';
 
@@ -42,7 +42,11 @@ export const extendOrShortTimer = async ({
             extendTimer(timers.timer, extendTime2, addOrSub, timerObject);
         }
     } catch (e: any) {
-        errorLogger('Error in extendOrShortTimer', e, voiceInput);
+        errorLogger.send({
+            title: 'Error in extendOrShortenTimer',
+            e,
+            additionalInfos: [['VoiceInput', voiceInput.get()]],
+        });
     }
 };
 

@@ -37,7 +37,7 @@ __export(ioBrokerStateAndObjects_exports, {
 });
 module.exports = __toCommonJS(ioBrokerStateAndObjects_exports);
 var import_store = __toESM(require("../store/store"));
-var import_logging = require("../lib/logging");
+var import_logging = __toESM(require("../lib/logging"));
 var import_string = require("../lib/string");
 var import_createStates = require("../app/createStates");
 var import_state = require("../lib/state");
@@ -54,7 +54,7 @@ const setDeviceNameInObject = async (index, val) => {
       native: {}
     });
   } catch (e) {
-    (0, import_logging.errorLogger)("Error setDeviceNameInObject", e, null);
+    import_logging.default.send({ title: "Error setDeviceNameInObject", e });
   }
 };
 async function getParsedAlexaJson() {
@@ -65,7 +65,7 @@ async function getParsedAlexaJson() {
       return JSON.parse(jsonAlexa.val);
     }
   } catch (e) {
-    (0, import_logging.errorLogger)("Error in getParsedAlexaJson", e, null);
+    import_logging.default.send({ title: "Error in getParsedAlexaJson", e });
   }
 }
 const setAdapterStatusAndInitStateCreation = async () => {

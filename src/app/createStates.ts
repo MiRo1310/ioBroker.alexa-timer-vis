@@ -1,5 +1,5 @@
 import store from '@/store/store';
-import { errorLogger } from '@/lib/logging';
+import errorLogger from '@/lib/logging';
 
 export const createStates = async (value: number): Promise<void> => {
     const { adapter } = store;
@@ -215,6 +215,6 @@ export const createStates = async (value: number): Promise<void> => {
             adapter.subscribeForeignStates(id);
         }
     } catch (e: any) {
-        errorLogger('Error in createState', e, null);
+        errorLogger.send({ title: 'Error in createState', e });
     }
 };
