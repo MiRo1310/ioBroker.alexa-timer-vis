@@ -25,10 +25,6 @@ export type TimerIndex = string;
 export interface TimerInit {
     timerIndex: TimerIndex;
     creationTime: number;
-    startTimeString: string;
-    endTimeNumber: number;
-    endTimeString: string;
-    initialTimerString: string;
 }
 
 export type Timers = Record<TimerIndex, Timer>;
@@ -207,13 +203,6 @@ export interface SetOutputProperties {
     stringTimer1: string;
     stringTimer2: string;
     lengthTimer: string;
-}
-
-export interface StartAndEndTime {
-    creationTime: number;
-    startTimeString: string;
-    endTimeNumber: number;
-    endTimeString: string;
 }
 
 export interface SecToHourMinSecReturn {

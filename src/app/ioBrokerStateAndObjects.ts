@@ -39,9 +39,9 @@ export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
 
 export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
     const adapter = store.adapter;
-    const result = await adapter.getForeignObjectAsync(store.pathAlexaStateToListenTo);
+    const result = await adapter.getForeignObjectAsync(store.pathAlexaStateIntent);
     if (!result) {
-        adapter.log.warn(`The State ${store.pathAlexaStateToListenTo} was not found!`);
+        adapter.log.warn(`The State ${store.pathAlexaStateIntent} was not found!`);
         return;
     }
     adapter.log.info('Alexa State was found');
@@ -50,8 +50,8 @@ export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
     await createStates(4);
 };
 
-export function isAlexaSummaryStateChanged({ state, id }: { state?: ioBroker.State | null; id: string }): boolean {
-    return isIobrokerValue(state) && isString(state.val) && state.val !== '' && id === store.pathAlexaStateToListenTo;
+export function isAlexaStateIntentUpdated({ state, id }: { state?: ioBroker.State | null; id: string }): boolean {
+    return isIobrokerValue(state) && isString(state.val) && state.val !== '' && id === store.pathAlexaStateIntent;
 }
 
 export const isAlexaTimerVisResetButton = (state: ioBroker.State | null | undefined, id: string): boolean =>

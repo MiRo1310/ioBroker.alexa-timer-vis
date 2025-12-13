@@ -3,10 +3,10 @@ import { timerObject } from '@/config/timer-data';
 import store from '@/store/store';
 import { interval } from '@/app/interval';
 import errorLogger from '@/lib/logging';
-import { isMoreThanAMinute, secToHourMinSec, timeToString } from '@/lib/time';
+import { isMoreThanAMinute } from '@/lib/time';
 import { getParsedAlexaJson } from '@/app/ioBrokerStateAndObjects';
 
-export const startTimer = async (sec: number, name: string): Promise<void> => {
+export const startTimer = async (): Promise<void> => {
     try {
         const timerIndex = getAvailableTimerIndex();
         timerObject.timerActive.timer[timerIndex] = true;
@@ -17,21 +17,11 @@ export const startTimer = async (sec: number, name: string): Promise<void> => {
         }
 
         const creationTime = alexaJson.creationTime;
-        const startTimeString = timeToString(creationTime);
-        const timerMilliseconds = sec * 1000;
-        const endTimeNumber = creationTime + timerMilliseconds;
-        const endTimeString = timeToString(endTimeNumber);
-        const timer = timerObject.timer[timerIndex];
-        const result = secToHourMinSec(sec, true);
-        await timer.init({
-            timerIndex,
-            creationTime,
-            startTimeString,
-            endTimeNumber,
-            endTimeString,
-            initialTimerString: result.initialString,
-        });
 
+        const timer = timerObject.timer[timerIndex];
+        await timer.init({ timerIndex, creationTime });
+        const name = timer.getName();
+        const sec = timer.calculatedSeconds;
         if (isMoreThanAMinute(sec)) {
             interval(sec, name, timer, store.intervalMore60 * 1000, false);
             return;

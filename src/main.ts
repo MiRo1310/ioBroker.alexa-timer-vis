@@ -1,6 +1,5 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
-import { decomposeInputValue } from '@/app/decompose-input-value';
 import errorLogger from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
 import { timerAdd } from '@/app/timer-add';
@@ -13,7 +12,7 @@ import { extendOrShortTimer } from '@/app/timer-extend-or-shorten';
 import { writeStates } from '@/app/write-state';
 import { isIobrokerValue } from '@/lib/state';
 import {
-    isAlexaSummaryStateChanged,
+    isAlexaStateIntentUpdated,
     isAlexaTimerVisResetButton,
     isTimerAction,
     setAdapterStatusAndInitStateCreation,
@@ -63,7 +62,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
         this.on('stateChange', async (id, state) => {
             try {
-                if (isAlexaSummaryStateChanged({ state: state, id: id }) && isTimerAction(state)) {
+                if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {
                     this.log.debug('Alexa state changed');
                     if (isIobrokerValue(state)) {
                         store.timerAction = state.val as TimerCondition;
@@ -86,7 +85,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                         return;
                     }
 
-                    const { name, timerSec } = decomposeInputValue(voiceInput);
+                    // const { name, timerSec } = decomposeInputValue(voiceInput);
                     voiceInput.doesAlexaSendAQuestion();
 
                     if (store.isDeleteTimer()) {
@@ -94,11 +93,12 @@ export default class AlexaTimerVis extends utils.Adapter {
                         return;
                     }
                     if (store.isAddTimer()) {
-                        await timerAdd(name, timerSec);
+                        // await timerAdd(name, timerSec);
+                        await timerAdd();
                         return;
                     }
                     if (store.isExtendTimer() || store.isShortenTimer()) {
-                        await extendOrShortTimer({ voiceInput, name });
+                        await extendOrShortTimer({ voiceInput, name: '' });
                         return;
                     }
 
@@ -118,7 +118,7 @@ export default class AlexaTimerVis extends utils.Adapter {
             }
         });
 
-        this.subscribeForeignStates(store.pathAlexaStateToListenTo);
+        this.subscribeForeignStates(store.pathAlexaStateIntent);
     }
 
     async onUnload(callback: () => void): Promise<void> {

@@ -6,7 +6,6 @@ import { Timer } from '@/app/timer';
 import errorLogger from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
-import { isStringEmpty } from '@/lib/string';
 
 function addNewRawTimer(timerIndex: string): void {
     timerObject.timerActive.timer[timerIndex] = false;
@@ -16,35 +15,21 @@ function addNewRawTimer(timerIndex: string): void {
     });
 }
 
-export const timerAdd = async (name: string, timerSec: number): Promise<void> => {
+export const timerAdd = async (): Promise<void> => {
     try {
-        if (timerSec && timerSec != 0) {
-            let nameExist = false;
+        timerObject.timerActive.timerCount++;
 
-            for (const element in timerObject.timer) {
-                if (timerObject.timer[element].getName() == name && !isStringEmpty(name)) {
-                    nameExist = true;
-                    //FIXME: Break evtl entfernen
-                    break;
-                }
-            }
+        await createStates(timerObject.timerActive.timerCount);
 
-            if (!nameExist) {
-                timerObject.timerActive.timerCount++;
+        const timerIndex = `timer${timerObject.timerActive.timerCount}`;
 
-                await createStates(timerObject.timerActive.timerCount);
-
-                const timerIndex = `timer${timerObject.timerActive.timerCount}`;
-
-                if (!timerObject.timerActive.timer[timerIndex]) {
-                    addNewRawTimer(timerIndex);
-                }
-
-                await startTimer(timerSec, name);
-
-                writeStateInterval();
-            }
+        if (!timerObject.timerActive.timer[timerIndex]) {
+            addNewRawTimer(timerIndex);
         }
+
+        await startTimer();
+
+        writeStateInterval();
     } catch (e: any) {
         errorLogger.send({ title: 'Error timerAdd', e });
     }
