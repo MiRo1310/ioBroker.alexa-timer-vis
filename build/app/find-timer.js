@@ -41,9 +41,11 @@ const findTimer = async (sec, name, deleteTimerIndex, voiceInput) => {
   try {
     name = name.trim();
     let inputDevice = "";
-    const obj = await adapter.getForeignStateAsync(
-      `alexa2.${import_store.default.getAlexaInstanceObject().instance}.History.name`
-    );
+    const instance = import_store.default.getAlexa2Instance();
+    if (!instance) {
+      return { oneOfMultiTimer: {}, timer: [] };
+    }
+    const obj = await adapter.getForeignStateAsync(`alexa2.${instance}.History.name`);
     if ((0, import_state.isIobrokerValue)(obj) && (0, import_string.isString)(obj.val)) {
       inputDevice = obj.val;
     }

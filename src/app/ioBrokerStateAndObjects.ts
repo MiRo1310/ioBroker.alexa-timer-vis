@@ -1,4 +1,4 @@
-import type { AlexaJson, TimerIndex } from '@/types/types';
+import type { AlexaActiveTimerList, AlexaJson, TimerIndex } from '@/types/types';
 import store from '@/store/store';
 import errorLogger from '@/lib/logging';
 import { isString } from '@/lib/string';
@@ -24,7 +24,10 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
 
 export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
     try {
-        const instance = store.getAlexaInstanceObject().instance;
+        const instance = store.getAlexa2Instance();
+        if (!instance) {
+            return;
+        }
         const jsonAlexa = await store.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
         if (isString(jsonAlexa?.val)) {
             return JSON.parse(jsonAlexa.val);
@@ -61,3 +64,17 @@ export const isTimerAction = (state: ioBroker.State | null | undefined): boolean
         'ExtendNotificationIntent',
         'RemoveNotificationIntent',
     ].includes(String(state?.val ?? ''));
+
+export const getActiveAlexaTimerListForDevice = async (
+    deviceSerialNumber: string,
+): Promise<AlexaActiveTimerList[] | undefined> => {
+    const instance = store.getAlexa2Instance();
+    if (!instance) {
+        //TODO
+        return;
+    }
+    const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
+    const activeTimerListState = await store.adapter.getForeignStateAsync(activeTimerListId);
+
+    return activeTimerListState?.val ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[]) : [];
+};

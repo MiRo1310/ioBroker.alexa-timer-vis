@@ -86,11 +86,11 @@ export default class AlexaTimerVis extends utils.Adapter {
                         return;
                     }
 
-                    const { name, timerSec, deleteVal } = decomposeInputValue(voiceInput);
+                    const { name, timerSec } = decomposeInputValue(voiceInput);
                     voiceInput.doesAlexaSendAQuestion();
 
                     if (store.isDeleteTimer()) {
-                        await timerDelete(name, timerSec, voiceInput, deleteVal);
+                        await timerDelete(voiceInput);
                         return;
                     }
                     if (store.isAddTimer()) {

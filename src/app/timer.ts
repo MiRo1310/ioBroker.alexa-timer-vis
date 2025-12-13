@@ -1,16 +1,9 @@
-import type {
-    AlexaActiveTimerList,
-    GetOutputProperties,
-    SetOutputProperties,
-    StartAndEndTime,
-    TimerIndex,
-    TimerInit,
-} from '@/types/types';
+import type { GetOutputProperties, SetOutputProperties, StartAndEndTime, TimerIndex, TimerInit } from '@/types/types';
 import errorLogger from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
-import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
+import { getActiveAlexaTimerListForDevice, setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 import { firstLetterToUpperCase } from '@/lib/string';
 import { isIobrokerValue } from '@/lib/state';
 import { timeToString } from '@/lib/time';
@@ -159,7 +152,7 @@ export class Timer {
         this.initialTimer = initialTimerString;
         this.timerIndex = timerIndex;
         try {
-            const instance = Store.getAlexaInstanceObject().instance;
+            const instance = Store.getAlexa2Instance();
             this.alexaInstance = instance;
 
             const nameState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.name`);
@@ -199,13 +192,11 @@ export class Timer {
     }
     async setIdFromEcoDeviceTimerList(): Promise<void> {
         try {
-            const activeTimerListId = `alexa2.${this.alexaInstance}.Echo-Devices.${this.deviceSerialNumber}.Timer.activeTimerList`;
-            const activeTimerListState = await this.adapter.getForeignStateAsync(activeTimerListId);
-            const activeTimerList = activeTimerListState?.val
-                ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[])
-                : [];
-
-            const activeTimerId = Store.addNewActiveTimerId(activeTimerList);
+            const activeTimerList = await getActiveAlexaTimerListForDevice(this.deviceSerialNumber);
+            if (!activeTimerList) {
+                return;
+            }
+            const activeTimerId = Store.getNewActiveTimerId(activeTimerList);
 
             if (activeTimerId) {
                 this.timerId = activeTimerId;
@@ -288,6 +279,9 @@ export class Timer {
             this.adapter.unsubscribeForeignStates(this.foreignActiveTimerListId);
             this.adapter.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
         }
+    }
+    getTimerId(): string {
+        return this.timerId;
     }
 }
 

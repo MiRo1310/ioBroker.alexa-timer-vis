@@ -1,45 +1,35 @@
 import store from '@/store/store';
-import { findTimer } from '@/app/find-timer';
-import { oneOfMultiTimerDelete } from '@/app/one-timer-to-delete';
 import errorLogger from '@/lib/logging';
 import { timerObject } from '@/config/timer-data';
 import type { VoiceInput } from '@/app/voiceInput';
+import { getActiveAlexaTimerListForDevice } from '@/app/ioBrokerStateAndObjects';
+import { getTimerByIndex } from '@/app/timer';
 
-export const timerDelete = async (
-    decomposeName: string,
-    timerSec: number,
-    voiceInput: VoiceInput,
-    deleteVal: number,
-): Promise<void> => {
-    let name = decomposeName;
-    let timerAbortSec = 0;
-    if (timerSec) {
-        timerAbortSec = timerSec;
-    }
-
-    let deleteTimerIndex = 0;
-
-    if (store.questionAlexa) {
-        deleteTimerIndex = 1;
-        name = '';
-    } else {
-        if (deleteVal) {
-            deleteTimerIndex = deleteVal;
-        }
-
-        store.adapter.log.debug('Timer can be deleted');
-    }
+export const timerDelete = async (voiceInput: VoiceInput): Promise<void> => {
     try {
-        const result = await findTimer(timerAbortSec, name, deleteTimerIndex, voiceInput);
+        const { adapter } = store;
+        const alexaInstance = store.getAlexa2Instance();
 
-        if (result.timer.length) {
-            for (const element of result.timer) {
-                await timerObject.timer[element].reset();
+        const serialState = await adapter.getForeignStateAsync(`alexa2.${alexaInstance}.History.serialNumber`);
+        if (!serialState?.val) {
+            //TODO Output das keine serial gefunden wurde
+            return;
+        }
+        const activeTimerList = await getActiveAlexaTimerListForDevice(String(serialState.val));
+        if (!activeTimerList) {
+            //TODO
+            return;
+        }
+        const id = store.getRemovedTimerId(activeTimerList);
+
+        if (id) {
+            for (const timerIndex in timerObject.timer) {
+                const timer = getTimerByIndex(timerIndex);
+
+                if (timer && timer.getTimerId() === id) {
+                    await timer.reset();
+                }
             }
-        } else if (result.oneOfMultiTimer) {
-            const { sec, name, inputDevice } = result.oneOfMultiTimer;
-
-            oneOfMultiTimerDelete(voiceInput, sec, name, inputDevice);
         }
     } catch (e: any) {
         errorLogger.send({

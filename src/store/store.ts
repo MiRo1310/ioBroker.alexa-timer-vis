@@ -1,5 +1,5 @@
 import type AlexaTimerVis from '@/main';
-import type { AlexaActiveTimerList, AlexaInstanceObject, StoreType, TimerCondition } from '@/types/types';
+import type { AlexaActiveTimerList, StoreType, TimerCondition } from '@/types/types';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -24,6 +24,7 @@ class Store {
     questionAlexa: boolean;
     interval: ioBroker.Interval | null | undefined;
     alexaTimerVisInstance: string;
+    alexa2Instance: string | null;
     private activeTimerIds: string[];
     constructor() {
         this.pathAlexaStateToListenTo = '';
@@ -49,6 +50,7 @@ class Store {
         this.valSecondForZero = '';
         this.timerAction = null;
         this.activeTimerIds = [];
+        this.alexa2Instance = null;
     }
 
     init(store: StoreType): void {
@@ -76,6 +78,7 @@ class Store {
         this.valMinuteForZero = valMinuteForZero;
         this.valSecondForZero = valSecondForZero;
         this.pathAlexaStateToListenTo = `${alexa}.History.intent`;
+        this.alexa2Instance = alexa.split('.')[1];
         this.pathAlexaSummary = `${alexa}.History.summary`;
         this.intervalMore60 = intervall1;
         this.intervalLess60 = intervall2;
@@ -91,13 +94,8 @@ class Store {
         this.unitSecond3 = unitSecond3;
         this.alexaTimerVisInstance = alexaTimerVisInstance;
     }
-    getAlexaInstanceObject(): AlexaInstanceObject {
-        const dataPointArray = this.pathAlexaStateToListenTo.split('.');
-        return {
-            adapter: dataPointArray[0],
-            instance: dataPointArray[1],
-            channel_history: dataPointArray[2],
-        };
+    getAlexa2Instance(): string | null {
+        return this.alexa2Instance;
     }
     isAddTimer(): boolean {
         return this.timerAction === 'SetNotificationIntent';
@@ -114,11 +112,23 @@ class Store {
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
     }
-    addNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
+    getNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
         const newestTimer = activeTimerLists.find(t => !this.includesActiveTimerId(t.id));
         if (newestTimer) {
             this.activeTimerIds.push(newestTimer.id);
             return newestTimer.id;
+        }
+    }
+    getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
+        const timerIdToDelete = this.activeTimerIds.find(id => {
+            if (!activeTimerLists.some(t => t.id === id)) {
+                return id;
+            }
+        });
+        if (timerIdToDelete) {
+            const index = this.activeTimerIds.findIndex(id => id === timerIdToDelete);
+            this.activeTimerIds.splice(index, 1);
+            return timerIdToDelete;
         }
     }
     removeActiveTimerId(id: string): void {

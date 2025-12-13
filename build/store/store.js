@@ -44,6 +44,7 @@ class Store {
   questionAlexa;
   interval;
   alexaTimerVisInstance;
+  alexa2Instance;
   activeTimerIds;
   constructor() {
     this.pathAlexaStateToListenTo = "";
@@ -69,6 +70,7 @@ class Store {
     this.valSecondForZero = "";
     this.timerAction = null;
     this.activeTimerIds = [];
+    this.alexa2Instance = null;
   }
   init(store) {
     this.adapter = store.adapter;
@@ -95,6 +97,7 @@ class Store {
     this.valMinuteForZero = valMinuteForZero;
     this.valSecondForZero = valSecondForZero;
     this.pathAlexaStateToListenTo = `${alexa}.History.intent`;
+    this.alexa2Instance = alexa.split(".")[1];
     this.pathAlexaSummary = `${alexa}.History.summary`;
     this.intervalMore60 = intervall1;
     this.intervalLess60 = intervall2;
@@ -110,13 +113,8 @@ class Store {
     this.unitSecond3 = unitSecond3;
     this.alexaTimerVisInstance = alexaTimerVisInstance;
   }
-  getAlexaInstanceObject() {
-    const dataPointArray = this.pathAlexaStateToListenTo.split(".");
-    return {
-      adapter: dataPointArray[0],
-      instance: dataPointArray[1],
-      channel_history: dataPointArray[2]
-    };
+  getAlexa2Instance() {
+    return this.alexa2Instance;
   }
   isAddTimer() {
     return this.timerAction === "SetNotificationIntent";
@@ -133,11 +131,23 @@ class Store {
   getAlexaTimerVisInstance() {
     return this.alexaTimerVisInstance;
   }
-  addNewActiveTimerId(activeTimerLists) {
+  getNewActiveTimerId(activeTimerLists) {
     const newestTimer = activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
       this.activeTimerIds.push(newestTimer.id);
       return newestTimer.id;
+    }
+  }
+  getRemovedTimerId(activeTimerLists) {
+    const timerIdToDelete = this.activeTimerIds.find((id) => {
+      if (!activeTimerLists.some((t) => t.id === id)) {
+        return id;
+      }
+    });
+    if (timerIdToDelete) {
+      const index = this.activeTimerIds.findIndex((id) => id === timerIdToDelete);
+      this.activeTimerIds.splice(index, 1);
+      return timerIdToDelete;
     }
   }
   removeActiveTimerId(id) {
