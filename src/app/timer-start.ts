@@ -9,7 +9,7 @@ import { getParsedAlexaJson } from '@/app/ioBrokerStateAndObjects';
 export const startTimer = async (): Promise<void> => {
     try {
         const timerIndex = getAvailableTimerIndex();
-        timerObject.timerActive.timer[timerIndex] = true;
+        timerObject.timerStatus[timerIndex] = true;
 
         const alexaJson = await getParsedAlexaJson();
         if (!alexaJson) {
@@ -36,11 +36,11 @@ export const startTimer = async (): Promise<void> => {
 };
 
 export function getAvailableTimerIndex(): TimerIndex {
-    const keys = Object.keys(timerObject.timerActive.timer);
+    const keys = Object.keys(timerObject.timerStatus);
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
 
-        if (!timerObject.timerActive.timer[key]) {
+        if (!timerObject.timerStatus[key]) {
             return key;
         }
     }

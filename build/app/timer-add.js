@@ -39,17 +39,17 @@ var import_logging = __toESM(require("../lib/logging"));
 var import_timer_start = require("../app/timer-start");
 var import_write_state_interval = require("../app/write-state-interval");
 function addNewRawTimer(timerIndex) {
-  import_timer_data.timerObject.timerActive.timer[timerIndex] = false;
+  import_timer_data.timerObject.timerStatus[timerIndex] = false;
   import_timer_data.timerObject.timer[timerIndex] = new import_timer.Timer({
     store: import_store.default
   });
 }
 const timerAdd = async () => {
   try {
-    import_timer_data.timerObject.timerActive.timerCount++;
-    await (0, import_createStates.createStates)(import_timer_data.timerObject.timerActive.timerCount);
-    const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
-    if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
+    import_timer_data.timerObject.timerCount++;
+    await (0, import_createStates.createStates)(import_timer_data.timerObject.timerCount);
+    const timerIndex = `timer${import_timer_data.timerObject.timerCount}`;
+    if (!import_timer_data.timerObject.timerStatus[timerIndex]) {
       addNewRawTimer(timerIndex);
     }
     await (0, import_timer_start.startTimer)();

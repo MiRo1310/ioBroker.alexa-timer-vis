@@ -271,7 +271,7 @@ export class Timer {
         this.endTime = 0;
         this.initialTimer = '';
         if (this.timerIndex !== null) {
-            timerObject.timerActive.timer[this.timerIndex] = false;
+            timerObject.timerStatus[this.timerIndex] = false;
             await setDeviceNameInObject(this.timerIndex, '');
         }
         this.isActive = false;

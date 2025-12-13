@@ -52,7 +52,7 @@ const writeStateInterval = () => {
         import_store.default.interval = null;
         adapter.log.debug("Interval stopped!");
       }
-    }, import_timer_data.timerObject.timerActive.data.interval);
+    }, import_timer_data.timerObject.intervalTime);
   } catch (e) {
     import_logging.default.send({ title: "Error writeStateIntervall", e });
     adapter.clearInterval(import_store.default.interval);

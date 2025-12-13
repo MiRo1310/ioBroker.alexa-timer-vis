@@ -49,7 +49,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
 
 export async function writeStates({ reset }: { reset: boolean }): Promise<void> {
     try {
-        for (const timerIndex in timerObject.timerActive.timer) {
+        for (const timerIndex in timerObject.timerStatus) {
             await writeStatesByTimerIndex(timerIndex, reset);
         }
     } catch (e: any) {

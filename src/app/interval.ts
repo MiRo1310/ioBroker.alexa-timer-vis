@@ -15,38 +15,41 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, o
 
     const { string } = secToHourMinSec(sec, false);
     timer.setLengthTimer(string);
-    if (timerObject.interval[timerIndex as keyof typeof timerObject.interval] || !timer.isActive) {
+    if (timerObject.iobrokerInterval[timerIndex as keyof typeof timerObject.iobrokerInterval] || !timer.isActive) {
         return;
     }
 
-    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = adapter.setInterval(async () => {
-        const timeLeftSec = generateTimerValues(timer, sec, name);
+    timerObject.iobrokerInterval[timerIndex as keyof typeof timerObject.iobrokerInterval] = adapter.setInterval(
+        async () => {
+            const timeLeftSec = generateTimerValues(timer, sec, name);
 
-        if (timeLeftSec <= 60 && !onlyOneTimer) {
-            onlyOneTimer = true;
+            if (timeLeftSec <= 60 && !onlyOneTimer) {
+                onlyOneTimer = true;
 
-            if (timerObject.interval[timerIndex as keyof typeof timerObject.interval]) {
-                clearIntervalByTimerIndex(timerIndex, timer);
+                if (timerObject.iobrokerInterval[timerIndex as keyof typeof timerObject.iobrokerInterval]) {
+                    clearIntervalByTimerIndex(timerIndex, timer);
+                }
+
+                interval(sec, name, timer, timerObject.timer[timerIndex].getInterval(), true);
             }
 
-            interval(sec, name, timer, timerObject.timer[timerIndex].getInterval(), true);
-        }
+            if (timeLeftSec <= 0 || !timerObject.timerStatus[timerIndex]) {
+                timerObject.timerCount--;
+                await timer.reset();
 
-        if (timeLeftSec <= 0 || !timerObject.timerActive.timer[timerIndex]) {
-            timerObject.timerActive.timerCount--;
-            await timer.reset();
+                adapter.log.debug('Timer stopped');
 
-            adapter.log.debug('Timer stopped');
-
-            if (timerObject.interval[timerIndex as keyof typeof timerObject.interval]) {
-                clearIntervalByTimerIndex(timerIndex, timer);
+                if (timerObject.iobrokerInterval[timerIndex as keyof typeof timerObject.iobrokerInterval]) {
+                    clearIntervalByTimerIndex(timerIndex, timer);
+                }
             }
-        }
-    }, int);
+        },
+        int,
+    );
 };
 
 function clearIntervalByTimerIndex(timerIndex: string, timer: Timer): void {
-    store.adapter.clearInterval(timerObject.interval[timerIndex as keyof typeof timerObject.interval]);
+    store.adapter.clearInterval(timerObject.iobrokerInterval[timerIndex as keyof typeof timerObject.iobrokerInterval]);
     timer.isActive = false;
-    timerObject.interval[timerIndex as keyof typeof timerObject.interval] = null;
+    timerObject.iobrokerInterval[timerIndex as keyof typeof timerObject.iobrokerInterval] = null;
 }

@@ -41,7 +41,7 @@ var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async () => {
   try {
     const timerIndex = getAvailableTimerIndex();
-    import_timer_data.timerObject.timerActive.timer[timerIndex] = true;
+    import_timer_data.timerObject.timerStatus[timerIndex] = true;
     const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
     if (!alexaJson) {
       return;
@@ -62,10 +62,10 @@ const startTimer = async () => {
   }
 };
 function getAvailableTimerIndex() {
-  const keys = Object.keys(import_timer_data.timerObject.timerActive.timer);
+  const keys = Object.keys(import_timer_data.timerObject.timerStatus);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    if (!import_timer_data.timerObject.timerActive.timer[key]) {
+    if (!import_timer_data.timerObject.timerStatus[key]) {
       return key;
     }
   }
