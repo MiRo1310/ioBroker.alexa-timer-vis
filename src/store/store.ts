@@ -25,7 +25,7 @@ class Store {
     interval: ioBroker.Interval | null | undefined;
     alexaTimerVisInstance: string;
     alexa2Instance: string | null;
-    private activeTimerIds: string[];
+    private activeTimerIds: AlexaActiveTimerList[];
     constructor() {
         this.pathAlexaStateToListenTo = '';
         this.intervalLess60 = 0;
@@ -115,27 +115,28 @@ class Store {
     getNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
         const newestTimer = activeTimerLists.find(t => !this.includesActiveTimerId(t.id));
         if (newestTimer) {
-            this.activeTimerIds.push(newestTimer.id);
+            this.activeTimerIds.push(newestTimer);
             return newestTimer.id;
         }
     }
     getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
-        const timerIdToDelete = this.activeTimerIds.find(id => {
-            if (!activeTimerLists.some(t => t.id === id)) {
-                return id;
+        const timerIdToDelete = this.activeTimerIds.find(activeList => {
+            if (!activeTimerLists.some(t => t.id === activeList.id)) {
+                return activeList;
             }
-        });
+        })?.id;
+
         if (timerIdToDelete) {
-            const index = this.activeTimerIds.findIndex(id => id === timerIdToDelete);
+            const index = this.activeTimerIds.findIndex(el => el.id === timerIdToDelete);
             this.activeTimerIds.splice(index, 1);
             return timerIdToDelete;
         }
     }
     removeActiveTimerId(id: string): void {
-        this.activeTimerIds = this.activeTimerIds.filter(activeId => activeId !== id);
+        this.activeTimerIds = this.activeTimerIds.filter(t => t.id !== id);
     }
     includesActiveTimerId(id: string): boolean {
-        return this.activeTimerIds.includes(id);
+        return this.activeTimerIds.some(t => t.id === id);
     }
 }
 export default new Store();

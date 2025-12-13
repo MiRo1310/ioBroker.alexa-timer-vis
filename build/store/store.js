@@ -134,27 +134,28 @@ class Store {
   getNewActiveTimerId(activeTimerLists) {
     const newestTimer = activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
-      this.activeTimerIds.push(newestTimer.id);
+      this.activeTimerIds.push(newestTimer);
       return newestTimer.id;
     }
   }
   getRemovedTimerId(activeTimerLists) {
-    const timerIdToDelete = this.activeTimerIds.find((id) => {
-      if (!activeTimerLists.some((t) => t.id === id)) {
-        return id;
+    var _a;
+    const timerIdToDelete = (_a = this.activeTimerIds.find((activeList) => {
+      if (!activeTimerLists.some((t) => t.id === activeList.id)) {
+        return activeList;
       }
-    });
+    })) == null ? void 0 : _a.id;
     if (timerIdToDelete) {
-      const index = this.activeTimerIds.findIndex((id) => id === timerIdToDelete);
+      const index = this.activeTimerIds.findIndex((el) => el.id === timerIdToDelete);
       this.activeTimerIds.splice(index, 1);
       return timerIdToDelete;
     }
   }
   removeActiveTimerId(id) {
-    this.activeTimerIds = this.activeTimerIds.filter((activeId) => activeId !== id);
+    this.activeTimerIds = this.activeTimerIds.filter((t) => t.id !== id);
   }
   includesActiveTimerId(id) {
-    return this.activeTimerIds.includes(id);
+    return this.activeTimerIds.some((t) => t.id === id);
   }
 }
 var store_default = new Store();
