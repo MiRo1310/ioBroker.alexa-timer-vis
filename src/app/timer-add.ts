@@ -8,7 +8,7 @@ import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
 
 function addNewRawTimer(timerIndex: string): void {
-    timerObject.timerActive.timer[timerIndex] = false;
+    timerObject.timerStatus[timerIndex] = false;
 
     timerObject.timer[timerIndex] = new Timer({
         store,
@@ -17,13 +17,13 @@ function addNewRawTimer(timerIndex: string): void {
 
 export const timerAdd = async (): Promise<void> => {
     try {
-        timerObject.timerActive.timerCount++;
+        timerObject.timerCount++;
 
-        await createStates(timerObject.timerActive.timerCount);
+        await createStates(timerObject.timerCount);
 
-        const timerIndex = `timer${timerObject.timerActive.timerCount}`;
+        const timerIndex = `timer${timerObject.timerCount}`;
 
-        if (!timerObject.timerActive.timer[timerIndex]) {
+        if (!timerObject.timerStatus[timerIndex]) {
             addNewRawTimer(timerIndex);
         }
 

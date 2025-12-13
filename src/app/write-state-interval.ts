@@ -24,7 +24,7 @@ export const writeStateInterval = (): void => {
 
                 adapter.log.debug('Interval stopped!');
             }
-        }, timerObject.timerActive.data.interval);
+        }, timerObject.intervalTime);
     } catch (e: any) {
         errorLogger.send({ title: 'Error writeStateIntervall', e });
 

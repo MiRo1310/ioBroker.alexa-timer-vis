@@ -290,7 +290,7 @@ class Timer {
     this.endTime = 0;
     this.initialTimer = "";
     if (this.timerIndex !== null) {
-      import_timer_data.timerObject.timerActive.timer[this.timerIndex] = false;
+      import_timer_data.timerObject.timerStatus[this.timerIndex] = false;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, "");
     }
     this.isActive = false;

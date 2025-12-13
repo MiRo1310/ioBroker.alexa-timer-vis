@@ -121,8 +121,8 @@ class AlexaTimerVis extends utils.Adapter {
       this.clearTimeout(timeout_1);
       this.clearTimeout(debounceTimeout);
       this.clearInterval(import_store.default.interval);
-      for (const element in import_timer_data.timerObject.interval) {
-        this.clearInterval(import_timer_data.timerObject.interval[element]);
+      for (const element in import_timer_data.timerObject.iobrokerInterval) {
+        this.clearInterval(import_timer_data.timerObject.iobrokerInterval[element]);
       }
       this.log.debug("Intervals and timeouts cleared!");
       callback();
