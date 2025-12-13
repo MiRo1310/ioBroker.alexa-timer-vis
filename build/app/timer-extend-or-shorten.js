@@ -6,8 +6,8 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
-  for (var name2 in all)
-    __defProp(target, name2, { get: all[name2], enumerable: true });
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -28,59 +28,30 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_extend_or_shorten_exports = {};
 __export(timer_extend_or_shorten_exports, {
-  extendOrShortTimer: () => extendOrShortTimer,
-  extendTimer: () => extendTimer
+  extendOrShortTimer: () => extendOrShortTimer
 });
 module.exports = __toCommonJS(timer_extend_or_shorten_exports);
-var import_timer_data = require("../config/timer-data");
-var import_timer_parse_time_input = require("../app/timer-parse-time-input");
-var import_find_timer = require("../app/find-timer");
 var import_logging = __toESM(require("../lib/logging"));
 var import_store = __toESM(require("../store/store"));
-const getMultiplicatorForAddOrSub = () => import_store.default.isShortenTimer() ? -1 : 1;
-const extendOrShortTimer = async ({
-  voiceInput,
-  name
-}) => {
+var import_timer = require("../app/timer");
+var import_timer_delete = require("../app/timer-delete");
+const extendOrShortTimer = async () => {
   try {
-    const addOrSub = getMultiplicatorForAddOrSub();
-    let firstPartOfValue, valueExtend;
-    let extendTime = 0;
-    let extendTime2 = 0;
-    if (voiceInput.isExtendOrShortenSentence()) {
-      firstPartOfValue = voiceInput.getValueExtendBefore();
-      valueExtend = voiceInput.getValueExtend();
-      const { stringToEvaluate } = (0, import_timer_parse_time_input.timerParseTimeInput)(firstPartOfValue);
-      extendTime = eval(stringToEvaluate);
-      const { stringToEvaluate: string2 } = (0, import_timer_parse_time_input.timerParseTimeInput)(valueExtend);
-      extendTime2 = eval(string2);
-    }
-    const timers = await (0, import_find_timer.findTimer)(extendTime, name, 1, voiceInput);
-    if (timers.timer) {
-      extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
+    const activeTimerList = await (0, import_timer_delete.getActiveAlexaTimerList)();
+    const activeTimerWithDifferentTriggerTime = import_store.default.getActiveTimerWithDifferentTriggerTime(activeTimerList);
+    if (!activeTimerWithDifferentTriggerTime) {
       return;
     }
-    if (timers.oneOfMultiTimer) {
-      extendTimer(timers.timer, extendTime2, addOrSub, import_timer_data.timerObject);
+    const timer = (0, import_timer.getTimerById)(activeTimerWithDifferentTriggerTime.listEl.id);
+    if (timer) {
+      timer.extendTimer(activeTimerWithDifferentTriggerTime.changedSec);
     }
   } catch (e) {
-    import_logging.default.send({
-      title: "Error in extendOrShortenTimer",
-      e,
-      additionalInfos: [["VoiceInput", voiceInput.get()]]
-    });
+    import_logging.default.send({ title: "Error in extendOrShortenTimer", e });
   }
 };
-function extendTimer(timers2, sec, addOrSub2, timerObject2) {
-  timers2.forEach((timer) => {
-    if (timerObject2.timerActive.timer[timer]) {
-      timerObject2.timer[timer].extendTimer(sec, addOrSub2);
-    }
-  });
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  extendOrShortTimer,
-  extendTimer
+  extendOrShortTimer
 });
 //# sourceMappingURL=timer-extend-or-shorten.js.map

@@ -44,10 +44,8 @@ var import_timer_extend_or_shorten = require("./app/timer-extend-or-shorten");
 var import_write_state = require("./app/write-state");
 var import_state = require("./lib/state");
 var import_ioBrokerStateAndObjects = require("./app/ioBrokerStateAndObjects");
-var import_voiceInput = require("./app/voiceInput");
 let timeout_1;
 let debounceTimeout;
-let voiceInput;
 class AlexaTimerVis extends utils.Adapter {
   static instance;
   /**
@@ -82,29 +80,15 @@ class AlexaTimerVis extends utils.Adapter {
     await (0, import_ioBrokerStateAndObjects.setAdapterStatusAndInitStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
     this.on("stateChange", async (id, state) => {
+      var _a2;
       try {
         if ((0, import_ioBrokerStateAndObjects.isAlexaStateIntentUpdated)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
           this.log.debug("Alexa state changed");
           if ((0, import_state.isIobrokerValue)(state)) {
             import_store.default.timerAction = state.val;
           }
-          const res = await this.getForeignStateAsync(import_store.default.pathAlexaSummary);
-          if ((0, import_state.isIobrokerValue)(res)) {
-            voiceInput = new import_voiceInput.VoiceInput(res.val);
-            this.log.debug(`VoiceInput: ${voiceInput.get()}`);
-          }
-          const abortWord = voiceInput.getAbortWord();
-          if (abortWord) {
-            this.log.debug(`This will be aborted because found "${abortWord}" in the voice input.`);
-            return;
-          }
-          if (voiceInput.isAbortSentence() && !import_store.default.isDeleteTimer()) {
-            this.log.debug("Input is an abort sentence. No action will be executed.");
-            return;
-          }
-          voiceInput.doesAlexaSendAQuestion();
           if (import_store.default.isDeleteTimer()) {
-            await (0, import_timer_delete.timerDelete)(voiceInput);
+            await (0, import_timer_delete.timerDelete)();
             return;
           }
           if (import_store.default.isAddTimer()) {
@@ -112,22 +96,20 @@ class AlexaTimerVis extends utils.Adapter {
             return;
           }
           if (import_store.default.isExtendTimer() || import_store.default.isShortenTimer()) {
-            await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, name: "" });
+            await (0, import_timer_extend_or_shorten.extendOrShortTimer)();
             return;
           }
           return;
         }
         if ((0, import_ioBrokerStateAndObjects.isAlexaTimerVisResetButton)(state, id)) {
-          const timerIndex = id.split(".")[2];
-          const timer = import_timer_data.timerObject.timer[timerIndex];
-          await timer.stopTimerInAlexa();
+          const timerIndex = (_a2 = id.split(".")[2]) != null ? _a2 : "";
+          const timer = (0, import_timer.getTimerByIndex)(timerIndex);
+          if (timer) {
+            await timer.stopTimerInAlexa();
+          }
         }
       } catch (e) {
-        import_logging.default.send({
-          title: "Error in stateChange",
-          e,
-          additionalInfos: [["VoiceInput", voiceInput.get()]]
-        });
+        import_logging.default.send({ title: "Error in stateChange", e });
       }
     });
     this.subscribeForeignStates(import_store.default.pathAlexaStateIntent);
@@ -145,11 +127,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
-      import_logging.default.send({
-        title: "Error in onUnload",
-        e,
-        additionalInfos: [["VoiceInput", voiceInput.get()]]
-      });
+      import_logging.default.send({ title: "Error in onUnload", e });
       callback();
     }
   }

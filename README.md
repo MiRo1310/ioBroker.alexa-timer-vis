@@ -43,7 +43,6 @@ to make them visible in the Vis. So you have a better overview if you have sever
 - Unlimited timers can be created with Alexa by voice command.
 - When the adapter is started, 4 folders are created with all of the states.
 - Additional folders will be created as soon as a 5th and more timers are created via Alexa's voice input.
-- It works with German input
 
 ### Timer add ( Examples )
 
@@ -73,6 +72,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 - (copilot) Adapter requires node.js >= 22 now
 
 - CHORE: Update dependencies
+- FEAT: Complete refactored with new logic
 
 ### 2.2.2 (2025-12-12)
 
