@@ -28,6 +28,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_delete_exports = {};
 __export(timer_delete_exports, {
+  getActiveAlexaTimerList: () => getActiveAlexaTimerList,
   timerDelete: () => timerDelete
 });
 module.exports = __toCommonJS(timer_delete_exports);
@@ -36,37 +37,38 @@ var import_logging = __toESM(require("../lib/logging"));
 var import_timer_data = require("../config/timer-data");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 var import_timer = require("../app/timer");
-const timerDelete = async (voiceInput) => {
+const getActiveAlexaTimerList = async () => {
+  var _a;
+  const { adapter } = import_store.default;
+  const alexaInstance = import_store.default.getAlexa2Instance();
+  const serialState = await adapter.getForeignStateAsync(`alexa2.${alexaInstance}.History.serialNumber`);
+  if (!(serialState == null ? void 0 : serialState.val)) {
+    const title = "Cannot find serial";
+    import_logging.default.send({ title, e: null, level: "warning" });
+    return [];
+  }
+  return (_a = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(String(serialState.val))) != null ? _a : [];
+};
+const timerDelete = async () => {
   try {
-    const { adapter } = import_store.default;
-    const alexaInstance = import_store.default.getAlexa2Instance();
-    const serialState = await adapter.getForeignStateAsync(`alexa2.${alexaInstance}.History.serialNumber`);
-    if (!(serialState == null ? void 0 : serialState.val)) {
-      return;
-    }
-    const activeTimerList = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(String(serialState.val));
-    if (!activeTimerList) {
-      return;
-    }
+    const activeTimerList = await getActiveAlexaTimerList();
     const id = import_store.default.getRemovedTimerId(activeTimerList);
-    if (id) {
-      for (const timerIndex in import_timer_data.timerObject.timer) {
-        const timer = (0, import_timer.getTimerByIndex)(timerIndex);
-        if (timer && timer.getTimerId() === id) {
-          await timer.reset();
-        }
+    if (!id) {
+      return;
+    }
+    for (const timerIndex in import_timer_data.timerObject.timer) {
+      const timer = (0, import_timer.getTimerByIndex)(timerIndex);
+      if (timer && timer.getTimerId() === id) {
+        await timer.reset();
       }
     }
   } catch (e) {
-    import_logging.default.send({
-      title: "Error in timerDelete",
-      e,
-      additionalInfos: [["VoiceInput", voiceInput.get()]]
-    });
+    import_logging.default.send({ title: "Error in timerDelete", e });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  getActiveAlexaTimerList,
   timerDelete
 });
 //# sourceMappingURL=timer-delete.js.map

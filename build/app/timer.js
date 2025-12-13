@@ -29,6 +29,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var timer_exports = {};
 __export(timer_exports, {
   Timer: () => Timer,
+  getTimerById: () => getTimerById,
   getTimerByIndex: () => getTimerByIndex
 });
 module.exports = __toCommonJS(timer_exports);
@@ -123,28 +124,21 @@ class Timer {
   isExtendOrShortenTimer() {
     return this.extendOrShortenTimer;
   }
-  getVoiceInputAsSeconds() {
-    return this.voiceInputAsSeconds;
-  }
   getInterval() {
     return this.interval;
-  }
-  getRemainingTimeInSeconds() {
-    return this.remainingTimeInSeconds;
-  }
-  getInputDevice() {
-    return this.inputDeviceName;
   }
   outPutTimerName() {
     const name = this.timerName;
     return this.alexaTimerName || !["Timer", ""].includes(name) ? `${(0, import_string.firstLetterToUpperCase)(name)} Timer` : "Timer";
   }
-  extendTimer(sec, addOrSub) {
+  extendTimer(milliseconds) {
     this.extendOrShortenTimer = true;
-    this.endTime += sec * 1e3 * addOrSub;
-    this.remainingTimeInSeconds += sec * addOrSub;
+    this.endTime += milliseconds;
+    const seconds = milliseconds / 1e3;
+    this.remainingTimeInSeconds += seconds;
     this.endTimeString = (0, import_time.millisecondsToString)(this.endTime);
-    this.voiceInputAsSeconds += sec * addOrSub;
+    this.voiceInputAsSeconds += seconds;
+    this.updateInitialTimer(seconds);
   }
   getDataAsJson() {
     return JSON.stringify({
@@ -227,8 +221,14 @@ class Timer {
   setInitialTimer() {
     const secEnd = Math.floor(this.endTime / 1e3);
     const secStart = Math.floor(this.creationTime / 1e3);
-    this.calculatedSeconds = secEnd - secStart;
+    this.calculatedSeconds = this.removeDifferenzInCalculatedSeconds(secEnd - secStart);
     this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
+  }
+  updateInitialTimer(sec) {
+    this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds + sec, true).initialString;
+  }
+  removeDifferenzInCalculatedSeconds(sec) {
+    return Math.floor(sec / 10) * 10;
   }
   setInterval(interval) {
     this.interval = interval;
@@ -309,9 +309,16 @@ class Timer {
 function getTimerByIndex(timerIndex) {
   return import_timer_data.timerObject.timer[timerIndex];
 }
+function getTimerById(id) {
+  var _a;
+  const timerList = Object.keys(import_timer_data.timerObject.timer);
+  const timerIndex = timerList.find((value) => import_timer_data.timerObject.timer[value].getTimerId() === id);
+  return timerIndex ? (_a = import_timer_data.timerObject.timer) == null ? void 0 : _a[timerIndex] : void 0;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   Timer,
+  getTimerById,
   getTimerByIndex
 });
 //# sourceMappingURL=timer.js.map

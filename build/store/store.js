@@ -45,7 +45,7 @@ class Store {
   interval;
   alexaTimerVisInstance;
   alexa2Instance;
-  activeTimerIds;
+  localeActiveTimerList;
   constructor() {
     this.pathAlexaStateIntent = "";
     this.intervalLess60 = 0;
@@ -69,7 +69,7 @@ class Store {
     this.valMinuteForZero = "";
     this.valSecondForZero = "";
     this.timerAction = null;
-    this.activeTimerIds = [];
+    this.localeActiveTimerList = [];
     this.alexa2Instance = null;
   }
   init(store) {
@@ -134,28 +134,41 @@ class Store {
   getNewActiveTimerId(activeTimerLists) {
     const newestTimer = activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
-      this.activeTimerIds.push(newestTimer);
+      this.localeActiveTimerList.push(newestTimer);
       return newestTimer;
     }
   }
   getRemovedTimerId(activeTimerLists) {
     var _a;
-    const timerIdToDelete = (_a = this.activeTimerIds.find((activeList) => {
+    const timerIdToDelete = (_a = this.localeActiveTimerList.find((activeList) => {
       if (!activeTimerLists.some((t) => t.id === activeList.id)) {
         return activeList;
       }
     })) == null ? void 0 : _a.id;
     if (timerIdToDelete) {
-      const index = this.activeTimerIds.findIndex((el) => el.id === timerIdToDelete);
-      this.activeTimerIds.splice(index, 1);
+      const index = this.localeActiveTimerList.findIndex((el) => el.id === timerIdToDelete);
+      this.localeActiveTimerList.splice(index, 1);
       return timerIdToDelete;
     }
   }
+  getActiveTimerWithDifferentTriggerTime(activeTimerLists) {
+    let changedSec = 0;
+    const listEl = activeTimerLists.find(
+      (activeList) => this.localeActiveTimerList.some((localActiveList) => {
+        if (activeList.id === localActiveList.id && activeList.triggerTime !== localActiveList.triggerTime) {
+          changedSec = activeList.triggerTime - localActiveList.triggerTime;
+          return true;
+        }
+        return false;
+      })
+    );
+    return listEl ? { listEl, changedSec } : void 0;
+  }
   removeActiveTimerId(id) {
-    this.activeTimerIds = this.activeTimerIds.filter((t) => t.id !== id);
+    this.localeActiveTimerList = this.localeActiveTimerList.filter((t) => t.id !== id);
   }
   includesActiveTimerId(id) {
-    return this.activeTimerIds.some((t) => t.id === id);
+    return this.localeActiveTimerList.some((t) => t.id === id);
   }
 }
 var store_default = new Store();

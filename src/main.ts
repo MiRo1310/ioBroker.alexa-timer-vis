@@ -4,7 +4,7 @@ import errorLogger from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
 import { timerAdd } from '@/app/timer-add';
 import { timerObject } from '@/config/timer-data';
-import { Timer } from '@/app/timer';
+import { getTimerByIndex, Timer } from '@/app/timer';
 import store from '@/store/store';
 import type { TimerCondition } from '@/types/types';
 import { timerDelete } from '@/app/timer-delete';
@@ -17,11 +17,9 @@ import {
     isTimerAction,
     setAdapterStatusAndInitStateCreation,
 } from '@/app/ioBrokerStateAndObjects';
-import { VoiceInput } from '@/app/voiceInput';
 
 let timeout_1: ioBroker.Timeout | undefined;
 let debounceTimeout: ioBroker.Timeout | undefined;
-let voiceInput: VoiceInput;
 
 export default class AlexaTimerVis extends utils.Adapter {
     private static instance: AlexaTimerVis;
@@ -64,57 +62,35 @@ export default class AlexaTimerVis extends utils.Adapter {
             try {
                 if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {
                     this.log.debug('Alexa state changed');
+
                     if (isIobrokerValue(state)) {
                         store.timerAction = state.val as TimerCondition;
                     }
 
-                    const res = await this.getForeignStateAsync(store.pathAlexaSummary);
-                    if (isIobrokerValue(res)) {
-                        voiceInput = new VoiceInput(res.val);
-                        this.log.debug(`VoiceInput: ${voiceInput.get()}`);
-                    }
-
-                    const abortWord = voiceInput.getAbortWord();
-                    if (abortWord) {
-                        this.log.debug(`This will be aborted because found "${abortWord}" in the voice input.`);
-                        return;
-                    }
-
-                    if (voiceInput.isAbortSentence() && !store.isDeleteTimer()) {
-                        this.log.debug('Input is an abort sentence. No action will be executed.');
-                        return;
-                    }
-
-                    // const { name, timerSec } = decomposeInputValue(voiceInput);
-                    voiceInput.doesAlexaSendAQuestion();
-
                     if (store.isDeleteTimer()) {
-                        await timerDelete(voiceInput);
+                        await timerDelete();
                         return;
                     }
                     if (store.isAddTimer()) {
-                        // await timerAdd(name, timerSec);
                         await timerAdd();
                         return;
                     }
                     if (store.isExtendTimer() || store.isShortenTimer()) {
-                        await extendOrShortTimer({ voiceInput, name: '' });
+                        await extendOrShortTimer();
                         return;
                     }
 
                     return;
                 }
                 if (isAlexaTimerVisResetButton(state, id)) {
-                    const timerIndex = id.split('.')[2];
-                    const timer = timerObject.timer[timerIndex];
-                    await timer.stopTimerInAlexa();
+                    const timerIndex = id.split('.')[2] ?? '';
+                    const timer = getTimerByIndex(timerIndex);
+                    if (timer) {
+                        await timer.stopTimerInAlexa();
+                    }
                 }
             } catch (e) {
-                errorLogger.send({
-                    title: 'Error in stateChange',
-                    e,
-                    additionalInfos: [['VoiceInput', voiceInput.get()]],
-                });
+                errorLogger.send({ title: 'Error in stateChange', e });
             }
         });
 
@@ -140,11 +116,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
             callback();
         } catch (e) {
-            errorLogger.send({
-                title: 'Error in onUnload',
-                e,
-                additionalInfos: [['VoiceInput', voiceInput.get()]],
-            });
+            errorLogger.send({ title: 'Error in onUnload', e });
             callback();
         }
     }

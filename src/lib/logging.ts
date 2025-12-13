@@ -29,7 +29,7 @@ class ErrorLoggerClass {
     send({ title, e, additionalInfos, level = 'error' }: CaptureMessage): void {
         if (additionalInfos) {
             this.sendMessageToSentry(title, level, additionalInfos, e);
-        } else {
+        } else if (e) {
             this.sendErrorToSentry(e);
         }
         this.iobrokerLogging(title, e);
@@ -45,7 +45,9 @@ class ErrorLoggerClass {
             for (const [label, value] of infos) {
                 scope.setExtra(label, value);
             }
-            scope.setExtra('Exception', e);
+            if (e) {
+                scope.setExtra('Exception', e);
+            }
             this.Sentry.captureMessage(title, level);
         });
     }

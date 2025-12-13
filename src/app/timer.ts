@@ -94,28 +94,21 @@ export class Timer {
     isExtendOrShortenTimer(): boolean {
         return this.extendOrShortenTimer;
     }
-    getVoiceInputAsSeconds(): number {
-        return this.voiceInputAsSeconds;
-    }
     getInterval(): number {
         return this.interval;
-    }
-    getRemainingTimeInSeconds(): number {
-        return this.remainingTimeInSeconds;
-    }
-    getInputDevice(): string {
-        return this.inputDeviceName;
     }
     outPutTimerName(): string {
         const name = this.timerName;
         return this.alexaTimerName || !['Timer', ''].includes(name) ? `${firstLetterToUpperCase(name)} Timer` : 'Timer';
     }
-    extendTimer(sec: number, addOrSub: number): void {
+    extendTimer(milliseconds: number): void {
         this.extendOrShortenTimer = true;
-        this.endTime += sec * 1000 * addOrSub;
-        this.remainingTimeInSeconds += sec * addOrSub;
+        this.endTime += milliseconds;
+        const seconds = milliseconds / 1000;
+        this.remainingTimeInSeconds += seconds;
         this.endTimeString = millisecondsToString(this.endTime);
-        this.voiceInputAsSeconds += sec * addOrSub;
+        this.voiceInputAsSeconds += seconds;
+        this.updateInitialTimer(seconds);
     }
     getDataAsJson(): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
         return JSON.stringify({
@@ -207,8 +200,16 @@ export class Timer {
     private setInitialTimer(): void {
         const secEnd = Math.floor(this.endTime / 1000);
         const secStart = Math.floor(this.creationTime / 1000);
-        this.calculatedSeconds = secEnd - secStart;
+        this.calculatedSeconds = this.removeDifferenzInCalculatedSeconds(secEnd - secStart);
+
         this.initialTimer = secToHourMinSec(this.calculatedSeconds, true).initialString;
+    }
+    private updateInitialTimer(sec: number): void {
+        this.initialTimer = secToHourMinSec(this.calculatedSeconds + sec, true).initialString;
+    }
+
+    removeDifferenzInCalculatedSeconds(sec: number): number {
+        return Math.floor(sec / 10) * 10;
     }
     setInterval(interval: number): void {
         this.interval = interval;
@@ -289,4 +290,10 @@ export class Timer {
 
 export function getTimerByIndex(timerIndex: TimerIndex): Timer | undefined {
     return timerObject.timer[timerIndex];
+}
+
+export function getTimerById(id: string): Timer | undefined {
+    const timerList = Object.keys(timerObject.timer);
+    const timerIndex = timerList.find(value => timerObject.timer[value].getTimerId() === id);
+    return timerIndex ? timerObject.timer?.[timerIndex] : undefined;
 }
