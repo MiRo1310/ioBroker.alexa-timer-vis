@@ -38,7 +38,7 @@ var import_interval = require("../app/interval");
 var import_logging = __toESM(require("../lib/logging"));
 var import_time = require("../lib/time");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
-const startTimer = async (sec, name) => {
+const startTimer = async () => {
   try {
     const timerIndex = getAvailableTimerIndex();
     import_timer_data.timerObject.timerActive.timer[timerIndex] = true;
@@ -47,20 +47,10 @@ const startTimer = async (sec, name) => {
       return;
     }
     const creationTime = alexaJson.creationTime;
-    const startTimeString = (0, import_time.timeToString)(creationTime);
-    const timerMilliseconds = sec * 1e3;
-    const endTimeNumber = creationTime + timerMilliseconds;
-    const endTimeString = (0, import_time.timeToString)(endTimeNumber);
     const timer = import_timer_data.timerObject.timer[timerIndex];
-    const result = (0, import_time.secToHourMinSec)(sec, true);
-    await timer.init({
-      timerIndex,
-      creationTime,
-      startTimeString,
-      endTimeNumber,
-      endTimeString,
-      initialTimerString: result.initialString
-    });
+    await timer.init({ timerIndex, creationTime });
+    const name = timer.getName();
+    const sec = timer.calculatedSeconds;
     if ((0, import_time.isMoreThanAMinute)(sec)) {
       (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
       return;

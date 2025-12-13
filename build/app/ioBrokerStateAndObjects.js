@@ -30,7 +30,7 @@ var ioBrokerStateAndObjects_exports = {};
 __export(ioBrokerStateAndObjects_exports, {
   getActiveAlexaTimerListForDevice: () => getActiveAlexaTimerListForDevice,
   getParsedAlexaJson: () => getParsedAlexaJson,
-  isAlexaSummaryStateChanged: () => isAlexaSummaryStateChanged,
+  isAlexaStateIntentUpdated: () => isAlexaStateIntentUpdated,
   isAlexaTimerVisResetButton: () => isAlexaTimerVisResetButton,
   isTimerAction: () => isTimerAction,
   setAdapterStatusAndInitStateCreation: () => setAdapterStatusAndInitStateCreation,
@@ -74,17 +74,17 @@ async function getParsedAlexaJson() {
 }
 const setAdapterStatusAndInitStateCreation = async () => {
   const adapter = import_store.default.adapter;
-  const result = await adapter.getForeignObjectAsync(import_store.default.pathAlexaStateToListenTo);
+  const result = await adapter.getForeignObjectAsync(import_store.default.pathAlexaStateIntent);
   if (!result) {
-    adapter.log.warn(`The State ${import_store.default.pathAlexaStateToListenTo} was not found!`);
+    adapter.log.warn(`The State ${import_store.default.pathAlexaStateIntent} was not found!`);
     return;
   }
   adapter.log.info("Alexa State was found");
   await adapter.setState("info.connection", true, true);
   await (0, import_createStates.createStates)(4);
 };
-function isAlexaSummaryStateChanged({ state, id }) {
-  return (0, import_state.isIobrokerValue)(state) && (0, import_string.isString)(state.val) && state.val !== "" && id === import_store.default.pathAlexaStateToListenTo;
+function isAlexaStateIntentUpdated({ state, id }) {
+  return (0, import_state.isIobrokerValue)(state) && (0, import_string.isString)(state.val) && state.val !== "" && id === import_store.default.pathAlexaStateIntent;
 }
 const isAlexaTimerVisResetButton = (state, id) => (0, import_state.isIobrokerValue)(state) && id.includes(".Reset");
 const isTimerAction = (state) => {
@@ -109,7 +109,7 @@ const getActiveAlexaTimerListForDevice = async (deviceSerialNumber) => {
 0 && (module.exports = {
   getActiveAlexaTimerListForDevice,
   getParsedAlexaJson,
-  isAlexaSummaryStateChanged,
+  isAlexaStateIntentUpdated,
   isAlexaTimerVisResetButton,
   isTimerAction,
   setAdapterStatusAndInitStateCreation,

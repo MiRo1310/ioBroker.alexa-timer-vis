@@ -33,7 +33,6 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_decompose_input_value = require("./app/decompose-input-value");
 var import_logging = __toESM(require("./lib/logging"));
 var import_reset = require("./app/reset");
 var import_timer_add = require("./app/timer-add");
@@ -84,7 +83,7 @@ class AlexaTimerVis extends utils.Adapter {
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
     this.on("stateChange", async (id, state) => {
       try {
-        if ((0, import_ioBrokerStateAndObjects.isAlexaSummaryStateChanged)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
+        if ((0, import_ioBrokerStateAndObjects.isAlexaStateIntentUpdated)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
           this.log.debug("Alexa state changed");
           if ((0, import_state.isIobrokerValue)(state)) {
             import_store.default.timerAction = state.val;
@@ -103,18 +102,17 @@ class AlexaTimerVis extends utils.Adapter {
             this.log.debug("Input is an abort sentence. No action will be executed.");
             return;
           }
-          const { name, timerSec } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
           voiceInput.doesAlexaSendAQuestion();
           if (import_store.default.isDeleteTimer()) {
             await (0, import_timer_delete.timerDelete)(voiceInput);
             return;
           }
           if (import_store.default.isAddTimer()) {
-            await (0, import_timer_add.timerAdd)(name, timerSec);
+            await (0, import_timer_add.timerAdd)();
             return;
           }
           if (import_store.default.isExtendTimer() || import_store.default.isShortenTimer()) {
-            await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, name });
+            await (0, import_timer_extend_or_shorten.extendOrShortTimer)({ voiceInput, name: "" });
             return;
           }
           return;
@@ -132,7 +130,7 @@ class AlexaTimerVis extends utils.Adapter {
         });
       }
     });
-    this.subscribeForeignStates(import_store.default.pathAlexaStateToListenTo);
+    this.subscribeForeignStates(import_store.default.pathAlexaStateIntent);
   }
   async onUnload(callback) {
     try {

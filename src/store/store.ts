@@ -6,7 +6,7 @@ class Store {
     valHourForZero: string;
     valMinuteForZero: string;
     valSecondForZero: string;
-    pathAlexaStateToListenTo: string;
+    pathAlexaStateIntent: string;
     pathAlexaSummary: string;
     intervalMore60: number;
     intervalLess60: number;
@@ -27,7 +27,7 @@ class Store {
     alexa2Instance: string | null;
     private activeTimerIds: AlexaActiveTimerList[];
     constructor() {
-        this.pathAlexaStateToListenTo = '';
+        this.pathAlexaStateIntent = '';
         this.intervalLess60 = 0;
         this.intervalMore60 = 0;
         this.debounceTime = 0;
@@ -77,7 +77,7 @@ class Store {
         this.valHourForZero = valHourForZero;
         this.valMinuteForZero = valMinuteForZero;
         this.valSecondForZero = valSecondForZero;
-        this.pathAlexaStateToListenTo = `${alexa}.History.intent`;
+        this.pathAlexaStateIntent = `${alexa}.History.intent`;
         this.alexa2Instance = alexa.split('.')[1];
         this.pathAlexaSummary = `${alexa}.History.summary`;
         this.intervalMore60 = intervall1;
@@ -112,11 +112,11 @@ class Store {
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
     }
-    getNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
+    getNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): AlexaActiveTimerList | undefined {
         const newestTimer = activeTimerLists.find(t => !this.includesActiveTimerId(t.id));
         if (newestTimer) {
             this.activeTimerIds.push(newestTimer);
-            return newestTimer.id;
+            return newestTimer;
         }
     }
     getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {

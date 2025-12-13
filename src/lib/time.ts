@@ -98,5 +98,5 @@ export function resetSuperiorValue(
  *
  * @param milliseconds - The time in milliseconds
  */
-export const timeToString = (milliseconds: number): string =>
+export const millisecondsToString = (milliseconds: number): string =>
     new Date(milliseconds).toString().split(' ').slice(4, 5).toString();

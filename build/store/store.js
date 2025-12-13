@@ -26,7 +26,7 @@ class Store {
   valHourForZero;
   valMinuteForZero;
   valSecondForZero;
-  pathAlexaStateToListenTo;
+  pathAlexaStateIntent;
   pathAlexaSummary;
   intervalMore60;
   intervalLess60;
@@ -47,7 +47,7 @@ class Store {
   alexa2Instance;
   activeTimerIds;
   constructor() {
-    this.pathAlexaStateToListenTo = "";
+    this.pathAlexaStateIntent = "";
     this.intervalLess60 = 0;
     this.intervalMore60 = 0;
     this.debounceTime = 0;
@@ -96,7 +96,7 @@ class Store {
     this.valHourForZero = valHourForZero;
     this.valMinuteForZero = valMinuteForZero;
     this.valSecondForZero = valSecondForZero;
-    this.pathAlexaStateToListenTo = `${alexa}.History.intent`;
+    this.pathAlexaStateIntent = `${alexa}.History.intent`;
     this.alexa2Instance = alexa.split(".")[1];
     this.pathAlexaSummary = `${alexa}.History.summary`;
     this.intervalMore60 = intervall1;
@@ -135,7 +135,7 @@ class Store {
     const newestTimer = activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
       this.activeTimerIds.push(newestTimer);
-      return newestTimer.id;
+      return newestTimer;
     }
   }
   getRemovedTimerId(activeTimerLists) {
