@@ -28,6 +28,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var ioBrokerStateAndObjects_exports = {};
 __export(ioBrokerStateAndObjects_exports, {
+  getActiveAlexaTimerListForDevice: () => getActiveAlexaTimerListForDevice,
   getParsedAlexaJson: () => getParsedAlexaJson,
   isAlexaSummaryStateChanged: () => isAlexaSummaryStateChanged,
   isAlexaTimerVisResetButton: () => isAlexaTimerVisResetButton,
@@ -59,7 +60,10 @@ const setDeviceNameInObject = async (index, val) => {
 };
 async function getParsedAlexaJson() {
   try {
-    const instance = import_store.default.getAlexaInstanceObject().instance;
+    const instance = import_store.default.getAlexa2Instance();
+    if (!instance) {
+      return;
+    }
     const jsonAlexa = await import_store.default.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
     if ((0, import_string.isString)(jsonAlexa == null ? void 0 : jsonAlexa.val)) {
       return JSON.parse(jsonAlexa.val);
@@ -92,8 +96,18 @@ const isTimerAction = (state) => {
     "RemoveNotificationIntent"
   ].includes(String((_a = state == null ? void 0 : state.val) != null ? _a : ""));
 };
+const getActiveAlexaTimerListForDevice = async (deviceSerialNumber) => {
+  const instance = import_store.default.getAlexa2Instance();
+  if (!instance) {
+    return;
+  }
+  const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
+  const activeTimerListState = await import_store.default.adapter.getForeignStateAsync(activeTimerListId);
+  return (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  getActiveAlexaTimerListForDevice,
   getParsedAlexaJson,
   isAlexaSummaryStateChanged,
   isAlexaTimerVisResetButton,

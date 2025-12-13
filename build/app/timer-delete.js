@@ -32,35 +32,30 @@ __export(timer_delete_exports, {
 });
 module.exports = __toCommonJS(timer_delete_exports);
 var import_store = __toESM(require("../store/store"));
-var import_find_timer = require("../app/find-timer");
-var import_one_timer_to_delete = require("../app/one-timer-to-delete");
 var import_logging = __toESM(require("../lib/logging"));
 var import_timer_data = require("../config/timer-data");
-const timerDelete = async (decomposeName, timerSec, voiceInput, deleteVal) => {
-  let name = decomposeName;
-  let timerAbortSec = 0;
-  if (timerSec) {
-    timerAbortSec = timerSec;
-  }
-  let deleteTimerIndex = 0;
-  if (import_store.default.questionAlexa) {
-    deleteTimerIndex = 1;
-    name = "";
-  } else {
-    if (deleteVal) {
-      deleteTimerIndex = deleteVal;
-    }
-    import_store.default.adapter.log.debug("Timer can be deleted");
-  }
+var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
+var import_timer = require("../app/timer");
+const timerDelete = async (voiceInput) => {
   try {
-    const result = await (0, import_find_timer.findTimer)(timerAbortSec, name, deleteTimerIndex, voiceInput);
-    if (result.timer.length) {
-      for (const element of result.timer) {
-        await import_timer_data.timerObject.timer[element].reset();
+    const { adapter } = import_store.default;
+    const alexaInstance = import_store.default.getAlexa2Instance();
+    const serialState = await adapter.getForeignStateAsync(`alexa2.${alexaInstance}.History.serialNumber`);
+    if (!(serialState == null ? void 0 : serialState.val)) {
+      return;
+    }
+    const activeTimerList = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(String(serialState.val));
+    if (!activeTimerList) {
+      return;
+    }
+    const id = import_store.default.getRemovedTimerId(activeTimerList);
+    if (id) {
+      for (const timerIndex in import_timer_data.timerObject.timer) {
+        const timer = (0, import_timer.getTimerByIndex)(timerIndex);
+        if (timer && timer.getTimerId() === id) {
+          await timer.reset();
+        }
       }
-    } else if (result.oneOfMultiTimer) {
-      const { sec, name: name2, inputDevice } = result.oneOfMultiTimer;
-      (0, import_one_timer_to_delete.oneOfMultiTimerDelete)(voiceInput, sec, name2, inputDevice);
     }
   } catch (e) {
     import_logging.default.send({

@@ -17,10 +17,11 @@ export const findTimer = async (
     try {
         name = name.trim();
         let inputDevice = '';
-
-        const obj = await adapter.getForeignStateAsync(
-            `alexa2.${store.getAlexaInstanceObject().instance}.History.name`,
-        );
+        const instance = store.getAlexa2Instance();
+        if (!instance) {
+            return { oneOfMultiTimer: {} as OneOfMultiTimer, timer: [] };
+        }
+        const obj = await adapter.getForeignStateAsync(`alexa2.${instance}.History.name`);
 
         if (isIobrokerValue(obj) && isString(obj.val)) {
             inputDevice = obj.val;

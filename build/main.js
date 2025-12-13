@@ -103,10 +103,10 @@ class AlexaTimerVis extends utils.Adapter {
             this.log.debug("Input is an abort sentence. No action will be executed.");
             return;
           }
-          const { name, timerSec, deleteVal } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
+          const { name, timerSec } = (0, import_decompose_input_value.decomposeInputValue)(voiceInput);
           voiceInput.doesAlexaSendAQuestion();
           if (import_store.default.isDeleteTimer()) {
-            await (0, import_timer_delete.timerDelete)(name, timerSec, voiceInput, deleteVal);
+            await (0, import_timer_delete.timerDelete)(voiceInput);
             return;
           }
           if (import_store.default.isAddTimer()) {
