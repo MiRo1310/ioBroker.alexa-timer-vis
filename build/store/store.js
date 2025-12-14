@@ -45,7 +45,11 @@ class Store {
   interval;
   alexaTimerVisInstance;
   alexa2Instance;
+  activeTimeListChanged;
+  subscribedIds;
   localeActiveTimerList;
+  coolDownSetStatus = false;
+  timeouts = [];
   constructor() {
     this.pathAlexaStateIntent = "";
     this.intervalLess60 = 0;
@@ -71,6 +75,8 @@ class Store {
     this.timerAction = null;
     this.localeActiveTimerList = [];
     this.alexa2Instance = null;
+    this.activeTimeListChanged = {};
+    this.subscribedIds = [];
   }
   init(store) {
     this.adapter = store.adapter;
@@ -126,15 +132,15 @@ class Store {
     return this.timerAction === "ExtendNotificationIntent";
   }
   isDeleteTimer() {
-    return this.timerAction === "RemoveNotificationIntent";
+    return !!this.timerAction && ["RemoveNotificationIntent", "SilenceNotificationIntent"].includes(this.timerAction);
   }
   getAlexaTimerVisInstance() {
     return this.alexaTimerVisInstance;
   }
-  getNewActiveTimerId(activeTimerLists) {
+  getNewActiveTimerId(activeTimerLists, deviceSerialNumber) {
     const newestTimer = activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
-      this.localeActiveTimerList.push(newestTimer);
+      this.localeActiveTimerList.push({ ...newestTimer, deviceSerialNumber });
       return newestTimer;
     }
   }
@@ -169,6 +175,56 @@ class Store {
   }
   includesActiveTimerId(id) {
     return this.localeActiveTimerList.some((t) => t.id === id);
+  }
+  getLocalActiveTimerList() {
+    return this.localeActiveTimerList;
+  }
+  setActiveTimeListChanged(id) {
+    if (id.includes(".Timer.activeTimerList")) {
+      if (this.coolDownSetStatus) {
+        return true;
+      }
+      this.coolDownSetStatus = true;
+      this.adapter.log.debug(this.coolDownSetStatus ? "c -> true" : "c -> false");
+      this.adapter.log.debug("Set true");
+      const serialNumber = id.split(".")[3];
+      this.activeTimeListChanged[serialNumber] = true;
+      const timeout = this.adapter.setTimeout(() => {
+        this.adapter.log.debug("reset cooldown");
+        this.coolDownSetStatus = false;
+        this.clearTimeout(timeout);
+      }, 2e3);
+      this.addTimeout(timeout);
+      return true;
+    }
+    return false;
+  }
+  activeTimeListChangedIsHandled(serial) {
+    this.adapter.log.debug(`Set false to serial: ${serial}`);
+    this.activeTimeListChanged[serial] = false;
+  }
+  getActiveTimeListChangedStatus(serial) {
+    return this.activeTimeListChanged[serial];
+  }
+  async handleSubscribeForeignStates(id) {
+    if (this.subscribedIds.includes(id)) {
+      return;
+    }
+    await this.adapter.subscribeForeignStatesAsync(id);
+    this.subscribedIds.push(id);
+    this.adapter.log.debug(`Subscribed: ${id}`);
+  }
+  addTimeout(timeout) {
+    if (timeout) {
+      this.timeouts.push(timeout);
+    }
+  }
+  clearTimeout(timeout) {
+    this.adapter.clearTimeout(timeout);
+    this.timeouts = this.timeouts.filter((t) => t !== timeout);
+  }
+  clearTimeouts() {
+    this.timeouts.forEach((timeout) => this.clearTimeout(timeout));
   }
 }
 var store_default = new Store();

@@ -4,6 +4,7 @@ import errorLogger from '@/lib/logging';
 import { isString } from '@/lib/string';
 import { createStates } from '@/app/createStates';
 import { isIobrokerValue } from '@/lib/state';
+import { sleep } from '@/lib/time';
 
 export const setDeviceNameInObject = async (index: TimerIndex, val: string): Promise<void> => {
     const pathArray = [store.getAlexaTimerVisInstance(), index];
@@ -63,6 +64,7 @@ export const isTimerAction = (state: ioBroker.State | null | undefined): boolean
         'ShortenNotificationIntent',
         'ExtendNotificationIntent',
         'RemoveNotificationIntent',
+        'SilenceNotificationIntent',
     ].includes(String(state?.val ?? ''));
 
 export const getActiveAlexaTimerListForDevice = async (
@@ -73,7 +75,19 @@ export const getActiveAlexaTimerListForDevice = async (
         //TODO
         return;
     }
+
     const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
+
+    let loopIndex = 0;
+    store.adapter.log.debug(`LoopIndex: ${store.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
+
+    while (loopIndex < 20 && !store.getActiveTimeListChangedStatus(deviceSerialNumber)) {
+        await sleep(200);
+
+        store.adapter.log.debug(`LoopIndex: ${loopIndex}`);
+        loopIndex++;
+    }
+    store.activeTimeListChangedIsHandled(deviceSerialNumber);
     const activeTimerListState = await store.adapter.getForeignStateAsync(activeTimerListId);
 
     return activeTimerListState?.val ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[]) : [];

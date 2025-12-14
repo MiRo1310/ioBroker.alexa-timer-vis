@@ -42,6 +42,7 @@ var import_logging = __toESM(require("../lib/logging"));
 var import_string = require("../lib/string");
 var import_createStates = require("../app/createStates");
 var import_state = require("../lib/state");
+var import_time = require("../lib/time");
 const setDeviceNameInObject = async (index, val) => {
   const pathArray = [import_store.default.getAlexaTimerVisInstance(), index];
   const { adapter } = import_store.default;
@@ -93,7 +94,8 @@ const isTimerAction = (state) => {
     "SetNotificationIntent",
     "ShortenNotificationIntent",
     "ExtendNotificationIntent",
-    "RemoveNotificationIntent"
+    "RemoveNotificationIntent",
+    "SilenceNotificationIntent"
   ].includes(String((_a = state == null ? void 0 : state.val) != null ? _a : ""));
 };
 const getActiveAlexaTimerListForDevice = async (deviceSerialNumber) => {
@@ -102,6 +104,14 @@ const getActiveAlexaTimerListForDevice = async (deviceSerialNumber) => {
     return;
   }
   const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
+  let loopIndex = 0;
+  import_store.default.adapter.log.debug(`LoopIndex: ${import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
+  while (loopIndex < 20 && !import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber)) {
+    await (0, import_time.sleep)(200);
+    import_store.default.adapter.log.debug(`LoopIndex: ${loopIndex}`);
+    loopIndex++;
+  }
+  import_store.default.activeTimeListChangedIsHandled(deviceSerialNumber);
   const activeTimerListState = await import_store.default.adapter.getForeignStateAsync(activeTimerListId);
   return (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
 };

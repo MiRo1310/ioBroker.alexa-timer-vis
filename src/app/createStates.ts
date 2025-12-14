@@ -210,9 +210,9 @@ export const createStates = async (value: number): Promise<void> => {
                 native: {},
             });
 
-            const id = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
+            const resetBtnId = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
 
-            adapter.subscribeForeignStates(id);
+            adapter.subscribeForeignStates(resetBtnId);
         }
     } catch (e: any) {
         errorLogger.send({ title: 'Error in createState', e });
