@@ -65,6 +65,7 @@ export const isTimerAction = (state: ioBroker.State | null | undefined): boolean
 
 export const getActiveAlexaTimerListForDevice = async (
     deviceSerialNumber: string,
+    disableLoop = false,
 ): Promise<AlexaActiveTimerList[] | undefined> => {
     const instance = store.getAlexa2Instance();
     if (!instance) {
@@ -75,11 +76,13 @@ export const getActiveAlexaTimerListForDevice = async (
     const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
 
     let loopIndex = 0;
-    store.adapter.log.debug(`LoopIndex: ${store.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
+    //TODO
+    store.adapter.log.debug(`Status: ${store.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
 
-    while (loopIndex < 20 && !store.getActiveTimeListChangedStatus(deviceSerialNumber)) {
-        await sleep(200);
-
+    while (loopIndex < 20 && !store.getActiveTimeListChangedStatus(deviceSerialNumber) && !disableLoop) {
+        await sleep(500);
+        //TODO
+        store.adapter.log.debug(`Status in Loop: ${store.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
         store.adapter.log.debug(`LoopIndex: ${loopIndex}`);
         loopIndex++;
     }

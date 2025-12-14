@@ -113,11 +113,6 @@ class Store {
     isExtendTimer(): boolean {
         return this.timerAction === 'ExtendNotificationIntent';
     }
-    isDeleteTimer(): boolean {
-        return (
-            !!this.timerAction && ['RemoveNotificationIntent', 'SilenceNotificationIntent'].includes(this.timerAction)
-        );
-    }
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
     }
@@ -168,10 +163,19 @@ class Store {
     getLocalActiveTimerList(): LocalAlexaActiveTimerList[] {
         return this.localeActiveTimerList;
     }
-    async setActiveTimeListChanged(id: string): Promise<boolean> {
+    async activeTimeListChangedHandler(id: string): Promise<boolean> {
         if (id.includes('.Timer.activeTimerList')) {
             await timerDelete();
-
+            if (this.coolDownSetStatus) {
+                return true;
+            }
+            this.coolDownSetStatus = true;
+            const serial = id.split('.')[3];
+            this.activeTimeListChanged[serial] = true;
+            const timeout = this.adapter.setTimeout(() => {
+                this.coolDownSetStatus = false;
+            }, 2000);
+            this.addTimeout(timeout);
             return true;
         }
         return false;
@@ -181,7 +185,7 @@ class Store {
         this.activeTimeListChanged[serial] = false;
     }
     getActiveTimeListChangedStatus(serial: string): boolean {
-        return this.activeTimeListChanged[serial];
+        return serial in this.activeTimeListChanged && this.activeTimeListChanged[serial];
     }
     async handleSubscribeForeignStates(id: string): Promise<void> {
         if (this.subscribedIds.includes(id)) {

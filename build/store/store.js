@@ -132,9 +132,6 @@ class Store {
   isExtendTimer() {
     return this.timerAction === "ExtendNotificationIntent";
   }
-  isDeleteTimer() {
-    return !!this.timerAction && ["RemoveNotificationIntent", "SilenceNotificationIntent"].includes(this.timerAction);
-  }
   getAlexaTimerVisInstance() {
     return this.alexaTimerVisInstance;
   }
@@ -180,9 +177,19 @@ class Store {
   getLocalActiveTimerList() {
     return this.localeActiveTimerList;
   }
-  async setActiveTimeListChanged(id) {
+  async activeTimeListChangedHandler(id) {
     if (id.includes(".Timer.activeTimerList")) {
       await (0, import_timer_delete.timerDelete)();
+      if (this.coolDownSetStatus) {
+        return true;
+      }
+      this.coolDownSetStatus = true;
+      const serial = id.split(".")[3];
+      this.activeTimeListChanged[serial] = true;
+      const timeout = this.adapter.setTimeout(() => {
+        this.coolDownSetStatus = false;
+      }, 2e3);
+      this.addTimeout(timeout);
       return true;
     }
     return false;
@@ -192,7 +199,7 @@ class Store {
     this.activeTimeListChanged[serial] = false;
   }
   getActiveTimeListChangedStatus(serial) {
-    return this.activeTimeListChanged[serial];
+    return serial in this.activeTimeListChanged && this.activeTimeListChanged[serial];
   }
   async handleSubscribeForeignStates(id) {
     if (this.subscribedIds.includes(id)) {

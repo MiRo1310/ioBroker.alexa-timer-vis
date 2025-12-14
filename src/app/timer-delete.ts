@@ -19,7 +19,7 @@ export const getActiveAlexaTimerList = async (serial?: string): Promise<AlexaAct
         }
         serialNumber = String(serialState.val);
     }
-    return (await getActiveAlexaTimerListForDevice(serialNumber)) ?? [];
+    return (await getActiveAlexaTimerListForDevice(serialNumber, true)) ?? [];
 };
 
 export const timerDelete = async (): Promise<void> => {

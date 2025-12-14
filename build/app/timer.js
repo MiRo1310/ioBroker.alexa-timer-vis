@@ -283,18 +283,11 @@ class Timer {
     this.creationTime = 0;
     this.endTime = 0;
     this.initialTimer = "";
-    if (this.timerIndex !== null) {
+    if (this.timerIndex) {
       import_timer_data.timerObject.timerStatus[this.timerIndex] = false;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, "");
     }
     this.isActive = false;
-    this.unSubscribeStates();
-  }
-  unSubscribeStates() {
-    if (this.foreignActiveTimerListId) {
-      this.adapter.unsubscribeForeignStates(this.foreignActiveTimerListId);
-      this.adapter.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
-    }
   }
   getTimerId() {
     return this.timerId;

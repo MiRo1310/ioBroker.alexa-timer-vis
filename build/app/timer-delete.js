@@ -51,7 +51,7 @@ const getActiveAlexaTimerList = async (serial) => {
     }
     serialNumber = String(serialState.val);
   }
-  return (_a = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(serialNumber)) != null ? _a : [];
+  return (_a = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(serialNumber, true)) != null ? _a : [];
 };
 const timerDelete = async () => {
   try {

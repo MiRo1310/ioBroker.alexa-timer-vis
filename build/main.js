@@ -81,7 +81,7 @@ class AlexaTimerVis extends utils.Adapter {
     this.on("stateChange", async (id, state) => {
       var _a2;
       try {
-        if (await import_store.default.setActiveTimeListChanged(id)) {
+        if (await import_store.default.activeTimeListChangedHandler(id)) {
           return;
         }
         if ((0, import_ioBrokerStateAndObjects.isAlexaStateIntentUpdated)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
