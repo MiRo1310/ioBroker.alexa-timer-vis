@@ -25,8 +25,6 @@ export const timerAdd = async (): Promise<void> => {
         const timerIndex = `timer${timerObject.timerCount}`;
 
         if (!getTimerByIndex(timerIndex)) {
-            //TODO
-            store.adapter.log.debug(`Add raw timer... ${timerIndex}`);
             addNewRawTimer(timerIndex);
         }
 
