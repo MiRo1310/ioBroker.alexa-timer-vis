@@ -263,19 +263,13 @@ export class Timer {
         this.creationTime = 0;
         this.endTime = 0;
         this.initialTimer = '';
-        if (this.timerIndex !== null) {
+        if (this.timerIndex) {
             timerObject.timerStatus[this.timerIndex] = false;
             await setDeviceNameInObject(this.timerIndex, '');
         }
         this.isActive = false;
-        this.unSubscribeStates();
     }
-    unSubscribeStates(): void {
-        if (this.foreignActiveTimerListId) {
-            this.adapter.unsubscribeForeignStates(this.foreignActiveTimerListId);
-            this.adapter.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);
-        }
-    }
+
     getTimerId(): string {
         return this.timerId;
     }

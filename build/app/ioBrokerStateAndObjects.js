@@ -94,16 +94,17 @@ const isTimerAction = (state) => {
     String((_a = state == null ? void 0 : state.val) != null ? _a : "")
   );
 };
-const getActiveAlexaTimerListForDevice = async (deviceSerialNumber) => {
+const getActiveAlexaTimerListForDevice = async (deviceSerialNumber, disableLoop = false) => {
   const instance = import_store.default.getAlexa2Instance();
   if (!instance) {
     return;
   }
   const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
   let loopIndex = 0;
-  import_store.default.adapter.log.debug(`LoopIndex: ${import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
-  while (loopIndex < 20 && !import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber)) {
-    await (0, import_time.sleep)(200);
+  import_store.default.adapter.log.debug(`Status: ${import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
+  while (loopIndex < 20 && !import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber) && !disableLoop) {
+    await (0, import_time.sleep)(500);
+    import_store.default.adapter.log.debug(`Status in Loop: ${import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber)}`);
     import_store.default.adapter.log.debug(`LoopIndex: ${loopIndex}`);
     loopIndex++;
   }

@@ -8,6 +8,7 @@ import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
 
 function addNewRawTimer(timerIndex: string): void {
+    store.adapter.log.debug(`add index ${timerIndex}`);
     timerObject.timerStatus[timerIndex] = false;
 
     timerObject.timer[timerIndex] = new Timer({
@@ -24,6 +25,8 @@ export const timerAdd = async (): Promise<void> => {
         const timerIndex = `timer${timerObject.timerCount}`;
 
         if (!getTimerByIndex(timerIndex)) {
+            //TODO
+            store.adapter.log.debug(`Add raw timer... ${timerIndex}`);
             addNewRawTimer(timerIndex);
         }
 

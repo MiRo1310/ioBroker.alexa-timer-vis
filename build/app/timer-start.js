@@ -41,6 +41,7 @@ var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async () => {
   try {
     const timerIndex = getAvailableTimerIndex();
+    import_store.default.adapter.log.debug(`Starting timer... ${timerIndex}`);
     import_timer_data.timerObject.timerStatus[timerIndex] = true;
     const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
     if (!alexaJson) {
@@ -62,14 +63,14 @@ const startTimer = async () => {
   }
 };
 function getAvailableTimerIndex() {
-  const keys = Object.keys(import_timer_data.timerObject.timerStatus);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
+  const timerIndexes = Object.keys(import_timer_data.timerObject.timerStatus);
+  for (let i = 0; i < timerIndexes.length; i++) {
+    const key = timerIndexes[i];
     if (!import_timer_data.timerObject.timerStatus[key]) {
       return key;
     }
   }
-  return `timer${keys.length + 1}`;
+  return `timer${timerIndexes.length + 1}`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

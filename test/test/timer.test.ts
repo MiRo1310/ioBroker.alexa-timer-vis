@@ -172,47 +172,53 @@ describe('Timer evaluate string to Output string with units', () => {
         });
     });
 });
-
-describe('startTimer (mit stubbed timerObject)', () => {
-    let originalTimers: any;
-
-    beforeEach(() => {
-        originalTimers = (timerData as any).timerObject.timerActive.timer;
-    });
-
+describe('startTimer (stubbed timerObject)', () => {
     afterEach(() => {
-        // Rücksetzen
-        (timerData as any).timerObject.timerActive.timer = originalTimers;
         sinon.restore();
     });
 
     it('should get a free timerIndex 1', () => {
-        (timerData as any).timerObject.timerActive.timer = {
+        sinon.stub(timerData.timerObject, 'timerStatus').value({
             timer1: false,
             timer2: true,
             timer3: true,
             timer4: true,
-        };
-        expect(getAvailableTimerIndex()).to.be.equal('timer1');
+        });
+
+        expect(getAvailableTimerIndex()).to.equal('timer1');
     });
 
     it('should get a free timerIndex 2', () => {
-        (timerData as any).timerObject.timerActive.timer = {
+        sinon.stub(timerData.timerObject, 'timerStatus').value({
             timer1: true,
             timer2: false,
             timer3: true,
             timer4: false,
-        };
-        expect(getAvailableTimerIndex()).to.be.equal('timer2');
+        });
+
+        expect(getAvailableTimerIndex()).to.equal('timer2');
     });
 
     it('should get a free timerIndex 3', () => {
-        (timerData as any).timerObject.timerActive.timer = {
+        sinon.stub(timerData.timerObject, 'timerStatus').value({
             timer1: true,
             timer2: true,
             timer3: true,
             timer4: true,
-        };
-        expect(getAvailableTimerIndex()).to.be.equal('timer5');
+        });
+
+        expect(getAvailableTimerIndex()).to.equal('timer5');
+    });
+
+    it('should get a free timerIndex with invalid key 3', () => {
+        sinon.stub(timerData.timerObject, 'timerStatus').value({
+            timer1: true,
+            timer2: true,
+            timer3: true,
+            timer4: true,
+            '': false,
+        });
+
+        expect(getAvailableTimerIndex()).to.equal('timer5');
     });
 });
