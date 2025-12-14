@@ -41,7 +41,6 @@ var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async () => {
   try {
     const timerIndex = getAvailableTimerIndex();
-    import_store.default.adapter.log.debug(`Starting timer... ${timerIndex}`);
     import_timer_data.timerObject.timerStatus[timerIndex] = true;
     const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
     if (!alexaJson) {

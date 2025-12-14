@@ -6,7 +6,7 @@ export type AdditionalInformation = [string, any];
 
 interface CaptureMessage {
     title: string;
-    e: any;
+    e?: any;
     additionalInfos?: AdditionalInformation[];
     level?: SentryLevels;
 }
@@ -39,7 +39,7 @@ class ErrorLoggerClass {
         this.Sentry?.captureException(e);
     }
 
-    private sendMessageToSentry(title: string, level: SentryLevels, infos: AdditionalInformation[], e: any): void {
+    private sendMessageToSentry(title: string, level: SentryLevels, infos: AdditionalInformation[], e?: any): void {
         this.Sentry?.withScope((scope: any) => {
             scope.setLevel(level);
             for (const [label, value] of infos) {

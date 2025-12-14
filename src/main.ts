@@ -59,7 +59,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 
         this.on('stateChange', async (id, state) => {
             try {
-                //TODO Change wird nicht registriert beim löschen
                 if (await store.activeTimeListChangedHandler(id)) {
                     return;
                 }

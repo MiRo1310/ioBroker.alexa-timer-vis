@@ -9,8 +9,6 @@ import { getParsedAlexaJson } from '@/app/ioBrokerStateAndObjects';
 export const startTimer = async (): Promise<void> => {
     try {
         const timerIndex = getAvailableTimerIndex();
-        //TODO
-        store.adapter.log.debug(`Starting timer... ${timerIndex}`);
         timerObject.timerStatus[timerIndex] = true;
 
         const alexaJson = await getParsedAlexaJson();

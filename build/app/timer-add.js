@@ -51,7 +51,6 @@ const timerAdd = async () => {
     await (0, import_createStates.createStates)(import_timer_data.timerObject.timerCount);
     const timerIndex = `timer${import_timer_data.timerObject.timerCount}`;
     if (!(0, import_timer.getTimerByIndex)(timerIndex)) {
-      import_store.default.adapter.log.debug(`Add raw timer... ${timerIndex}`);
       addNewRawTimer(timerIndex);
     }
     await (0, import_timer_start.startTimer)();
