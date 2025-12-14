@@ -18,6 +18,8 @@ export const writeStateInterval = (): void => {
             });
 
             adapter.log.debug(JSON.stringify(store.activeTimeListChanged));
+            adapter.log.debug(JSON.stringify(timerObject.timerStatus));
+            adapter.log.debug(JSON.stringify(timerObject.timerCount));
             if (!Object.keys(timerObject.timer)?.find(t => timerObject.timer[t].isActive)) {
                 adapter.setStateChanged('all_Timer.alive', false, true);
                 adapter.clearInterval(store.interval);

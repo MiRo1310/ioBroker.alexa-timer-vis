@@ -12,6 +12,7 @@ export const generateTimerValues = (timer: Timer, sec: number, name: string): nu
     }
     const timeLeft = endTime - new Date().getTime(); // Restlaufzeit errechnen in millisec
     const remainingTimeInSeconds = Math.round(timeLeft / 1000); // Aus timeLeft(Millisekunden) glatte Sekunden erstellen
+
     const result = secToHourMinSec(remainingTimeInSeconds, true);
 
     let { hour, minutes, seconds } = result;
@@ -41,9 +42,7 @@ export const generateTimerValues = (timer: Timer, sec: number, name: string): nu
         lengthTimer,
         name,
     });
-    if (remainingTimeInSeconds < 0) {
-        store.adapter.log.error('Error timer calculating');
-    }
+
     return remainingTimeInSeconds;
 };
 

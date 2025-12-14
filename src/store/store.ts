@@ -1,5 +1,6 @@
 import type AlexaTimerVis from '@/main';
 import type { AlexaActiveTimerList, LocalAlexaActiveTimerList, StoreType, TimerCondition } from '@/types/types';
+import { timerDelete } from '@/app/timer-delete';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -167,25 +168,9 @@ class Store {
     getLocalActiveTimerList(): LocalAlexaActiveTimerList[] {
         return this.localeActiveTimerList;
     }
-    setActiveTimeListChanged(id: string): boolean {
+    async setActiveTimeListChanged(id: string): Promise<boolean> {
         if (id.includes('.Timer.activeTimerList')) {
-            if (this.coolDownSetStatus) {
-                return true;
-            }
-            this.coolDownSetStatus = true;
-            this.adapter.log.debug(this.coolDownSetStatus ? 'c -> true' : 'c -> false');
-            this.adapter.log.debug('Set true');
-            const serialNumber = id.split('.')[3];
-            this.activeTimeListChanged[serialNumber] = true;
-
-            const timeout = this.adapter.setTimeout(() => {
-                this.adapter.log.debug('reset cooldown');
-                this.coolDownSetStatus = false;
-
-                this.clearTimeout(timeout);
-            }, 2000);
-
-            this.addTimeout(timeout);
+            await timerDelete();
 
             return true;
         }

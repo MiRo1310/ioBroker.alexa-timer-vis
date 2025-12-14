@@ -2,7 +2,7 @@ import { createStates } from '@/app/createStates';
 import { timerObject } from '@/config/timer-data';
 
 import store from '@/store/store';
-import { Timer } from '@/app/timer';
+import { getTimerByIndex, Timer } from '@/app/timer';
 import errorLogger from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
@@ -23,7 +23,7 @@ export const timerAdd = async (): Promise<void> => {
 
         const timerIndex = `timer${timerObject.timerCount}`;
 
-        if (!timerObject.timerStatus[timerIndex]) {
+        if (!getTimerByIndex(timerIndex)) {
             addNewRawTimer(timerIndex);
         }
 

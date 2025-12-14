@@ -59,13 +59,9 @@ export const isAlexaTimerVisResetButton = (state: ioBroker.State | null | undefi
     isIobrokerValue(state) && id.includes('.Reset');
 
 export const isTimerAction = (state: ioBroker.State | null | undefined): boolean =>
-    [
-        'SetNotificationIntent',
-        'ShortenNotificationIntent',
-        'ExtendNotificationIntent',
-        'RemoveNotificationIntent',
-        'SilenceNotificationIntent',
-    ].includes(String(state?.val ?? ''));
+    ['SetNotificationIntent', 'ShortenNotificationIntent', 'ExtendNotificationIntent'].includes(
+        String(state?.val ?? ''),
+    );
 
 export const getActiveAlexaTimerListForDevice = async (
     deviceSerialNumber: string,
