@@ -7,7 +7,6 @@ import { timerObject } from '@/config/timer-data';
 import { getTimerByIndex, Timer } from '@/app/timer';
 import store from '@/store/store';
 import type { TimerCondition } from '@/types/types';
-import { timerDelete } from '@/app/timer-delete';
 import { extendOrShortTimer } from '@/app/timer-extend-or-shorten';
 import { writeStates } from '@/app/write-state';
 import { isIobrokerValue } from '@/lib/state';
@@ -60,9 +59,7 @@ export default class AlexaTimerVis extends utils.Adapter {
 
         this.on('stateChange', async (id, state) => {
             try {
-                if (store.setActiveTimeListChanged(id)) {
-                    this.log.debug(JSON.stringify(state?.val));
-
+                if (await store.setActiveTimeListChanged(id)) {
                     return;
                 }
                 if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {
@@ -70,11 +67,6 @@ export default class AlexaTimerVis extends utils.Adapter {
 
                     if (isIobrokerValue(state)) {
                         store.timerAction = state.val as TimerCondition;
-                    }
-
-                    if (store.isDeleteTimer()) {
-                        await timerDelete();
-                        return;
                     }
                     if (store.isAddTimer()) {
                         await timerAdd();

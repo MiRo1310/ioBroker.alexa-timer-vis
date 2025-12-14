@@ -39,7 +39,6 @@ var import_timer_add = require("./app/timer-add");
 var import_timer_data = require("./config/timer-data");
 var import_timer = require("./app/timer");
 var import_store = __toESM(require("./store/store"));
-var import_timer_delete = require("./app/timer-delete");
 var import_timer_extend_or_shorten = require("./app/timer-extend-or-shorten");
 var import_write_state = require("./app/write-state");
 var import_state = require("./lib/state");
@@ -82,18 +81,13 @@ class AlexaTimerVis extends utils.Adapter {
     this.on("stateChange", async (id, state) => {
       var _a2;
       try {
-        if (import_store.default.setActiveTimeListChanged(id)) {
-          this.log.debug(JSON.stringify(state == null ? void 0 : state.val));
+        if (await import_store.default.setActiveTimeListChanged(id)) {
           return;
         }
         if ((0, import_ioBrokerStateAndObjects.isAlexaStateIntentUpdated)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
           this.log.debug("Alexa state changed");
           if ((0, import_state.isIobrokerValue)(state)) {
             import_store.default.timerAction = state.val;
-          }
-          if (import_store.default.isDeleteTimer()) {
-            await (0, import_timer_delete.timerDelete)();
-            return;
           }
           if (import_store.default.isAddTimer()) {
             await (0, import_timer_add.timerAdd)();

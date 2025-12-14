@@ -65,9 +65,6 @@ const generateTimerValues = (timer, sec, name) => {
     lengthTimer,
     name
   });
-  if (remainingTimeInSeconds < 0) {
-    import_store.default.adapter.log.error("Error timer calculating");
-  }
   return remainingTimeInSeconds;
 };
 function isShorterThanAMinute({ minutes, seconds, timeString }) {

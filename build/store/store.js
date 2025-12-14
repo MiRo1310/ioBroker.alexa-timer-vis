@@ -21,6 +21,7 @@ __export(store_exports, {
   default: () => store_default
 });
 module.exports = __toCommonJS(store_exports);
+var import_timer_delete = require("../app/timer-delete");
 class Store {
   adapter;
   valHourForZero;
@@ -179,22 +180,9 @@ class Store {
   getLocalActiveTimerList() {
     return this.localeActiveTimerList;
   }
-  setActiveTimeListChanged(id) {
+  async setActiveTimeListChanged(id) {
     if (id.includes(".Timer.activeTimerList")) {
-      if (this.coolDownSetStatus) {
-        return true;
-      }
-      this.coolDownSetStatus = true;
-      this.adapter.log.debug(this.coolDownSetStatus ? "c -> true" : "c -> false");
-      this.adapter.log.debug("Set true");
-      const serialNumber = id.split(".")[3];
-      this.activeTimeListChanged[serialNumber] = true;
-      const timeout = this.adapter.setTimeout(() => {
-        this.adapter.log.debug("reset cooldown");
-        this.coolDownSetStatus = false;
-        this.clearTimeout(timeout);
-      }, 2e3);
-      this.addTimeout(timeout);
+      await (0, import_timer_delete.timerDelete)();
       return true;
     }
     return false;

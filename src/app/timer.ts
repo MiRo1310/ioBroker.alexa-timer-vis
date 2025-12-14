@@ -180,6 +180,9 @@ export class Timer {
                 const { id, label, triggerTime: endTime } = newActiveTimer;
                 this.timerId = id;
                 this.setTimerName(label);
+                if (this.endTime < 0) {
+                    this.adapter.log.warn('Wrong endTime set');
+                }
                 this.endTime = endTime;
                 this.endTimeString = millisecondsToString(endTime);
                 this.setInitialTimer();

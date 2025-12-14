@@ -49,7 +49,7 @@ const timerAdd = async () => {
     import_timer_data.timerObject.timerCount++;
     await (0, import_createStates.createStates)(import_timer_data.timerObject.timerCount);
     const timerIndex = `timer${import_timer_data.timerObject.timerCount}`;
-    if (!import_timer_data.timerObject.timerStatus[timerIndex]) {
+    if (!(0, import_timer.getTimerByIndex)(timerIndex)) {
       addNewRawTimer(timerIndex);
     }
     await (0, import_timer_start.startTimer)();

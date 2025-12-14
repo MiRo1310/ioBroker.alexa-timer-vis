@@ -90,13 +90,9 @@ function isAlexaStateIntentUpdated({ state, id }) {
 const isAlexaTimerVisResetButton = (state, id) => (0, import_state.isIobrokerValue)(state) && id.includes(".Reset");
 const isTimerAction = (state) => {
   var _a;
-  return [
-    "SetNotificationIntent",
-    "ShortenNotificationIntent",
-    "ExtendNotificationIntent",
-    "RemoveNotificationIntent",
-    "SilenceNotificationIntent"
-  ].includes(String((_a = state == null ? void 0 : state.val) != null ? _a : ""));
+  return ["SetNotificationIntent", "ShortenNotificationIntent", "ExtendNotificationIntent"].includes(
+    String((_a = state == null ? void 0 : state.val) != null ? _a : "")
+  );
 };
 const getActiveAlexaTimerListForDevice = async (deviceSerialNumber) => {
   const instance = import_store.default.getAlexa2Instance();
