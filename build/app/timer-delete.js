@@ -37,29 +37,35 @@ var import_logging = __toESM(require("../lib/logging"));
 var import_timer_data = require("../config/timer-data");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 var import_timer = require("../app/timer");
-const getActiveAlexaTimerList = async () => {
+const getActiveAlexaTimerList = async (serial) => {
   var _a;
-  const { adapter } = import_store.default;
-  const alexaInstance = import_store.default.getAlexa2Instance();
-  const serialState = await adapter.getForeignStateAsync(`alexa2.${alexaInstance}.History.serialNumber`);
-  if (!(serialState == null ? void 0 : serialState.val)) {
-    const title = "Cannot find serial";
-    import_logging.default.send({ title, e: null, level: "warning" });
-    return [];
+  let serialNumber = serial;
+  if (!serialNumber) {
+    const { adapter } = import_store.default;
+    const alexaInstance = import_store.default.getAlexa2Instance();
+    const serialState = await adapter.getForeignStateAsync(`alexa2.${alexaInstance}.History.serialNumber`);
+    if (!(serialState == null ? void 0 : serialState.val)) {
+      const title = "Cannot find serial";
+      import_logging.default.send({ title, e: null, level: "warning" });
+      return [];
+    }
+    serialNumber = String(serialState.val);
   }
-  return (_a = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(String(serialState.val))) != null ? _a : [];
+  return (_a = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(serialNumber)) != null ? _a : [];
 };
 const timerDelete = async () => {
   try {
-    const activeTimerList = await getActiveAlexaTimerList();
-    const id = import_store.default.getRemovedTimerId(activeTimerList);
-    if (!id) {
-      return;
-    }
-    for (const timerIndex in import_timer_data.timerObject.timer) {
-      const timer = (0, import_timer.getTimerByIndex)(timerIndex);
-      if (timer && timer.getTimerId() === id) {
-        await timer.reset();
+    for (const el of import_store.default.getLocalActiveTimerList()) {
+      const activeTimerList = await getActiveAlexaTimerList(el.deviceSerialNumber);
+      const id = import_store.default.getRemovedTimerId(activeTimerList);
+      if (!id) {
+        continue;
+      }
+      for (const timerIndex in import_timer_data.timerObject.timer) {
+        const timer = (0, import_timer.getTimerByIndex)(timerIndex);
+        if (timer && timer.getTimerId() === id) {
+          await timer.reset();
+        }
       }
     }
   } catch (e) {

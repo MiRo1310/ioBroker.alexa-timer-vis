@@ -46,6 +46,7 @@ const writeStateInterval = () => {
       (0, import_write_state.writeStates)({ reset: false }).catch((e) => {
         import_logging.default.send({ title: "Error writeStateIntervall", e });
       });
+      adapter.log.debug(JSON.stringify(import_store.default.activeTimeListChanged));
       if (!((_a = Object.keys(import_timer_data.timerObject.timer)) == null ? void 0 : _a.find((t) => import_timer_data.timerObject.timer[t].isActive))) {
         adapter.setStateChanged("all_Timer.alive", false, true);
         adapter.clearInterval(import_store.default.interval);

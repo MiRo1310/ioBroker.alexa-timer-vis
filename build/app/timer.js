@@ -41,21 +41,20 @@ var import_string = require("../lib/string");
 var import_state = require("../lib/state");
 var import_time = require("../lib/time");
 class Timer {
+  timerIndex;
+  inputDeviceName;
+  deviceSerialNumber;
+  timerName;
+  voiceInputAsSeconds;
   hours;
   minutes;
   seconds;
   stringTimer1;
   stringTimer2;
-  voiceInputAsSeconds;
-  timerIndex;
-  timerName;
-  alexaTimerName;
   creationTime;
   creationTimeString;
   endTime;
   endTimeString;
-  inputDeviceName;
-  deviceSerialNumber;
   interval;
   lengthTimer;
   percent;
@@ -79,7 +78,6 @@ class Timer {
     this.voiceInputAsSeconds = 0;
     this.timerIndex = "";
     this.timerName = "";
-    this.alexaTimerName = null;
     this.creationTime = 0;
     this.creationTimeString = "";
     this.endTime = 0;
@@ -129,7 +127,7 @@ class Timer {
   }
   outPutTimerName() {
     const name = this.timerName;
-    return this.alexaTimerName || !["Timer", ""].includes(name) ? `${(0, import_string.firstLetterToUpperCase)(name)} Timer` : "Timer";
+    return !["Timer", ""].includes(name) ? `${(0, import_string.firstLetterToUpperCase)(name)} Timer` : "Timer";
   }
   extendTimer(milliseconds) {
     this.extendOrShortenTimer = true;
@@ -149,8 +147,6 @@ class Timer {
       voiceInputAsSeconds: this.voiceInputAsSeconds,
       stringTimer1: this.stringTimer1,
       stringTimer2: this.stringTimer2,
-      TimerName: this.timerName,
-      alexaTimerName: this.alexaTimerName,
       creationTime: this.creationTime,
       creationTimeString: this.creationTimeString,
       endTimeNumber: this.endTime,
@@ -180,18 +176,14 @@ class Timer {
       }
       const serial = this.deviceSerialNumber;
       const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
-      await this.setForeignActiveTimerListSubscription(foreignId);
+      await import_store.default.handleSubscribeForeignStates(foreignId);
       this.foreignActiveTimerListId = foreignId;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
-      this.setStartAndEndTime(creationTime);
+      this.setCreationTime(creationTime);
       await this.setValuesFromEchoDeviceTimerList();
     } catch (e) {
       import_logging.default.send({ title: "Error in getInputDevice", e });
     }
-  }
-  async setForeignActiveTimerListSubscription(id) {
-    await this.adapter.subscribeForeignStatesAsync(id);
-    this.adapter.log.debug(`Subscribed: ${id}`);
   }
   setVoiceInputAsSeconds(seconds) {
     this.voiceInputAsSeconds = seconds;
@@ -205,7 +197,7 @@ class Timer {
       if (!activeTimerList) {
         return;
       }
-      const newActiveTimer = import_store.default.getNewActiveTimerId(activeTimerList);
+      const newActiveTimer = import_store.default.getNewActiveTimerId(activeTimerList, this.deviceSerialNumber);
       if (newActiveTimer) {
         const { id, label, triggerTime: endTime } = newActiveTimer;
         this.timerId = id;
@@ -233,7 +225,7 @@ class Timer {
   setInterval(interval) {
     this.interval = interval;
   }
-  setStartAndEndTime(creationTime) {
+  setCreationTime(creationTime) {
     this.creationTime = creationTime;
     this.creationTimeString = (0, import_time.millisecondsToString)(creationTime);
   }
@@ -274,7 +266,6 @@ class Timer {
     this.voiceInputAsSeconds = 0;
     this.remainingTimeInSeconds = 0;
     this.timerName = "";
-    this.alexaTimerName = "";
     this.creationTimeString = "00:00:00";
     this.endTimeString = "00:00:00";
     this.inputDeviceName = "";
@@ -294,9 +285,9 @@ class Timer {
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, "");
     }
     this.isActive = false;
-    this.resetForeignStateSubscription();
+    this.unSubscribeStates();
   }
-  resetForeignStateSubscription() {
+  unSubscribeStates() {
     if (this.foreignActiveTimerListId) {
       this.adapter.unsubscribeForeignStates(this.foreignActiveTimerListId);
       this.adapter.log.debug(`UnSubscribed: ${this.foreignActiveTimerListId}`);

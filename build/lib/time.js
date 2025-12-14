@@ -31,7 +31,8 @@ __export(time_exports, {
   isMoreThanAMinute: () => isMoreThanAMinute,
   millisecondsToString: () => millisecondsToString,
   resetSuperiorValue: () => resetSuperiorValue,
-  secToHourMinSec: () => secToHourMinSec
+  secToHourMinSec: () => secToHourMinSec,
+  sleep: () => sleep
 });
 module.exports = __toCommonJS(time_exports);
 var import_store = __toESM(require("../store/store"));
@@ -106,11 +107,13 @@ function resetSuperiorValue(hour, minutes, seconds) {
   return { hour, minutes, seconds };
 }
 const millisecondsToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   isMoreThanAMinute,
   millisecondsToString,
   resetSuperiorValue,
-  secToHourMinSec
+  secToHourMinSec,
+  sleep
 });
 //# sourceMappingURL=time.js.map

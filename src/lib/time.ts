@@ -100,3 +100,5 @@ export function resetSuperiorValue(
  */
 export const millisecondsToString = (milliseconds: number): string =>
     new Date(milliseconds).toString().split(' ').slice(4, 5).toString();
+
+export const sleep = (ms: number): Promise<unknown> => new Promise(resolve => setTimeout(resolve, ms));

@@ -115,3 +115,5 @@ export interface AlexaJson {
     domain: string;
     intent: string;
 }
+
+export type LocalAlexaActiveTimerList = AlexaActiveTimerList & { deviceSerialNumber: string };

@@ -1,5 +1,5 @@
 import type AlexaTimerVis from '@/main';
-import type { AlexaActiveTimerList, StoreType, TimerCondition } from '@/types/types';
+import type { AlexaActiveTimerList, LocalAlexaActiveTimerList, StoreType, TimerCondition } from '@/types/types';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -25,7 +25,11 @@ class Store {
     interval: ioBroker.Interval | null | undefined;
     alexaTimerVisInstance: string;
     alexa2Instance: string | null;
-    private localeActiveTimerList: AlexaActiveTimerList[];
+    activeTimeListChanged: Record<string, boolean>;
+    private subscribedIds: string[];
+    private localeActiveTimerList: LocalAlexaActiveTimerList[];
+    private coolDownSetStatus = false;
+    private timeouts: ioBroker.Timeout[] = [];
     constructor() {
         this.pathAlexaStateIntent = '';
         this.intervalLess60 = 0;
@@ -51,6 +55,8 @@ class Store {
         this.timerAction = null;
         this.localeActiveTimerList = [];
         this.alexa2Instance = null;
+        this.activeTimeListChanged = {};
+        this.subscribedIds = [];
     }
 
     init(store: StoreType): void {
@@ -107,15 +113,20 @@ class Store {
         return this.timerAction === 'ExtendNotificationIntent';
     }
     isDeleteTimer(): boolean {
-        return this.timerAction === 'RemoveNotificationIntent';
+        return (
+            !!this.timerAction && ['RemoveNotificationIntent', 'SilenceNotificationIntent'].includes(this.timerAction)
+        );
     }
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
     }
-    getNewActiveTimerId(activeTimerLists: AlexaActiveTimerList[]): AlexaActiveTimerList | undefined {
+    getNewActiveTimerId(
+        activeTimerLists: AlexaActiveTimerList[],
+        deviceSerialNumber: string,
+    ): AlexaActiveTimerList | undefined {
         const newestTimer = activeTimerLists.find(t => !this.includesActiveTimerId(t.id));
         if (newestTimer) {
-            this.localeActiveTimerList.push(newestTimer);
+            this.localeActiveTimerList.push({ ...newestTimer, deviceSerialNumber });
             return newestTimer;
         }
     }
@@ -152,6 +163,60 @@ class Store {
     }
     includesActiveTimerId(id: string): boolean {
         return this.localeActiveTimerList.some(t => t.id === id);
+    }
+    getLocalActiveTimerList(): LocalAlexaActiveTimerList[] {
+        return this.localeActiveTimerList;
+    }
+    setActiveTimeListChanged(id: string): boolean {
+        if (id.includes('.Timer.activeTimerList')) {
+            if (this.coolDownSetStatus) {
+                return true;
+            }
+            this.coolDownSetStatus = true;
+            this.adapter.log.debug(this.coolDownSetStatus ? 'c -> true' : 'c -> false');
+            this.adapter.log.debug('Set true');
+            const serialNumber = id.split('.')[3];
+            this.activeTimeListChanged[serialNumber] = true;
+
+            const timeout = this.adapter.setTimeout(() => {
+                this.adapter.log.debug('reset cooldown');
+                this.coolDownSetStatus = false;
+
+                this.clearTimeout(timeout);
+            }, 2000);
+
+            this.addTimeout(timeout);
+
+            return true;
+        }
+        return false;
+    }
+    activeTimeListChangedIsHandled(serial: string): void {
+        this.adapter.log.debug(`Set false to serial: ${serial}`);
+        this.activeTimeListChanged[serial] = false;
+    }
+    getActiveTimeListChangedStatus(serial: string): boolean {
+        return this.activeTimeListChanged[serial];
+    }
+    async handleSubscribeForeignStates(id: string): Promise<void> {
+        if (this.subscribedIds.includes(id)) {
+            return;
+        }
+        await this.adapter.subscribeForeignStatesAsync(id);
+        this.subscribedIds.push(id);
+        this.adapter.log.debug(`Subscribed: ${id}`);
+    }
+    addTimeout(timeout: ioBroker.Timeout | undefined): void {
+        if (timeout) {
+            this.timeouts.push(timeout);
+        }
+    }
+    clearTimeout(timeout: ioBroker.Timeout | undefined): void {
+        this.adapter.clearTimeout(timeout);
+        this.timeouts = this.timeouts.filter(t => t !== timeout);
+    }
+    clearTimeouts(): void {
+        this.timeouts.forEach(timeout => this.clearTimeout(timeout));
     }
 }
 export default new Store();

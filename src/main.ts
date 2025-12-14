@@ -60,6 +60,11 @@ export default class AlexaTimerVis extends utils.Adapter {
 
         this.on('stateChange', async (id, state) => {
             try {
+                if (store.setActiveTimeListChanged(id)) {
+                    this.log.debug(JSON.stringify(state?.val));
+
+                    return;
+                }
                 if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {
                     this.log.debug('Alexa state changed');
 
@@ -107,6 +112,7 @@ export default class AlexaTimerVis extends utils.Adapter {
             this.clearTimeout(debounceTimeout);
 
             this.clearInterval(store.interval);
+            store.clearTimeouts();
 
             for (const element in timerObject.iobrokerInterval) {
                 this.clearInterval(timerObject.iobrokerInterval[element as keyof typeof timerObject.iobrokerInterval]);

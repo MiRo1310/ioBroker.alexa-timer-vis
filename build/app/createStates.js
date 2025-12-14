@@ -241,8 +241,8 @@ const createStates = async (value) => {
         },
         native: {}
       });
-      const id = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
-      adapter.subscribeForeignStates(id);
+      const resetBtnId = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
+      adapter.subscribeForeignStates(resetBtnId);
     }
   } catch (e) {
     import_logging.default.send({ title: "Error in createState", e });

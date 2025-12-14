@@ -34,7 +34,13 @@ module.exports = __toCommonJS(generate_timer_values_exports);
 var import_store = __toESM(require("../store/store"));
 var import_time = require("../lib/time");
 const generateTimerValues = (timer, sec, name) => {
-  const timeLeft = timer.getOutputProperties().endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
+  const endTime = timer.getOutputProperties().endTimeNumber;
+  if (endTime < 0) {
+    import_store.default.adapter.log.error(JSON.stringify(endTime));
+    import_store.default.adapter.log.error("Error no endTime set.");
+    return 0;
+  }
+  const timeLeft = endTime - (/* @__PURE__ */ new Date()).getTime();
   const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
   const result = (0, import_time.secToHourMinSec)(remainingTimeInSeconds, true);
   let { hour, minutes, seconds } = result;
@@ -59,6 +65,9 @@ const generateTimerValues = (timer, sec, name) => {
     lengthTimer,
     name
   });
+  if (remainingTimeInSeconds < 0) {
+    import_store.default.adapter.log.error("Error timer calculating");
+  }
   return remainingTimeInSeconds;
 };
 function isShorterThanAMinute({ minutes, seconds, timeString }) {
