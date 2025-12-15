@@ -44,7 +44,6 @@ var import_write_state = require("./app/write-state");
 var import_state = require("./lib/state");
 var import_ioBrokerStateAndObjects = require("./app/ioBrokerStateAndObjects");
 let timeout_1;
-let debounceTimeout;
 class AlexaTimerVis extends utils.Adapter {
   static instance;
   /**
@@ -79,13 +78,11 @@ class AlexaTimerVis extends utils.Adapter {
     await (0, import_ioBrokerStateAndObjects.setAdapterStatusAndInitStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
     this.on("stateChange", async (id, state) => {
-      var _a2;
       try {
         if (await import_store.default.activeTimeListChangedHandler(id)) {
           return;
         }
         if ((0, import_ioBrokerStateAndObjects.isAlexaStateIntentUpdated)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
-          this.log.debug("Alexa state changed");
           if ((0, import_state.isIobrokerValue)(state)) {
             import_store.default.timerAction = state.val;
           }
@@ -100,8 +97,7 @@ class AlexaTimerVis extends utils.Adapter {
           return;
         }
         if ((0, import_ioBrokerStateAndObjects.isAlexaTimerVisResetButton)(state, id)) {
-          const timerIndex = (_a2 = id.split(".")[2]) != null ? _a2 : "";
-          const timer = (0, import_timer.getTimerByIndex)(timerIndex);
+          const timer = (0, import_timer.getTimerByIndex)((0, import_ioBrokerStateAndObjects.getIndexFromId)(id));
           if (timer) {
             await timer.stopTimerInAlexa();
           }
@@ -117,7 +113,6 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.info("Adapter shuts down");
       await (0, import_write_state.writeStates)({ reset: true });
       this.clearTimeout(timeout_1);
-      this.clearTimeout(debounceTimeout);
       this.clearInterval(import_store.default.interval);
       import_store.default.clearTimeouts();
       for (const element in import_timer_data.timerObject.iobrokerInterval) {

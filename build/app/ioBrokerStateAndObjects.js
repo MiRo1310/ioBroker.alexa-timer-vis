@@ -29,6 +29,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var ioBrokerStateAndObjects_exports = {};
 __export(ioBrokerStateAndObjects_exports, {
   getActiveAlexaTimerListForDevice: () => getActiveAlexaTimerListForDevice,
+  getIndexFromId: () => getIndexFromId,
   getParsedAlexaJson: () => getParsedAlexaJson,
   isAlexaStateIntentUpdated: () => isAlexaStateIntentUpdated,
   isAlexaTimerVisResetButton: () => isAlexaTimerVisResetButton,
@@ -84,9 +85,7 @@ const setAdapterStatusAndInitStateCreation = async () => {
   await adapter.setState("info.connection", true, true);
   await (0, import_createStates.createStates)(4);
 };
-function isAlexaStateIntentUpdated({ state, id }) {
-  return (0, import_state.isIobrokerValue)(state) && (0, import_string.isString)(state.val) && state.val !== "" && id === import_store.default.pathAlexaStateIntent;
-}
+const isAlexaStateIntentUpdated = ({ state, id }) => (0, import_state.isIobrokerValue)(state) && (0, import_string.isString)(state.val) && state.val !== "" && id === import_store.default.pathAlexaStateIntent;
 const isAlexaTimerVisResetButton = (state, id) => (0, import_state.isIobrokerValue)(state) && id.includes(".Reset");
 const isTimerAction = (state) => {
   var _a;
@@ -122,9 +121,14 @@ const getActiveAlexaTimerListForDevice = async (deviceSerialNumber, disableLoop 
   const activeTimerListState = await import_store.default.adapter.getForeignStateAsync(activeTimerListId);
   return (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
 };
+const getIndexFromId = (id) => {
+  var _a, _b;
+  return (_b = (_a = id.split(".")) == null ? void 0 : _a[2]) != null ? _b : "";
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   getActiveAlexaTimerListForDevice,
+  getIndexFromId,
   getParsedAlexaJson,
   isAlexaStateIntentUpdated,
   isAlexaTimerVisResetButton,

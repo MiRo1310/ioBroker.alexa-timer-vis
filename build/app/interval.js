@@ -35,7 +35,10 @@ var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_generate_timer_values = require("../app/generate-timer-values");
 var import_time = require("../lib/time");
-const interval = (sec, name, timer, int, onlyOneTimer) => {
+function isIndexInInterval(timerIndex) {
+  return timerIndex in import_timer_data.timerObject.iobrokerInterval;
+}
+const interval = (sec, name, timer, int, singleInstance) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
   if (!timerIndex) {
@@ -44,30 +47,27 @@ const interval = (sec, name, timer, int, onlyOneTimer) => {
   (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
   const { string } = (0, import_time.secToHourMinSec)(sec, false);
   timer.setLengthTimer(string);
-  if (import_timer_data.timerObject.iobrokerInterval[timerIndex] || !timer.isActive) {
+  if (isIndexInInterval(timerIndex) || !timer.isActive) {
     return;
   }
-  import_timer_data.timerObject.iobrokerInterval[timerIndex] = adapter.setInterval(
-    async () => {
-      const timeLeftSec = (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
-      if (timeLeftSec <= 60 && !onlyOneTimer) {
-        onlyOneTimer = true;
-        if (import_timer_data.timerObject.iobrokerInterval[timerIndex]) {
-          clearIntervalByTimerIndex(timerIndex, timer);
-        }
-        interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
+  import_timer_data.timerObject.iobrokerInterval[timerIndex] = adapter.setInterval(async () => {
+    const timeLeftSec = (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
+    if (timeLeftSec <= 60 && !singleInstance) {
+      singleInstance = true;
+      if (isIndexInInterval(timerIndex)) {
+        clearIntervalByTimerIndex(timerIndex, timer);
       }
-      if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerStatus[timerIndex]) {
-        import_timer_data.timerObject.timerCount--;
-        await timer.reset();
-        adapter.log.debug("Timer stopped");
-        if (import_timer_data.timerObject.iobrokerInterval[timerIndex]) {
-          clearIntervalByTimerIndex(timerIndex, timer);
-        }
+      interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
+    }
+    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerStatus[timerIndex]) {
+      import_timer_data.timerObject.timerCount--;
+      await timer.reset();
+      adapter.log.debug("Timer stopped");
+      if (isIndexInInterval(timerIndex)) {
+        clearIntervalByTimerIndex(timerIndex, timer);
       }
-    },
-    int
-  );
+    }
+  }, int);
 };
 function clearIntervalByTimerIndex(timerIndex, timer) {
   import_store.default.adapter.clearInterval(import_timer_data.timerObject.iobrokerInterval[timerIndex]);

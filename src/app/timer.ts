@@ -171,9 +171,7 @@ export class Timer {
     async setValuesFromEchoDeviceTimerList(): Promise<void> {
         try {
             const activeTimerList = await getActiveAlexaTimerListForDevice(this.deviceSerialNumber);
-            if (!activeTimerList) {
-                return;
-            }
+
             const newActiveTimer = Store.getNewActiveTimerId(activeTimerList, this.deviceSerialNumber);
 
             if (newActiveTimer) {

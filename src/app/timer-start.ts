@@ -8,8 +8,8 @@ import { getParsedAlexaJson } from '@/app/ioBrokerStateAndObjects';
 
 export const startTimer = async (): Promise<void> => {
     try {
-        const timerIndex = getAvailableTimerIndex();
-        timerObject.timerStatus[timerIndex] = true;
+        const availableTimerIndex = getAvailableTimerIndex();
+        timerObject.timerStatus[availableTimerIndex] = true;
 
         const alexaJson = await getParsedAlexaJson();
         if (!alexaJson) {
@@ -18,16 +18,17 @@ export const startTimer = async (): Promise<void> => {
 
         const creationTime = alexaJson.creationTime;
 
-        const timer = timerObject.timer[timerIndex];
-        await timer.init({ timerIndex, creationTime });
+        const timer = timerObject.timer[availableTimerIndex];
+        await timer.init({ timerIndex: availableTimerIndex, creationTime });
         const name = timer.getName();
         const sec = timer.calculatedSeconds;
+
         if (isMoreThanAMinute(sec)) {
             interval(sec, name, timer, store.intervalMore60 * 1000, false);
             return;
         }
 
-        timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1000);
+        timerObject.timer[availableTimerIndex].setInterval(store.intervalLess60 * 1000);
 
         interval(sec, name, timer, store.intervalLess60 * 1000, true);
     } catch (e: any) {

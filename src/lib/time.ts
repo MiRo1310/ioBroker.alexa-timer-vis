@@ -1,5 +1,5 @@
 import store from '@/store/store';
-import type { SecToHourMinSecReturn } from '@/types/types';
+import type { GenerateTimeStringObject, SecToHourMinSecReturn } from '@/types/types';
 
 const getSecondUnit = (seconds: number): string => (seconds != 1 ? store.unitSecond2 : store.unitSecond1);
 
@@ -102,3 +102,37 @@ export const millisecondsToString = (milliseconds: number): string =>
     new Date(milliseconds).toString().split(' ').slice(4, 5).toString();
 
 export const sleep = (ms: number): Promise<unknown> => new Promise(resolve => setTimeout(resolve, ms));
+
+export const isShorterThanAMinute = ({ minutes, seconds, timeString }: GenerateTimeStringObject): string =>
+    parseInt(minutes) == 0 ? `${seconds} ${store.unitSecond3}` : timeString;
+
+export const isShorterThanSixtyMinutes = ({
+    hour,
+    minutes,
+    seconds,
+    timeString,
+}: GenerateTimeStringObject): GenerateTimeStringObject => ({
+    timeString: parseInt(hour) == 0 ? `${minutes}:${seconds} ${store.unitMinute3}` : timeString,
+    hour,
+    minutes,
+    seconds,
+});
+
+export const isShorterOrEqualToSixtyFiveMinutes = ({
+    hour,
+    minutes,
+    seconds,
+    timeString,
+}: GenerateTimeStringObject): GenerateTimeStringObject => ({
+    timeString:
+        parseInt(hour) === 1 && parseInt(minutes) <= 5
+            ? `${hour}:${minutes}:${seconds} ${store.unitHour3}`
+            : timeString,
+    hour,
+    minutes,
+    seconds,
+});
+
+export const getMsLeftFromNowToEndtime = (endTimeMS: number): number => endTimeMS - new Date().getTime();
+
+export const getSecondsFromMS = (millisecondsLeft: number): number => Math.round(millisecondsLeft / 1000);

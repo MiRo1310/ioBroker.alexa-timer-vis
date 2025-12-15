@@ -40,22 +40,22 @@ var import_time = require("../lib/time");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async () => {
   try {
-    const timerIndex = getAvailableTimerIndex();
-    import_timer_data.timerObject.timerStatus[timerIndex] = true;
+    const availableTimerIndex = getAvailableTimerIndex();
+    import_timer_data.timerObject.timerStatus[availableTimerIndex] = true;
     const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
     if (!alexaJson) {
       return;
     }
     const creationTime = alexaJson.creationTime;
-    const timer = import_timer_data.timerObject.timer[timerIndex];
-    await timer.init({ timerIndex, creationTime });
+    const timer = import_timer_data.timerObject.timer[availableTimerIndex];
+    await timer.init({ timerIndex: availableTimerIndex, creationTime });
     const name = timer.getName();
     const sec = timer.calculatedSeconds;
     if ((0, import_time.isMoreThanAMinute)(sec)) {
       (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
       return;
     }
-    import_timer_data.timerObject.timer[timerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
+    import_timer_data.timerObject.timer[availableTimerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
     (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
   } catch (e) {
     import_logging.default.send({ title: "Error startTimer", e });

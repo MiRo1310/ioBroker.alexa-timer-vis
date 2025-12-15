@@ -31,7 +31,6 @@ class Store {
   pathAlexaSummary;
   intervalMore60;
   intervalLess60;
-  debounceTime;
   unitHour1;
   unitHour2;
   unitHour3;
@@ -55,7 +54,6 @@ class Store {
     this.pathAlexaStateIntent = "";
     this.intervalLess60 = 0;
     this.intervalMore60 = 0;
-    this.debounceTime = 0;
     this.unitHour1 = "Stunde";
     this.unitHour2 = "Stunden";
     this.unitHour3 = "";
@@ -97,7 +95,6 @@ class Store {
       unitMinute3,
       intervall1,
       intervall2,
-      entprellZeit,
       alexaTimerVisInstance
     } = store;
     this.valHourForZero = valHourForZero;
@@ -108,7 +105,6 @@ class Store {
     this.pathAlexaSummary = `${alexa}.History.summary`;
     this.intervalMore60 = intervall1;
     this.intervalLess60 = intervall2;
-    this.debounceTime = entprellZeit;
     this.unitHour1 = unitHour1;
     this.unitHour2 = unitHour2;
     this.unitHour3 = unitHour3;
@@ -136,7 +132,7 @@ class Store {
     return this.alexaTimerVisInstance;
   }
   getNewActiveTimerId(activeTimerLists, deviceSerialNumber) {
-    const newestTimer = activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
+    const newestTimer = activeTimerLists == null ? void 0 : activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
       this.localeActiveTimerList.push({ ...newestTimer, deviceSerialNumber });
       return newestTimer;
