@@ -35,9 +35,7 @@ var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_generate_timer_values = require("../app/generate-timer-values");
 var import_time = require("../lib/time");
-function isIndexInInterval(timerIndex) {
-  return timerIndex in import_timer_data.timerObject.iobrokerInterval;
-}
+const isIndexInInterval = (timerIndex) => timerIndex in import_timer_data.timerObject.iobrokerInterval && import_timer_data.timerObject.iobrokerInterval[timerIndex] !== null;
 const interval = (sec, name, timer, int, singleInstance) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
