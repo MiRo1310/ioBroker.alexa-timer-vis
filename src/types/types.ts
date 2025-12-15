@@ -34,9 +34,7 @@ export interface TimerObject {
     intervalTime: number;
     timerStatus: Record<keyof Timers, boolean>;
     timer: Timers;
-    iobrokerInterval: {
-        timer1?: ioBroker.Interval;
-    };
+    iobrokerInterval: Record<string, ioBroker.Interval | null | undefined>;
 }
 
 export interface StoreType {
@@ -57,7 +55,6 @@ export interface StoreType {
     valHourForZero: string;
     valMinuteForZero: string;
     valSecondForZero: string;
-    entprellZeit: number;
 }
 
 export interface AlexaActiveTimerList {

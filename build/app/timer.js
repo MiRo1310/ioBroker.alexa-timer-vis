@@ -194,9 +194,6 @@ class Timer {
   async setValuesFromEchoDeviceTimerList() {
     try {
       const activeTimerList = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(this.deviceSerialNumber);
-      if (!activeTimerList) {
-        return;
-      }
       const newActiveTimer = import_store.default.getNewActiveTimerId(activeTimerList, this.deviceSerialNumber);
       if (newActiveTimer) {
         const { id, label, triggerTime: endTime } = newActiveTimer;

@@ -36,19 +36,18 @@ var import_time = require("../lib/time");
 const generateTimerValues = (timer, sec, name) => {
   const endTime = timer.getOutputProperties().endTimeNumber;
   if (endTime < 0) {
-    import_store.default.adapter.log.error(JSON.stringify(endTime));
-    import_store.default.adapter.log.error("Error no endTime set.");
+    import_store.default.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
     return 0;
   }
-  const timeLeft = endTime - (/* @__PURE__ */ new Date()).getTime();
-  const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
-  const result = (0, import_time.secToHourMinSec)(remainingTimeInSeconds, true);
+  const msLeft = (0, import_time.getMsLeftFromNowToEndtime)(endTime);
+  const remainingSeconds = (0, import_time.getSecondsFromMS)(msLeft);
+  const result = (0, import_time.secToHourMinSec)(remainingSeconds, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
-  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds)}`;
-  const { timeString: stringTimer2 } = isShorterThanAMinute(
-    isShorterThanSixtyMinutes(
-      isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds))
+  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingSeconds)}`;
+  const stringTimer2 = (0, import_time.isShorterThanAMinute)(
+    (0, import_time.isShorterThanSixtyMinutes)(
+      (0, import_time.isShorterOrEqualToSixtyFiveMinutes)(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds))
     )
   );
   if (!timer.isExtendOrShortenTimer()) {
@@ -61,42 +60,12 @@ const generateTimerValues = (timer, sec, name) => {
     seconds,
     stringTimer1,
     stringTimer2,
-    remainingTimeInSeconds,
+    remainingTimeInSeconds: remainingSeconds,
     lengthTimer,
     name
   });
-  return remainingTimeInSeconds;
+  return remainingSeconds;
 };
-function isShorterThanAMinute({ minutes, seconds, timeString }) {
-  if (parseInt(minutes) == 0) {
-    return { timeString: `${seconds} ${import_store.default.unitSecond3}` };
-  }
-  return { timeString };
-}
-function isShorterOrEqualToSixtyFiveMinutes({
-  hour,
-  minutes,
-  seconds,
-  timeString
-}) {
-  if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
-    const timeString2 = `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;
-    return { timeString: timeString2, hour, minutes, seconds };
-  }
-  return { timeString, hour, minutes, seconds };
-}
-function isShorterThanSixtyMinutes({
-  hour,
-  minutes,
-  seconds,
-  timeString
-}) {
-  if (parseInt(hour) == 0) {
-    const timeString2 = `${minutes}:${seconds} ${import_store.default.unitMinute3}`;
-    return { timeString: timeString2, hour, minutes, seconds };
-  }
-  return { timeString, hour, minutes, seconds };
-}
 function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds) {
   if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {
     const timeString = `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;

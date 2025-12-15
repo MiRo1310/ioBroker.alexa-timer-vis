@@ -11,6 +11,7 @@ import { extendOrShortTimer } from '@/app/timer-extend-or-shorten';
 import { writeStates } from '@/app/write-state';
 import { isIobrokerValue } from '@/lib/state';
 import {
+    getIndexFromId,
     isAlexaStateIntentUpdated,
     isAlexaTimerVisResetButton,
     isTimerAction,
@@ -18,7 +19,6 @@ import {
 } from '@/app/ioBrokerStateAndObjects';
 
 let timeout_1: ioBroker.Timeout | undefined;
-let debounceTimeout: ioBroker.Timeout | undefined;
 
 export default class AlexaTimerVis extends utils.Adapter {
     private static instance: AlexaTimerVis;
@@ -63,8 +63,6 @@ export default class AlexaTimerVis extends utils.Adapter {
                     return;
                 }
                 if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {
-                    this.log.debug('Alexa state changed');
-
                     if (isIobrokerValue(state)) {
                         store.timerAction = state.val as TimerCondition;
                     }
@@ -80,8 +78,7 @@ export default class AlexaTimerVis extends utils.Adapter {
                     return;
                 }
                 if (isAlexaTimerVisResetButton(state, id)) {
-                    const timerIndex = id.split('.')[2] ?? '';
-                    const timer = getTimerByIndex(timerIndex);
+                    const timer = getTimerByIndex(getIndexFromId(id));
                     if (timer) {
                         await timer.stopTimerInAlexa();
                     }
@@ -101,13 +98,12 @@ export default class AlexaTimerVis extends utils.Adapter {
             await writeStates({ reset: true });
 
             this.clearTimeout(timeout_1);
-            this.clearTimeout(debounceTimeout);
 
             this.clearInterval(store.interval);
             store.clearTimeouts();
 
             for (const element in timerObject.iobrokerInterval) {
-                this.clearInterval(timerObject.iobrokerInterval[element as keyof typeof timerObject.iobrokerInterval]);
+                this.clearInterval(timerObject.iobrokerInterval[element]);
             }
 
             this.log.debug('Intervals and timeouts cleared!');

@@ -51,9 +51,8 @@ export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
     await createStates(4);
 };
 
-export function isAlexaStateIntentUpdated({ state, id }: { state?: ioBroker.State | null; id: string }): boolean {
-    return isIobrokerValue(state) && isString(state.val) && state.val !== '' && id === store.pathAlexaStateIntent;
-}
+export const isAlexaStateIntentUpdated = ({ state, id }: { state?: ioBroker.State | null; id: string }): boolean =>
+    isIobrokerValue(state) && isString(state.val) && state.val !== '' && id === store.pathAlexaStateIntent;
 
 export const isAlexaTimerVisResetButton = (state: ioBroker.State | null | undefined, id: string): boolean =>
     isIobrokerValue(state) && id.includes('.Reset');
@@ -97,3 +96,5 @@ export const getActiveAlexaTimerListForDevice = async (
 
     return activeTimerListState?.val ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[]) : [];
 };
+
+export const getIndexFromId = (id: string): string => id.split('.')?.[2] ?? '';

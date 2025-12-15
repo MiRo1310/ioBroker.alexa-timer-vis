@@ -28,7 +28,12 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var time_exports = {};
 __export(time_exports, {
+  getMsLeftFromNowToEndtime: () => getMsLeftFromNowToEndtime,
+  getSecondsFromMS: () => getSecondsFromMS,
   isMoreThanAMinute: () => isMoreThanAMinute,
+  isShorterOrEqualToSixtyFiveMinutes: () => isShorterOrEqualToSixtyFiveMinutes,
+  isShorterThanAMinute: () => isShorterThanAMinute,
+  isShorterThanSixtyMinutes: () => isShorterThanSixtyMinutes,
   millisecondsToString: () => millisecondsToString,
   resetSuperiorValue: () => resetSuperiorValue,
   secToHourMinSec: () => secToHourMinSec,
@@ -108,9 +113,39 @@ function resetSuperiorValue(hour, minutes, seconds) {
 }
 const millisecondsToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const isShorterThanAMinute = ({ minutes, seconds, timeString }) => parseInt(minutes) == 0 ? `${seconds} ${import_store.default.unitSecond3}` : timeString;
+const isShorterThanSixtyMinutes = ({
+  hour,
+  minutes,
+  seconds,
+  timeString
+}) => ({
+  timeString: parseInt(hour) == 0 ? `${minutes}:${seconds} ${import_store.default.unitMinute3}` : timeString,
+  hour,
+  minutes,
+  seconds
+});
+const isShorterOrEqualToSixtyFiveMinutes = ({
+  hour,
+  minutes,
+  seconds,
+  timeString
+}) => ({
+  timeString: parseInt(hour) === 1 && parseInt(minutes) <= 5 ? `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}` : timeString,
+  hour,
+  minutes,
+  seconds
+});
+const getMsLeftFromNowToEndtime = (endTimeMS) => endTimeMS - (/* @__PURE__ */ new Date()).getTime();
+const getSecondsFromMS = (millisecondsLeft) => Math.round(millisecondsLeft / 1e3);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  getMsLeftFromNowToEndtime,
+  getSecondsFromMS,
   isMoreThanAMinute,
+  isShorterOrEqualToSixtyFiveMinutes,
+  isShorterThanAMinute,
+  isShorterThanSixtyMinutes,
   millisecondsToString,
   resetSuperiorValue,
   secToHourMinSec,
