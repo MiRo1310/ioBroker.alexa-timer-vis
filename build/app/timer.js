@@ -214,7 +214,11 @@ class Timer {
     const secEnd = Math.floor(this.endTime / 1e3);
     const secStart = Math.floor(this.creationTime / 1e3);
     this.calculatedSeconds = this.removeDifferenzInCalculatedSeconds(secEnd - secStart);
+    this.updateCreationTimeAfterCalculateSeconds(this.calculatedSeconds);
     this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
+  }
+  updateCreationTimeAfterCalculateSeconds(sec) {
+    this.setCreationTime(this.endTime - sec * 1e3);
   }
   updateInitialTimer(sec) {
     this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds + sec, true).initialString;

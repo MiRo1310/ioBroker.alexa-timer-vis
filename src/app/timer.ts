@@ -193,8 +193,11 @@ export class Timer {
         const secEnd = Math.floor(this.endTime / 1000);
         const secStart = Math.floor(this.creationTime / 1000);
         this.calculatedSeconds = this.removeDifferenzInCalculatedSeconds(secEnd - secStart);
-
+        this.updateCreationTimeAfterCalculateSeconds(this.calculatedSeconds);
         this.initialTimer = secToHourMinSec(this.calculatedSeconds, true).initialString;
+    }
+    private updateCreationTimeAfterCalculateSeconds(sec: number): void {
+        this.setCreationTime(this.endTime - sec * 1000);
     }
     private updateInitialTimer(sec: number): void {
         this.initialTimer = secToHourMinSec(this.calculatedSeconds + sec, true).initialString;
