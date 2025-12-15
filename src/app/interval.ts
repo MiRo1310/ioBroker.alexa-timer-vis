@@ -4,9 +4,8 @@ import type { Timer } from '@/app/timer';
 import { generateTimerValues } from '@/app/generate-timer-values';
 import { secToHourMinSec } from '@/lib/time';
 
-function isIndexInInterval(timerIndex: string): boolean {
-    return timerIndex in timerObject.iobrokerInterval;
-}
+const isIndexInInterval = (timerIndex: string): boolean =>
+    timerIndex in timerObject.iobrokerInterval && timerObject.iobrokerInterval[timerIndex] !== null;
 
 export const interval = (sec: number, name: string, timer: Timer, int: number, singleInstance: boolean): void => {
     const adapter = store.adapter;

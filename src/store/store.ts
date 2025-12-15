@@ -177,7 +177,6 @@ class Store {
         return false;
     }
     activeTimeListChangedIsHandled(serial: string): void {
-        this.adapter.log.debug(`Set false to serial: ${serial}`);
         this.activeTimeListChanged[serial] = false;
     }
     getActiveTimeListChangedStatus(serial: string): boolean {
