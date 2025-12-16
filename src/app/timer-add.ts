@@ -6,6 +6,7 @@ import { getTimerByIndex, Timer } from '@/app/timer';
 import errorLogger from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
+import type { AlexaActiveTimerList } from '@/types/types';
 
 function addNewRawTimer(timerIndex: string): void {
     store.adapter.log.debug(`add index ${timerIndex}`);
@@ -16,7 +17,7 @@ function addNewRawTimer(timerIndex: string): void {
     });
 }
 
-export const timerAdd = async (): Promise<void> => {
+export const timerAdd = async (newActiveTimer: AlexaActiveTimerList): Promise<void> => {
     try {
         timerObject.timerCount.increment();
         const timerCount = timerObject.timerCount.getCount();
@@ -28,7 +29,7 @@ export const timerAdd = async (): Promise<void> => {
             addNewRawTimer(timerIndex);
         }
 
-        await startTimer();
+        await startTimer(newActiveTimer);
 
         writeStateInterval();
     } catch (e: any) {

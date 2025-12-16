@@ -35,14 +35,12 @@ module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_logging = __toESM(require("./lib/logging"));
 var import_reset = require("./app/reset");
-var import_timer_add = require("./app/timer-add");
 var import_timer_data = require("./config/timer-data");
 var import_timer = require("./app/timer");
 var import_store = __toESM(require("./store/store"));
-var import_timer_extend_or_shorten = require("./app/timer-extend-or-shorten");
 var import_write_state = require("./app/write-state");
-var import_state = require("./lib/state");
 var import_ioBrokerStateAndObjects = require("./app/ioBrokerStateAndObjects");
+var import_subscribeStates = require("./app/subscribeStates");
 let timeout_1;
 class AlexaTimerVis extends utils.Adapter {
   static instance;
@@ -75,29 +73,12 @@ class AlexaTimerVis extends utils.Adapter {
     import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer4 = new import_timer.Timer({ store: import_store.default });
-    const res = await this.getForeignStatesAsync("alexa2.0.*.activeTimerList");
-    this.log.error(JSON.stringify(Object.keys(res)));
+    await (0, import_subscribeStates.subscribeActiveTimerListStates)();
     await (0, import_ioBrokerStateAndObjects.setAdapterStatusAndInitStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
     this.on("stateChange", async (id, state) => {
       try {
-        if (await import_store.default.activeTimeListChangedHandler(id)) {
-          return;
-        }
-        if ((0, import_ioBrokerStateAndObjects.isAlexaStateIntentUpdated)({ state, id }) && (0, import_ioBrokerStateAndObjects.isTimerAction)(state)) {
-          if ((0, import_state.isIobrokerValue)(state)) {
-            import_store.default.timerAction = state.val;
-          }
-          if (import_store.default.isAddTimer()) {
-            await (0, import_timer_add.timerAdd)();
-            return;
-          }
-          if (import_store.default.isExtendTimer() || import_store.default.isShortenTimer()) {
-            await (0, import_timer_extend_or_shorten.extendOrShortTimer)();
-            return;
-          }
-          return;
-        }
+        await import_store.default.activeTimeListChangedHandler(id, state);
         if ((0, import_ioBrokerStateAndObjects.isAlexaTimerVisResetButton)(state, id)) {
           const timer = (0, import_timer.getTimerByIndex)((0, import_ioBrokerStateAndObjects.getIndexFromId)(id));
           if (timer) {

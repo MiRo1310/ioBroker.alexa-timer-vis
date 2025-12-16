@@ -1,6 +1,8 @@
 import type AlexaTimerVis from '@/main';
 import type { AlexaActiveTimerList, LocalAlexaActiveTimerList, StoreType, TimerCondition } from '@/types/types';
 import { timerDelete } from '@/app/timer-delete';
+import { timerAdd } from '@/app/timer-add';
+import { getTimerById } from '@/app/timer';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -25,10 +27,7 @@ class Store {
     interval: ioBroker.Interval | null | undefined;
     alexaTimerVisInstance: string;
     alexa2Instance: string | null;
-    activeTimeListChanged: Record<string, boolean>;
-    private subscribedIds: string[];
     private localeActiveTimerList: LocalAlexaActiveTimerList[];
-    private coolDownSetStatus = false;
     private timeouts: ioBroker.Timeout[] = [];
     constructor() {
         this.pathAlexaStateIntent = '';
@@ -54,8 +53,6 @@ class Store {
         this.timerAction = null;
         this.localeActiveTimerList = [];
         this.alexa2Instance = null;
-        this.activeTimeListChanged = {};
-        this.subscribedIds = [];
     }
 
     init(store: StoreType): void {
@@ -100,19 +97,10 @@ class Store {
     getAlexa2Instance(): string | null {
         return this.alexa2Instance;
     }
-    isAddTimer(): boolean {
-        return this.timerAction === 'SetNotificationIntent';
-    }
-    isShortenTimer(): boolean {
-        return this.timerAction === 'ShortenNotificationIntent';
-    }
-    isExtendTimer(): boolean {
-        return this.timerAction === 'ExtendNotificationIntent';
-    }
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
     }
-    getNewActiveTimerId(
+    getNewActiveTimer(
         activeTimerLists: AlexaActiveTimerList[] | undefined,
         deviceSerialNumber: string,
     ): AlexaActiveTimerList | undefined {
@@ -156,36 +144,34 @@ class Store {
     includesActiveTimerId(id: string): boolean {
         return this.localeActiveTimerList.some(t => t.id === id);
     }
-    getLocalActiveTimerList(): LocalAlexaActiveTimerList[] {
-        return this.localeActiveTimerList;
-    }
-    async activeTimeListChangedHandler(id: string, state: ioBroker.State | undefined | null): Promise<boolean> {
-        if (id.includes('.Timer.activeTimerList')) {
-            await timerDelete();
-
-            const serial = id.split('.')[3];
-
-            return true;
-        }
-        return false;
-    }
-    activeTimeListChangedIsHandled(serial: string): void {
-        this.activeTimeListChanged[serial] = false;
-    }
-    getActiveTimeListChangedStatus(serial: string): boolean {
-        return serial in this.activeTimeListChanged && this.activeTimeListChanged[serial];
-    }
-    async handleSubscribeForeignStates(id: string): Promise<void> {
-        if (this.subscribedIds.includes(id)) {
+    async activeTimeListChangedHandler(id: string, state: ioBroker.State | undefined | null): Promise<void> {
+        const list = state?.val;
+        if (!id.includes('.Timer.activeTimerList') || !list) {
             return;
         }
-        await this.adapter.subscribeForeignStatesAsync(id);
-        this.subscribedIds.push(id);
-        this.adapter.log.debug(`Subscribed: ${id}`);
-    }
-    addTimeout(timeout: ioBroker.Timeout | undefined): void {
-        if (timeout) {
-            this.timeouts.push(timeout);
+
+        let removedId: string | undefined = 'init';
+        let addedTimer: AlexaActiveTimerList | undefined = undefined;
+        let extendTimer: { listEl: AlexaActiveTimerList; changedSec: number } | undefined = undefined;
+
+        const updatedList = JSON.parse(String(list));
+        while (removedId || addedTimer || extendTimer) {
+            removedId = this.getRemovedTimerId(updatedList);
+            addedTimer = this.getNewActiveTimer(updatedList, id.split('.')[3]);
+            extendTimer = this.getActiveTimerWithDifferentTriggerTime(updatedList);
+
+            if (removedId) {
+                await timerDelete(removedId);
+            }
+            if (addedTimer) {
+                await timerAdd(addedTimer);
+            }
+            if (extendTimer) {
+                const timer = getTimerById(extendTimer.listEl.id);
+                if (timer) {
+                    timer.extendTimer(extendTimer.changedSec);
+                }
+            }
         }
     }
     clearTimeout(timeout: ioBroker.Timeout | undefined): void {

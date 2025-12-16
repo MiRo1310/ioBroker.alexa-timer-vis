@@ -161,7 +161,7 @@ class Timer {
       timerId: this.timerId
     });
   }
-  async init({ timerIndex, creationTime }) {
+  async init({ timerIndex, creationTime, newActiveTimer }) {
     this.timerIndex = timerIndex;
     try {
       const instance = import_store.default.getAlexa2Instance();
@@ -174,13 +174,9 @@ class Timer {
       if ((0, import_state.isIobrokerValue)(serialState)) {
         this.deviceSerialNumber = String(serialState.val);
       }
-      const serial = this.deviceSerialNumber;
-      const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
-      await import_store.default.handleSubscribeForeignStates(foreignId);
-      this.foreignActiveTimerListId = foreignId;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
       this.setCreationTime(creationTime);
-      await this.setValuesFromEchoDeviceTimerList();
+      this.setValuesFromEchoDeviceTimerList(newActiveTimer);
     } catch (e) {
       import_logging.default.send({ title: "Error in getInputDevice", e });
     }
@@ -191,10 +187,8 @@ class Timer {
   setLengthTimer(length) {
     this.lengthTimer = length;
   }
-  async setValuesFromEchoDeviceTimerList() {
+  setValuesFromEchoDeviceTimerList(newActiveTimer) {
     try {
-      const activeTimerList = await (0, import_ioBrokerStateAndObjects.getActiveAlexaTimerListForDevice)(this.deviceSerialNumber);
-      const newActiveTimer = import_store.default.getNewActiveTimerId(activeTimerList, this.deviceSerialNumber);
       if (newActiveTimer) {
         const { id, label, triggerTime: endTime } = newActiveTimer;
         this.timerId = id;

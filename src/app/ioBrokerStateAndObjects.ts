@@ -1,10 +1,9 @@
-import type { AlexaActiveTimerList, AlexaJson, TimerIndex } from '@/types/types';
+import type { AlexaJson, TimerIndex } from '@/types/types';
 import store from '@/store/store';
 import errorLogger from '@/lib/logging';
 import { isString } from '@/lib/string';
 import { createStates } from '@/app/createStates';
 import { isIobrokerValue } from '@/lib/state';
-import { sleep } from '@/lib/time';
 
 export const setDeviceNameInObject = async (index: TimerIndex, val: string): Promise<void> => {
     const pathArray = [store.getAlexaTimerVisInstance(), index];
@@ -51,56 +50,7 @@ export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
     await createStates(4);
 };
 
-export const isAlexaStateIntentUpdated = ({ state, id }: { state?: ioBroker.State | null; id: string }): boolean =>
-    isIobrokerValue(state) && isString(state.val) && state.val !== '' && id === store.pathAlexaStateIntent;
-
 export const isAlexaTimerVisResetButton = (state: ioBroker.State | null | undefined, id: string): boolean =>
     isIobrokerValue(state) && id.includes('.Reset');
-
-export const isTimerAction = (state: ioBroker.State | null | undefined): boolean =>
-    ['SetNotificationIntent', 'ShortenNotificationIntent', 'ExtendNotificationIntent'].includes(
-        String(state?.val ?? ''),
-    );
-
-export const getActiveAlexaTimerListForDevice = async (
-    deviceSerialNumber: string,
-    disableLoop = false,
-): Promise<AlexaActiveTimerList[] | undefined> => {
-    const instance = store.getAlexa2Instance();
-    if (!instance) {
-        errorLogger.send({
-            title: 'Instance not found',
-            level: 'warning',
-            additionalInfos: [['Instance not found in getActiveTimerListForDevice', '']],
-        });
-        return;
-    }
-
-    const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
-    const maxLoops = 30;
-    let loopIndex = 0;
-    const sleepMS = 500;
-    while (loopIndex < maxLoops && !store.getActiveTimeListChangedStatus(deviceSerialNumber) && !disableLoop) {
-        await sleep(sleepMS);
-        loopIndex++;
-    }
-    if (loopIndex === maxLoops) {
-        store.adapter.log.warn('No change in activeTimerList detected after maximum loops.');
-        errorLogger.send({
-            title: 'LoopIndex',
-            level: 'warning',
-            additionalInfos: [['Nothing after loop with sleep: ', sleepMS]],
-        });
-    }
-    if (loopIndex < maxLoops) {
-        store.adapter.log.debug(`activeTimerList changed detected after ${loopIndex} loops.`);
-    }
-    //TODO killen sich gegenseitig
-    store.activeTimeListChangedIsHandled(deviceSerialNumber);
-    store.adapter.log.warn('reset');
-    const activeTimerListState = await store.adapter.getForeignStateAsync(activeTimerListId);
-
-    return activeTimerListState?.val ? (JSON.parse(String(activeTimerListState.val)) as AlexaActiveTimerList[]) : [];
-};
 
 export const getIndexFromId = (id: string): string => id.split('.')?.[2] ?? '';

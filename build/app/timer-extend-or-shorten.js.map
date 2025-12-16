@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/app/timer-extend-or-shorten.ts"],
-  "sourcesContent": ["import errorLogger from '@/lib/logging';\nimport store from '@/store/store';\nimport { getTimerById } from '@/app/timer';\nimport { getActiveAlexaTimerList } from '@/app/timer-delete';\n\nexport const extendOrShortTimer = async (): Promise<void> => {\n    try {\n        const activeTimerList = await getActiveAlexaTimerList();\n        const activeTimerWithDifferentTriggerTime = store.getActiveTimerWithDifferentTriggerTime(activeTimerList);\n\n        if (!activeTimerWithDifferentTriggerTime) {\n            return;\n        }\n\n        const timer = getTimerById(activeTimerWithDifferentTriggerTime.listEl.id);\n        if (timer) {\n            timer.extendTimer(activeTimerWithDifferentTriggerTime.changedSec);\n        }\n    } catch (e: any) {\n        errorLogger.send({ title: 'Error in extendOrShortenTimer', e });\n    }\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,qBAAwB;AACxB,mBAAkB;AAClB,mBAA6B;AAC7B,0BAAwC;AAEjC,MAAM,qBAAqB,YAA2B;AACzD,MAAI;AACA,UAAM,kBAAkB,UAAM,6CAAwB;AACtD,UAAM,sCAAsC,aAAAA,QAAM,uCAAuC,eAAe;AAExG,QAAI,CAAC,qCAAqC;AACtC;AAAA,IACJ;AAEA,UAAM,YAAQ,2BAAa,oCAAoC,OAAO,EAAE;AACxE,QAAI,OAAO;AACP,YAAM,YAAY,oCAAoC,UAAU;AAAA,IACpE;AAAA,EACJ,SAAS,GAAQ;AACb,mBAAAC,QAAY,KAAK,EAAE,OAAO,iCAAiC,EAAE,CAAC;AAAA,EAClE;AACJ;",
-  "names": ["store", "errorLogger"]
-}
