@@ -2,19 +2,13 @@
 import * as utils from '@iobroker/adapter-core';
 import errorLogger from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
-import { timerAdd } from '@/app/timer-add';
 import { timerObject } from '@/config/timer-data';
 import { getTimerByIndex, Timer } from '@/app/timer';
 import store from '@/store/store';
-import type { TimerCondition } from '@/types/types';
-import { extendOrShortTimer } from '@/app/timer-extend-or-shorten';
 import { writeStates } from '@/app/write-state';
-import { isIobrokerValue } from '@/lib/state';
 import {
     getIndexFromId,
-    isAlexaStateIntentUpdated,
     isAlexaTimerVisResetButton,
-    isTimerAction,
     setAdapterStatusAndInitStateCreation,
 } from '@/app/ioBrokerStateAndObjects';
 import { subscribeActiveTimerListStates } from '@/app/subscribeStates';
@@ -61,24 +55,8 @@ export default class AlexaTimerVis extends utils.Adapter {
 
         this.on('stateChange', async (id, state) => {
             try {
-                if (await store.activeTimeListChangedHandler(id, state)) {
-                    return;
-                }
-                if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {
-                    if (isIobrokerValue(state)) {
-                        store.timerAction = state.val as TimerCondition;
-                    }
-                    if (store.isAddTimer()) {
-                        await timerAdd();
-                        return;
-                    }
-                    if (store.isExtendTimer() || store.isShortenTimer()) {
-                        await extendOrShortTimer();
-                        return;
-                    }
+                await store.activeTimeListChangedHandler(id, state);
 
-                    return;
-                }
                 if (isAlexaTimerVisResetButton(state, id)) {
                     const timer = getTimerByIndex(getIndexFromId(id));
                     if (timer) {

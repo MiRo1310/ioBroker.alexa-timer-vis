@@ -26,6 +26,7 @@ export type TimerIndex = string;
 export interface TimerInit {
     timerIndex: TimerIndex;
     creationTime: number;
+    newActiveTimer: AlexaActiveTimerList;
 }
 
 export type Timers = Record<TimerIndex, Timer>;

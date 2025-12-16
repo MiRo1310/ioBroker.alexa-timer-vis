@@ -1,9 +1,15 @@
-import type { GetOutputProperties, SetOutputProperties, TimerIndex, TimerInit } from '@/types/types';
+import type {
+    AlexaActiveTimerList,
+    GetOutputProperties,
+    SetOutputProperties,
+    TimerIndex,
+    TimerInit,
+} from '@/types/types';
 import errorLogger from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
 import { timerObject } from '@/config/timer-data';
-import { getActiveAlexaTimerListForDevice, setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
+import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 import { firstLetterToUpperCase } from '@/lib/string';
 import { isIobrokerValue } from '@/lib/state';
 import { millisecondsToString, secToHourMinSec } from '@/lib/time';
@@ -131,7 +137,7 @@ export class Timer {
         });
     }
 
-    async init({ timerIndex, creationTime }: TimerInit): Promise<void> {
+    async init({ timerIndex, creationTime, newActiveTimer }: TimerInit): Promise<void> {
         this.timerIndex = timerIndex;
         try {
             const instance = Store.getAlexa2Instance();
@@ -147,16 +153,11 @@ export class Timer {
             if (isIobrokerValue(serialState)) {
                 this.deviceSerialNumber = String(serialState.val);
             }
-            const serial = this.deviceSerialNumber;
-
-            const foreignId = `alexa2.${instance}.Echo-Devices.${serial}.Timer.activeTimerList`;
-            await Store.handleSubscribeForeignStates(foreignId);
-            this.foreignActiveTimerListId = foreignId;
 
             await setDeviceNameInObject(this.timerIndex, this.inputDeviceName);
             this.setCreationTime(creationTime);
 
-            await this.setValuesFromEchoDeviceTimerList();
+            this.setValuesFromEchoDeviceTimerList(newActiveTimer);
         } catch (e) {
             errorLogger.send({ title: 'Error in getInputDevice', e });
         }
@@ -168,12 +169,8 @@ export class Timer {
     setLengthTimer(length: string): void {
         this.lengthTimer = length;
     }
-    async setValuesFromEchoDeviceTimerList(): Promise<void> {
+    setValuesFromEchoDeviceTimerList(newActiveTimer: AlexaActiveTimerList): void {
         try {
-            const activeTimerList = await getActiveAlexaTimerListForDevice(this.deviceSerialNumber);
-
-            const newActiveTimer = Store.getNewActiveTimerId(activeTimerList, this.deviceSerialNumber);
-
             if (newActiveTimer) {
                 const { id, label, triggerTime: endTime } = newActiveTimer;
                 this.timerId = id;

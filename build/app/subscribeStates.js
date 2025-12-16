@@ -26,32 +26,22 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var timer_extend_or_shorten_exports = {};
-__export(timer_extend_or_shorten_exports, {
-  extendOrShortTimer: () => extendOrShortTimer
+var subscribeStates_exports = {};
+__export(subscribeStates_exports, {
+  subscribeActiveTimerListStates: () => subscribeActiveTimerListStates
 });
-module.exports = __toCommonJS(timer_extend_or_shorten_exports);
-var import_logging = __toESM(require("../lib/logging"));
+module.exports = __toCommonJS(subscribeStates_exports);
 var import_store = __toESM(require("../store/store"));
-var import_timer = require("../app/timer");
-var import_timer_delete = require("../app/timer-delete");
-const extendOrShortTimer = async () => {
-  try {
-    const activeTimerList = await (0, import_timer_delete.getActiveAlexaTimerList)();
-    const activeTimerWithDifferentTriggerTime = import_store.default.getActiveTimerWithDifferentTriggerTime(activeTimerList);
-    if (!activeTimerWithDifferentTriggerTime) {
-      return;
-    }
-    const timer = (0, import_timer.getTimerById)(activeTimerWithDifferentTriggerTime.listEl.id);
-    if (timer) {
-      timer.extendTimer(activeTimerWithDifferentTriggerTime.changedSec);
-    }
-  } catch (e) {
-    import_logging.default.send({ title: "Error in extendOrShortenTimer", e });
-  }
+const subscribeActiveTimerListStates = async () => {
+  const pattern = `alexa2.${import_store.default.alexa2Instance}.*.activeTimerList`;
+  const res = await import_store.default.adapter.getForeignStatesAsync(pattern);
+  Object.keys(res).forEach((id) => {
+    import_store.default.adapter.log.debug(`Subscribing to activeTimerList state: ${id}`);
+    import_store.default.adapter.subscribeForeignStates(id);
+  });
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  extendOrShortTimer
+  subscribeActiveTimerListStates
 });
-//# sourceMappingURL=timer-extend-or-shorten.js.map
+//# sourceMappingURL=subscribeStates.js.map

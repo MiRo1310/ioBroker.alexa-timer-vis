@@ -38,7 +38,7 @@ var import_interval = require("../app/interval");
 var import_logging = __toESM(require("../lib/logging"));
 var import_time = require("../lib/time");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
-const startTimer = async () => {
+const startTimer = async (newActiveTimer) => {
   try {
     const availableTimerIndex = getAvailableTimerIndex();
     import_timer_data.timerObject.timerStatus[availableTimerIndex] = true;
@@ -48,7 +48,7 @@ const startTimer = async () => {
     }
     const creationTime = alexaJson.creationTime;
     const timer = import_timer_data.timerObject.timer[availableTimerIndex];
-    await timer.init({ timerIndex: availableTimerIndex, creationTime });
+    await timer.init({ timerIndex: availableTimerIndex, creationTime, newActiveTimer });
     const name = timer.getName();
     const sec = timer.calculatedSeconds;
     if ((0, import_time.isMoreThanAMinute)(sec)) {

@@ -45,7 +45,7 @@ function addNewRawTimer(timerIndex) {
     store: import_store.default
   });
 }
-const timerAdd = async () => {
+const timerAdd = async (newActiveTimer) => {
   try {
     import_timer_data.timerObject.timerCount.increment();
     const timerCount = import_timer_data.timerObject.timerCount.getCount();
@@ -54,7 +54,7 @@ const timerAdd = async () => {
     if (!(0, import_timer.getTimerByIndex)(timerIndex)) {
       addNewRawTimer(timerIndex);
     }
-    await (0, import_timer_start.startTimer)();
+    await (0, import_timer_start.startTimer)(newActiveTimer);
     (0, import_write_state_interval.writeStateInterval)();
   } catch (e) {
     import_logging.default.send({ title: "Error timerAdd", e });

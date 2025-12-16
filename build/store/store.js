@@ -22,6 +22,8 @@ __export(store_exports, {
 });
 module.exports = __toCommonJS(store_exports);
 var import_timer_delete = require("../app/timer-delete");
+var import_timer_add = require("../app/timer-add");
+var import_timer = require("../app/timer");
 class Store {
   adapter;
   valHourForZero;
@@ -45,10 +47,7 @@ class Store {
   interval;
   alexaTimerVisInstance;
   alexa2Instance;
-  activeTimeListChanged;
-  subscribedIds;
   localeActiveTimerList;
-  coolDownSetStatus = false;
   timeouts = [];
   constructor() {
     this.pathAlexaStateIntent = "";
@@ -74,8 +73,6 @@ class Store {
     this.timerAction = null;
     this.localeActiveTimerList = [];
     this.alexa2Instance = null;
-    this.activeTimeListChanged = {};
-    this.subscribedIds = [];
   }
   init(store) {
     this.adapter = store.adapter;
@@ -119,19 +116,10 @@ class Store {
   getAlexa2Instance() {
     return this.alexa2Instance;
   }
-  isAddTimer() {
-    return this.timerAction === "SetNotificationIntent";
-  }
-  isShortenTimer() {
-    return this.timerAction === "ShortenNotificationIntent";
-  }
-  isExtendTimer() {
-    return this.timerAction === "ExtendNotificationIntent";
-  }
   getAlexaTimerVisInstance() {
     return this.alexaTimerVisInstance;
   }
-  getNewActiveTimerId(activeTimerLists, deviceSerialNumber) {
+  getNewActiveTimer(activeTimerLists, deviceSerialNumber) {
     const newestTimer = activeTimerLists == null ? void 0 : activeTimerLists.find((t) => !this.includesActiveTimerId(t.id));
     if (newestTimer) {
       this.localeActiveTimerList.push({ ...newestTimer, deviceSerialNumber });
@@ -170,45 +158,31 @@ class Store {
   includesActiveTimerId(id) {
     return this.localeActiveTimerList.some((t) => t.id === id);
   }
-  getLocalActiveTimerList() {
-    return this.localeActiveTimerList;
-  }
-  async activeTimeListChangedHandler(id) {
-    if (id.includes(".Timer.activeTimerList")) {
-      await (0, import_timer_delete.timerDelete)();
-      if (this.coolDownSetStatus) {
-        return true;
-      }
-      this.coolDownSetStatus = true;
-      const serial = id.split(".")[3];
-      this.adapter.log.warn("Changed activeTimerList - don't set states again for 2 seconds");
-      this.activeTimeListChanged[serial] = true;
-      const timeout = this.adapter.setTimeout(() => {
-        this.coolDownSetStatus = false;
-        this.adapter.log.warn("Cooldown ended - can set states again");
-      }, 2e3);
-      this.addTimeout(timeout);
-      return true;
-    }
-    return false;
-  }
-  activeTimeListChangedIsHandled(serial) {
-    this.activeTimeListChanged[serial] = false;
-  }
-  getActiveTimeListChangedStatus(serial) {
-    return serial in this.activeTimeListChanged && this.activeTimeListChanged[serial];
-  }
-  async handleSubscribeForeignStates(id) {
-    if (this.subscribedIds.includes(id)) {
+  async activeTimeListChangedHandler(id, state) {
+    const list = state == null ? void 0 : state.val;
+    if (!id.includes(".Timer.activeTimerList") || !list) {
       return;
     }
-    await this.adapter.subscribeForeignStatesAsync(id);
-    this.subscribedIds.push(id);
-    this.adapter.log.debug(`Subscribed: ${id}`);
-  }
-  addTimeout(timeout) {
-    if (timeout) {
-      this.timeouts.push(timeout);
+    let removedId = "init";
+    let addedTimer = void 0;
+    let extendTimer = void 0;
+    const updatedList = JSON.parse(String(list));
+    while (removedId || addedTimer || extendTimer) {
+      removedId = this.getRemovedTimerId(updatedList);
+      addedTimer = this.getNewActiveTimer(updatedList, id.split(".")[3]);
+      extendTimer = this.getActiveTimerWithDifferentTriggerTime(updatedList);
+      if (removedId) {
+        await (0, import_timer_delete.timerDelete)(removedId);
+      }
+      if (addedTimer) {
+        await (0, import_timer_add.timerAdd)(addedTimer);
+      }
+      if (extendTimer) {
+        const timer = (0, import_timer.getTimerById)(extendTimer.listEl.id);
+        if (timer) {
+          timer.extendTimer(extendTimer.changedSec);
+        }
+      }
     }
   }
   clearTimeout(timeout) {

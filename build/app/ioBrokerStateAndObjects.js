@@ -28,12 +28,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var ioBrokerStateAndObjects_exports = {};
 __export(ioBrokerStateAndObjects_exports, {
-  getActiveAlexaTimerListForDevice: () => getActiveAlexaTimerListForDevice,
   getIndexFromId: () => getIndexFromId,
   getParsedAlexaJson: () => getParsedAlexaJson,
-  isAlexaStateIntentUpdated: () => isAlexaStateIntentUpdated,
   isAlexaTimerVisResetButton: () => isAlexaTimerVisResetButton,
-  isTimerAction: () => isTimerAction,
   setAdapterStatusAndInitStateCreation: () => setAdapterStatusAndInitStateCreation,
   setDeviceNameInObject: () => setDeviceNameInObject
 });
@@ -43,7 +40,6 @@ var import_logging = __toESM(require("../lib/logging"));
 var import_string = require("../lib/string");
 var import_createStates = require("../app/createStates");
 var import_state = require("../lib/state");
-var import_time = require("../lib/time");
 const setDeviceNameInObject = async (index, val) => {
   const pathArray = [import_store.default.getAlexaTimerVisInstance(), index];
   const { adapter } = import_store.default;
@@ -85,60 +81,16 @@ const setAdapterStatusAndInitStateCreation = async () => {
   await adapter.setState("info.connection", true, true);
   await (0, import_createStates.createStates)(4);
 };
-const isAlexaStateIntentUpdated = ({ state, id }) => (0, import_state.isIobrokerValue)(state) && (0, import_string.isString)(state.val) && state.val !== "" && id === import_store.default.pathAlexaStateIntent;
 const isAlexaTimerVisResetButton = (state, id) => (0, import_state.isIobrokerValue)(state) && id.includes(".Reset");
-const isTimerAction = (state) => {
-  var _a;
-  return ["SetNotificationIntent", "ShortenNotificationIntent", "ExtendNotificationIntent"].includes(
-    String((_a = state == null ? void 0 : state.val) != null ? _a : "")
-  );
-};
-const getActiveAlexaTimerListForDevice = async (deviceSerialNumber, disableLoop = false) => {
-  const instance = import_store.default.getAlexa2Instance();
-  if (!instance) {
-    import_logging.default.send({
-      title: "Instance not found",
-      level: "warning",
-      additionalInfos: [["Instance not found in getActiveTimerListForDevice", ""]]
-    });
-    return;
-  }
-  const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
-  const maxLoops = 30;
-  let loopIndex = 0;
-  const sleepMS = 500;
-  while (loopIndex < maxLoops && !import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber) && !disableLoop) {
-    await (0, import_time.sleep)(sleepMS);
-    loopIndex++;
-  }
-  if (loopIndex === maxLoops) {
-    import_store.default.adapter.log.warn("No change in activeTimerList detected after maximum loops.");
-    import_logging.default.send({
-      title: "LoopIndex",
-      level: "warning",
-      additionalInfos: [["Nothing after loop with sleep: ", sleepMS]]
-    });
-  }
-  if (loopIndex < maxLoops) {
-    import_store.default.adapter.log.debug(`activeTimerList changed detected after ${loopIndex} loops.`);
-  }
-  import_store.default.activeTimeListChangedIsHandled(deviceSerialNumber);
-  import_store.default.adapter.log.warn("reset");
-  const activeTimerListState = await import_store.default.adapter.getForeignStateAsync(activeTimerListId);
-  return (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
-};
 const getIndexFromId = (id) => {
   var _a, _b;
   return (_b = (_a = id.split(".")) == null ? void 0 : _a[2]) != null ? _b : "";
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  getActiveAlexaTimerListForDevice,
   getIndexFromId,
   getParsedAlexaJson,
-  isAlexaStateIntentUpdated,
   isAlexaTimerVisResetButton,
-  isTimerAction,
   setAdapterStatusAndInitStateCreation,
   setDeviceNameInObject
 });
