@@ -41,9 +41,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, s
 
             adapter.log.debug('Timer stopped');
 
-            if (isIndexInInterval(timerIndex)) {
-                clearIntervalByTimerIndex(timerIndex, timer);
-            }
+            clearIntervalByTimerIndex(timerIndex, timer);
         }
     }, int);
 };

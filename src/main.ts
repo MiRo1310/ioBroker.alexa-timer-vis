@@ -6,11 +6,7 @@ import { timerObject } from '@/config/timer-data';
 import { getTimerByIndex, Timer } from '@/app/timer';
 import store from '@/store/store';
 import { writeStates } from '@/app/write-state';
-import {
-    getIndexFromId,
-    isAlexaTimerVisResetButton,
-    setAdapterStatusAndInitStateCreation,
-} from '@/app/ioBrokerStateAndObjects';
+import { getIndexFromId, isAlexaTimerVisResetButton, initStateCreation } from '@/app/ioBrokerStateAndObjects';
 import { subscribeActiveTimerListStates } from '@/app/subscribeStates';
 
 let timeout_1: ioBroker.Timeout | undefined;
@@ -50,7 +46,7 @@ export default class AlexaTimerVis extends utils.Adapter {
         timerObject.timer.timer4 = new Timer({ store });
 
         await subscribeActiveTimerListStates();
-        await setAdapterStatusAndInitStateCreation();
+        await initStateCreation();
         await resetAllTimerValuesAndStateValues();
 
         this.on('stateChange', async (id, state) => {
@@ -67,8 +63,6 @@ export default class AlexaTimerVis extends utils.Adapter {
                 errorLogger.send({ title: 'Error in stateChange', e });
             }
         });
-
-        this.subscribeForeignStates(store.pathAlexaStateIntent);
     }
 
     async onUnload(callback: () => void): Promise<void> {

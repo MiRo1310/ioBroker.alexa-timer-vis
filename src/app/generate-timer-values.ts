@@ -50,7 +50,7 @@ export const generateTimerValues = (timer: Timer, sec: number, name: string): nu
         name,
     });
 
-    return remainingSeconds;
+    return remainingSeconds < 0 ? 0 : remainingSeconds;
 };
 
 function isGreaterThanSixtyFiveMinutes(hour: string, minutes: string, seconds: string): GenerateTimeStringObject {

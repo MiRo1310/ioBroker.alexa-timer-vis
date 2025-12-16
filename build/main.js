@@ -74,7 +74,7 @@ class AlexaTimerVis extends utils.Adapter {
     import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer4 = new import_timer.Timer({ store: import_store.default });
     await (0, import_subscribeStates.subscribeActiveTimerListStates)();
-    await (0, import_ioBrokerStateAndObjects.setAdapterStatusAndInitStateCreation)();
+    await (0, import_ioBrokerStateAndObjects.initStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
     this.on("stateChange", async (id, state) => {
       try {
@@ -89,7 +89,6 @@ class AlexaTimerVis extends utils.Adapter {
         import_logging.default.send({ title: "Error in stateChange", e });
       }
     });
-    this.subscribeForeignStates(import_store.default.pathAlexaStateIntent);
   }
   async onUnload(callback) {
     try {

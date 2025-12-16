@@ -9,7 +9,6 @@ class Store {
     valHourForZero: string;
     valMinuteForZero: string;
     valSecondForZero: string;
-    pathAlexaStateIntent: string;
     pathAlexaSummary: string;
     intervalMore60: number;
     intervalLess60: number;
@@ -29,8 +28,8 @@ class Store {
     alexa2Instance: string | null;
     private localeActiveTimerList: LocalAlexaActiveTimerList[];
     private timeouts: ioBroker.Timeout[] = [];
+    private upDateCoolDown = false;
     constructor() {
-        this.pathAlexaStateIntent = '';
         this.intervalLess60 = 0;
         this.intervalMore60 = 0;
         this.unitHour1 = 'Stunde';
@@ -78,7 +77,6 @@ class Store {
         this.valHourForZero = valHourForZero;
         this.valMinuteForZero = valMinuteForZero;
         this.valSecondForZero = valSecondForZero;
-        this.pathAlexaStateIntent = `${alexa}.History.intent`;
         this.alexa2Instance = alexa.split('.')[1];
         this.pathAlexaSummary = `${alexa}.History.summary`;
         this.intervalMore60 = intervall1;
@@ -149,7 +147,10 @@ class Store {
         if (!id.includes('.Timer.activeTimerList') || !list) {
             return;
         }
-
+        if (this.upDateCoolDown) {
+            return;
+        }
+        this.upDateCoolDown = true;
         let removedId: string | undefined = 'init';
         let addedTimer: AlexaActiveTimerList | undefined = undefined;
         let extendTimer: { listEl: AlexaActiveTimerList; changedSec: number } | undefined = undefined;
@@ -173,6 +174,9 @@ class Store {
                 }
             }
         }
+        this.adapter.setTimeout(() => {
+            this.upDateCoolDown = false;
+        }, 2000);
     }
     clearTimeout(timeout: ioBroker.Timeout | undefined): void {
         this.adapter.clearTimeout(timeout);
