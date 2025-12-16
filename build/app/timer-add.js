@@ -47,9 +47,10 @@ function addNewRawTimer(timerIndex) {
 }
 const timerAdd = async () => {
   try {
-    import_timer_data.timerObject.timerCount++;
-    await (0, import_createStates.createStates)(import_timer_data.timerObject.timerCount);
-    const timerIndex = `timer${import_timer_data.timerObject.timerCount}`;
+    import_timer_data.timerObject.timerCount.increment();
+    const timerCount = import_timer_data.timerObject.timerCount.getCount();
+    await (0, import_createStates.createStates)(timerCount);
+    const timerIndex = `timer${timerCount}`;
     if (!(0, import_timer.getTimerByIndex)(timerIndex)) {
       addNewRawTimer(timerIndex);
     }

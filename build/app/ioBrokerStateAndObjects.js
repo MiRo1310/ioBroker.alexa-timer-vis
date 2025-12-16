@@ -104,20 +104,26 @@ const getActiveAlexaTimerListForDevice = async (deviceSerialNumber, disableLoop 
     return;
   }
   const activeTimerListId = `alexa2.${instance}.Echo-Devices.${deviceSerialNumber}.Timer.activeTimerList`;
+  const maxLoops = 30;
   let loopIndex = 0;
   const sleepMS = 500;
-  while (loopIndex < 20 && !import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber) && !disableLoop) {
+  while (loopIndex < maxLoops && !import_store.default.getActiveTimeListChangedStatus(deviceSerialNumber) && !disableLoop) {
     await (0, import_time.sleep)(sleepMS);
     loopIndex++;
   }
-  if (loopIndex === 20) {
+  if (loopIndex === maxLoops) {
+    import_store.default.adapter.log.warn("No change in activeTimerList detected after maximum loops.");
     import_logging.default.send({
       title: "LoopIndex",
       level: "warning",
       additionalInfos: [["Nothing after loop with sleep: ", sleepMS]]
     });
   }
+  if (loopIndex < maxLoops) {
+    import_store.default.adapter.log.debug(`activeTimerList changed detected after ${loopIndex} loops.`);
+  }
   import_store.default.activeTimeListChangedIsHandled(deviceSerialNumber);
+  import_store.default.adapter.log.warn("reset");
   const activeTimerListState = await import_store.default.adapter.getForeignStateAsync(activeTimerListId);
   return (activeTimerListState == null ? void 0 : activeTimerListState.val) ? JSON.parse(String(activeTimerListState.val)) : [];
 };

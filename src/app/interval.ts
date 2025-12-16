@@ -36,7 +36,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, s
         }
 
         if (timeLeftSec <= 0 || !timerObject.timerStatus[timerIndex]) {
-            timerObject.timerCount--;
+            timerObject.timerCount.decrement();
             await timer.reset();
 
             adapter.log.debug('Timer stopped');

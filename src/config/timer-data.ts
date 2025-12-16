@@ -1,7 +1,8 @@
 import type { TimerObject } from '@/types/types';
+import TimerCount from '@/app/timerCount';
 
 export const timerObject: TimerObject = {
-    timerCount: 0, // Anzahl aktiver Timer
+    timerCount: TimerCount, // Anzahl aktiver Timer
 
     intervalTime: 1000,
 

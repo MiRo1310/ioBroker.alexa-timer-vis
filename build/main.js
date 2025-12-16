@@ -75,6 +75,8 @@ class AlexaTimerVis extends utils.Adapter {
     import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.timerObject.timer.timer4 = new import_timer.Timer({ store: import_store.default });
+    const res = await this.getForeignStatesAsync("alexa2.0.*.activeTimerList");
+    this.log.error(JSON.stringify(Object.keys(res)));
     await (0, import_ioBrokerStateAndObjects.setAdapterStatusAndInitStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
     this.on("stateChange", async (id, state) => {

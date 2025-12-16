@@ -18,11 +18,11 @@ function addNewRawTimer(timerIndex: string): void {
 
 export const timerAdd = async (): Promise<void> => {
     try {
-        timerObject.timerCount++;
+        timerObject.timerCount.increment();
+        const timerCount = timerObject.timerCount.getCount();
+        await createStates(timerCount);
 
-        await createStates(timerObject.timerCount);
-
-        const timerIndex = `timer${timerObject.timerCount}`;
+        const timerIndex = `timer${timerCount}`;
 
         if (!getTimerByIndex(timerIndex)) {
             addNewRawTimer(timerIndex);
