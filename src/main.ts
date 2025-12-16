@@ -17,6 +17,7 @@ import {
     isTimerAction,
     setAdapterStatusAndInitStateCreation,
 } from '@/app/ioBrokerStateAndObjects';
+import { subscribeActiveTimerListStates } from '@/app/subscribeStates';
 
 let timeout_1: ioBroker.Timeout | undefined;
 
@@ -54,12 +55,13 @@ export default class AlexaTimerVis extends utils.Adapter {
         timerObject.timer.timer3 = new Timer({ store });
         timerObject.timer.timer4 = new Timer({ store });
 
+        await subscribeActiveTimerListStates();
         await setAdapterStatusAndInitStateCreation();
         await resetAllTimerValuesAndStateValues();
 
         this.on('stateChange', async (id, state) => {
             try {
-                if (await store.activeTimeListChangedHandler(id)) {
+                if (await store.activeTimeListChangedHandler(id, state)) {
                     return;
                 }
                 if (isAlexaStateIntentUpdated({ state: state, id: id }) && isTimerAction(state)) {

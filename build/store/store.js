@@ -181,9 +181,11 @@ class Store {
       }
       this.coolDownSetStatus = true;
       const serial = id.split(".")[3];
+      this.adapter.log.warn("Changed activeTimerList - don't set states again for 2 seconds");
       this.activeTimeListChanged[serial] = true;
       const timeout = this.adapter.setTimeout(() => {
         this.coolDownSetStatus = false;
+        this.adapter.log.warn("Cooldown ended - can set states again");
       }, 2e3);
       this.addTimeout(timeout);
       return true;

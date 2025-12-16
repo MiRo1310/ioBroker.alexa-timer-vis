@@ -159,19 +159,12 @@ class Store {
     getLocalActiveTimerList(): LocalAlexaActiveTimerList[] {
         return this.localeActiveTimerList;
     }
-    async activeTimeListChangedHandler(id: string): Promise<boolean> {
+    async activeTimeListChangedHandler(id: string, state: ioBroker.State | undefined | null): Promise<boolean> {
         if (id.includes('.Timer.activeTimerList')) {
             await timerDelete();
-            if (this.coolDownSetStatus) {
-                return true;
-            }
-            this.coolDownSetStatus = true;
+
             const serial = id.split('.')[3];
-            this.activeTimeListChanged[serial] = true;
-            const timeout = this.adapter.setTimeout(() => {
-                this.coolDownSetStatus = false;
-            }, 2000);
-            this.addTimeout(timeout);
+
             return true;
         }
         return false;

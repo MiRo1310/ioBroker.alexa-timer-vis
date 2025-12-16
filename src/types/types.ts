@@ -1,5 +1,6 @@
 import type AlexaTimerVis from '@/main';
 import type { Timer } from '@/app/timer';
+import type TimerCount from '@/app/timerCount';
 
 export interface GenerateTimeStringObject {
     timeString: string;
@@ -30,7 +31,7 @@ export interface TimerInit {
 export type Timers = Record<TimerIndex, Timer>;
 
 export interface TimerObject {
-    timerCount: number;
+    timerCount: typeof TimerCount;
     intervalTime: number;
     timerStatus: Record<keyof Timers, boolean>;
     timer: Timers;

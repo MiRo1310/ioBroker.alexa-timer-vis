@@ -58,7 +58,7 @@ const interval = (sec, name, timer, int, singleInstance) => {
       interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerStatus[timerIndex]) {
-      import_timer_data.timerObject.timerCount--;
+      import_timer_data.timerObject.timerCount.decrement();
       await timer.reset();
       adapter.log.debug("Timer stopped");
       if (isIndexInInterval(timerIndex)) {
