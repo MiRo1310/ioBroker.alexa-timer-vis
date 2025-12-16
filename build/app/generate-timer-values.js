@@ -64,7 +64,7 @@ const generateTimerValues = (timer, sec, name) => {
     lengthTimer,
     name
   });
-  return remainingSeconds;
+  return remainingSeconds < 0 ? 0 : remainingSeconds;
 };
 function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds) {
   if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {

@@ -30,8 +30,8 @@ var ioBrokerStateAndObjects_exports = {};
 __export(ioBrokerStateAndObjects_exports, {
   getIndexFromId: () => getIndexFromId,
   getParsedAlexaJson: () => getParsedAlexaJson,
+  initStateCreation: () => initStateCreation,
   isAlexaTimerVisResetButton: () => isAlexaTimerVisResetButton,
-  setAdapterStatusAndInitStateCreation: () => setAdapterStatusAndInitStateCreation,
   setDeviceNameInObject: () => setDeviceNameInObject
 });
 module.exports = __toCommonJS(ioBrokerStateAndObjects_exports);
@@ -70,13 +70,8 @@ async function getParsedAlexaJson() {
     import_logging.default.send({ title: "Error in getParsedAlexaJson", e });
   }
 }
-const setAdapterStatusAndInitStateCreation = async () => {
+const initStateCreation = async () => {
   const adapter = import_store.default.adapter;
-  const result = await adapter.getForeignObjectAsync(import_store.default.pathAlexaStateIntent);
-  if (!result) {
-    adapter.log.warn(`The State ${import_store.default.pathAlexaStateIntent} was not found!`);
-    return;
-  }
   adapter.log.info("Alexa State was found");
   await adapter.setState("info.connection", true, true);
   await (0, import_createStates.createStates)(4);
@@ -90,8 +85,8 @@ const getIndexFromId = (id) => {
 0 && (module.exports = {
   getIndexFromId,
   getParsedAlexaJson,
+  initStateCreation,
   isAlexaTimerVisResetButton,
-  setAdapterStatusAndInitStateCreation,
   setDeviceNameInObject
 });
 //# sourceMappingURL=ioBrokerStateAndObjects.js.map

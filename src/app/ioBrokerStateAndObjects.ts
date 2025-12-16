@@ -37,13 +37,8 @@ export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
     }
 }
 
-export const setAdapterStatusAndInitStateCreation = async (): Promise<void> => {
+export const initStateCreation = async (): Promise<void> => {
     const adapter = store.adapter;
-    const result = await adapter.getForeignObjectAsync(store.pathAlexaStateIntent);
-    if (!result) {
-        adapter.log.warn(`The State ${store.pathAlexaStateIntent} was not found!`);
-        return;
-    }
     adapter.log.info('Alexa State was found');
     await adapter.setState('info.connection', true, true);
 
