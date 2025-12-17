@@ -82,7 +82,7 @@ export interface GetOutputProperties {
 }
 
 export interface SetOutputProperties {
-    remainingTimeInSeconds: number;
+    remainingSeconds: number;
     name: string;
     hours: string;
     minutes: string;

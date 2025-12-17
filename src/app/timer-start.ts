@@ -38,7 +38,7 @@ export const startTimer = async (newActiveTimer: AlexaActiveTimerList): Promise<
 };
 
 export function getAvailableTimerIndex(): TimerIndex {
-    const timerIndexes = Object.keys(timers.status);
+    const timerIndexes = Object.keys(timers.status).filter(key => key.startsWith('timer'));
     for (let i = 0; i < timerIndexes.length; i++) {
         const key = timerIndexes[i];
 

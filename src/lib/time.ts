@@ -1,5 +1,5 @@
 import store from '@/store/store';
-import type { GenerateTimeStringObject, SecToHourMinSecReturn } from '@/types/types';
+import type { SecToHourMinSecReturn } from '@/types/types';
 
 const getSecondUnit = (seconds: number): string => (seconds != 1 ? store.unitSecond2 : store.unitSecond1);
 
@@ -55,9 +55,8 @@ function getDoubleIntValues(
 }
 
 function includedSeconds(valSec: number, hourInSec: number, minutesInSec: number): number {
-    let seconds = valSec - hourInSec - minutesInSec;
-    seconds = Math.round(seconds);
-    return seconds;
+    const seconds = valSec - hourInSec - minutesInSec;
+    return Math.round(seconds);
 }
 
 function includedMinutes(valSec: number, hourInSec: number): { minutesInSec: number; minutes: number } {
@@ -74,8 +73,20 @@ function includedHours(valSec: number): { hourInSec: number; hour: number } {
     return { hourInSec, hour };
 }
 
+/**
+ * Check if seconds are more than a minute
+ *
+ * @param sec {number} Seconds
+ */
 export const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 
+/**
+ * Reset superior values if they are zero. 00 to empty string
+ *
+ * @param hour {string} Hours
+ * @param minutes {string} Minutes
+ * @param seconds {string} Seconds
+ */
 export function resetSuperiorValue(
     hour: string,
     minutes: string,
@@ -103,36 +114,40 @@ export const millisecondsToString = (milliseconds: number): string =>
 
 export const sleep = (ms: number): Promise<unknown> => new Promise(resolve => setTimeout(resolve, ms));
 
-export const isShorterThanAMinute = ({ minutes, seconds, timeString }: GenerateTimeStringObject): string =>
-    parseInt(minutes) == 0 ? `${seconds} ${store.unitSecond3}` : timeString;
-
-export const isShorterThanSixtyMinutes = ({
-    hour,
-    minutes,
-    seconds,
-    timeString,
-}: GenerateTimeStringObject): GenerateTimeStringObject => ({
-    timeString: parseInt(hour) == 0 ? `${minutes}:${seconds} ${store.unitMinute3}` : timeString,
-    hour,
-    minutes,
-    seconds,
-});
-
-export const isShorterOrEqualToSixtyFiveMinutes = ({
-    hour,
-    minutes,
-    seconds,
-    timeString,
-}: GenerateTimeStringObject): GenerateTimeStringObject => ({
-    timeString:
-        parseInt(hour) === 1 && parseInt(minutes) <= 5
-            ? `${hour}:${minutes}:${seconds} ${store.unitHour3}`
-            : timeString,
-    hour,
-    minutes,
-    seconds,
-});
-
 export const getMsLeftFromNowToEndtime = (endTimeMS: number): number => endTimeMS - new Date().getTime();
 
 export const getSecondsFromMS = (millisecondsLeft: number): number => Math.round(millisecondsLeft / 1000);
+
+/**
+ * Get timer string with units based on hour, minutes and seconds
+ *
+ * @param hour {string} hour
+ * @param minutes {string} minutes
+ * @param seconds {string} seconds
+ */
+export function getTimerStringUnitBasedOnTime(hour: string, minutes: string, seconds: string): string {
+    const totalMinutes = parseInt(hour) * 60 + parseInt(minutes);
+
+    if (totalMinutes < 1) {
+        return `${seconds} ${store.unitSecond3}`;
+    }
+    if (totalMinutes <= 65) {
+        return `${totalMinutes}:${seconds} ${store.unitMinute3}`;
+    }
+    return `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
+}
+
+/**
+ * Get time unit string based on time left in seconds
+ *
+ * @param leftSec {number} - Time left in seconds
+ */
+export function getTimeUnit(leftSec: number): string {
+    if (leftSec >= 3600) {
+        return ` ${store.unitHour3}`;
+    }
+    if (leftSec >= 60) {
+        return ` ${store.unitMinute3}`;
+    }
+    return ` ${store.unitSecond3}`;
+}
