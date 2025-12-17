@@ -210,13 +210,13 @@ export class Timer {
         this.creationTime = creationTime;
         this.creationTimeString = millisecondsToString(creationTime);
     }
-    setOutputProperties(props: SetOutputProperties): void {
+    setTimerValues(props: SetOutputProperties): void {
         this.hours = props.hours;
         this.minutes = props.minutes;
         this.seconds = props.seconds;
         this.stringTimer1 = props.stringTimer1;
         this.stringTimer2 = props.stringTimer2;
-        this.remainingTimeInSeconds = props.remainingTimeInSeconds;
+        this.remainingTimeInSeconds = props.remainingSeconds;
         this.lengthTimer = props.lengthTimer;
         this.mathPercent();
         this.isActive = true;

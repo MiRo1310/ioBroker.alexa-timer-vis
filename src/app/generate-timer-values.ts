@@ -1,16 +1,22 @@
-import type { GenerateTimeStringObject } from '@/types/types';
 import store from '@/store/store';
 import type { Timer } from '@/app/timer';
 import {
     getMsLeftFromNowToEndtime,
     getSecondsFromMS,
-    isShorterOrEqualToSixtyFiveMinutes,
-    isShorterThanAMinute,
-    isShorterThanSixtyMinutes,
+    getTimeUnit,
+    getTimerStringUnitBasedOnTime,
     resetSuperiorValue,
     secToHourMinSec,
 } from '@/lib/time';
 
+/**
+ * Generate timer values and update the timer object
+ *
+ * @param timer {Timer} - The timer object
+ * @param sec {number} - The total seconds for the timer
+ * @param name {string} - The name of the timer
+ * @returns remaining seconds of the timer
+ */
 export const generateTimerValues = (timer: Timer, sec: number, name: string): number => {
     const endTime = timer.getOutputProperties().endTimeNumber;
     if (endTime < 0) {
@@ -27,11 +33,7 @@ export const generateTimerValues = (timer: Timer, sec: number, name: string): nu
 
     const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingSeconds)}`;
 
-    const stringTimer2 = isShorterThanAMinute(
-        isShorterThanSixtyMinutes(
-            isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds)),
-        ),
-    );
+    const stringTimer2 = getTimerStringUnitBasedOnTime(hour, minutes, seconds);
 
     if (!timer.isExtendOrShortenTimer()) {
         timer.setVoiceInputAsSeconds(sec);
@@ -39,34 +41,16 @@ export const generateTimerValues = (timer: Timer, sec: number, name: string): nu
 
     ({ hour, minutes, seconds } = resetSuperiorValue(hour, minutes, seconds));
 
-    timer.setOutputProperties({
+    timer.setTimerValues({
         hours: hour,
         minutes,
         seconds,
         stringTimer1,
         stringTimer2,
-        remainingTimeInSeconds: remainingSeconds,
+        remainingSeconds,
         lengthTimer,
         name,
     });
 
     return remainingSeconds < 0 ? 0 : remainingSeconds;
 };
-
-function isGreaterThanSixtyFiveMinutes(hour: string, minutes: string, seconds: string): GenerateTimeStringObject {
-    if (parseInt(hour) > 1 || (parseInt(hour) === 1 && parseInt(minutes) > 5)) {
-        const timeString = `${hour}:${minutes}:${seconds} ${store.unitHour3}`;
-        return { timeString, hour, minutes, seconds };
-    }
-    return { timeString: '', hour, minutes, seconds };
-}
-
-function getTimeUnit(timeLeftSec: number): string {
-    if (timeLeftSec >= 3600) {
-        return ` ${store.unitHour3}`;
-    }
-    if (timeLeftSec >= 60) {
-        return ` ${store.unitMinute3}`;
-    }
-    return ` ${store.unitSecond3}`;
-}
