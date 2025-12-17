@@ -78,7 +78,7 @@ const writeStatesByTimerIndex = async (timerIndex, reset) => {
 };
 async function writeStates({ reset }) {
   try {
-    for (const timerIndex in import_timer_data.timerObject.timerStatus) {
+    for (const timerIndex in import_timer_data.timers.status) {
       await writeStatesByTimerIndex(timerIndex, reset);
     }
   } catch (e) {

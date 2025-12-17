@@ -8,7 +8,7 @@ import type {
 import errorLogger from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
-import { timerObject } from '@/config/timer-data';
+import { timers } from '@/config/timer-data';
 import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 import { firstLetterToUpperCase } from '@/lib/string';
 import { isIobrokerValue } from '@/lib/state';
@@ -262,7 +262,7 @@ export class Timer {
         this.endTime = 0;
         this.initialTimer = '';
         if (this.timerIndex) {
-            timerObject.timerStatus[this.timerIndex] = false;
+            timers.status[this.timerIndex] = false;
             await setDeviceNameInObject(this.timerIndex, '');
         }
         this.isActive = false;
@@ -274,11 +274,11 @@ export class Timer {
 }
 
 export function getTimerByIndex(timerIndex: TimerIndex): Timer | undefined {
-    return timerObject.timer[timerIndex];
+    return timers.timerList[timerIndex];
 }
 
 export function getTimerById(id: string): Timer | undefined {
-    const timerList = Object.keys(timerObject.timer);
-    const timerIndex = timerList.find(value => timerObject.timer[value].getTimerId() === id);
-    return timerIndex ? timerObject.timer?.[timerIndex] : undefined;
+    const timerList = Object.keys(timers.timerList);
+    const timerIndex = timerList.find(value => timers.timerList[value].getTimerId() === id);
+    return timerIndex ? timers.timerList?.[timerIndex] : undefined;
 }

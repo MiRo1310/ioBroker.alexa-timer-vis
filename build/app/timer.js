@@ -279,7 +279,7 @@ class Timer {
     this.endTime = 0;
     this.initialTimer = "";
     if (this.timerIndex) {
-      import_timer_data.timerObject.timerStatus[this.timerIndex] = false;
+      import_timer_data.timers.status[this.timerIndex] = false;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, "");
     }
     this.isActive = false;
@@ -289,13 +289,13 @@ class Timer {
   }
 }
 function getTimerByIndex(timerIndex) {
-  return import_timer_data.timerObject.timer[timerIndex];
+  return import_timer_data.timers.timer[timerIndex];
 }
 function getTimerById(id) {
   var _a;
-  const timerList = Object.keys(import_timer_data.timerObject.timer);
-  const timerIndex = timerList.find((value) => import_timer_data.timerObject.timer[value].getTimerId() === id);
-  return timerIndex ? (_a = import_timer_data.timerObject.timer) == null ? void 0 : _a[timerIndex] : void 0;
+  const timerList = Object.keys(import_timer_data.timers.timer);
+  const timerIndex = timerList.find((value) => import_timer_data.timers.timer[value].getTimerId() === id);
+  return timerIndex ? (_a = import_timer_data.timers.timer) == null ? void 0 : _a[timerIndex] : void 0;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

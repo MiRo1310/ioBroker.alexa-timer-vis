@@ -41,13 +41,13 @@ var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async (newActiveTimer) => {
   try {
     const availableTimerIndex = getAvailableTimerIndex();
-    import_timer_data.timerObject.timerStatus[availableTimerIndex] = true;
+    import_timer_data.timers.status[availableTimerIndex] = true;
     const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
     if (!alexaJson) {
       return;
     }
     const creationTime = alexaJson.creationTime;
-    const timer = import_timer_data.timerObject.timer[availableTimerIndex];
+    const timer = import_timer_data.timers.timer[availableTimerIndex];
     await timer.init({ timerIndex: availableTimerIndex, creationTime, newActiveTimer });
     const name = timer.getName();
     const sec = timer.calculatedSeconds;
@@ -55,17 +55,17 @@ const startTimer = async (newActiveTimer) => {
       (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
       return;
     }
-    import_timer_data.timerObject.timer[availableTimerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
+    import_timer_data.timers.timer[availableTimerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
     (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
   } catch (e) {
     import_logging.default.send({ title: "Error startTimer", e });
   }
 };
 function getAvailableTimerIndex() {
-  const timerIndexes = Object.keys(import_timer_data.timerObject.timerStatus);
+  const timerIndexes = Object.keys(import_timer_data.timers.status);
   for (let i = 0; i < timerIndexes.length; i++) {
     const key = timerIndexes[i];
-    if (!import_timer_data.timerObject.timerStatus[key]) {
+    if (!import_timer_data.timers.status[key]) {
       return key;
     }
   }

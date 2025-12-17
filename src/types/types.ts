@@ -32,11 +32,11 @@ export interface TimerInit {
 export type Timers = Record<TimerIndex, Timer>;
 
 export interface TimerObject {
-    timerCount: typeof TimerCount;
+    count: typeof TimerCount;
     intervalTime: number;
-    timerStatus: Record<keyof Timers, boolean>;
-    timer: Timers;
-    iobrokerInterval: Record<string, ioBroker.Interval | null | undefined>;
+    status: Record<keyof Timers, boolean>;
+    timerList: Timers;
+    interval: Record<string, ioBroker.Interval | null | undefined>;
 }
 
 export interface StoreType {

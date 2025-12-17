@@ -1,10 +1,10 @@
 import errorLogger from '@/lib/logging';
-import { timerObject } from '@/config/timer-data';
+import { timers } from '@/config/timer-data';
 import { getTimerByIndex } from '@/app/timer';
 
 export const timerDelete = async (id: string): Promise<void> => {
     try {
-        for (const timerIndex in timerObject.timer) {
+        for (const timerIndex in timers.timerList) {
             const timer = getTimerByIndex(timerIndex);
 
             if (timer && timer.getTimerId() === id) {

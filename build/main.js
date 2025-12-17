@@ -69,10 +69,10 @@ class AlexaTimerVis extends utils.Adapter {
     }
     import_logging.default.init();
     await this.setState("info.connection", false, true);
-    import_timer_data.timerObject.timer.timer1 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timerObject.timer.timer2 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timerObject.timer.timer3 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timerObject.timer.timer4 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timer.timer1 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timer.timer2 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timer.timer3 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timer.timer4 = new import_timer.Timer({ store: import_store.default });
     await (0, import_subscribeStates.subscribeActiveTimerListStates)();
     await (0, import_ioBrokerStateAndObjects.initStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
@@ -97,8 +97,8 @@ class AlexaTimerVis extends utils.Adapter {
       this.clearTimeout(timeout_1);
       this.clearInterval(import_store.default.interval);
       import_store.default.clearTimeouts();
-      for (const element in import_timer_data.timerObject.iobrokerInterval) {
-        this.clearInterval(import_timer_data.timerObject.iobrokerInterval[element]);
+      for (const element in import_timer_data.timers.interval) {
+        this.clearInterval(import_timer_data.timers.interval[element]);
       }
       this.log.debug("Intervals and timeouts cleared!");
       callback();

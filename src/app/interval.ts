@@ -1,11 +1,11 @@
-import { timerObject } from '@/config/timer-data';
+import { timers } from '@/config/timer-data';
 import store from '@/store/store';
 import type { Timer } from '@/app/timer';
 import { generateTimerValues } from '@/app/generate-timer-values';
 import { secToHourMinSec } from '@/lib/time';
 
 const isIndexInInterval = (timerIndex: string): boolean =>
-    timerIndex in timerObject.iobrokerInterval && timerObject.iobrokerInterval[timerIndex] !== null;
+    timerIndex in timers.interval && timers.interval[timerIndex] !== null;
 
 export const interval = (sec: number, name: string, timer: Timer, int: number, singleInstance: boolean): void => {
     const adapter = store.adapter;
@@ -22,7 +22,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, s
         return;
     }
 
-    timerObject.iobrokerInterval[timerIndex] = adapter.setInterval(async () => {
+    timers.interval[timerIndex] = adapter.setInterval(async () => {
         const timeLeftSec = generateTimerValues(timer, sec, name);
 
         if (timeLeftSec <= 60 && !singleInstance) {
@@ -32,11 +32,11 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, s
                 clearIntervalByTimerIndex(timerIndex, timer);
             }
 
-            interval(sec, name, timer, timerObject.timer[timerIndex].getInterval(), true);
+            interval(sec, name, timer, timers.timerList[timerIndex].getInterval(), true);
         }
 
-        if (timeLeftSec <= 0 || !timerObject.timerStatus[timerIndex]) {
-            timerObject.timerCount.decrement();
+        if (timeLeftSec <= 0 || !timers.status[timerIndex]) {
+            timers.count.decrement();
             await timer.reset();
 
             adapter.log.debug('Timer stopped');
@@ -47,7 +47,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, s
 };
 
 function clearIntervalByTimerIndex(timerIndex: string, timer: Timer): void {
-    store.adapter.clearInterval(timerObject.iobrokerInterval[timerIndex]);
+    store.adapter.clearInterval(timers.interval[timerIndex]);
     timer.isActive = false;
-    timerObject.iobrokerInterval[timerIndex] = null;
+    timers.interval[timerIndex] = null;
 }
