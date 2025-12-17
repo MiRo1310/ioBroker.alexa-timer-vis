@@ -1,5 +1,5 @@
 import store from '@/store/store';
-import { timerObject } from '@/config/timer-data';
+import { timers } from '@/config/timer-data';
 import { writeStates } from '@/app/write-state';
 import errorLogger from '@/lib/logging';
 
@@ -17,14 +17,14 @@ export const writeStateInterval = (): void => {
                 errorLogger.send({ title: 'Error writeStateIntervall', e });
             });
 
-            if (!Object.keys(timerObject.timer)?.find(t => timerObject.timer[t].isActive)) {
+            if (!Object.keys(timers.timerList)?.find(t => timers.timerList[t].isActive)) {
                 adapter.setStateChanged('all_Timer.alive', false, true);
                 adapter.clearInterval(store.interval);
 
                 store.interval = null;
                 adapter.log.debug('Interval stopped!');
             }
-        }, timerObject.intervalTime);
+        }, timers.intervalTime);
     } catch (e: any) {
         errorLogger.send({ title: 'Error writeStateIntervall', e });
 

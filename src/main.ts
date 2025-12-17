@@ -2,7 +2,7 @@
 import * as utils from '@iobroker/adapter-core';
 import errorLogger from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
-import { timerObject } from '@/config/timer-data';
+import { timers } from '@/config/timer-data';
 import { getTimerByIndex, Timer } from '@/app/timer';
 import store from '@/store/store';
 import { writeStates } from '@/app/write-state';
@@ -40,10 +40,10 @@ export default class AlexaTimerVis extends utils.Adapter {
         errorLogger.init();
 
         await this.setState('info.connection', false, true);
-        timerObject.timer.timer1 = new Timer({ store });
-        timerObject.timer.timer2 = new Timer({ store });
-        timerObject.timer.timer3 = new Timer({ store });
-        timerObject.timer.timer4 = new Timer({ store });
+        timers.timerList.timer1 = new Timer({ store });
+        timers.timerList.timer2 = new Timer({ store });
+        timers.timerList.timer3 = new Timer({ store });
+        timers.timerList.timer4 = new Timer({ store });
 
         await subscribeActiveTimerListStates();
         await initStateCreation();
@@ -76,8 +76,8 @@ export default class AlexaTimerVis extends utils.Adapter {
             this.clearInterval(store.interval);
             store.clearTimeouts();
 
-            for (const element in timerObject.iobrokerInterval) {
-                this.clearInterval(timerObject.iobrokerInterval[element]);
+            for (const element in timers.interval) {
+                this.clearInterval(timers.interval[element]);
             }
 
             this.log.debug('Intervals and timeouts cleared!');

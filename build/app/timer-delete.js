@@ -36,7 +36,7 @@ var import_timer_data = require("../config/timer-data");
 var import_timer = require("../app/timer");
 const timerDelete = async (id) => {
   try {
-    for (const timerIndex in import_timer_data.timerObject.timer) {
+    for (const timerIndex in import_timer_data.timers.timer) {
       const timer = (0, import_timer.getTimerByIndex)(timerIndex);
       if (timer && timer.getTimerId() === id) {
         await timer.reset();

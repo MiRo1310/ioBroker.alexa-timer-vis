@@ -1,5 +1,5 @@
 import { createStates } from '@/app/createStates';
-import { timerObject } from '@/config/timer-data';
+import { timers } from '@/config/timer-data';
 
 import store from '@/store/store';
 import { getTimerByIndex, Timer } from '@/app/timer';
@@ -10,17 +10,17 @@ import type { AlexaActiveTimerList } from '@/types/types';
 
 function addNewRawTimer(timerIndex: string): void {
     store.adapter.log.debug(`add index ${timerIndex}`);
-    timerObject.timerStatus[timerIndex] = false;
+    timers.status[timerIndex] = false;
 
-    timerObject.timer[timerIndex] = new Timer({
+    timers.timerList[timerIndex] = new Timer({
         store,
     });
 }
 
 export const timerAdd = async (newActiveTimer: AlexaActiveTimerList): Promise<void> => {
     try {
-        timerObject.timerCount.increment();
-        const timerCount = timerObject.timerCount.getCount();
+        timers.count.increment();
+        const timerCount = timers.count.getCount();
         await createStates(timerCount);
 
         const timerIndex = `timer${timerCount}`;

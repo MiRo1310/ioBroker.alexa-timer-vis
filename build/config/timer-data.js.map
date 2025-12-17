@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/config/timer-data.ts"],
-  "sourcesContent": ["import type { TimerObject } from '@/types/types';\nimport TimerCount from '@/app/timerCount';\n\nexport const timerObject: TimerObject = {\n    timerCount: TimerCount, // Anzahl aktiver Timer\n\n    intervalTime: 1000,\n\n    timerStatus: {\n        timer1: false,\n        timer2: false,\n        timer3: false,\n        timer4: false,\n    },\n\n    timer: {},\n    iobrokerInterval: { timer1: null },\n};\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,wBAAuB;AAEhB,MAAM,cAA2B;AAAA,EACpC,YAAY,kBAAAA;AAAA;AAAA,EAEZ,cAAc;AAAA,EAEd,aAAa;AAAA,IACT,QAAQ;AAAA,IACR,QAAQ;AAAA,IACR,QAAQ;AAAA,IACR,QAAQ;AAAA,EACZ;AAAA,EAEA,OAAO,CAAC;AAAA,EACR,kBAAkB,EAAE,QAAQ,KAAK;AACrC;",
+  "sourcesContent": ["import type { TimerObject } from '@/types/types';\nimport TimerCount from '@/app/timerCount';\n\nexport const timers: TimerObject = {\n    count: TimerCount, // Anzahl aktiver Timer\n\n    intervalTime: 1000,\n\n    status: {\n        timer1: false,\n        timer2: false,\n        timer3: false,\n        timer4: false,\n    },\n\n    timer: {},\n    interval: { timer1: null },\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,wBAAuB;AAEhB,MAAM,SAAsB;AAAA,EAC/B,OAAO,kBAAAA;AAAA;AAAA,EAEP,cAAc;AAAA,EAEd,QAAQ;AAAA,IACJ,QAAQ;AAAA,IACR,QAAQ;AAAA,IACR,QAAQ;AAAA,IACR,QAAQ;AAAA,EACZ;AAAA,EAEA,OAAO,CAAC;AAAA,EACR,UAAU,EAAE,QAAQ,KAAK;AAC7B;",
   "names": ["TimerCount"]
 }

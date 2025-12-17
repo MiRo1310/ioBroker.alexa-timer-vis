@@ -35,7 +35,7 @@ var import_timer_data = require("../config/timer-data");
 var import_store = __toESM(require("../store/store"));
 var import_generate_timer_values = require("../app/generate-timer-values");
 var import_time = require("../lib/time");
-const isIndexInInterval = (timerIndex) => timerIndex in import_timer_data.timerObject.iobrokerInterval && import_timer_data.timerObject.iobrokerInterval[timerIndex] !== null;
+const isIndexInInterval = (timerIndex) => timerIndex in import_timer_data.timers.interval && import_timer_data.timers.interval[timerIndex] !== null;
 const interval = (sec, name, timer, int, singleInstance) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
@@ -48,17 +48,17 @@ const interval = (sec, name, timer, int, singleInstance) => {
   if (isIndexInInterval(timerIndex) || !timer.isActive) {
     return;
   }
-  import_timer_data.timerObject.iobrokerInterval[timerIndex] = adapter.setInterval(async () => {
+  import_timer_data.timers.interval[timerIndex] = adapter.setInterval(async () => {
     const timeLeftSec = (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
     if (timeLeftSec <= 60 && !singleInstance) {
       singleInstance = true;
       if (isIndexInInterval(timerIndex)) {
         clearIntervalByTimerIndex(timerIndex, timer);
       }
-      interval(sec, name, timer, import_timer_data.timerObject.timer[timerIndex].getInterval(), true);
+      interval(sec, name, timer, import_timer_data.timers.timer[timerIndex].getInterval(), true);
     }
-    if (timeLeftSec <= 0 || !import_timer_data.timerObject.timerStatus[timerIndex]) {
-      import_timer_data.timerObject.timerCount.decrement();
+    if (timeLeftSec <= 0 || !import_timer_data.timers.status[timerIndex]) {
+      import_timer_data.timers.count.decrement();
       await timer.reset();
       adapter.log.debug("Timer stopped");
       clearIntervalByTimerIndex(timerIndex, timer);
@@ -66,9 +66,9 @@ const interval = (sec, name, timer, int, singleInstance) => {
   }, int);
 };
 function clearIntervalByTimerIndex(timerIndex, timer) {
-  import_store.default.adapter.clearInterval(import_timer_data.timerObject.iobrokerInterval[timerIndex]);
+  import_store.default.adapter.clearInterval(import_timer_data.timers.interval[timerIndex]);
   timer.isActive = false;
-  import_timer_data.timerObject.iobrokerInterval[timerIndex] = null;
+  import_timer_data.timers.interval[timerIndex] = null;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

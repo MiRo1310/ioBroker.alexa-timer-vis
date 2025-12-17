@@ -178,7 +178,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex 1', () => {
-        sinon.stub(timerData.timerObject, 'timerStatus').value({
+        sinon.stub(timerData.timers, 'status').value({
             timer1: false,
             timer2: true,
             timer3: true,
@@ -189,7 +189,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex 2', () => {
-        sinon.stub(timerData.timerObject, 'timerStatus').value({
+        sinon.stub(timerData.timers, 'status').value({
             timer1: true,
             timer2: false,
             timer3: true,
@@ -200,7 +200,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex 3', () => {
-        sinon.stub(timerData.timerObject, 'timerStatus').value({
+        sinon.stub(timerData.timers, 'status').value({
             timer1: true,
             timer2: true,
             timer3: true,
@@ -211,7 +211,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex with invalid key 3', () => {
-        sinon.stub(timerData.timerObject, 'timerStatus').value({
+        sinon.stub(timerData.timers, 'status').value({
             timer1: true,
             timer2: true,
             timer3: true,
