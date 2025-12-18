@@ -133,7 +133,7 @@ export class Timer {
         });
     }
 
-    async init({ timerIndex, creationTime, newActiveTimer }: TimerInit): Promise<void> {
+    async init({ timerIndex, newActiveTimer }: TimerInit): Promise<void> {
         this.timerIndex = timerIndex;
         try {
             const instance = Store.getAlexa2Instance();
@@ -149,7 +149,7 @@ export class Timer {
             if (isIobrokerValue(serialState)) {
                 this.deviceSerialNumber = String(serialState.val);
             }
-
+            const creationTime = newActiveTimer.triggerTime - newActiveTimer.durationMillis;
             await setDeviceNameInObject(this.timerIndex, this.inputDeviceName);
             this.setCreationTime(creationTime);
 
