@@ -218,6 +218,8 @@ export class Timer {
         await this.reset();
     }
     async reset(): Promise<void> {
+        //TODO remove log
+        this.adapter.log.debug(`Reset timer ${this.timerIndex}`);
         this.hours = Store.valHourForZero;
         this.minutes = Store.valMinuteForZero;
         this.seconds = Store.valSecondForZero;

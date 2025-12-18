@@ -58,6 +58,7 @@ const interval = (timer, int, singleInstance) => {
       interval(timer, timer.getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timers.status[timerIndex]) {
+      import_store.default.adapter.log.debug(JSON.stringify(import_timer_data.timers.status[timerIndex]));
       import_timer_data.timers.count.decrement();
       await timer.reset();
       adapter.log.debug("Timer stopped");
