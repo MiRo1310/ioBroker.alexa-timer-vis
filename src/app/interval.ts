@@ -32,7 +32,7 @@ export const interval = (timer: Timer, int: number, singleInstance: boolean): vo
                 clearIntervalByTimerIndex(timerIndex, timer);
             }
 
-            interval(timer, timers.timerList[timerIndex].getInterval(), true);
+            interval(timer, timer.getInterval(), true);
         }
 
         if (timeLeftSec <= 0 || !timers.status[timerIndex]) {

@@ -36,26 +36,26 @@ var import_store = __toESM(require("../store/store"));
 var import_generate_timer_values = require("../app/generate-timer-values");
 var import_time = require("../lib/time");
 const isIndexInInterval = (timerIndex) => timerIndex in import_timer_data.timers.interval && import_timer_data.timers.interval[timerIndex] !== null;
-const interval = (sec, name, timer, int, singleInstance) => {
+const interval = (timer, int, singleInstance) => {
   const adapter = import_store.default.adapter;
   const timerIndex = timer.getTimerIndex();
   if (!timerIndex) {
     return;
   }
-  (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
-  const { string } = (0, import_time.secToHourMinSec)(sec, false);
+  (0, import_generate_timer_values.generateTimerValues)(timer);
+  const { string } = (0, import_time.secToHourMinSec)(timer.calculatedSeconds, false);
   timer.setLengthTimer(string);
   if (isIndexInInterval(timerIndex) || !timer.isActive) {
     return;
   }
   import_timer_data.timers.interval[timerIndex] = adapter.setInterval(async () => {
-    const timeLeftSec = (0, import_generate_timer_values.generateTimerValues)(timer, sec, name);
+    const timeLeftSec = (0, import_generate_timer_values.generateTimerValues)(timer);
     if (timeLeftSec <= 60 && !singleInstance) {
       singleInstance = true;
       if (isIndexInInterval(timerIndex)) {
         clearIntervalByTimerIndex(timerIndex, timer);
       }
-      interval(sec, name, timer, import_timer_data.timers.timerList[timerIndex].getInterval(), true);
+      interval(timer, timer.getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timers.status[timerIndex]) {
       import_timer_data.timers.count.decrement();

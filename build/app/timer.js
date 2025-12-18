@@ -63,7 +63,6 @@ class Timer {
   remainingTimeInSeconds;
   timerId;
   adapter;
-  foreignActiveTimerListId;
   alexaInstance;
   initialTimer;
   calculatedSeconds;
@@ -91,13 +90,9 @@ class Timer {
     this.extendOrShortenTimer = false;
     this.remainingTimeInSeconds = 0;
     this.timerId = "";
-    this.foreignActiveTimerListId = null;
     this.alexaInstance = null;
     this.initialTimer = "";
     this.calculatedSeconds = 0;
-  }
-  getName() {
-    return this.timerName;
   }
   getTimerIndex() {
     return this.timerIndex;
@@ -161,8 +156,7 @@ class Timer {
       timerId: this.timerId
     });
   }
-  async init({ timerIndex, creationTime, newActiveTimer }) {
-    var _a;
+  async init({ timerIndex, newActiveTimer }) {
     this.timerIndex = timerIndex;
     try {
       const instance = import_store.default.getAlexa2Instance();
@@ -175,9 +169,7 @@ class Timer {
       if ((0, import_state.isIobrokerValue)(serialState)) {
         this.deviceSerialNumber = String(serialState.val);
       }
-      await (0, import_time.sleep)(2e3);
-      const creationState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.creationTime`);
-      this.adapter.log.error((_a = JSON.stringify(creationState == null ? void 0 : creationState.val)) != null ? _a : "No creation time found in objects");
+      const creationTime = newActiveTimer.triggerTime - newActiveTimer.durationMillis;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
       this.setCreationTime(creationTime);
       this.setValuesFromEchoDeviceTimerList(newActiveTimer);
@@ -194,10 +186,7 @@ class Timer {
   setValuesFromEchoDeviceTimerList(newActiveTimer) {
     try {
       if (newActiveTimer) {
-        const { id, label, triggerTime: endTime } = newActiveTimer;
-        this.adapter.log.warn(`Endtime from Echo Device's Active Timer List: ${endTime}`);
-        this.adapter.log.warn(`Creationtime from Echo Device's Active Timer List: ${this.creationTime}`);
-        this.adapter.log.warn(` ${endTime - this.creationTime}`);
+        const { id, label, triggerTime: endTime, durationMillis } = newActiveTimer;
         this.timerId = id;
         this.setTimerName(label);
         if (this.endTime < 0) {
@@ -205,27 +194,15 @@ class Timer {
         }
         this.endTime = endTime;
         this.endTimeString = (0, import_time.millisecondsToString)(endTime);
-        this.setInitialTimer();
+        this.calculatedSeconds = durationMillis / 1e3;
+        this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
       }
     } catch (e) {
       import_logging.default.send({ title: "Error in setIdFromEcoDeviceTimerList", e });
     }
   }
-  setInitialTimer() {
-    const secEnd = Math.floor(this.endTime / 1e3);
-    const secStart = Math.floor(this.creationTime / 1e3);
-    this.calculatedSeconds = this.removeDifferenzInCalculatedSeconds(secEnd - secStart);
-    this.updateCreationTimeAfterCalculateSeconds(this.calculatedSeconds);
-    this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
-  }
-  updateCreationTimeAfterCalculateSeconds(sec) {
-    this.setCreationTime(this.endTime - sec * 1e3);
-  }
   updateInitialTimer(sec) {
     this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds + sec, true).initialString;
-  }
-  removeDifferenzInCalculatedSeconds(sec) {
-    return Math.floor(sec / 10) * 10;
   }
   setInterval(interval) {
     this.interval = interval;
