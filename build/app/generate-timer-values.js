@@ -33,7 +33,8 @@ __export(generate_timer_values_exports, {
 module.exports = __toCommonJS(generate_timer_values_exports);
 var import_store = __toESM(require("../store/store"));
 var import_time = require("../lib/time");
-const generateTimerValues = (timer, sec, name) => {
+const generateTimerValues = (timer) => {
+  const sec = timer.calculatedSeconds;
   const endTime = timer.getOutputProperties().endTimeNumber;
   if (endTime < 0) {
     import_store.default.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
@@ -57,8 +58,7 @@ const generateTimerValues = (timer, sec, name) => {
     stringTimer1,
     stringTimer2,
     remainingSeconds,
-    lengthTimer,
-    name
+    lengthTimer
   });
   return remainingSeconds < 0 ? 0 : remainingSeconds;
 };

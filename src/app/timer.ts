@@ -37,7 +37,6 @@ export class Timer {
     private remainingTimeInSeconds: number;
     private timerId: string;
     private readonly adapter: AlexaTimerVis;
-    private foreignActiveTimerListId: string | null;
     private alexaInstance: string | null;
     private initialTimer: string;
     calculatedSeconds: number;
@@ -65,7 +64,6 @@ export class Timer {
         this.extendOrShortenTimer = false;
         this.remainingTimeInSeconds = 0;
         this.timerId = '';
-        this.foreignActiveTimerListId = null;
         this.alexaInstance = null;
         this.initialTimer = '';
         this.calculatedSeconds = 0;
@@ -132,7 +130,6 @@ export class Timer {
             timerId: this.timerId,
         });
     }
-
     async init({ timerIndex, newActiveTimer }: TimerInit): Promise<void> {
         this.timerIndex = timerIndex;
         try {
@@ -158,7 +155,6 @@ export class Timer {
             errorLogger.send({ title: 'Error in getInputDevice', e });
         }
     }
-
     setVoiceInputAsSeconds(seconds: number): void {
         this.voiceInputAsSeconds = seconds;
     }
@@ -168,10 +164,7 @@ export class Timer {
     setValuesFromEchoDeviceTimerList(newActiveTimer: AlexaActiveTimerList): void {
         try {
             if (newActiveTimer) {
-                const { id, label, triggerTime: endTime } = newActiveTimer;
-                this.adapter.log.warn(`Endtime from Echo Device's Active Timer List: ${endTime}`);
-                this.adapter.log.warn(`Creationtime from Echo Device's Active Timer List: ${this.creationTime}`);
-                this.adapter.log.warn(` ${endTime - this.creationTime}`);
+                const { id, label, triggerTime: endTime, durationMillis } = newActiveTimer;
 
                 this.timerId = id;
                 this.setTimerName(label);
@@ -180,28 +173,15 @@ export class Timer {
                 }
                 this.endTime = endTime;
                 this.endTimeString = millisecondsToString(endTime);
-                this.setInitialTimer();
+                this.calculatedSeconds = durationMillis / 1000;
+                this.initialTimer = secToHourMinSec(this.calculatedSeconds, true).initialString;
             }
         } catch (e) {
             errorLogger.send({ title: 'Error in setIdFromEcoDeviceTimerList', e });
         }
     }
-    private setInitialTimer(): void {
-        const secEnd = Math.floor(this.endTime / 1000);
-        const secStart = Math.floor(this.creationTime / 1000);
-        this.calculatedSeconds = this.removeDifferenzInCalculatedSeconds(secEnd - secStart);
-        this.updateCreationTimeAfterCalculateSeconds(this.calculatedSeconds);
-        this.initialTimer = secToHourMinSec(this.calculatedSeconds, true).initialString;
-    }
-    private updateCreationTimeAfterCalculateSeconds(sec: number): void {
-        this.setCreationTime(this.endTime - sec * 1000);
-    }
     private updateInitialTimer(sec: number): void {
         this.initialTimer = secToHourMinSec(this.calculatedSeconds + sec, true).initialString;
-    }
-
-    removeDifferenzInCalculatedSeconds(sec: number): number {
-        return Math.floor(sec / 10) * 10;
     }
     setInterval(interval: number): void {
         this.interval = interval;

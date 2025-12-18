@@ -37,28 +37,18 @@ var import_store = __toESM(require("../store/store"));
 var import_interval = require("../app/interval");
 var import_logging = __toESM(require("../lib/logging"));
 var import_time = require("../lib/time");
-var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 const startTimer = async (newActiveTimer) => {
   try {
     const availableTimerIndex = getAvailableTimerIndex();
     import_timer_data.timers.status[availableTimerIndex] = true;
-    const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
-    if (!alexaJson) {
-      return;
-    }
-    const creationTime = alexaJson.creationTime;
-    import_store.default.adapter.log.warn(`Starting timer at index ${availableTimerIndex} with creationTime ${creationTime}`);
     const timer = import_timer_data.timers.timerList[availableTimerIndex];
-    await timer.init({ timerIndex: availableTimerIndex, creationTime, newActiveTimer });
-    const name = timer.getName();
-    const sec = timer.calculatedSeconds;
-    import_store.default.adapter.log.warn(`Starting timer with sec ${sec}`);
-    if ((0, import_time.isMoreThanAMinute)(sec)) {
-      (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
+    await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
+    timer.setInterval(import_store.default.intervalLess60 * 1e3);
+    if ((0, import_time.isMoreThanAMinute)(timer.calculatedSeconds)) {
+      (0, import_interval.interval)(timer, import_store.default.intervalMore60 * 1e3, false);
       return;
     }
-    import_timer_data.timers.timerList[availableTimerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
-    (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
+    (0, import_interval.interval)(timer, import_store.default.intervalLess60 * 1e3, true);
   } catch (e) {
     import_logging.default.send({ title: "Error startTimer", e });
   }
