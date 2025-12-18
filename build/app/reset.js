@@ -35,8 +35,8 @@ var import_store = __toESM(require("../store/store"));
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
 async function resetAllTimerValuesAndStateValues() {
-  for (const timerIndex in import_timer_data.timers.timer) {
-    const timer = import_timer_data.timers.timer[timerIndex];
+  for (const timerIndex in import_timer_data.timers.timerList) {
+    const timer = import_timer_data.timers.timerList[timerIndex];
     await timer.reset();
     await (0, import_write_state.writeStates)({ reset: true });
   }

@@ -69,10 +69,10 @@ class AlexaTimerVis extends utils.Adapter {
     }
     import_logging.default.init();
     await this.setState("info.connection", false, true);
-    import_timer_data.timers.timer.timer1 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timers.timer.timer2 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timers.timer.timer3 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timers.timer.timer4 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timerList.timer1 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timerList.timer2 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timerList.timer3 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.timers.timerList.timer4 = new import_timer.Timer({ store: import_store.default });
     await (0, import_subscribeStates.subscribeActiveTimerListStates)();
     await (0, import_ioBrokerStateAndObjects.initStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();

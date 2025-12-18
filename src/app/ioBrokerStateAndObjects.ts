@@ -29,6 +29,7 @@ export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
             return;
         }
         const jsonAlexa = await store.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
+
         if (isString(jsonAlexa?.val)) {
             return JSON.parse(jsonAlexa.val);
         }

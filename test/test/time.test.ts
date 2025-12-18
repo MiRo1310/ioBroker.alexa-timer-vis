@@ -1,8 +1,5 @@
 import { expect } from 'chai';
 import { getTimerStringUnitBasedOnTime, millisecondsToString } from '@/lib/time';
-import sinon from 'sinon';
-import * as timerData from '@/config/timer-data';
-import { getAvailableTimerIndex } from '@/app/timer-start';
 import store from '@/store/store';
 
 describe('Time Tests', () => {

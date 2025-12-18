@@ -162,6 +162,7 @@ class Timer {
     });
   }
   async init({ timerIndex, creationTime, newActiveTimer }) {
+    var _a;
     this.timerIndex = timerIndex;
     try {
       const instance = import_store.default.getAlexa2Instance();
@@ -174,6 +175,9 @@ class Timer {
       if ((0, import_state.isIobrokerValue)(serialState)) {
         this.deviceSerialNumber = String(serialState.val);
       }
+      await (0, import_time.sleep)(2e3);
+      const creationState = await this.adapter.getForeignStateAsync(`alexa2.${instance}.History.creationTime`);
+      this.adapter.log.error((_a = JSON.stringify(creationState == null ? void 0 : creationState.val)) != null ? _a : "No creation time found in objects");
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, this.inputDeviceName);
       this.setCreationTime(creationTime);
       this.setValuesFromEchoDeviceTimerList(newActiveTimer);
@@ -191,6 +195,9 @@ class Timer {
     try {
       if (newActiveTimer) {
         const { id, label, triggerTime: endTime } = newActiveTimer;
+        this.adapter.log.warn(`Endtime from Echo Device's Active Timer List: ${endTime}`);
+        this.adapter.log.warn(`Creationtime from Echo Device's Active Timer List: ${this.creationTime}`);
+        this.adapter.log.warn(` ${endTime - this.creationTime}`);
         this.timerId = id;
         this.setTimerName(label);
         if (this.endTime < 0) {
@@ -227,13 +234,13 @@ class Timer {
     this.creationTime = creationTime;
     this.creationTimeString = (0, import_time.millisecondsToString)(creationTime);
   }
-  setOutputProperties(props) {
+  setTimerValues(props) {
     this.hours = props.hours;
     this.minutes = props.minutes;
     this.seconds = props.seconds;
     this.stringTimer1 = props.stringTimer1;
     this.stringTimer2 = props.stringTimer2;
-    this.remainingTimeInSeconds = props.remainingTimeInSeconds;
+    this.remainingTimeInSeconds = props.remainingSeconds;
     this.lengthTimer = props.lengthTimer;
     this.mathPercent();
     this.isActive = true;
@@ -289,13 +296,13 @@ class Timer {
   }
 }
 function getTimerByIndex(timerIndex) {
-  return import_timer_data.timers.timer[timerIndex];
+  return import_timer_data.timers.timerList[timerIndex];
 }
 function getTimerById(id) {
   var _a;
-  const timerList = Object.keys(import_timer_data.timers.timer);
-  const timerIndex = timerList.find((value) => import_timer_data.timers.timer[value].getTimerId() === id);
-  return timerIndex ? (_a = import_timer_data.timers.timer) == null ? void 0 : _a[timerIndex] : void 0;
+  const timerList = Object.keys(import_timer_data.timers.timerList);
+  const timerIndex = timerList.find((value) => import_timer_data.timers.timerList[value].getTimerId() === id);
+  return timerIndex ? (_a = import_timer_data.timers.timerList) == null ? void 0 : _a[timerIndex] : void 0;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

@@ -41,7 +41,7 @@ var import_write_state_interval = require("../app/write-state-interval");
 function addNewRawTimer(timerIndex) {
   import_store.default.adapter.log.debug(`add index ${timerIndex}`);
   import_timer_data.timers.status[timerIndex] = false;
-  import_timer_data.timers.timer[timerIndex] = new import_timer.Timer({
+  import_timer_data.timers.timerList[timerIndex] = new import_timer.Timer({
     store: import_store.default
   });
 }

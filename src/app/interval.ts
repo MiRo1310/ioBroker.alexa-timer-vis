@@ -7,23 +7,23 @@ import { secToHourMinSec } from '@/lib/time';
 const isIndexInInterval = (timerIndex: string): boolean =>
     timerIndex in timers.interval && timers.interval[timerIndex] !== null;
 
-export const interval = (sec: number, name: string, timer: Timer, int: number, singleInstance: boolean): void => {
+export const interval = (timer: Timer, int: number, singleInstance: boolean): void => {
     const adapter = store.adapter;
     const timerIndex = timer.getTimerIndex();
 
     if (!timerIndex) {
         return;
     }
-    generateTimerValues(timer, sec, name);
+    generateTimerValues(timer);
 
-    const { string } = secToHourMinSec(sec, false);
+    const { string } = secToHourMinSec(timer.calculatedSeconds, false);
     timer.setLengthTimer(string);
     if (isIndexInInterval(timerIndex) || !timer.isActive) {
         return;
     }
 
     timers.interval[timerIndex] = adapter.setInterval(async () => {
-        const timeLeftSec = generateTimerValues(timer, sec, name);
+        const timeLeftSec = generateTimerValues(timer);
 
         if (timeLeftSec <= 60 && !singleInstance) {
             singleInstance = true;
@@ -32,7 +32,7 @@ export const interval = (sec: number, name: string, timer: Timer, int: number, s
                 clearIntervalByTimerIndex(timerIndex, timer);
             }
 
-            interval(sec, name, timer, timers.timerList[timerIndex].getInterval(), true);
+            interval(timer, timers.timerList[timerIndex].getInterval(), true);
         }
 
         if (timeLeftSec <= 0 || !timers.status[timerIndex]) {
