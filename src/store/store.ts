@@ -109,17 +109,11 @@ class Store {
         }
     }
     getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
-        const timerIdToDelete = this.localeActiveTimerList.find(activeList => {
+        return this.localeActiveTimerList.find(activeList => {
             if (!activeTimerLists.some(t => t.id === activeList.id)) {
                 return activeList;
             }
         })?.id;
-
-        if (timerIdToDelete) {
-            const index = this.localeActiveTimerList.findIndex(el => el.id === timerIdToDelete);
-            this.localeActiveTimerList.splice(index, 1);
-            return timerIdToDelete;
-        }
     }
     getActiveTimerWithDifferentTriggerTime(
         activeTimerLists: AlexaActiveTimerList[],
@@ -163,6 +157,8 @@ class Store {
 
             if (removedId) {
                 await timerDelete(removedId);
+                const index = this.localeActiveTimerList.findIndex(el => el.id === removedId);
+                this.localeActiveTimerList.splice(index, 1);
             }
             if (addedTimer) {
                 await timerAdd(addedTimer);

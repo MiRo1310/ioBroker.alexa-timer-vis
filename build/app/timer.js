@@ -239,6 +239,7 @@ class Timer {
     await this.reset();
   }
   async reset() {
+    this.adapter.log.debug(`Reset timer ${this.timerIndex}`);
     this.hours = import_store.default.valHourForZero;
     this.minutes = import_store.default.valMinuteForZero;
     this.seconds = import_store.default.valSecondForZero;

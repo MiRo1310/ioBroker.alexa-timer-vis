@@ -34,11 +34,13 @@ module.exports = __toCommonJS(timer_delete_exports);
 var import_logging = __toESM(require("../lib/logging"));
 var import_timer_data = require("../config/timer-data");
 var import_timer = require("../app/timer");
+var import_store = __toESM(require("../store/store"));
 const timerDelete = async (id) => {
   try {
     for (const timerIndex in import_timer_data.timers.timerList) {
       const timer = (0, import_timer.getTimerByIndex)(timerIndex);
       if (timer && timer.getTimerId() === id) {
+        import_store.default.adapter.log.debug(`Reset timer in timerDelete ${timerIndex}`);
         await timer.reset();
       }
     }

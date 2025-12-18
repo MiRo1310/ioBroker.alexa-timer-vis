@@ -36,6 +36,8 @@ export const interval = (timer: Timer, int: number, singleInstance: boolean): vo
         }
 
         if (timeLeftSec <= 0 || !timers.status[timerIndex]) {
+            //TODO remove log
+            store.adapter.log.debug(JSON.stringify(timers.status[timerIndex]));
             timers.count.decrement();
             await timer.reset();
 
