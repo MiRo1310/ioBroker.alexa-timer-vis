@@ -42,7 +42,7 @@ const timers = {
     timer3: false,
     timer4: false
   },
-  timer: {},
+  timerList: {},
   interval: { timer1: null }
 };
 // Annotate the CommonJS export names for ESM import in node:

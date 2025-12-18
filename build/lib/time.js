@@ -30,10 +30,9 @@ var time_exports = {};
 __export(time_exports, {
   getMsLeftFromNowToEndtime: () => getMsLeftFromNowToEndtime,
   getSecondsFromMS: () => getSecondsFromMS,
+  getTimeUnit: () => getTimeUnit,
+  getTimerStringUnitBasedOnTime: () => getTimerStringUnitBasedOnTime,
   isMoreThanAMinute: () => isMoreThanAMinute,
-  isShorterOrEqualToSixtyFiveMinutes: () => isShorterOrEqualToSixtyFiveMinutes,
-  isShorterThanAMinute: () => isShorterThanAMinute,
-  isShorterThanSixtyMinutes: () => isShorterThanSixtyMinutes,
   millisecondsToString: () => millisecondsToString,
   resetSuperiorValue: () => resetSuperiorValue,
   secToHourMinSec: () => secToHourMinSec,
@@ -82,9 +81,8 @@ function getDoubleIntValues(doubleInt, hour, minutes, seconds) {
   };
 }
 function includedSeconds(valSec, hourInSec, minutesInSec) {
-  let seconds = valSec - hourInSec - minutesInSec;
-  seconds = Math.round(seconds);
-  return seconds;
+  const seconds = valSec - hourInSec - minutesInSec;
+  return Math.round(seconds);
 }
 function includedMinutes(valSec, hourInSec) {
   let minutes = (valSec - hourInSec) / 60;
@@ -113,39 +111,34 @@ function resetSuperiorValue(hour, minutes, seconds) {
 }
 const millisecondsToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const isShorterThanAMinute = ({ minutes, seconds, timeString }) => parseInt(minutes) == 0 ? `${seconds} ${import_store.default.unitSecond3}` : timeString;
-const isShorterThanSixtyMinutes = ({
-  hour,
-  minutes,
-  seconds,
-  timeString
-}) => ({
-  timeString: parseInt(hour) == 0 ? `${minutes}:${seconds} ${import_store.default.unitMinute3}` : timeString,
-  hour,
-  minutes,
-  seconds
-});
-const isShorterOrEqualToSixtyFiveMinutes = ({
-  hour,
-  minutes,
-  seconds,
-  timeString
-}) => ({
-  timeString: parseInt(hour) === 1 && parseInt(minutes) <= 5 ? `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}` : timeString,
-  hour,
-  minutes,
-  seconds
-});
 const getMsLeftFromNowToEndtime = (endTimeMS) => endTimeMS - (/* @__PURE__ */ new Date()).getTime();
 const getSecondsFromMS = (millisecondsLeft) => Math.round(millisecondsLeft / 1e3);
+function getTimerStringUnitBasedOnTime(hour, minutes, seconds) {
+  const totalMinutes = parseInt(hour) * 60 + parseInt(minutes);
+  if (totalMinutes < 1) {
+    return `${seconds} ${import_store.default.unitSecond3}`;
+  }
+  if (totalMinutes <= 65) {
+    return `${totalMinutes}:${seconds} ${import_store.default.unitMinute3}`;
+  }
+  return `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;
+}
+function getTimeUnit(leftSec) {
+  if (leftSec >= 3600) {
+    return ` ${import_store.default.unitHour3}`;
+  }
+  if (leftSec >= 60) {
+    return ` ${import_store.default.unitMinute3}`;
+  }
+  return ` ${import_store.default.unitSecond3}`;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   getMsLeftFromNowToEndtime,
   getSecondsFromMS,
+  getTimeUnit,
+  getTimerStringUnitBasedOnTime,
   isMoreThanAMinute,
-  isShorterOrEqualToSixtyFiveMinutes,
-  isShorterThanAMinute,
-  isShorterThanSixtyMinutes,
   millisecondsToString,
   resetSuperiorValue,
   secToHourMinSec,

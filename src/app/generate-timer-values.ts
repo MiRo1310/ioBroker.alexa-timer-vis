@@ -13,11 +13,10 @@ import {
  * Generate timer values and update the timer object
  *
  * @param timer {Timer} - The timer object
- * @param sec {number} - The total seconds for the timer
- * @param name {string} - The name of the timer
  * @returns remaining seconds of the timer
  */
-export const generateTimerValues = (timer: Timer, sec: number, name: string): number => {
+export const generateTimerValues = (timer: Timer): number => {
+    const sec = timer.calculatedSeconds;
     const endTime = timer.getOutputProperties().endTimeNumber;
     if (endTime < 0) {
         store.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
@@ -49,7 +48,6 @@ export const generateTimerValues = (timer: Timer, sec: number, name: string): nu
         stringTimer2,
         remainingSeconds,
         lengthTimer,
-        name,
     });
 
     return remainingSeconds < 0 ? 0 : remainingSeconds;

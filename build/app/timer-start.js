@@ -47,22 +47,24 @@ const startTimer = async (newActiveTimer) => {
       return;
     }
     const creationTime = alexaJson.creationTime;
-    const timer = import_timer_data.timers.timer[availableTimerIndex];
+    import_store.default.adapter.log.warn(`Starting timer at index ${availableTimerIndex} with creationTime ${creationTime}`);
+    const timer = import_timer_data.timers.timerList[availableTimerIndex];
     await timer.init({ timerIndex: availableTimerIndex, creationTime, newActiveTimer });
     const name = timer.getName();
     const sec = timer.calculatedSeconds;
+    import_store.default.adapter.log.warn(`Starting timer with sec ${sec}`);
     if ((0, import_time.isMoreThanAMinute)(sec)) {
       (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
       return;
     }
-    import_timer_data.timers.timer[availableTimerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
+    import_timer_data.timers.timerList[availableTimerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
     (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
   } catch (e) {
     import_logging.default.send({ title: "Error startTimer", e });
   }
 };
 function getAvailableTimerIndex() {
-  const timerIndexes = Object.keys(import_timer_data.timers.status);
+  const timerIndexes = Object.keys(import_timer_data.timers.status).filter((key) => key.startsWith("timer"));
   for (let i = 0; i < timerIndexes.length; i++) {
     const key = timerIndexes[i];
     if (!import_timer_data.timers.status[key]) {

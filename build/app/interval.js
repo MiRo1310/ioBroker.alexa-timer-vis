@@ -55,7 +55,7 @@ const interval = (sec, name, timer, int, singleInstance) => {
       if (isIndexInInterval(timerIndex)) {
         clearIntervalByTimerIndex(timerIndex, timer);
       }
-      interval(sec, name, timer, import_timer_data.timers.timer[timerIndex].getInterval(), true);
+      interval(sec, name, timer, import_timer_data.timers.timerList[timerIndex].getInterval(), true);
     }
     if (timeLeftSec <= 0 || !import_timer_data.timers.status[timerIndex]) {
       import_timer_data.timers.count.decrement();

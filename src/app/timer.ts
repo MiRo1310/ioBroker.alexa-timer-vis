@@ -70,10 +70,6 @@ export class Timer {
         this.initialTimer = '';
         this.calculatedSeconds = 0;
     }
-
-    getName(): string {
-        return this.timerName;
-    }
     getTimerIndex(): TimerIndex | null {
         return this.timerIndex;
     }
@@ -173,6 +169,10 @@ export class Timer {
         try {
             if (newActiveTimer) {
                 const { id, label, triggerTime: endTime } = newActiveTimer;
+                this.adapter.log.warn(`Endtime from Echo Device's Active Timer List: ${endTime}`);
+                this.adapter.log.warn(`Creationtime from Echo Device's Active Timer List: ${this.creationTime}`);
+                this.adapter.log.warn(` ${endTime - this.creationTime}`);
+
                 this.timerId = id;
                 this.setTimerName(label);
                 if (this.endTime < 0) {

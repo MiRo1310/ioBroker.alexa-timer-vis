@@ -9,10 +9,12 @@ export interface GenerateTimeStringObject {
     seconds: string;
 }
 
+//INFO durationMillis added for compatibility with Alexa API
 export interface AlexaActiveTimerList {
     id: string;
     label: string | null;
     triggerTime: number;
+    durationMillis: number;
 }
 
 export type TimerCondition =
@@ -83,7 +85,6 @@ export interface GetOutputProperties {
 
 export interface SetOutputProperties {
     remainingSeconds: number;
-    name: string;
     hours: string;
     minutes: string;
     seconds: string;

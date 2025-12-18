@@ -44,44 +44,24 @@ const generateTimerValues = (timer, sec, name) => {
   const result = (0, import_time.secToHourMinSec)(remainingSeconds, true);
   let { hour, minutes, seconds } = result;
   const { string: lengthTimer } = result;
-  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingSeconds)}`;
-  const stringTimer2 = (0, import_time.isShorterThanAMinute)(
-    (0, import_time.isShorterThanSixtyMinutes)(
-      (0, import_time.isShorterOrEqualToSixtyFiveMinutes)(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds))
-    )
-  );
+  const stringTimer1 = `${hour}:${minutes}:${seconds}${(0, import_time.getTimeUnit)(remainingSeconds)}`;
+  const stringTimer2 = (0, import_time.getTimerStringUnitBasedOnTime)(hour, minutes, seconds);
   if (!timer.isExtendOrShortenTimer()) {
     timer.setVoiceInputAsSeconds(sec);
   }
   ({ hour, minutes, seconds } = (0, import_time.resetSuperiorValue)(hour, minutes, seconds));
-  timer.setOutputProperties({
+  timer.setTimerValues({
     hours: hour,
     minutes,
     seconds,
     stringTimer1,
     stringTimer2,
-    remainingTimeInSeconds: remainingSeconds,
+    remainingSeconds,
     lengthTimer,
     name
   });
   return remainingSeconds < 0 ? 0 : remainingSeconds;
 };
-function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds) {
-  if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {
-    const timeString = `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;
-    return { timeString, hour, minutes, seconds };
-  }
-  return { timeString: "", hour, minutes, seconds };
-}
-function getTimeUnit(timeLeftSec) {
-  if (timeLeftSec >= 3600) {
-    return ` ${import_store.default.unitHour3}`;
-  }
-  if (timeLeftSec >= 60) {
-    return ` ${import_store.default.unitMinute3}`;
-  }
-  return ` ${import_store.default.unitSecond3}`;
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   generateTimerValues
