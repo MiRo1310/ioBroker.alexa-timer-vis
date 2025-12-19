@@ -218,8 +218,7 @@ export class Timer {
         await this.reset();
     }
     async reset(): Promise<void> {
-        //TODO remove log
-        this.adapter.log.debug(`Reset timer ${this.timerIndex}`);
+        Store.removeActiveTimerId(this.timerId, this.deviceSerialNumber);
         this.hours = Store.valHourForZero;
         this.minutes = Store.valMinuteForZero;
         this.seconds = Store.valSecondForZero;
@@ -237,7 +236,6 @@ export class Timer {
         this.percent = 0;
         this.percent2 = 0;
         this.extendOrShortenTimer = false;
-        Store.removeActiveTimerId(this.timerId);
         this.timerId = '';
         this.deviceSerialNumber = '';
         this.creationTime = 0;

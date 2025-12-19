@@ -3,6 +3,7 @@ import type { AlexaActiveTimerList, LocalAlexaActiveTimerList, StoreType, TimerC
 import { timerDelete } from '@/app/timer-delete';
 import { timerAdd } from '@/app/timer-add';
 import { getTimerById } from '@/app/timer';
+import { parseJSON } from '@/lib/string';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -26,9 +27,8 @@ class Store {
     interval: ioBroker.Interval | null | undefined;
     alexaTimerVisInstance: string;
     alexa2Instance: string | null;
-    private localeActiveTimerList: LocalAlexaActiveTimerList[];
+    private localeActiveTimerList: LocalAlexaActiveTimerList;
     private timeouts: ioBroker.Timeout[] = [];
-    private upDateCoolDown = false;
     constructor() {
         this.intervalLess60 = 0;
         this.intervalMore60 = 0;
@@ -50,7 +50,7 @@ class Store {
         this.valMinuteForZero = '';
         this.valSecondForZero = '';
         this.timerAction = null;
-        this.localeActiveTimerList = [];
+        this.localeActiveTimerList = {};
         this.alexa2Instance = null;
     }
 
@@ -102,25 +102,38 @@ class Store {
         activeTimerLists: AlexaActiveTimerList[] | undefined,
         deviceSerialNumber: string,
     ): AlexaActiveTimerList | undefined {
-        const newestTimer = activeTimerLists?.find(t => !this.includesActiveTimerId(t.id));
+        const newestTimer = activeTimerLists?.find(t => !this.includesActiveTimerId(t.id, deviceSerialNumber));
         if (newestTimer) {
-            this.localeActiveTimerList.push({ ...newestTimer, deviceSerialNumber });
+            this.localeActiveTimerList[deviceSerialNumber].push({ ...newestTimer, deviceSerialNumber });
             return newestTimer;
         }
     }
-    getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[]): string | undefined {
-        return this.localeActiveTimerList.find(activeList => {
+    /**
+     * Returns the ID of a removed timer by comparing the local active timer list with the provided active timer lists.
+     *
+     * @param activeTimerLists - The list of currently active timers to compare against.
+     * @param serial - The serial number of the device.
+     */
+    getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[], serial: string): string | undefined {
+        return this.localeActiveTimerList[serial].find(activeList => {
             if (!activeTimerLists.some(t => t.id === activeList.id)) {
                 return activeList;
             }
         })?.id;
     }
+    /**
+     * Returns an active timer with a different trigger time by comparing the local active timer list with the provided active timer lists.
+     *
+     * @param activeTimerLists - The list of currently active timers to compare against.
+     * @param serial - The serial number of the device.
+     */
     getActiveTimerWithDifferentTriggerTime(
         activeTimerLists: AlexaActiveTimerList[],
+        serial: string,
     ): { listEl: AlexaActiveTimerList; changedSec: number } | undefined {
         let changedSec = 0;
         const listEl = activeTimerLists.find(activeList =>
-            this.localeActiveTimerList.some(localActiveList => {
+            this.localeActiveTimerList[serial].some(localActiveList => {
                 if (activeList.id === localActiveList.id && activeList.triggerTime !== localActiveList.triggerTime) {
                     changedSec = activeList.triggerTime - localActiveList.triggerTime;
                     return true;
@@ -130,35 +143,47 @@ class Store {
         );
         return listEl ? { listEl, changedSec } : undefined;
     }
-    removeActiveTimerId(id: string): void {
-        this.localeActiveTimerList = this.localeActiveTimerList.filter(t => t.id !== id);
+
+    /**
+     * Removes an active timer ID from the local active timer list.
+     *
+     * @param id - The ID of the active timer to remove.
+     * @param serial - The serial number of the device.
+     */
+    removeActiveTimerId(id: string, serial: string): void {
+        this.localeActiveTimerList[serial] = this.localeActiveTimerList[serial]?.filter(t => t.id !== id);
     }
-    includesActiveTimerId(id: string): boolean {
-        return this.localeActiveTimerList.some(t => t.id === id);
+
+    /**
+     * Checks if an active timer ID exists in the local active timer list.
+     *
+     * @param id - The ID of the active timer to check.
+     * @param serial - The serial number of the device.
+     */
+    includesActiveTimerId(id: string, serial: string): boolean {
+        return this.localeActiveTimerList[serial].some(t => t.id === id);
     }
     async activeTimeListChangedHandler(id: string, state: ioBroker.State | undefined | null): Promise<void> {
         const list = state?.val;
         if (!id.includes('.Timer.activeTimerList') || !list) {
             return;
         }
-        if (this.upDateCoolDown) {
-            return;
-        }
-        this.upDateCoolDown = true;
+
         let removedId: string | undefined = 'init';
         let addedTimer: AlexaActiveTimerList | undefined = undefined;
         let extendTimer: { listEl: AlexaActiveTimerList; changedSec: number } | undefined = undefined;
 
-        const updatedList = JSON.parse(String(list));
-        while (removedId || addedTimer || extendTimer) {
-            removedId = this.getRemovedTimerId(updatedList);
-            addedTimer = this.getNewActiveTimer(updatedList, id.split('.')[3]);
-            extendTimer = this.getActiveTimerWithDifferentTriggerTime(updatedList);
+        const updatedList = parseJSON<AlexaActiveTimerList[]>(String(list));
+        const serial = this.getSerialFromId(id);
+        while ((removedId || addedTimer || extendTimer) && serial && updatedList.isValidJson) {
+            removedId = this.getRemovedTimerId(updatedList.ob, serial);
+            addedTimer = this.getNewActiveTimer(updatedList.ob, serial);
+            extendTimer = this.getActiveTimerWithDifferentTriggerTime(updatedList.ob, serial);
 
             if (removedId) {
                 await timerDelete(removedId);
-                const index = this.localeActiveTimerList.findIndex(el => el.id === removedId);
-                this.localeActiveTimerList.splice(index, 1);
+                const index = this.localeActiveTimerList[serial].findIndex(el => el?.id === removedId);
+                this.localeActiveTimerList[serial].splice(index, 1);
             }
             if (addedTimer) {
                 await timerAdd(addedTimer);
@@ -170,10 +195,22 @@ class Store {
                 }
             }
         }
-        this.adapter.setTimeout(() => {
-            this.upDateCoolDown = false;
-        }, 2000);
     }
+    addSerialToLocalActiveTimerList(serial?: string): void {
+        if (serial && !this.localeActiveTimerList[serial]) {
+            this.localeActiveTimerList[serial] = [];
+        }
+    }
+
+    /**
+     * Extracts the serial number from the given ID.
+     *
+     * @param id - The ID string to extract the serial number from.
+     */
+    getSerialFromId(id: string): string | undefined {
+        return id.split('.')[3];
+    }
+
     clearTimeout(timeout: ioBroker.Timeout | undefined): void {
         this.adapter.clearTimeout(timeout);
         this.timeouts = this.timeouts.filter(t => t !== timeout);

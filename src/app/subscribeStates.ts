@@ -6,5 +6,6 @@ export const subscribeActiveTimerListStates = async (): Promise<void> => {
     Object.keys(res).forEach(id => {
         store.adapter.log.debug(`Subscribing to activeTimerList state: ${id}`);
         store.adapter.subscribeForeignStates(id);
+        store.addSerialToLocalActiveTimerList(store.getSerialFromId(id));
     });
 };

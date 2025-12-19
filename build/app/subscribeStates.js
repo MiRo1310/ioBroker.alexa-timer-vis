@@ -38,6 +38,7 @@ const subscribeActiveTimerListStates = async () => {
   Object.keys(res).forEach((id) => {
     import_store.default.adapter.log.debug(`Subscribing to activeTimerList state: ${id}`);
     import_store.default.adapter.subscribeForeignStates(id);
+    import_store.default.addSerialToLocalActiveTimerList(import_store.default.getSerialFromId(id));
   });
 };
 // Annotate the CommonJS export names for ESM import in node:
