@@ -8,7 +8,7 @@ import type {
 import errorLogger from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
-import { timers } from '@/config/timer-data';
+import { obj } from '@/config/timer-data';
 import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 import { firstLetterToUpperCase } from '@/lib/string';
 import { isIobrokerValue } from '@/lib/state';
@@ -40,7 +40,10 @@ export class Timer {
     private alexaInstance: string | null;
     private initialTimer: string;
     calculatedSeconds: number;
-    isActive: boolean = false;
+    private _isActive: boolean = false;
+    get isActive(): boolean {
+        return this._isActive;
+    }
     constructor({ store }: { store: typeof Store }) {
         this.adapter = store.adapter;
         this.hours = '';
@@ -68,6 +71,9 @@ export class Timer {
         this.initialTimer = '';
         this.calculatedSeconds = 0;
     }
+    setInactive(): void {
+        this._isActive = false;
+    }
     getTimerIndex(): TimerIndex | null {
         return this.timerIndex;
     }
@@ -88,6 +94,7 @@ export class Timer {
             initialTimer: this.initialTimer,
         };
     }
+
     isExtendOrShortenTimer(): boolean {
         return this.extendOrShortenTimer;
     }
@@ -199,7 +206,7 @@ export class Timer {
         this.remainingTimeInSeconds = props.remainingSeconds;
         this.lengthTimer = props.lengthTimer;
         this.mathPercent();
-        this.isActive = true;
+        this._isActive = true;
     }
     private mathPercent(): void {
         const percent = Math.round((this.remainingTimeInSeconds / this.voiceInputAsSeconds) * 100);
@@ -242,10 +249,10 @@ export class Timer {
         this.endTime = 0;
         this.initialTimer = '';
         if (this.timerIndex) {
-            timers.status[this.timerIndex] = false;
+            obj.status[this.timerIndex] = false;
             await setDeviceNameInObject(this.timerIndex, '');
         }
-        this.isActive = false;
+        this._isActive = false;
     }
 
     getTimerId(): string {
@@ -254,11 +261,11 @@ export class Timer {
 }
 
 export function getTimerByIndex(timerIndex: TimerIndex): Timer | undefined {
-    return timers.timerList[timerIndex];
+    return obj.timers[timerIndex];
 }
 
 export function getTimerById(id: string): Timer | undefined {
-    const timerList = Object.keys(timers.timerList);
-    const timerIndex = timerList.find(value => timers.timerList[value].getTimerId() === id);
-    return timerIndex ? timers.timerList?.[timerIndex] : undefined;
+    const timerList = Object.keys(obj.timers);
+    const timerIndex = timerList.find(value => obj.timers[value].getTimerId() === id);
+    return timerIndex ? obj.timers?.[timerIndex] : undefined;
 }

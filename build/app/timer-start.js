@@ -32,36 +32,31 @@ __export(timer_start_exports, {
   startTimer: () => startTimer
 });
 module.exports = __toCommonJS(timer_start_exports);
-var import_timer_data = require("../config/timer-data");
-var import_store = __toESM(require("../store/store"));
-var import_interval = require("../app/interval");
-var import_logging = __toESM(require("../lib/logging"));
-var import_time = require("../lib/time");
+var import_timer_data = require("@/config/timer-data");
+var import_store = __toESM(require("@/store/store"));
+var import_interval = require("@/app/interval");
+var import_logging = __toESM(require("@/lib/logging"));
+var import_time = require("@/lib/time");
 const startTimer = async (newActiveTimer) => {
   try {
     const availableTimerIndex = getAvailableTimerIndex();
-    import_timer_data.timers.status[availableTimerIndex] = true;
-    const timer = import_timer_data.timers.timerList[availableTimerIndex];
+    import_timer_data.obj.status[availableTimerIndex] = true;
+    const timer = import_timer_data.obj.timers[availableTimerIndex];
     await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
-    timer.setInterval(import_store.default.intervalLess60 * 1e3);
+    timer.setInterval(import_store.default.intervalSecLessThan60Sec * 1e3);
     if ((0, import_time.isMoreThanAMinute)(timer.calculatedSeconds)) {
-      (0, import_interval.interval)(timer, import_store.default.intervalMore60 * 1e3, false);
+      (0, import_interval.interval)(timer, import_store.default.intervalSecMoreThan60Sec * 1e3, false);
       return;
     }
-    (0, import_interval.interval)(timer, import_store.default.intervalLess60 * 1e3, true);
+    (0, import_interval.interval)(timer, import_store.default.intervalSecLessThan60Sec * 1e3, true);
   } catch (e) {
     import_logging.default.send({ title: "Error startTimer", e });
   }
 };
 function getAvailableTimerIndex() {
-  const timerIndexes = Object.keys(import_timer_data.timers.status).filter((key) => key.startsWith("timer"));
-  for (let i = 0; i < timerIndexes.length; i++) {
-    const key = timerIndexes[i];
-    if (!import_timer_data.timers.status[key]) {
-      return key;
-    }
-  }
-  return `timer${timerIndexes.length + 1}`;
+  const timerIndexes = Object.keys(import_timer_data.obj.status).filter((key) => key.startsWith("timer")).sort();
+  const index = timerIndexes.find((index2) => !import_timer_data.obj.status[index2]);
+  return index ? index : `timer${timerIndexes.length + 1}`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

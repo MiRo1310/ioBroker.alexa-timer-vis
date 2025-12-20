@@ -36,7 +36,7 @@ export interface TimerObject {
     count: typeof TimerCount;
     intervalTime: number;
     status: Record<keyof Timers, boolean>;
-    timerList: Timers;
+    timers: Timers;
     interval: Record<string, ioBroker.Interval | null | undefined>;
 }
 
@@ -96,7 +96,7 @@ export interface SecToHourMinSecReturn {
     hour: string;
     minutes: string;
     seconds: string;
-    string: string;
+    stringTimer: string;
     initialString: string;
 }
 

@@ -31,7 +31,7 @@ __export(logging_exports, {
   default: () => logging_default
 });
 module.exports = __toCommonJS(logging_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("@/store/store"));
 class ErrorLoggerClass {
   Sentry;
   adapter;

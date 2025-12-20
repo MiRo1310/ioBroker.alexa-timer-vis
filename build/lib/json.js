@@ -26,30 +26,24 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var timer_delete_exports = {};
-__export(timer_delete_exports, {
-  timerDelete: () => timerDelete
+var json_exports = {};
+__export(json_exports, {
+  parseJSON: () => parseJSON
 });
-module.exports = __toCommonJS(timer_delete_exports);
-var import_logging = __toESM(require("../lib/logging"));
-var import_timer_data = require("../config/timer-data");
-var import_timer = require("../app/timer");
-var import_store = __toESM(require("../store/store"));
-const timerDelete = async (id) => {
+module.exports = __toCommonJS(json_exports);
+var import_logging = __toESM(require("@/lib/logging"));
+function parseJSON(val, adapter) {
   try {
-    for (const timerIndex in import_timer_data.timers.timerList) {
-      const timer = (0, import_timer.getTimerByIndex)(timerIndex);
-      if (timer && timer.getTimerId() === id) {
-        import_store.default.adapter.log.debug(`Reset timer in timerDelete ${timerIndex}`);
-        await timer.reset();
-      }
-    }
+    return val ? { ob: JSON.parse(val), isValidJson: true } : { ob: val != null ? val : "", isValidJson: false };
   } catch (e) {
-    import_logging.default.send({ title: "Error in timerDelete", e });
+    if (adapter) {
+      import_logging.default.send({ title: "Error parseJSON:", e });
+    }
+    return { ob: val != null ? val : "", isValidJson: false };
   }
-};
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  timerDelete
+  parseJSON
 });
-//# sourceMappingURL=timer-delete.js.map
+//# sourceMappingURL=json.js.map

@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,45 +15,24 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var string_exports = {};
 __export(string_exports, {
   countOccurrences: () => countOccurrences,
   firstLetterToUpperCase: () => firstLetterToUpperCase,
   isString: () => isString,
-  isStringEmpty: () => isStringEmpty,
-  parseJSON: () => parseJSON
+  isStringEmpty: () => isStringEmpty
 });
 module.exports = __toCommonJS(string_exports);
-var import_logging = __toESM(require("../lib/logging"));
 const firstLetterToUpperCase = (name) => name.slice(0, 1).toUpperCase() + name.slice(1);
 const isStringEmpty = (str) => str === "";
 const countOccurrences = (str, char) => str.split(char).length - 1;
 const isString = (str) => typeof str == "string";
-function parseJSON(val, adapter) {
-  try {
-    return val ? { ob: JSON.parse(val), isValidJson: true } : { ob: val != null ? val : "", isValidJson: false };
-  } catch (e) {
-    if (adapter) {
-      import_logging.default.send({ title: "Error parseJSON:", e });
-    }
-    return { ob: val != null ? val : "", isValidJson: false };
-  }
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   countOccurrences,
   firstLetterToUpperCase,
   isString,
-  isStringEmpty,
-  parseJSON
+  isStringEmpty
 });
 //# sourceMappingURL=string.js.map

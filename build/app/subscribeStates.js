@@ -31,7 +31,7 @@ __export(subscribeStates_exports, {
   subscribeActiveTimerListStates: () => subscribeActiveTimerListStates
 });
 module.exports = __toCommonJS(subscribeStates_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("@/store/store"));
 const subscribeActiveTimerListStates = async () => {
   const pattern = `alexa2.${import_store.default.alexa2Instance}.*.activeTimerList`;
   const res = await import_store.default.adapter.getForeignStatesAsync(pattern);

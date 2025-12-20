@@ -21,18 +21,18 @@ __export(store_exports, {
   default: () => store_default
 });
 module.exports = __toCommonJS(store_exports);
-var import_timer_delete = require("../app/timer-delete");
-var import_timer_add = require("../app/timer-add");
-var import_timer = require("../app/timer");
-var import_string = require("../lib/string");
+var import_timer_add = require("@/app/timer-add");
+var import_timer = require("@/app/timer");
+var import_string = require("@/lib/string");
+var import_timer_data = require("@/config/timer-data");
 class Store {
   adapter;
   valHourForZero;
   valMinuteForZero;
   valSecondForZero;
   pathAlexaSummary;
-  intervalMore60;
-  intervalLess60;
+  intervalSecMoreThan60Sec;
+  intervalSecLessThan60Sec;
   unitHour1;
   unitHour2;
   unitHour3;
@@ -44,15 +44,14 @@ class Store {
   unitSecond3;
   timerAction;
   questionAlexa;
-  interval;
+  writeStateInterval;
   alexaTimerVisInstance;
   alexa2Instance;
   localeActiveTimerList;
   timeouts = [];
-  upDateCoolDown = false;
   constructor() {
-    this.intervalLess60 = 0;
-    this.intervalMore60 = 0;
+    this.intervalSecLessThan60Sec = 0;
+    this.intervalSecMoreThan60Sec = 0;
     this.unitHour1 = "Stunde";
     this.unitHour2 = "Stunden";
     this.unitHour3 = "";
@@ -64,7 +63,7 @@ class Store {
     this.unitSecond3 = "";
     this.alexaTimerVisInstance = "";
     this.questionAlexa = false;
-    this.interval = null;
+    this.writeStateInterval = null;
     this.pathAlexaSummary = "";
     this.adapter = {};
     this.valHourForZero = "";
@@ -99,8 +98,8 @@ class Store {
     this.valSecondForZero = valSecondForZero;
     this.alexa2Instance = alexa.split(".")[1];
     this.pathAlexaSummary = `${alexa}.History.summary`;
-    this.intervalMore60 = intervall1;
-    this.intervalLess60 = intervall2;
+    this.intervalSecMoreThan60Sec = intervall1;
+    this.intervalSecLessThan60Sec = intervall2;
     this.unitHour1 = unitHour1;
     this.unitHour2 = unitHour2;
     this.unitHour3 = unitHour3;
@@ -118,10 +117,16 @@ class Store {
   getAlexaTimerVisInstance() {
     return this.alexaTimerVisInstance;
   }
-  getNewActiveTimer(activeTimerLists, deviceSerialNumber) {
-    const newestTimer = activeTimerLists == null ? void 0 : activeTimerLists.find((t) => !this.includesActiveTimerId(t.id, deviceSerialNumber));
+  /**
+   * Returns a new active timer by comparing the local active timer list with the provided active timer lists.
+   *
+   * @param activeTimerLists - The list of currently active timers to compare against.
+   * @param deviceSerial - The serial number of the device.
+   */
+  getNewActiveTimer(activeTimerLists, deviceSerial) {
+    const newestTimer = activeTimerLists == null ? void 0 : activeTimerLists.find((t) => !this.includesActiveTimerId(t.id, deviceSerial));
     if (newestTimer) {
-      this.localeActiveTimerList[deviceSerialNumber].push({ ...newestTimer, deviceSerialNumber });
+      this.localeActiveTimerList[deviceSerial].push({ ...newestTimer, deviceSerialNumber: deviceSerial });
       return newestTimer;
     }
   }
@@ -129,21 +134,21 @@ class Store {
    * Returns the ID of a removed timer by comparing the local active timer list with the provided active timer lists.
    *
    * @param activeTimerLists - The list of currently active timers to compare against.
-   * @param serial
+   * @param serial - The serial number of the device.
    */
   getRemovedTimerId(activeTimerLists, serial) {
-    var _a;
-    return (_a = this.localeActiveTimerList[serial].find((activeList) => {
+    var _a, _b;
+    return (_b = (_a = this.localeActiveTimerList[serial]) == null ? void 0 : _a.find((activeList) => {
       if (!activeTimerLists.some((t) => t.id === activeList.id)) {
         return activeList;
       }
-    })) == null ? void 0 : _a.id;
+    })) == null ? void 0 : _b.id;
   }
   /**
    * Returns an active timer with a different trigger time by comparing the local active timer list with the provided active timer lists.
    *
    * @param activeTimerLists - The list of currently active timers to compare against.
-   * @param serial
+   * @param serial - The serial number of the device.
    */
   getActiveTimerWithDifferentTriggerTime(activeTimerLists, serial) {
     let changedSec = 0;
@@ -162,7 +167,7 @@ class Store {
    * Removes an active timer ID from the local active timer list.
    *
    * @param id - The ID of the active timer to remove.
-   * @param serial
+   * @param serial - The serial number of the device.
    */
   removeActiveTimerId(id, serial) {
     var _a;
@@ -172,7 +177,7 @@ class Store {
    * Checks if an active timer ID exists in the local active timer list.
    *
    * @param id - The ID of the active timer to check.
-   * @param serial
+   * @param serial - The serial number of the device.
    */
   includesActiveTimerId(id, serial) {
     return this.localeActiveTimerList[serial].some((t) => t.id === id);
@@ -192,9 +197,12 @@ class Store {
       addedTimer = this.getNewActiveTimer(updatedList.ob, serial);
       extendTimer = this.getActiveTimerWithDifferentTriggerTime(updatedList.ob, serial);
       if (removedId) {
-        await (0, import_timer_delete.timerDelete)(removedId);
-        const index = this.localeActiveTimerList[serial].findIndex((el) => (el == null ? void 0 : el.id) === removedId);
-        this.localeActiveTimerList[serial].splice(index, 1);
+        const timer = (0, import_timer.getTimerById)(removedId);
+        if (timer) {
+          await timer.reset();
+          const index = this.localeActiveTimerList[serial].findIndex((el) => (el == null ? void 0 : el.id) === removedId);
+          this.localeActiveTimerList[serial].splice(index, 1);
+        }
       }
       if (addedTimer) {
         await (0, import_timer_add.timerAdd)(addedTimer);
@@ -207,9 +215,14 @@ class Store {
       }
     }
   }
-  addSerialToLocalActiveTimerList(serial) {
-    if (serial && !this.localeActiveTimerList[serial]) {
-      this.localeActiveTimerList[serial] = [];
+  /**
+   * Adds a serial number to the local active timer list if it doesn't already exist.
+   *
+   * @param deviceSerial - The serial number to add.
+   */
+  addSerialToLocalActiveTimerList(deviceSerial) {
+    if (deviceSerial && !this.localeActiveTimerList[deviceSerial]) {
+      this.localeActiveTimerList[deviceSerial] = [];
     }
   }
   /**
@@ -220,12 +233,26 @@ class Store {
   getSerialFromId(id) {
     return id.split(".")[3];
   }
-  clearTimeout(timeout) {
-    this.adapter.clearTimeout(timeout);
-    this.timeouts = this.timeouts.filter((t) => t !== timeout);
+  /**
+   * Clears a timeout and removes it from the internal list.
+   *
+   * @param t - The timeout to clear.
+   */
+  clearTimeout(t) {
+    this.adapter.clearTimeout(t);
+    this.timeouts = this.timeouts.filter((t2) => t2 !== t2);
   }
+  /**
+   * Clears all stored timeouts.
+   */
   clearTimeouts() {
     this.timeouts.forEach((timeout) => this.clearTimeout(timeout));
+  }
+  /**
+   * Returns boolean indicating if any timer is currently running.
+   */
+  isSomeTimerRunning() {
+    return Object.keys(import_timer_data.obj.timers).some((t) => import_timer_data.obj.timers[t].isActive);
   }
 }
 var store_default = new Store();

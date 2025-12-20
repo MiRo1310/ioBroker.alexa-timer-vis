@@ -1,9 +1,9 @@
 import type AlexaTimerVis from '@/main';
 import type { AlexaActiveTimerList, LocalAlexaActiveTimerList, StoreType, TimerCondition } from '@/types/types';
-import { timerDelete } from '@/app/timer-delete';
 import { timerAdd } from '@/app/timer-add';
 import { getTimerById } from '@/app/timer';
-import { parseJSON } from '@/lib/string';
+import { obj } from '@/config/timer-data';
+import { parseJSON } from '@/lib/json';
 
 class Store {
     adapter: AlexaTimerVis;
@@ -11,8 +11,8 @@ class Store {
     valMinuteForZero: string;
     valSecondForZero: string;
     pathAlexaSummary: string;
-    intervalMore60: number;
-    intervalLess60: number;
+    intervalSecMoreThan60Sec: number;
+    intervalSecLessThan60Sec: number;
     unitHour1: string;
     unitHour2: string;
     unitHour3: string;
@@ -24,14 +24,14 @@ class Store {
     unitSecond3: string;
     timerAction: TimerCondition | null | undefined;
     questionAlexa: boolean;
-    interval: ioBroker.Interval | null | undefined;
+    writeStateInterval: ioBroker.Interval | null | undefined;
     alexaTimerVisInstance: string;
     alexa2Instance: string | null;
     private localeActiveTimerList: LocalAlexaActiveTimerList;
     private timeouts: ioBroker.Timeout[] = [];
     constructor() {
-        this.intervalLess60 = 0;
-        this.intervalMore60 = 0;
+        this.intervalSecLessThan60Sec = 0;
+        this.intervalSecMoreThan60Sec = 0;
         this.unitHour1 = 'Stunde';
         this.unitHour2 = 'Stunden';
         this.unitHour3 = '';
@@ -43,7 +43,7 @@ class Store {
         this.unitSecond3 = '';
         this.alexaTimerVisInstance = '';
         this.questionAlexa = false;
-        this.interval = null;
+        this.writeStateInterval = null;
         this.pathAlexaSummary = '';
         this.adapter = {} as AlexaTimerVis;
         this.valHourForZero = '';
@@ -79,8 +79,8 @@ class Store {
         this.valSecondForZero = valSecondForZero;
         this.alexa2Instance = alexa.split('.')[1];
         this.pathAlexaSummary = `${alexa}.History.summary`;
-        this.intervalMore60 = intervall1;
-        this.intervalLess60 = intervall2;
+        this.intervalSecMoreThan60Sec = intervall1;
+        this.intervalSecLessThan60Sec = intervall2;
         this.unitHour1 = unitHour1;
         this.unitHour2 = unitHour2;
         this.unitHour3 = unitHour3;
@@ -98,13 +98,20 @@ class Store {
     getAlexaTimerVisInstance(): string {
         return this.alexaTimerVisInstance;
     }
+
+    /**
+     * Returns a new active timer by comparing the local active timer list with the provided active timer lists.
+     *
+     * @param activeTimerLists - The list of currently active timers to compare against.
+     * @param deviceSerial - The serial number of the device.
+     */
     getNewActiveTimer(
         activeTimerLists: AlexaActiveTimerList[] | undefined,
-        deviceSerialNumber: string,
+        deviceSerial: string,
     ): AlexaActiveTimerList | undefined {
-        const newestTimer = activeTimerLists?.find(t => !this.includesActiveTimerId(t.id, deviceSerialNumber));
+        const newestTimer = activeTimerLists?.find(t => !this.includesActiveTimerId(t.id, deviceSerial));
         if (newestTimer) {
-            this.localeActiveTimerList[deviceSerialNumber].push({ ...newestTimer, deviceSerialNumber });
+            this.localeActiveTimerList[deviceSerial].push({ ...newestTimer, deviceSerialNumber: deviceSerial });
             return newestTimer;
         }
     }
@@ -115,7 +122,7 @@ class Store {
      * @param serial - The serial number of the device.
      */
     getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[], serial: string): string | undefined {
-        return this.localeActiveTimerList[serial].find(activeList => {
+        return this.localeActiveTimerList[serial]?.find(activeList => {
             if (!activeTimerLists.some(t => t.id === activeList.id)) {
                 return activeList;
             }
@@ -163,9 +170,12 @@ class Store {
     includesActiveTimerId(id: string, serial: string): boolean {
         return this.localeActiveTimerList[serial].some(t => t.id === id);
     }
+    isIdFromActiveTimerList(id: string): boolean {
+        return id.includes('.Timer.activeTimerList');
+    }
     async activeTimeListChangedHandler(id: string, state: ioBroker.State | undefined | null): Promise<void> {
-        const list = state?.val;
-        if (!id.includes('.Timer.activeTimerList') || !list) {
+        const stateValue = state?.val;
+        if (!this.isIdFromActiveTimerList(id) || !stateValue) {
             return;
         }
 
@@ -173,17 +183,20 @@ class Store {
         let addedTimer: AlexaActiveTimerList | undefined = undefined;
         let extendTimer: { listEl: AlexaActiveTimerList; changedSec: number } | undefined = undefined;
 
-        const updatedList = parseJSON<AlexaActiveTimerList[]>(String(list));
-        const serial = this.getSerialFromId(id);
+        const updatedList = parseJSON<AlexaActiveTimerList[]>(String(stateValue));
+        const serial = this.getSerialFromIobrokerStateId(id);
         while ((removedId || addedTimer || extendTimer) && serial && updatedList.isValidJson) {
             removedId = this.getRemovedTimerId(updatedList.ob, serial);
             addedTimer = this.getNewActiveTimer(updatedList.ob, serial);
             extendTimer = this.getActiveTimerWithDifferentTriggerTime(updatedList.ob, serial);
 
             if (removedId) {
-                await timerDelete(removedId);
-                const index = this.localeActiveTimerList[serial].findIndex(el => el?.id === removedId);
-                this.localeActiveTimerList[serial].splice(index, 1);
+                const timer = getTimerById(removedId);
+                if (timer) {
+                    await timer.reset();
+                    const index = this.localeActiveTimerList[serial].findIndex(el => el?.id === removedId);
+                    this.localeActiveTimerList[serial].splice(index, 1);
+                }
             }
             if (addedTimer) {
                 await timerAdd(addedTimer);
@@ -196,9 +209,15 @@ class Store {
             }
         }
     }
-    addSerialToLocalActiveTimerList(serial?: string): void {
-        if (serial && !this.localeActiveTimerList[serial]) {
-            this.localeActiveTimerList[serial] = [];
+
+    /**
+     * Adds a serial number to the local active timer list if it doesn't already exist.
+     *
+     * @param deviceSerial - The serial number to add.
+     */
+    addSerialToLocalActiveTimerList(deviceSerial?: string): void {
+        if (deviceSerial && !this.localeActiveTimerList[deviceSerial]) {
+            this.localeActiveTimerList[deviceSerial] = [];
         }
     }
 
@@ -207,16 +226,32 @@ class Store {
      *
      * @param id - The ID string to extract the serial number from.
      */
-    getSerialFromId(id: string): string | undefined {
+    getSerialFromIobrokerStateId(id: string): string | undefined {
         return id.split('.')[3];
     }
 
-    clearTimeout(timeout: ioBroker.Timeout | undefined): void {
-        this.adapter.clearTimeout(timeout);
-        this.timeouts = this.timeouts.filter(t => t !== timeout);
+    /**
+     * Clears a timeout and removes it from the internal list.
+     *
+     * @param t - The timeout to clear.
+     */
+    clearTimeout(t: ioBroker.Timeout | undefined): void {
+        this.adapter.clearTimeout(t);
+        this.timeouts = this.timeouts.filter(t => t !== t);
     }
+
+    /**
+     * Clears all stored timeouts.
+     */
     clearTimeouts(): void {
         this.timeouts.forEach(timeout => this.clearTimeout(timeout));
+    }
+
+    /**
+     * Returns boolean indicating if any timer is currently running.
+     */
+    isSomeTimerRunning(): boolean {
+        return Object.keys(obj.timers).some(t => obj.timers[t].isActive);
     }
 }
 export default new Store();

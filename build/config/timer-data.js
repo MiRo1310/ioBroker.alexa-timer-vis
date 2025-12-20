@@ -28,11 +28,11 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var timer_data_exports = {};
 __export(timer_data_exports, {
-  timers: () => timers
+  obj: () => obj
 });
 module.exports = __toCommonJS(timer_data_exports);
-var import_timerCount = __toESM(require("../app/timerCount"));
-const timers = {
+var import_timerCount = __toESM(require("@/app/timerCount"));
+const obj = {
   count: import_timerCount.default,
   // Anzahl aktiver Timer
   intervalTime: 1e3,
@@ -42,11 +42,11 @@ const timers = {
     timer3: false,
     timer4: false
   },
-  timerList: {},
+  timers: {},
   interval: { timer1: null }
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  timers
+  obj
 });
 //# sourceMappingURL=timer-data.js.map

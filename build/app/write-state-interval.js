@@ -31,33 +31,31 @@ __export(write_state_interval_exports, {
   writeStateInterval: () => writeStateInterval
 });
 module.exports = __toCommonJS(write_state_interval_exports);
-var import_store = __toESM(require("../store/store"));
-var import_timer_data = require("../config/timer-data");
-var import_write_state = require("../app/write-state");
-var import_logging = __toESM(require("../lib/logging"));
+var import_store = __toESM(require("@/store/store"));
+var import_timer_data = require("@/config/timer-data");
+var import_write_state = require("@/app/write-state");
+var import_logging = __toESM(require("@/lib/logging"));
 const writeStateInterval = () => {
   const { adapter } = import_store.default;
-  try {
-    if (import_store.default.interval) {
-      return;
-    }
-    import_store.default.interval = adapter.setInterval(() => {
-      var _a;
-      (0, import_write_state.writeStates)({ reset: false }).catch((e) => {
-        import_logging.default.send({ title: "Error writeStateIntervall", e });
-      });
-      if (!((_a = Object.keys(import_timer_data.timers.timerList)) == null ? void 0 : _a.find((t) => import_timer_data.timers.timerList[t].isActive))) {
-        adapter.setStateChanged("all_Timer.alive", false, true);
-        adapter.clearInterval(import_store.default.interval);
-        import_store.default.interval = null;
-        adapter.log.debug("Interval stopped!");
-      }
-    }, import_timer_data.timers.intervalTime);
-  } catch (e) {
-    import_logging.default.send({ title: "Error writeStateIntervall", e });
-    adapter.clearInterval(import_store.default.interval);
+  if (import_store.default.writeStateInterval) {
+    return;
   }
+  import_store.default.writeStateInterval = adapter.setInterval(() => {
+    (0, import_write_state.writeStates)({ reset: false }).catch((e) => {
+      import_logging.default.send({ title: "Error writeStateIntervall", e });
+    });
+    if (!import_store.default.isSomeTimerRunning()) {
+      stopWriteStateInterval();
+    }
+  }, import_timer_data.obj.intervalTime);
 };
+function stopWriteStateInterval() {
+  const { adapter } = import_store.default;
+  adapter.setStateChanged("all_Timer.alive", false, true);
+  adapter.clearInterval(import_store.default.writeStateInterval);
+  import_store.default.writeStateInterval = null;
+  adapter.log.debug("Write States Interval stopped!");
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   writeStateInterval

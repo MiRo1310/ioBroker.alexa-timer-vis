@@ -22,33 +22,26 @@ export const generateTimerValues = (timer: Timer): number => {
         store.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
         return 0;
     }
-    const msLeft = getMsLeftFromNowToEndtime(endTime);
-    const remainingSeconds = getSecondsFromMS(msLeft);
+    const remainingMs = getMsLeftFromNowToEndtime(endTime);
+    const remainingSecondsRound = getSecondsFromMS(remainingMs);
 
-    const result = secToHourMinSec(remainingSeconds, true);
+    const { hour, minutes, seconds, stringTimer } = secToHourMinSec(remainingSecondsRound, true);
 
-    let { hour, minutes, seconds } = result;
-    const { string: lengthTimer } = result;
+    const stringTimerWithUnit = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingSecondsRound)}`;
 
-    const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingSeconds)}`;
-
-    const stringTimer2 = getTimerStringUnitBasedOnTime(hour, minutes, seconds);
+    const timerStringUnitBasedOnTime = getTimerStringUnitBasedOnTime(hour, minutes, seconds);
 
     if (!timer.isExtendOrShortenTimer()) {
         timer.setVoiceInputAsSeconds(sec);
     }
 
-    ({ hour, minutes, seconds } = resetSuperiorValue(hour, minutes, seconds));
-
     timer.setTimerValues({
-        hours: hour,
-        minutes,
-        seconds,
-        stringTimer1,
-        stringTimer2,
-        remainingSeconds,
-        lengthTimer,
+        ...resetSuperiorValue(hour, minutes, seconds),
+        stringTimer1: stringTimerWithUnit,
+        stringTimer2: timerStringUnitBasedOnTime,
+        remainingSeconds: remainingSecondsRound,
+        lengthTimer: stringTimer,
     });
 
-    return remainingSeconds < 0 ? 0 : remainingSeconds;
+    return remainingSecondsRound < 0 ? 0 : remainingSecondsRound;
 };
