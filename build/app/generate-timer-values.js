@@ -31,8 +31,8 @@ __export(generate_timer_values_exports, {
   generateTimerValues: () => generateTimerValues
 });
 module.exports = __toCommonJS(generate_timer_values_exports);
-var import_store = __toESM(require("../store/store"));
-var import_time = require("../lib/time");
+var import_store = __toESM(require("@/store/store"));
+var import_time = require("@/lib/time");
 const generateTimerValues = (timer) => {
   const sec = timer.calculatedSeconds;
   const endTime = timer.getOutputProperties().endTimeNumber;
@@ -40,27 +40,22 @@ const generateTimerValues = (timer) => {
     import_store.default.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
     return 0;
   }
-  const msLeft = (0, import_time.getMsLeftFromNowToEndtime)(endTime);
-  const remainingSeconds = (0, import_time.getSecondsFromMS)(msLeft);
-  const result = (0, import_time.secToHourMinSec)(remainingSeconds, true);
-  let { hour, minutes, seconds } = result;
-  const { string: lengthTimer } = result;
-  const stringTimer1 = `${hour}:${minutes}:${seconds}${(0, import_time.getTimeUnit)(remainingSeconds)}`;
-  const stringTimer2 = (0, import_time.getTimerStringUnitBasedOnTime)(hour, minutes, seconds);
+  const remainingMs = (0, import_time.getMsLeftFromNowToEndtime)(endTime);
+  const remainingSecondsRound = (0, import_time.getSecondsFromMS)(remainingMs);
+  const { hour, minutes, seconds, stringTimer } = (0, import_time.secToHourMinSec)(remainingSecondsRound, true);
+  const stringTimerWithUnit = `${hour}:${minutes}:${seconds}${(0, import_time.getTimeUnit)(remainingSecondsRound)}`;
+  const timerStringUnitBasedOnTime = (0, import_time.getTimerStringUnitBasedOnTime)(hour, minutes, seconds);
   if (!timer.isExtendOrShortenTimer()) {
     timer.setVoiceInputAsSeconds(sec);
   }
-  ({ hour, minutes, seconds } = (0, import_time.resetSuperiorValue)(hour, minutes, seconds));
   timer.setTimerValues({
-    hours: hour,
-    minutes,
-    seconds,
-    stringTimer1,
-    stringTimer2,
-    remainingSeconds,
-    lengthTimer
+    ...(0, import_time.resetSuperiorValue)(hour, minutes, seconds),
+    stringTimer1: stringTimerWithUnit,
+    stringTimer2: timerStringUnitBasedOnTime,
+    remainingSeconds: remainingSecondsRound,
+    lengthTimer: stringTimer
   });
-  return remainingSeconds < 0 ? 0 : remainingSeconds;
+  return remainingSecondsRound < 0 ? 0 : remainingSecondsRound;
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

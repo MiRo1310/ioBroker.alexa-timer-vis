@@ -1,6 +1,3 @@
-import type AlexaTimerVis from '@/main';
-import errorLogger from '@/lib/logging';
-
 /**
  * Convert the first letter of a string to uppercase
  *
@@ -29,17 +26,3 @@ export const countOccurrences = (str: string, char: string): number => str.split
  * @param str - The variable to check
  */
 export const isString = (str?: string | number | boolean | object | null): str is string => typeof str == 'string';
-
-export function parseJSON<T>(
-    val: string | null,
-    adapter?: AlexaTimerVis,
-): { ob: string; isValidJson: false } | { ob: T; isValidJson: true } {
-    try {
-        return val ? { ob: JSON.parse(val) as T, isValidJson: true } : { ob: val ?? '', isValidJson: false };
-    } catch (e) {
-        if (adapter) {
-            errorLogger.send({ title: 'Error parseJSON:', e });
-        }
-        return { ob: val ?? '', isValidJson: false };
-    }
-}

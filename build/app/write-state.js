@@ -32,10 +32,10 @@ __export(write_state_exports, {
   writeStatesByTimerIndex: () => writeStatesByTimerIndex
 });
 module.exports = __toCommonJS(write_state_exports);
-var import_timer_data = require("../config/timer-data");
-var import_logging = __toESM(require("../lib/logging"));
-var import_store = __toESM(require("../store/store"));
-var import_timer = require("../app/timer");
+var import_timer_data = require("@/config/timer-data");
+var import_logging = __toESM(require("@/lib/logging"));
+var import_store = __toESM(require("@/store/store"));
+var import_timer = require("@/app/timer");
 const writeStatesByTimerIndex = async (timerIndex, reset) => {
   const adapter = import_store.default.adapter;
   const timer = (0, import_timer.getTimerByIndex)(timerIndex);
@@ -78,7 +78,7 @@ const writeStatesByTimerIndex = async (timerIndex, reset) => {
 };
 async function writeStates({ reset }) {
   try {
-    for (const timerIndex in import_timer_data.timers.status) {
+    for (const timerIndex in import_timer_data.obj.status) {
       await writeStatesByTimerIndex(timerIndex, reset);
     }
   } catch (e) {

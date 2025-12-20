@@ -1,7 +1,7 @@
 import type { TimerObject } from '@/types/types';
 import TimerCount from '@/app/timerCount';
 
-export const timers: TimerObject = {
+export const obj: TimerObject = {
     count: TimerCount, // Anzahl aktiver Timer
 
     intervalTime: 1000,
@@ -13,6 +13,6 @@ export const timers: TimerObject = {
         timer4: false,
     },
 
-    timerList: {},
+    timers: {},
     interval: { timer1: null },
 };

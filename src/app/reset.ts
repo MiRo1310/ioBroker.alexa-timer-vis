@@ -1,10 +1,10 @@
 import store from '@/store/store';
-import { timers } from '@/config/timer-data';
+import { obj } from '@/config/timer-data';
 import { writeStates } from '@/app/write-state';
 
 export async function resetAllTimerValuesAndStateValues(): Promise<void> {
-    for (const timerIndex in timers.timerList) {
-        const timer = timers.timerList[timerIndex];
+    for (const timerIndex in obj.timers) {
+        const timer = obj.timers[timerIndex];
 
         await timer.reset();
 

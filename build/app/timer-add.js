@@ -31,24 +31,24 @@ __export(timer_add_exports, {
   timerAdd: () => timerAdd
 });
 module.exports = __toCommonJS(timer_add_exports);
-var import_createStates = require("../app/createStates");
-var import_timer_data = require("../config/timer-data");
-var import_store = __toESM(require("../store/store"));
-var import_timer = require("../app/timer");
-var import_logging = __toESM(require("../lib/logging"));
-var import_timer_start = require("../app/timer-start");
-var import_write_state_interval = require("../app/write-state-interval");
+var import_createStates = require("@/app/createStates");
+var import_timer_data = require("@/config/timer-data");
+var import_store = __toESM(require("@/store/store"));
+var import_timer = require("@/app/timer");
+var import_logging = __toESM(require("@/lib/logging"));
+var import_timer_start = require("@/app/timer-start");
+var import_write_state_interval = require("@/app/write-state-interval");
 function addNewRawTimer(timerIndex) {
-  import_store.default.adapter.log.debug(`add index ${timerIndex}`);
-  import_timer_data.timers.status[timerIndex] = false;
-  import_timer_data.timers.timerList[timerIndex] = new import_timer.Timer({
+  import_store.default.adapter.log.debug(`Add new rawTimer: "${timerIndex}"`);
+  import_timer_data.obj.status[timerIndex] = false;
+  import_timer_data.obj.timers[timerIndex] = new import_timer.Timer({
     store: import_store.default
   });
 }
 const timerAdd = async (newActiveTimer) => {
   try {
-    import_timer_data.timers.count.increment();
-    const timerCount = import_timer_data.timers.count.getCount();
+    import_timer_data.obj.count.increment();
+    const timerCount = import_timer_data.obj.count.getCount();
     await (0, import_createStates.createStates)(timerCount);
     const timerIndex = `timer${timerCount}`;
     if (!(0, import_timer.getTimerByIndex)(timerIndex)) {

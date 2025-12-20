@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/json.ts"],
+  "sourcesContent": ["import type AlexaTimerVis from '@/main';\nimport errorLogger from '@/lib/logging';\n\nexport function parseJSON<T>(\n    val: string | null,\n    adapter?: AlexaTimerVis,\n): { ob: string; isValidJson: false } | { ob: T; isValidJson: true } {\n    try {\n        return val ? { ob: JSON.parse(val) as T, isValidJson: true } : { ob: val ?? '', isValidJson: false };\n    } catch (e) {\n        if (adapter) {\n            errorLogger.send({ title: 'Error parseJSON:', e });\n        }\n        return { ob: val ?? '', isValidJson: false };\n    }\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,qBAAwB;AAEjB,SAAS,UACZ,KACA,SACiE;AACjE,MAAI;AACA,WAAO,MAAM,EAAE,IAAI,KAAK,MAAM,GAAG,GAAQ,aAAa,KAAK,IAAI,EAAE,IAAI,oBAAO,IAAI,aAAa,MAAM;AAAA,EACvG,SAAS,GAAG;AACR,QAAI,SAAS;AACT,qBAAAA,QAAY,KAAK,EAAE,OAAO,oBAAoB,EAAE,CAAC;AAAA,IACrD;AACA,WAAO,EAAE,IAAI,oBAAO,IAAI,aAAa,MAAM;AAAA,EAC/C;AACJ;",
+  "names": ["errorLogger"]
+}

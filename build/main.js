@@ -33,14 +33,14 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_logging = __toESM(require("./lib/logging"));
-var import_reset = require("./app/reset");
-var import_timer_data = require("./config/timer-data");
-var import_timer = require("./app/timer");
-var import_store = __toESM(require("./store/store"));
-var import_write_state = require("./app/write-state");
-var import_ioBrokerStateAndObjects = require("./app/ioBrokerStateAndObjects");
-var import_subscribeStates = require("./app/subscribeStates");
+var import_logging = __toESM(require("@/lib/logging"));
+var import_reset = require("@/app/reset");
+var import_timer_data = require("@/config/timer-data");
+var import_timer = require("@/app/timer");
+var import_store = __toESM(require("@/store/store"));
+var import_write_state = require("@/app/write-state");
+var import_ioBrokerStateAndObjects = require("@/app/ioBrokerStateAndObjects");
+var import_subscribeStates = require("@/app/subscribeStates");
 let timeout_1;
 class AlexaTimerVis extends utils.Adapter {
   static instance;
@@ -69,10 +69,10 @@ class AlexaTimerVis extends utils.Adapter {
     }
     import_logging.default.init();
     await this.setState("info.connection", false, true);
-    import_timer_data.timers.timerList.timer1 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timers.timerList.timer2 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timers.timerList.timer3 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.timers.timerList.timer4 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.obj.timers.timer1 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.obj.timers.timer2 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.obj.timers.timer3 = new import_timer.Timer({ store: import_store.default });
+    import_timer_data.obj.timers.timer4 = new import_timer.Timer({ store: import_store.default });
     await (0, import_subscribeStates.subscribeActiveTimerListStates)();
     await (0, import_ioBrokerStateAndObjects.initStateCreation)();
     await (0, import_reset.resetAllTimerValuesAndStateValues)();
@@ -95,10 +95,10 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.info("Adapter shuts down");
       await (0, import_write_state.writeStates)({ reset: true });
       this.clearTimeout(timeout_1);
-      this.clearInterval(import_store.default.interval);
+      this.clearInterval(import_store.default.writeStateInterval);
       import_store.default.clearTimeouts();
-      for (const element in import_timer_data.timers.interval) {
-        this.clearInterval(import_timer_data.timers.interval[element]);
+      for (const element in import_timer_data.obj.interval) {
+        this.clearInterval(import_timer_data.obj.interval[element]);
       }
       this.log.debug("Intervals and timeouts cleared!");
       callback();

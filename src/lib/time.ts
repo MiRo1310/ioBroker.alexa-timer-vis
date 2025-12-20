@@ -24,7 +24,7 @@ export const secToHourMinSec = (valSec: number, doubleInt: boolean): SecToHourMi
         hour: hourString,
         minutes: minutesString,
         seconds: secondsString,
-        string: array.join(' ').trim(),
+        stringTimer: array.join(' ').trim(),
         initialString: initialArray.join(' ').trim(),
     };
 };
@@ -83,17 +83,17 @@ export const isMoreThanAMinute = (sec: number): boolean => sec > 60;
 /**
  * Reset superior values if they are zero. 00 to empty string
  *
- * @param hour {string} Hours
+ * @param hours {string} Hours
  * @param minutes {string} Minutes
  * @param seconds {string} Seconds
  */
 export function resetSuperiorValue(
-    hour: string,
+    hours: string,
     minutes: string,
     seconds: string,
-): { hour: string; minutes: string; seconds: string } {
-    if (hour === '00') {
-        hour = '';
+): { hours: string; minutes: string; seconds: string } {
+    if (hours === '00') {
+        hours = '';
         if (minutes === '00') {
             minutes = '';
             if (seconds === '00') {
@@ -101,7 +101,7 @@ export function resetSuperiorValue(
             }
         }
     }
-    return { hour, minutes, seconds };
+    return { hours, minutes, seconds };
 }
 
 /**

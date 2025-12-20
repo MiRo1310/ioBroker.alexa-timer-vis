@@ -156,7 +156,7 @@ describe('Timer evaluate string to Output string with units', () => {
     ];
     tests.forEach((test, index) => {
         it(`should be valid for Index ${index}`, () => {
-            expect(secToHourMinSec(eval(test.s), false).string).to.be.equal(test.e);
+            expect(secToHourMinSec(eval(test.s), false).stringTimer).to.be.equal(test.e);
         });
         it(`should be valid for Index ${index} and 0 values are ignored `, () => {
             expect(secToHourMinSec(eval(test.s), false).initialString).to.be.equal(test.initial);
@@ -165,7 +165,7 @@ describe('Timer evaluate string to Output string with units', () => {
 
     tests.forEach((test, index) => {
         it(`should be valid for Index ${index} with double int`, () => {
-            expect(secToHourMinSec(eval(test.s), true).string).to.be.equal(test.doubleInt);
+            expect(secToHourMinSec(eval(test.s), true).stringTimer).to.be.equal(test.doubleInt);
         });
         it(`should be valid for Index ${index} with double int, and 0 values are ignored`, () => {
             expect(secToHourMinSec(eval(test.s), true).initialString).to.be.equal(test.doubleInitial);
@@ -178,7 +178,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex 1', () => {
-        sinon.stub(timerData.timers, 'status').value({
+        sinon.stub(timerData.obj, 'status').value({
             timer1: false,
             timer2: true,
             timer3: true,
@@ -189,7 +189,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex 2', () => {
-        sinon.stub(timerData.timers, 'status').value({
+        sinon.stub(timerData.obj, 'status').value({
             timer1: true,
             timer2: false,
             timer3: true,
@@ -200,7 +200,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex 3', () => {
-        sinon.stub(timerData.timers, 'status').value({
+        sinon.stub(timerData.obj, 'status').value({
             timer1: true,
             timer2: true,
             timer3: true,
@@ -211,7 +211,7 @@ describe('startTimer (stubbed timerObject)', () => {
     });
 
     it('should get a free timerIndex with invalid key 3', () => {
-        sinon.stub(timerData.timers, 'status').value({
+        sinon.stub(timerData.obj, 'status').value({
             timer1: true,
             timer2: true,
             timer3: true,

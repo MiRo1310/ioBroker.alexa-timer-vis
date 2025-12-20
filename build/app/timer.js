@@ -33,13 +33,13 @@ __export(timer_exports, {
   getTimerByIndex: () => getTimerByIndex
 });
 module.exports = __toCommonJS(timer_exports);
-var import_logging = __toESM(require("../lib/logging"));
-var import_store = __toESM(require("../store/store"));
-var import_timer_data = require("../config/timer-data");
-var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
-var import_string = require("../lib/string");
-var import_state = require("../lib/state");
-var import_time = require("../lib/time");
+var import_logging = __toESM(require("@/lib/logging"));
+var import_store = __toESM(require("@/store/store"));
+var import_timer_data = require("@/config/timer-data");
+var import_ioBrokerStateAndObjects = require("@/app/ioBrokerStateAndObjects");
+var import_string = require("@/lib/string");
+var import_state = require("@/lib/state");
+var import_time = require("@/lib/time");
 class Timer {
   timerIndex;
   inputDeviceName;
@@ -66,7 +66,10 @@ class Timer {
   alexaInstance;
   initialTimer;
   calculatedSeconds;
-  isActive = false;
+  _isActive = false;
+  get isActive() {
+    return this._isActive;
+  }
   constructor({ store }) {
     this.adapter = store.adapter;
     this.hours = "";
@@ -93,6 +96,9 @@ class Timer {
     this.alexaInstance = null;
     this.initialTimer = "";
     this.calculatedSeconds = 0;
+  }
+  setInactive() {
+    this._isActive = false;
   }
   getTimerIndex() {
     return this.timerIndex;
@@ -220,7 +226,7 @@ class Timer {
     this.remainingTimeInSeconds = props.remainingSeconds;
     this.lengthTimer = props.lengthTimer;
     this.mathPercent();
-    this.isActive = true;
+    this._isActive = true;
   }
   mathPercent() {
     const percent = Math.round(this.remainingTimeInSeconds / this.voiceInputAsSeconds * 100);
@@ -263,23 +269,23 @@ class Timer {
     this.endTime = 0;
     this.initialTimer = "";
     if (this.timerIndex) {
-      import_timer_data.timers.status[this.timerIndex] = false;
+      import_timer_data.obj.status[this.timerIndex] = false;
       await (0, import_ioBrokerStateAndObjects.setDeviceNameInObject)(this.timerIndex, "");
     }
-    this.isActive = false;
+    this._isActive = false;
   }
   getTimerId() {
     return this.timerId;
   }
 }
 function getTimerByIndex(timerIndex) {
-  return import_timer_data.timers.timerList[timerIndex];
+  return import_timer_data.obj.timers[timerIndex];
 }
 function getTimerById(id) {
   var _a;
-  const timerList = Object.keys(import_timer_data.timers.timerList);
-  const timerIndex = timerList.find((value) => import_timer_data.timers.timerList[value].getTimerId() === id);
-  return timerIndex ? (_a = import_timer_data.timers.timerList) == null ? void 0 : _a[timerIndex] : void 0;
+  const timerList = Object.keys(import_timer_data.obj.timers);
+  const timerIndex = timerList.find((value) => import_timer_data.obj.timers[value].getTimerId() === id);
+  return timerIndex ? (_a = import_timer_data.obj.timers) == null ? void 0 : _a[timerIndex] : void 0;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
