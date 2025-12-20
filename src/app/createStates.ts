@@ -1,5 +1,5 @@
 import store from '@/store/store';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 
 export const createStates = async (value: number): Promise<void> => {
     const { adapter } = store;

@@ -35,11 +35,11 @@ __export(ioBrokerStateAndObjects_exports, {
   setDeviceNameInObject: () => setDeviceNameInObject
 });
 module.exports = __toCommonJS(ioBrokerStateAndObjects_exports);
-var import_store = __toESM(require("@/store/store"));
-var import_logging = __toESM(require("@/lib/logging"));
-var import_string = require("@/lib/string");
-var import_createStates = require("@/app/createStates");
-var import_state = require("@/lib/state");
+var import_store = __toESM(require("../store/store"));
+var import_logging = require("../lib/logging");
+var import_string = require("../lib/string");
+var import_createStates = require("../app/createStates");
+var import_state = require("../lib/state");
 const setDeviceNameInObject = async (index, val) => {
   const pathArray = [import_store.default.getAlexaTimerVisInstance(), index];
   const { adapter } = import_store.default;
@@ -53,7 +53,7 @@ const setDeviceNameInObject = async (index, val) => {
       native: {}
     });
   } catch (e) {
-    import_logging.default.send({ title: "Error setDeviceNameInObject", e });
+    import_logging.errorLogger.send({ title: "Error setDeviceNameInObject", e });
   }
 };
 async function getParsedAlexaJson() {
@@ -67,7 +67,7 @@ async function getParsedAlexaJson() {
       return JSON.parse(jsonAlexa.val);
     }
   } catch (e) {
-    import_logging.default.send({ title: "Error in getParsedAlexaJson", e });
+    import_logging.errorLogger.send({ title: "Error in getParsedAlexaJson", e });
   }
 }
 const initStateCreation = async () => {

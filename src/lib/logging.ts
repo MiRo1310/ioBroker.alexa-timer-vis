@@ -70,4 +70,4 @@ class ErrorLoggerClass {
     }
 }
 
-export default new ErrorLoggerClass();
+export const errorLogger = new ErrorLoggerClass();

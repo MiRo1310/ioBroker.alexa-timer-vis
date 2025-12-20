@@ -31,14 +31,14 @@ __export(subscribeStates_exports, {
   subscribeActiveTimerListStates: () => subscribeActiveTimerListStates
 });
 module.exports = __toCommonJS(subscribeStates_exports);
-var import_store = __toESM(require("@/store/store"));
+var import_store = __toESM(require("../store/store"));
 const subscribeActiveTimerListStates = async () => {
   const pattern = `alexa2.${import_store.default.alexa2Instance}.*.activeTimerList`;
   const res = await import_store.default.adapter.getForeignStatesAsync(pattern);
   Object.keys(res).forEach((id) => {
     import_store.default.adapter.log.debug(`Subscribing to activeTimerList state: ${id}`);
     import_store.default.adapter.subscribeForeignStates(id);
-    import_store.default.addSerialToLocalActiveTimerList(import_store.default.getSerialFromId(id));
+    import_store.default.addSerialToLocalActiveTimerList(import_store.default.getSerialFromIobrokerStateId(id));
   });
 };
 // Annotate the CommonJS export names for ESM import in node:

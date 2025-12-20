@@ -31,10 +31,10 @@ __export(interval_exports, {
   interval: () => interval
 });
 module.exports = __toCommonJS(interval_exports);
-var import_timer_data = require("@/config/timer-data");
-var import_store = __toESM(require("@/store/store"));
-var import_generate_timer_values = require("@/app/generate-timer-values");
-var import_time = require("@/lib/time");
+var import_timer_data = require("../config/timer-data");
+var import_store = __toESM(require("../store/store"));
+var import_generate_timer_values = require("../app/generate-timer-values");
+var import_time = require("../lib/time");
 const isIndexInInterval = (timerIndex) => timerIndex in import_timer_data.obj.interval && import_timer_data.obj.interval[timerIndex] !== null;
 const interval = (timer, int, singleInstance) => {
   const adapter = import_store.default.adapter;

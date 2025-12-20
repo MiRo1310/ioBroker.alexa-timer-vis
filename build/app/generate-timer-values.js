@@ -31,8 +31,8 @@ __export(generate_timer_values_exports, {
   generateTimerValues: () => generateTimerValues
 });
 module.exports = __toCommonJS(generate_timer_values_exports);
-var import_store = __toESM(require("@/store/store"));
-var import_time = require("@/lib/time");
+var import_store = __toESM(require("../store/store"));
+var import_time = require("../lib/time");
 const generateTimerValues = (timer) => {
   const sec = timer.calculatedSeconds;
   const endTime = timer.getOutputProperties().endTimeNumber;

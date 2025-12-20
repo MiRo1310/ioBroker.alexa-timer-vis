@@ -33,13 +33,13 @@ __export(timer_exports, {
   getTimerByIndex: () => getTimerByIndex
 });
 module.exports = __toCommonJS(timer_exports);
-var import_logging = __toESM(require("@/lib/logging"));
-var import_store = __toESM(require("@/store/store"));
-var import_timer_data = require("@/config/timer-data");
-var import_ioBrokerStateAndObjects = require("@/app/ioBrokerStateAndObjects");
-var import_string = require("@/lib/string");
-var import_state = require("@/lib/state");
-var import_time = require("@/lib/time");
+var import_logging = require("../lib/logging");
+var import_store = __toESM(require("../store/store"));
+var import_timer_data = require("../config/timer-data");
+var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
+var import_string = require("../lib/string");
+var import_state = require("../lib/state");
+var import_time = require("../lib/time");
 class Timer {
   timerIndex;
   inputDeviceName;
@@ -180,7 +180,7 @@ class Timer {
       this.setCreationTime(creationTime);
       this.setValuesFromEchoDeviceTimerList(newActiveTimer);
     } catch (e) {
-      import_logging.default.send({ title: "Error in getInputDevice", e });
+      import_logging.errorLogger.send({ title: "Error in getInputDevice", e });
     }
   }
   setVoiceInputAsSeconds(seconds) {
@@ -204,7 +204,7 @@ class Timer {
         this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
       }
     } catch (e) {
-      import_logging.default.send({ title: "Error in setIdFromEcoDeviceTimerList", e });
+      import_logging.errorLogger.send({ title: "Error in setIdFromEcoDeviceTimerList", e });
     }
   }
   updateInitialTimer(sec) {

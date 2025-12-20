@@ -33,14 +33,14 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_logging = __toESM(require("@/lib/logging"));
-var import_reset = require("@/app/reset");
-var import_timer_data = require("@/config/timer-data");
-var import_timer = require("@/app/timer");
-var import_store = __toESM(require("@/store/store"));
-var import_write_state = require("@/app/write-state");
-var import_ioBrokerStateAndObjects = require("@/app/ioBrokerStateAndObjects");
-var import_subscribeStates = require("@/app/subscribeStates");
+var import_logging = require("./lib/logging");
+var import_reset = require("./app/reset");
+var import_timer_data = require("./config/timer-data");
+var import_timer = require("./app/timer");
+var import_store = __toESM(require("./store/store"));
+var import_write_state = require("./app/write-state");
+var import_ioBrokerStateAndObjects = require("./app/ioBrokerStateAndObjects");
+var import_subscribeStates = require("./app/subscribeStates");
 let timeout_1;
 class AlexaTimerVis extends utils.Adapter {
   static instance;
@@ -67,7 +67,7 @@ class AlexaTimerVis extends utils.Adapter {
     } else {
       return;
     }
-    import_logging.default.init();
+    import_logging.errorLogger.init();
     await this.setState("info.connection", false, true);
     import_timer_data.obj.timers.timer1 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.obj.timers.timer2 = new import_timer.Timer({ store: import_store.default });
@@ -86,7 +86,7 @@ class AlexaTimerVis extends utils.Adapter {
           }
         }
       } catch (e) {
-        import_logging.default.send({ title: "Error in stateChange", e });
+        import_logging.errorLogger.send({ title: "Error in stateChange", e });
       }
     });
   }
@@ -103,7 +103,7 @@ class AlexaTimerVis extends utils.Adapter {
       this.log.debug("Intervals and timeouts cleared!");
       callback();
     } catch (e) {
-      import_logging.default.send({ title: "Error in onUnload", e });
+      import_logging.errorLogger.send({ title: "Error in onUnload", e });
       callback();
     }
   }

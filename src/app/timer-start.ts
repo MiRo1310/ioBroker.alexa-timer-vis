@@ -2,7 +2,7 @@ import type { AlexaActiveTimerList, TimerIndex } from '@/types/types';
 import { obj } from '@/config/timer-data';
 import store from '@/store/store';
 import { interval } from '@/app/interval';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import { isMoreThanAMinute } from '@/lib/time';
 
 export const startTimer = async (newActiveTimer: AlexaActiveTimerList): Promise<void> => {

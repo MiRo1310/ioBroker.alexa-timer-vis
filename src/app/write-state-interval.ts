@@ -1,7 +1,7 @@
 import store from '@/store/store';
 import { obj } from '@/config/timer-data';
 import { writeStates } from '@/app/write-state';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 
 /**
  * Starts an interval to periodically write the state of all active timers.

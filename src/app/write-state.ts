@@ -1,5 +1,5 @@
 import { obj } from '@/config/timer-data';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import store from '@/store/store';
 import { getTimerByIndex } from '@/app/timer';
 

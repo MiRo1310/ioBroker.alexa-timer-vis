@@ -1,6 +1,6 @@
 'use strict';
 import * as utils from '@iobroker/adapter-core';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
 import { obj } from '@/config/timer-data';
 import { getTimerByIndex, Timer } from '@/app/timer';
