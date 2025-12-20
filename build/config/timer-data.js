@@ -31,7 +31,7 @@ __export(timer_data_exports, {
   obj: () => obj
 });
 module.exports = __toCommonJS(timer_data_exports);
-var import_timerCount = __toESM(require("@/app/timerCount"));
+var import_timerCount = __toESM(require("../app/timerCount"));
 const obj = {
   count: import_timerCount.default,
   // Anzahl aktiver Timer

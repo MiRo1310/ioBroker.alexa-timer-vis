@@ -31,13 +31,13 @@ __export(timer_add_exports, {
   timerAdd: () => timerAdd
 });
 module.exports = __toCommonJS(timer_add_exports);
-var import_createStates = require("@/app/createStates");
-var import_timer_data = require("@/config/timer-data");
-var import_store = __toESM(require("@/store/store"));
-var import_timer = require("@/app/timer");
-var import_logging = __toESM(require("@/lib/logging"));
-var import_timer_start = require("@/app/timer-start");
-var import_write_state_interval = require("@/app/write-state-interval");
+var import_createStates = require("../app/createStates");
+var import_timer_data = require("../config/timer-data");
+var import_store = __toESM(require("../store/store"));
+var import_timer = require("../app/timer");
+var import_logging = require("../lib/logging");
+var import_timer_start = require("../app/timer-start");
+var import_write_state_interval = require("../app/write-state-interval");
 function addNewRawTimer(timerIndex) {
   import_store.default.adapter.log.debug(`Add new rawTimer: "${timerIndex}"`);
   import_timer_data.obj.status[timerIndex] = false;
@@ -57,7 +57,7 @@ const timerAdd = async (newActiveTimer) => {
     await (0, import_timer_start.startTimer)(newActiveTimer);
     (0, import_write_state_interval.writeStateInterval)();
   } catch (e) {
-    import_logging.default.send({ title: "Error timerAdd", e });
+    import_logging.errorLogger.send({ title: "Error timerAdd", e });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

@@ -31,13 +31,15 @@ __export(json_exports, {
   parseJSON: () => parseJSON
 });
 module.exports = __toCommonJS(json_exports);
-var import_logging = __toESM(require("@/lib/logging"));
-function parseJSON(val, adapter) {
+var import_logging = require("../lib/logging");
+var import_store = __toESM(require("../store/store"));
+function parseJSON(val) {
+  const { adapter } = import_store.default;
   try {
     return val ? { ob: JSON.parse(val), isValidJson: true } : { ob: val != null ? val : "", isValidJson: false };
   } catch (e) {
     if (adapter) {
-      import_logging.default.send({ title: "Error parseJSON:", e });
+      import_logging.errorLogger.send({ title: "Error parseJSON:", e });
     }
     return { ob: val != null ? val : "", isValidJson: false };
   }

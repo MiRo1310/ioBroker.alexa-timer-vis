@@ -32,11 +32,11 @@ __export(timer_start_exports, {
   startTimer: () => startTimer
 });
 module.exports = __toCommonJS(timer_start_exports);
-var import_timer_data = require("@/config/timer-data");
-var import_store = __toESM(require("@/store/store"));
-var import_interval = require("@/app/interval");
-var import_logging = __toESM(require("@/lib/logging"));
-var import_time = require("@/lib/time");
+var import_timer_data = require("../config/timer-data");
+var import_store = __toESM(require("../store/store"));
+var import_interval = require("../app/interval");
+var import_logging = require("../lib/logging");
+var import_time = require("../lib/time");
 const startTimer = async (newActiveTimer) => {
   try {
     const availableTimerIndex = getAvailableTimerIndex();
@@ -50,7 +50,7 @@ const startTimer = async (newActiveTimer) => {
     }
     (0, import_interval.interval)(timer, import_store.default.intervalSecLessThan60Sec * 1e3, true);
   } catch (e) {
-    import_logging.default.send({ title: "Error startTimer", e });
+    import_logging.errorLogger.send({ title: "Error startTimer", e });
   }
 };
 function getAvailableTimerIndex() {

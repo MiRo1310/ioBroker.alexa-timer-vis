@@ -21,7 +21,7 @@ __export(state_exports, {
   isIobrokerValue: () => isIobrokerValue
 });
 module.exports = __toCommonJS(state_exports);
-var import_object = require("@/lib/object");
+var import_object = require("../lib/object");
 const isIobrokerValue = (obj) => (0, import_object.isDefined)(obj == null ? void 0 : obj.val);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

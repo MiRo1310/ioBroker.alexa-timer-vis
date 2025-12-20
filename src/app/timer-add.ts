@@ -1,9 +1,8 @@
 import { createStates } from '@/app/createStates';
 import { obj } from '@/config/timer-data';
-
 import store from '@/store/store';
 import { getTimerByIndex, Timer } from '@/app/timer';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
 import type { AlexaActiveTimerList } from '@/types/types';

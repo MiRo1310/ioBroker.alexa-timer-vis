@@ -1,4 +1,4 @@
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import store from '@/store/store';
 
 /**

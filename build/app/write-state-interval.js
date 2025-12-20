@@ -31,10 +31,10 @@ __export(write_state_interval_exports, {
   writeStateInterval: () => writeStateInterval
 });
 module.exports = __toCommonJS(write_state_interval_exports);
-var import_store = __toESM(require("@/store/store"));
-var import_timer_data = require("@/config/timer-data");
-var import_write_state = require("@/app/write-state");
-var import_logging = __toESM(require("@/lib/logging"));
+var import_store = __toESM(require("../store/store"));
+var import_timer_data = require("../config/timer-data");
+var import_write_state = require("../app/write-state");
+var import_logging = require("../lib/logging");
 const writeStateInterval = () => {
   const { adapter } = import_store.default;
   if (import_store.default.writeStateInterval) {
@@ -42,7 +42,7 @@ const writeStateInterval = () => {
   }
   import_store.default.writeStateInterval = adapter.setInterval(() => {
     (0, import_write_state.writeStates)({ reset: false }).catch((e) => {
-      import_logging.default.send({ title: "Error writeStateIntervall", e });
+      import_logging.errorLogger.send({ title: "Error writeStateIntervall", e });
     });
     if (!import_store.default.isSomeTimerRunning()) {
       stopWriteStateInterval();

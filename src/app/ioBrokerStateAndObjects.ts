@@ -1,6 +1,6 @@
 import type { AlexaJson, TimerIndex } from '@/types/types';
 import store from '@/store/store';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import { isString } from '@/lib/string';
 import { createStates } from '@/app/createStates';
 import { isIobrokerValue } from '@/lib/state';

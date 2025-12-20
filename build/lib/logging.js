@@ -28,10 +28,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var logging_exports = {};
 __export(logging_exports, {
-  default: () => logging_default
+  errorLogger: () => errorLogger
 });
 module.exports = __toCommonJS(logging_exports);
-var import_store = __toESM(require("@/store/store"));
+var import_store = __toESM(require("../store/store"));
 class ErrorLoggerClass {
   Sentry;
   adapter;
@@ -87,5 +87,9 @@ class ErrorLoggerClass {
     }
   }
 }
-var logging_default = new ErrorLoggerClass();
+const errorLogger = new ErrorLoggerClass();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  errorLogger
+});
 //# sourceMappingURL=logging.js.map

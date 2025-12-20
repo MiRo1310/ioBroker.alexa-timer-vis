@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/lib/json.ts"],
-  "sourcesContent": ["import type AlexaTimerVis from '@/main';\nimport errorLogger from '@/lib/logging';\n\nexport function parseJSON<T>(\n    val: string | null,\n    adapter?: AlexaTimerVis,\n): { ob: string; isValidJson: false } | { ob: T; isValidJson: true } {\n    try {\n        return val ? { ob: JSON.parse(val) as T, isValidJson: true } : { ob: val ?? '', isValidJson: false };\n    } catch (e) {\n        if (adapter) {\n            errorLogger.send({ title: 'Error parseJSON:', e });\n        }\n        return { ob: val ?? '', isValidJson: false };\n    }\n}\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,qBAAwB;AAEjB,SAAS,UACZ,KACA,SACiE;AACjE,MAAI;AACA,WAAO,MAAM,EAAE,IAAI,KAAK,MAAM,GAAG,GAAQ,aAAa,KAAK,IAAI,EAAE,IAAI,oBAAO,IAAI,aAAa,MAAM;AAAA,EACvG,SAAS,GAAG;AACR,QAAI,SAAS;AACT,qBAAAA,QAAY,KAAK,EAAE,OAAO,oBAAoB,EAAE,CAAC;AAAA,IACrD;AACA,WAAO,EAAE,IAAI,oBAAO,IAAI,aAAa,MAAM;AAAA,EAC/C;AACJ;",
-  "names": ["errorLogger"]
+  "sourcesContent": ["import { errorLogger } from '@/lib/logging';\nimport store from '@/store/store';\n\n/**\n * Parse a JSON string and return an object with generic Typ and  with validity status\n *\n * @param val - The JSON string to parse\n */\nexport function parseJSON<T>(val: string | null): { ob: string; isValidJson: false } | { ob: T; isValidJson: true } {\n    const { adapter } = store;\n    try {\n        return val ? { ob: JSON.parse(val) as T, isValidJson: true } : { ob: val ?? '', isValidJson: false };\n    } catch (e) {\n        if (adapter) {\n            errorLogger.send({ title: 'Error parseJSON:', e });\n        }\n        return { ob: val ?? '', isValidJson: false };\n    }\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,qBAA4B;AAC5B,mBAAkB;AAOX,SAAS,UAAa,KAAuF;AAChH,QAAM,EAAE,QAAQ,IAAI,aAAAA;AACpB,MAAI;AACA,WAAO,MAAM,EAAE,IAAI,KAAK,MAAM,GAAG,GAAQ,aAAa,KAAK,IAAI,EAAE,IAAI,oBAAO,IAAI,aAAa,MAAM;AAAA,EACvG,SAAS,GAAG;AACR,QAAI,SAAS;AACT,iCAAY,KAAK,EAAE,OAAO,oBAAoB,EAAE,CAAC;AAAA,IACrD;AACA,WAAO,EAAE,IAAI,oBAAO,IAAI,aAAa,MAAM;AAAA,EAC/C;AACJ;",
+  "names": ["store"]
 }

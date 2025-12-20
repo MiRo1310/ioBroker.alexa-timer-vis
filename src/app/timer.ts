@@ -5,7 +5,7 @@ import type {
     TimerIndex,
     TimerInit,
 } from '@/types/types';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
 import Store from '@/store/store';
 import { obj } from '@/config/timer-data';

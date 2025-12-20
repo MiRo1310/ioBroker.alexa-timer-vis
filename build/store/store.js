@@ -21,10 +21,10 @@ __export(store_exports, {
   default: () => store_default
 });
 module.exports = __toCommonJS(store_exports);
-var import_timer_add = require("@/app/timer-add");
-var import_timer = require("@/app/timer");
-var import_string = require("@/lib/string");
-var import_timer_data = require("@/config/timer-data");
+var import_timer_add = require("../app/timer-add");
+var import_timer = require("../app/timer");
+var import_timer_data = require("../config/timer-data");
+var import_json = require("../lib/json");
 class Store {
   adapter;
   valHourForZero;
@@ -182,16 +182,19 @@ class Store {
   includesActiveTimerId(id, serial) {
     return this.localeActiveTimerList[serial].some((t) => t.id === id);
   }
+  isIdFromActiveTimerList(id) {
+    return id.includes(".Timer.activeTimerList");
+  }
   async activeTimeListChangedHandler(id, state) {
-    const list = state == null ? void 0 : state.val;
-    if (!id.includes(".Timer.activeTimerList") || !list) {
+    const stateValue = state == null ? void 0 : state.val;
+    if (!this.isIdFromActiveTimerList(id) || !stateValue) {
       return;
     }
     let removedId = "init";
     let addedTimer = void 0;
     let extendTimer = void 0;
-    const updatedList = (0, import_string.parseJSON)(String(list));
-    const serial = this.getSerialFromId(id);
+    const updatedList = (0, import_json.parseJSON)(String(stateValue));
+    const serial = this.getSerialFromIobrokerStateId(id);
     while ((removedId || addedTimer || extendTimer) && serial && updatedList.isValidJson) {
       removedId = this.getRemovedTimerId(updatedList.ob, serial);
       addedTimer = this.getNewActiveTimer(updatedList.ob, serial);
@@ -230,7 +233,7 @@ class Store {
    *
    * @param id - The ID string to extract the serial number from.
    */
-  getSerialFromId(id) {
+  getSerialFromIobrokerStateId(id) {
     return id.split(".")[3];
   }
   /**
