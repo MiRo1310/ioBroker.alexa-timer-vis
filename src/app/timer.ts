@@ -7,7 +7,7 @@ import type {
 } from '@/types/types';
 import { errorLogger } from '@/lib/logging';
 import type AlexaTimerVis from '@/main';
-import Store from '@/store/store';
+import Store from '@/app/store';
 import { obj } from '@/config/timer-data';
 import { setDeviceNameInObject } from '@/app/ioBrokerStateAndObjects';
 import { firstLetterToUpperCase } from '@/lib/string';

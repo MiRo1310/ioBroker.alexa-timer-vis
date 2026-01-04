@@ -1,5 +1,5 @@
 import { errorLogger } from '@/lib/logging';
-import store from '@/store/store';
+import store from '@/app/store';
 
 /**
  * Parse a JSON string and return an object with generic Typ and  with validity status

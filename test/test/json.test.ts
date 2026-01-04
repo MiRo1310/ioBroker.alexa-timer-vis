@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { parseJSON } from '@/lib/json';
 import errorLogger from '@/lib/logging';
-import store from '@/store/store';
+import store from '@/app/store';
 
 describe('parseJSON', () => {
     let sendStub: sinon.SinonStub;

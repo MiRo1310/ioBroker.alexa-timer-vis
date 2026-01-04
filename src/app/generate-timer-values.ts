@@ -1,4 +1,4 @@
-import store from '@/store/store';
+import store from '@/app/store';
 import type { Timer } from '@/app/timer';
 import {
     getMsLeftFromNowToEndtime,

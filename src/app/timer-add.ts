@@ -1,6 +1,6 @@
 import { createStates } from '@/app/createStates';
 import { obj } from '@/config/timer-data';
-import store from '@/store/store';
+import store from '@/app/store';
 import { getTimerByIndex, Timer } from '@/app/timer';
 import { errorLogger } from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';

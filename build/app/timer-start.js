@@ -33,7 +33,7 @@ __export(timer_start_exports, {
 });
 module.exports = __toCommonJS(timer_start_exports);
 var import_timer_data = require("../config/timer-data");
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_interval = require("../app/interval");
 var import_logging = require("../lib/logging");
 var import_time = require("../lib/time");

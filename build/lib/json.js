@@ -32,7 +32,7 @@ __export(json_exports, {
 });
 module.exports = __toCommonJS(json_exports);
 var import_logging = require("../lib/logging");
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 function parseJSON(val) {
   const { adapter } = import_store.default;
   try {

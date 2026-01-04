@@ -31,7 +31,7 @@ __export(createStates_exports, {
   createStates: () => createStates
 });
 module.exports = __toCommonJS(createStates_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_logging = require("../lib/logging");
 const createStates = async (value) => {
   const { adapter } = import_store.default;

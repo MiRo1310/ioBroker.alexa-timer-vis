@@ -1,4 +1,4 @@
-import store from '@/store/store';
+import store from '@/app/store';
 import type { SecToHourMinSecReturn } from '@/types/types';
 
 const getSecondUnit = (seconds: number): string => (seconds != 1 ? store.unitSecond2 : store.unitSecond1);

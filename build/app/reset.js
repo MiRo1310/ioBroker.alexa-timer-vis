@@ -31,7 +31,7 @@ __export(reset_exports, {
   resetAllTimerValuesAndStateValues: () => resetAllTimerValuesAndStateValues
 });
 module.exports = __toCommonJS(reset_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
 async function resetAllTimerValuesAndStateValues() {

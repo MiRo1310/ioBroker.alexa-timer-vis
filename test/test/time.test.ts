@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { getTimerStringUnitBasedOnTime, millisecondsToString } from '@/lib/time';
-import store from '@/store/store';
+import store from '@/app/store';
 
 describe('Time Tests', () => {
     // + 1 hour

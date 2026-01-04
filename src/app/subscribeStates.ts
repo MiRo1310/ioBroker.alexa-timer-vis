@@ -1,4 +1,4 @@
-import store from '@/store/store';
+import store from '@/app/store';
 
 export const subscribeActiveTimerListStates = async (): Promise<void> => {
     const pattern = `alexa2.${store.alexa2Instance}.*.activeTimerList`;

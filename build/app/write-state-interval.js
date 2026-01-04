@@ -31,7 +31,7 @@ __export(write_state_interval_exports, {
   writeStateInterval: () => writeStateInterval
 });
 module.exports = __toCommonJS(write_state_interval_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_timer_data = require("../config/timer-data");
 var import_write_state = require("../app/write-state");
 var import_logging = require("../lib/logging");

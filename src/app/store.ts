@@ -180,8 +180,8 @@ class Store {
         }
 
         let removedId: string | undefined = 'init';
-        let addedTimer: AlexaActiveTimerList | undefined = undefined;
-        let extendTimer: { listEl: AlexaActiveTimerList; changedSec: number } | undefined = undefined;
+        let addedTimer: AlexaActiveTimerList | undefined;
+        let extendTimer: { listEl: AlexaActiveTimerList; changedSec: number } | undefined;
 
         const updatedList = parseJSON<AlexaActiveTimerList[]>(String(stateValue));
         const serial = this.getSerialFromIobrokerStateId(id);

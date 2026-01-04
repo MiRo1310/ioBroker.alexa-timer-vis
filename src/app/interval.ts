@@ -1,5 +1,5 @@
 import { obj } from '@/config/timer-data';
-import store from '@/store/store';
+import store from '@/app/store';
 import type { Timer } from '@/app/timer';
 import { generateTimerValues } from '@/app/generate-timer-values';
 import { secToHourMinSec } from '@/lib/time';

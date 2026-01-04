@@ -1,6 +1,6 @@
 // typescript
 import { expect } from 'chai';
-import store from '@/store/store';
+import store from '@/app/store';
 import type { LocalAlexaActiveTimerList } from '@/types/types';
 
 describe('Store.getRemovedTimerId', () => {
