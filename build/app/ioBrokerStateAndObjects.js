@@ -35,7 +35,7 @@ __export(ioBrokerStateAndObjects_exports, {
   setDeviceNameInObject: () => setDeviceNameInObject
 });
 module.exports = __toCommonJS(ioBrokerStateAndObjects_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_logging = require("../lib/logging");
 var import_string = require("../lib/string");
 var import_createStates = require("../app/createStates");

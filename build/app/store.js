@@ -191,8 +191,8 @@ class Store {
       return;
     }
     let removedId = "init";
-    let addedTimer = void 0;
-    let extendTimer = void 0;
+    let addedTimer;
+    let extendTimer;
     const updatedList = (0, import_json.parseJSON)(String(stateValue));
     const serial = this.getSerialFromIobrokerStateId(id);
     while ((removedId || addedTimer || extendTimer) && serial && updatedList.isValidJson) {

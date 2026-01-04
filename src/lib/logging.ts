@@ -1,4 +1,4 @@
-import store from '@/store/store';
+import store from '@/app/store';
 import type AlexaTimerVis from '@/main';
 
 type SentryLevels = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';

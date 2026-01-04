@@ -1,4 +1,4 @@
-import store from '@/store/store';
+import store from '@/app/store';
 import { obj } from '@/config/timer-data';
 import { writeStates } from '@/app/write-state';
 import { errorLogger } from '@/lib/logging';

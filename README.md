@@ -72,7 +72,8 @@ to make them visible in the Vis. So you have a better overview if you have sever
 - (copilot) Adapter requires node.js >= 22 now
 
 - CHORE: Update dependencies
-- FEAT: Complete refactored with new logic
+- FEAT: Complete refactored with new logic, it should work with all languages which are supported by alexa2 adapter
+- Chore: Min alexa2 adapter version is now x.xx.x //TODO set version
 
 ### 2.2.2 (2025-12-12)
 

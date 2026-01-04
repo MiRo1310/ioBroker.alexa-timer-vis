@@ -1,6 +1,6 @@
 import type { AlexaActiveTimerList, TimerIndex } from '@/types/types';
 import { obj } from '@/config/timer-data';
-import store from '@/store/store';
+import store from '@/app/store';
 import { interval } from '@/app/interval';
 import { errorLogger } from '@/lib/logging';
 import { isMoreThanAMinute } from '@/lib/time';

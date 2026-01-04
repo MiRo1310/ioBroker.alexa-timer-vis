@@ -1,6 +1,6 @@
 import { obj } from '@/config/timer-data';
 import { errorLogger } from '@/lib/logging';
-import store from '@/store/store';
+import store from '@/app/store';
 import { getTimerByIndex } from '@/app/timer';
 
 export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean): Promise<void> => {

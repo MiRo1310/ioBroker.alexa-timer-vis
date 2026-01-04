@@ -4,7 +4,7 @@ import { errorLogger } from '@/lib/logging';
 import { resetAllTimerValuesAndStateValues } from '@/app/reset';
 import { obj } from '@/config/timer-data';
 import { getTimerByIndex, Timer } from '@/app/timer';
-import store from '@/store/store';
+import store from '@/app/store';
 import { writeStates } from '@/app/write-state';
 import { getIndexFromId, isAlexaTimerVisResetButton, initStateCreation } from '@/app/ioBrokerStateAndObjects';
 import { subscribeActiveTimerListStates } from '@/app/subscribeStates';

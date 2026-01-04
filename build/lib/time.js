@@ -39,7 +39,7 @@ __export(time_exports, {
   sleep: () => sleep
 });
 module.exports = __toCommonJS(time_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 const getSecondUnit = (seconds) => seconds != 1 ? import_store.default.unitSecond2 : import_store.default.unitSecond1;
 const getMinuteUnit = (minutes) => minutes != 1 ? import_store.default.unitMinute2 : import_store.default.unitMinute1;
 const getHourUnit = (hour) => hour > 1 ? import_store.default.unitHour2 : import_store.default.unitHour1;

@@ -34,7 +34,7 @@ __export(timer_exports, {
 });
 module.exports = __toCommonJS(timer_exports);
 var import_logging = require("../lib/logging");
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_timer_data = require("../config/timer-data");
 var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
 var import_string = require("../lib/string");
