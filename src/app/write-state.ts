@@ -5,6 +5,10 @@ import { getTimerByIndex } from '@/app/timer';
 
 export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean): Promise<void> => {
     const adapter = store.adapter;
+    if (!adapter) {
+        return;
+    }
+
     const timer = getTimerByIndex(timerIndex);
 
     if (!timer) {
@@ -12,7 +16,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
     }
 
     if (reset) {
-        await timer.reset();
+        await timer?.reset();
     }
 
     adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);

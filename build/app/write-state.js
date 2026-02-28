@@ -38,12 +38,15 @@ var import_store = __toESM(require("../app/store"));
 var import_timer = require("../app/timer");
 const writeStatesByTimerIndex = async (timerIndex, reset) => {
   const adapter = import_store.default.adapter;
+  if (!adapter) {
+    return;
+  }
   const timer = (0, import_timer.getTimerByIndex)(timerIndex);
   if (!timer) {
     return;
   }
   if (reset) {
-    await timer.reset();
+    await (timer == null ? void 0 : timer.reset());
   }
   adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
   const {
