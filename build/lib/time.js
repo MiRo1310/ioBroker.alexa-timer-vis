@@ -28,13 +28,18 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var time_exports = {};
 __export(time_exports, {
+  getMsLeftFromNowToEndtime: () => getMsLeftFromNowToEndtime,
+  getSecondsFromMS: () => getSecondsFromMS,
+  getTimeUnit: () => getTimeUnit,
+  getTimerStringUnitBasedOnTime: () => getTimerStringUnitBasedOnTime,
   isMoreThanAMinute: () => isMoreThanAMinute,
+  millisecondsToString: () => millisecondsToString,
   resetSuperiorValue: () => resetSuperiorValue,
   secToHourMinSec: () => secToHourMinSec,
-  timeToString: () => timeToString
+  sleep: () => sleep
 });
 module.exports = __toCommonJS(time_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 const getSecondUnit = (seconds) => seconds != 1 ? import_store.default.unitSecond2 : import_store.default.unitSecond1;
 const getMinuteUnit = (minutes) => minutes != 1 ? import_store.default.unitMinute2 : import_store.default.unitMinute1;
 const getHourUnit = (hour) => hour > 1 ? import_store.default.unitHour2 : import_store.default.unitHour1;
@@ -53,7 +58,7 @@ const secToHourMinSec = (valSec, doubleInt) => {
     hour: hourString,
     minutes: minutesString,
     seconds: secondsString,
-    string: array.join(" ").trim(),
+    stringTimer: array.join(" ").trim(),
     initialString: initialArray.join(" ").trim()
   };
 };
@@ -76,9 +81,8 @@ function getDoubleIntValues(doubleInt, hour, minutes, seconds) {
   };
 }
 function includedSeconds(valSec, hourInSec, minutesInSec) {
-  let seconds = valSec - hourInSec - minutesInSec;
-  seconds = Math.round(seconds);
-  return seconds;
+  const seconds = valSec - hourInSec - minutesInSec;
+  return Math.round(seconds);
 }
 function includedMinutes(valSec, hourInSec) {
   let minutes = (valSec - hourInSec) / 60;
@@ -93,9 +97,9 @@ function includedHours(valSec) {
   return { hourInSec, hour };
 }
 const isMoreThanAMinute = (sec) => sec > 60;
-function resetSuperiorValue(hour, minutes, seconds) {
-  if (hour === "00") {
-    hour = "";
+function resetSuperiorValue(hours, minutes, seconds) {
+  if (hours === "00") {
+    hours = "";
     if (minutes === "00") {
       minutes = "";
       if (seconds === "00") {
@@ -103,14 +107,41 @@ function resetSuperiorValue(hour, minutes, seconds) {
       }
     }
   }
-  return { hour, minutes, seconds };
+  return { hours, minutes, seconds };
 }
-const timeToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
+const millisecondsToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const getMsLeftFromNowToEndtime = (endTimeMS) => endTimeMS - (/* @__PURE__ */ new Date()).getTime();
+const getSecondsFromMS = (millisecondsLeft) => Math.round(millisecondsLeft / 1e3);
+function getTimerStringUnitBasedOnTime(hour, minutes, seconds) {
+  const totalMinutes = parseInt(hour) * 60 + parseInt(minutes);
+  if (totalMinutes < 1) {
+    return `${seconds} ${import_store.default.unitSecond3}`;
+  }
+  if (totalMinutes <= 65) {
+    return `${totalMinutes}:${seconds} ${import_store.default.unitMinute3}`;
+  }
+  return `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;
+}
+function getTimeUnit(leftSec) {
+  if (leftSec >= 3600) {
+    return ` ${import_store.default.unitHour3}`;
+  }
+  if (leftSec >= 60) {
+    return ` ${import_store.default.unitMinute3}`;
+  }
+  return ` ${import_store.default.unitSecond3}`;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  getMsLeftFromNowToEndtime,
+  getSecondsFromMS,
+  getTimeUnit,
+  getTimerStringUnitBasedOnTime,
   isMoreThanAMinute,
+  millisecondsToString,
   resetSuperiorValue,
   secToHourMinSec,
-  timeToString
+  sleep
 });
 //# sourceMappingURL=time.js.map

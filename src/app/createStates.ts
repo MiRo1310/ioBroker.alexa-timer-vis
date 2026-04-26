@@ -1,22 +1,22 @@
-import store from '@/store/store';
-import errorLogger from '@/lib/logging';
+import store from '@/app/store';
+import { errorLogger } from '@/lib/logging';
 
 export const createStates = async (value: number): Promise<void> => {
     const { adapter } = store;
     try {
+        await adapter.setObjectNotExistsAsync('all_Timer.alive', {
+            type: 'state',
+            common: {
+                name: 'Is a Timer active?',
+                type: 'boolean',
+                role: 'indicator',
+                read: true,
+                write: false,
+                def: false,
+            },
+            native: {},
+        });
         for (let i = 1; i <= value; i++) {
-            await adapter.setObjectNotExistsAsync('all_Timer.alive', {
-                type: 'state',
-                common: {
-                    name: 'Is a Timer active?',
-                    type: 'boolean',
-                    role: 'indicator',
-                    read: true,
-                    write: false,
-                    def: false,
-                },
-                native: {},
-            });
             await adapter.setObjectNotExistsAsync(`timer${i}.percent`, {
                 type: 'state',
                 common: {
@@ -210,9 +210,9 @@ export const createStates = async (value: number): Promise<void> => {
                 native: {},
             });
 
-            const id = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
+            const resetBtnId = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
 
-            adapter.subscribeForeignStates(id);
+            adapter.subscribeForeignStates(resetBtnId);
         }
     } catch (e: any) {
         errorLogger.send({ title: 'Error in createState', e });

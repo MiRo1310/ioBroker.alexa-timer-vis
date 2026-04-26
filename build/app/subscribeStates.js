@@ -26,52 +26,23 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var voiceInput_exports = {};
-__export(voiceInput_exports, {
-  VoiceInput: () => VoiceInput
+var subscribeStates_exports = {};
+__export(subscribeStates_exports, {
+  subscribeActiveTimerListStates: () => subscribeActiveTimerListStates
 });
-module.exports = __toCommonJS(voiceInput_exports);
-var import_store = __toESM(require("../store/store"));
-var import_timer_data = require("../config/timer-data");
-class VoiceInput {
-  voiceInput;
-  constructor(voiceInput) {
-    this.voiceInput = String(voiceInput);
-  }
-  get() {
-    return this.voiceInput;
-  }
-  doesAlexaSendAQuestion() {
-    const question = this.voiceInput.indexOf(",") != -1;
-    import_store.default.questionAlexa = question;
-    return question;
-  }
-  getAbortWord() {
-    return import_timer_data.timerObject.timerActive.data.abortWords.find(
-      (word) => this.voiceInput.toLocaleLowerCase().includes(word.toLocaleLowerCase())
-    );
-  }
-  isAbortSentence() {
-    return import_timer_data.timerObject.timerActive.data.notNotedSentence.some((sentence) => sentence === this.voiceInput);
-  }
-  isExtendOrShortenSentence() {
-    return this.voiceInput.includes("um");
-  }
-  getIndexOfExtendWordTo() {
-    return this.voiceInput.indexOf("um");
-  }
-  getIndexOf(str) {
-    return this.voiceInput.indexOf(str);
-  }
-  getValueExtendBefore() {
-    return this.voiceInput.slice(0, this.getIndexOfExtendWordTo()).split(" ");
-  }
-  getValueExtend() {
-    return this.voiceInput.slice(this.getIndexOfExtendWordTo() + 2).split(" ");
-  }
-}
+module.exports = __toCommonJS(subscribeStates_exports);
+var import_store = __toESM(require("../app/store"));
+const subscribeActiveTimerListStates = async () => {
+  const pattern = `alexa2.${import_store.default.alexa2Instance}.*.activeTimerList`;
+  const res = await import_store.default.adapter.getForeignStatesAsync(pattern);
+  Object.keys(res).forEach((id) => {
+    import_store.default.adapter.log.debug(`Subscribing to activeTimerList state: ${id}`);
+    import_store.default.adapter.subscribeForeignStates(id);
+    import_store.default.addSerialToLocalActiveTimerList(import_store.default.getSerialFromIobrokerStateId(id));
+  });
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  VoiceInput
+  subscribeActiveTimerListStates
 });
-//# sourceMappingURL=voiceInput.js.map
+//# sourceMappingURL=subscribeStates.js.map

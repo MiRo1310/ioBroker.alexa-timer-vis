@@ -1,50 +1,36 @@
 import { createStates } from '@/app/createStates';
-import { timerObject } from '@/config/timer-data';
-
-import store from '@/store/store';
-import { Timer } from '@/app/timer';
-import errorLogger from '@/lib/logging';
+import { obj } from '@/config/timer-data';
+import store from '@/app/store';
+import { getTimerByIndex, Timer } from '@/app/timer';
+import { errorLogger } from '@/lib/logging';
 import { startTimer } from '@/app/timer-start';
 import { writeStateInterval } from '@/app/write-state-interval';
-import { isStringEmpty } from '@/lib/string';
+import type { AlexaActiveTimerList } from '@/types/types';
 
 function addNewRawTimer(timerIndex: string): void {
-    timerObject.timerActive.timer[timerIndex] = false;
+    store.adapter.log.debug(`Add new rawTimer: "${timerIndex}"`);
+    obj.status[timerIndex] = false;
 
-    timerObject.timer[timerIndex] = new Timer({
+    obj.timers[timerIndex] = new Timer({
         store,
     });
 }
 
-export const timerAdd = async (name: string, timerSec: number): Promise<void> => {
+export const timerAdd = async (newActiveTimer: AlexaActiveTimerList): Promise<void> => {
     try {
-        if (timerSec && timerSec != 0) {
-            let nameExist = false;
+        obj.count.increment();
+        const timerCount = obj.count.getCount();
+        await createStates(timerCount);
 
-            for (const element in timerObject.timer) {
-                if (timerObject.timer[element].getName() == name && !isStringEmpty(name)) {
-                    nameExist = true;
-                    //FIXME: Break evtl entfernen
-                    break;
-                }
-            }
+        const timerIndex = `timer${timerCount}`;
 
-            if (!nameExist) {
-                timerObject.timerActive.timerCount++;
-
-                await createStates(timerObject.timerActive.timerCount);
-
-                const timerIndex = `timer${timerObject.timerActive.timerCount}`;
-
-                if (!timerObject.timerActive.timer[timerIndex]) {
-                    addNewRawTimer(timerIndex);
-                }
-
-                await startTimer(timerSec, name);
-
-                writeStateInterval();
-            }
+        if (!getTimerByIndex(timerIndex)) {
+            addNewRawTimer(timerIndex);
         }
+
+        await startTimer(newActiveTimer);
+
+        writeStateInterval();
     } catch (e: any) {
         errorLogger.send({ title: 'Error timerAdd', e });
     }

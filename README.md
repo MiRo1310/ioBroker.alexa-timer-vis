@@ -43,7 +43,6 @@ to make them visible in the Vis. So you have a better overview if you have sever
 - Unlimited timers can be created with Alexa by voice command.
 - When the adapter is started, 4 folders are created with all of the states.
 - Additional folders will be created as soon as a 5th and more timers are created via Alexa's voice input.
-- It works with German input
 
 ### Timer add ( Examples )
 
@@ -72,6 +71,9 @@ to make them visible in the Vis. So you have a better overview if you have sever
 ### **WORK IN PROGRESS**
 
 - CHORE: Update dependencies
+- FIX: #270 Errors has no existing object 
+- FEAT: Complete refactored with new logic, it should work with all languages which are supported by Alexa2 adapter
+- Chore: Min Alexa2 adapter version is now x.xx.x //TODO set version
 
 ### 2.2.2 (2025-12-12)
 

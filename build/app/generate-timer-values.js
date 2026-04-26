@@ -31,82 +31,32 @@ __export(generate_timer_values_exports, {
   generateTimerValues: () => generateTimerValues
 });
 module.exports = __toCommonJS(generate_timer_values_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_time = require("../lib/time");
-const generateTimerValues = (timer, sec, name) => {
-  const timeLeft = timer.getOutputProperties().endTimeNumber - (/* @__PURE__ */ new Date()).getTime();
-  const remainingTimeInSeconds = Math.round(timeLeft / 1e3);
-  const result = (0, import_time.secToHourMinSec)(remainingTimeInSeconds, true);
-  let { hour, minutes, seconds } = result;
-  const { string: lengthTimer } = result;
-  const stringTimer1 = `${hour}:${minutes}:${seconds}${getTimeUnit(remainingTimeInSeconds)}`;
-  const { timeString: stringTimer2 } = isShorterThanAMinute(
-    isShorterThanSixtyMinutes(
-      isShorterOrEqualToSixtyFiveMinutes(isGreaterThanSixtyFiveMinutes(hour, minutes, seconds))
-    )
-  );
+const generateTimerValues = (timer) => {
+  const sec = timer.calculatedSeconds;
+  const endTime = timer.getOutputProperties().endTimeNumber;
+  if (endTime < 0) {
+    import_store.default.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
+    return 0;
+  }
+  const remainingMs = (0, import_time.getMsLeftFromNowToEndtime)(endTime);
+  const remainingSecondsRound = (0, import_time.getSecondsFromMS)(remainingMs);
+  const { hour, minutes, seconds, stringTimer } = (0, import_time.secToHourMinSec)(remainingSecondsRound, true);
+  const stringTimerWithUnit = `${hour}:${minutes}:${seconds}${(0, import_time.getTimeUnit)(remainingSecondsRound)}`;
+  const timerStringUnitBasedOnTime = (0, import_time.getTimerStringUnitBasedOnTime)(hour, minutes, seconds);
   if (!timer.isExtendOrShortenTimer()) {
     timer.setVoiceInputAsSeconds(sec);
   }
-  ({ hour, minutes, seconds } = (0, import_time.resetSuperiorValue)(hour, minutes, seconds));
-  timer.setOutputProperties({
-    hours: hour,
-    minutes,
-    seconds,
-    stringTimer1,
-    stringTimer2,
-    remainingTimeInSeconds,
-    lengthTimer,
-    name
+  timer.setTimerValues({
+    ...(0, import_time.resetSuperiorValue)(hour, minutes, seconds),
+    stringTimer1: stringTimerWithUnit,
+    stringTimer2: timerStringUnitBasedOnTime,
+    remainingSeconds: remainingSecondsRound,
+    lengthTimer: stringTimer
   });
-  return remainingTimeInSeconds;
+  return remainingSecondsRound < 0 ? 0 : remainingSecondsRound;
 };
-function isShorterThanAMinute({ minutes, seconds, timeString }) {
-  if (parseInt(minutes) == 0) {
-    return { timeString: `${seconds} ${import_store.default.unitSecond3}` };
-  }
-  return { timeString };
-}
-function isShorterOrEqualToSixtyFiveMinutes({
-  hour,
-  minutes,
-  seconds,
-  timeString
-}) {
-  if (parseInt(hour) === 1 && parseInt(minutes) <= 5) {
-    const timeString2 = `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;
-    return { timeString: timeString2, hour, minutes, seconds };
-  }
-  return { timeString, hour, minutes, seconds };
-}
-function isShorterThanSixtyMinutes({
-  hour,
-  minutes,
-  seconds,
-  timeString
-}) {
-  if (parseInt(hour) == 0) {
-    const timeString2 = `${minutes}:${seconds} ${import_store.default.unitMinute3}`;
-    return { timeString: timeString2, hour, minutes, seconds };
-  }
-  return { timeString, hour, minutes, seconds };
-}
-function isGreaterThanSixtyFiveMinutes(hour, minutes, seconds) {
-  if (parseInt(hour) > 1 || parseInt(hour) === 1 && parseInt(minutes) > 5) {
-    const timeString = `${hour}:${minutes}:${seconds} ${import_store.default.unitHour3}`;
-    return { timeString, hour, minutes, seconds };
-  }
-  return { timeString: "", hour, minutes, seconds };
-}
-function getTimeUnit(timeLeftSec) {
-  if (timeLeftSec >= 3600) {
-    return ` ${import_store.default.unitHour3}`;
-  }
-  if (timeLeftSec >= 60) {
-    return ` ${import_store.default.unitMinute3}`;
-  }
-  return ` ${import_store.default.unitSecond3}`;
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   generateTimerValues

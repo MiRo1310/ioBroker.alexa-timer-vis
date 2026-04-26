@@ -6,8 +6,8 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
-  for (var name2 in all)
-    __defProp(target, name2, { get: all[name2], enumerable: true });
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -26,33 +26,26 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var decompose_input_value_exports = {};
-__export(decompose_input_value_exports, {
-  decomposeInputValue: () => decomposeInputValue
+var json_exports = {};
+__export(json_exports, {
+  parseJSON: () => parseJSON
 });
-module.exports = __toCommonJS(decompose_input_value_exports);
-var import_store = __toESM(require("../store/store"));
-var import_timer_parse_time_input = require("../app/timer-parse-time-input");
-var import_logging = __toESM(require("../lib/logging"));
-const decomposeInputValue = (voiceInputClass) => {
-  const voiceInput = voiceInputClass.get();
+module.exports = __toCommonJS(json_exports);
+var import_logging = require("../lib/logging");
+var import_store = __toESM(require("../app/store"));
+function parseJSON(val) {
+  const { adapter } = import_store.default;
   try {
-    let inputDecomposed = voiceInput.split(",");
-    inputDecomposed = inputDecomposed[0].split(" ");
-    const { stringToEvaluate, name, deleteVal } = (0, import_timer_parse_time_input.timerParseTimeInput)(inputDecomposed);
-    return { name, timerSec: eval(stringToEvaluate), deleteVal };
+    return val ? { ob: JSON.parse(val), isValidJson: true } : { ob: val != null ? val : "", isValidJson: false };
   } catch (e) {
-    import_store.default.adapter.log.error(`Trying to evaluate a string that doesn't contain a valid string: ${voiceInput}`);
-    import_logging.default.send({
-      title: "Error in decomposeInputValue",
-      e,
-      additionalInfos: [["VoiceInput", voiceInputClass.get()]]
-    });
-    return { name: "", timerSec: 0, deleteVal: 0 };
+    if (adapter) {
+      import_logging.errorLogger.send({ title: "Error parseJSON:", e });
+    }
+    return { ob: val != null ? val : "", isValidJson: false };
   }
-};
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  decomposeInputValue
+  parseJSON
 });
-//# sourceMappingURL=decompose-input-value.js.map
+//# sourceMappingURL=json.js.map

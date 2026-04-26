@@ -33,53 +33,30 @@ __export(timer_start_exports, {
 });
 module.exports = __toCommonJS(timer_start_exports);
 var import_timer_data = require("../config/timer-data");
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_interval = require("../app/interval");
-var import_logging = __toESM(require("../lib/logging"));
+var import_logging = require("../lib/logging");
 var import_time = require("../lib/time");
-var import_ioBrokerStateAndObjects = require("../app/ioBrokerStateAndObjects");
-const startTimer = async (sec, name) => {
+const startTimer = async (newActiveTimer) => {
   try {
-    const timerIndex = getAvailableTimerIndex();
-    import_timer_data.timerObject.timerActive.timer[timerIndex] = true;
-    const alexaJson = await (0, import_ioBrokerStateAndObjects.getParsedAlexaJson)();
-    if (!alexaJson) {
+    const availableTimerIndex = getAvailableTimerIndex();
+    import_timer_data.obj.status[availableTimerIndex] = true;
+    const timer = import_timer_data.obj.timers[availableTimerIndex];
+    await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
+    timer.setInterval(import_store.default.intervalSecLessThan60Sec * 1e3);
+    if ((0, import_time.isMoreThanAMinute)(timer.calculatedSeconds)) {
+      (0, import_interval.interval)(timer, import_store.default.intervalSecMoreThan60Sec * 1e3, false);
       return;
     }
-    const creationTime = alexaJson.creationTime;
-    const startTimeString = (0, import_time.timeToString)(creationTime);
-    const timerMilliseconds = sec * 1e3;
-    const endTimeNumber = creationTime + timerMilliseconds;
-    const endTimeString = (0, import_time.timeToString)(endTimeNumber);
-    const timer = import_timer_data.timerObject.timer[timerIndex];
-    const result = (0, import_time.secToHourMinSec)(sec, true);
-    await timer.init({
-      timerIndex,
-      creationTime,
-      startTimeString,
-      endTimeNumber,
-      endTimeString,
-      initialTimerString: result.initialString
-    });
-    if ((0, import_time.isMoreThanAMinute)(sec)) {
-      (0, import_interval.interval)(sec, name, timer, import_store.default.intervalMore60 * 1e3, false);
-      return;
-    }
-    import_timer_data.timerObject.timer[timerIndex].setInterval(import_store.default.intervalLess60 * 1e3);
-    (0, import_interval.interval)(sec, name, timer, import_store.default.intervalLess60 * 1e3, true);
+    (0, import_interval.interval)(timer, import_store.default.intervalSecLessThan60Sec * 1e3, true);
   } catch (e) {
-    import_logging.default.send({ title: "Error startTimer", e });
+    import_logging.errorLogger.send({ title: "Error startTimer", e });
   }
 };
 function getAvailableTimerIndex() {
-  const keys = Object.keys(import_timer_data.timerObject.timerActive.timer);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    if (!import_timer_data.timerObject.timerActive.timer[key]) {
-      return key;
-    }
-  }
-  return `timer${keys.length + 1}`;
+  const timerIndexes = Object.keys(import_timer_data.obj.status).filter((key) => key.startsWith("timer")).sort();
+  const index = timerIndexes.find((index2) => !import_timer_data.obj.status[index2]);
+  return index ? index : `timer${timerIndexes.length + 1}`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

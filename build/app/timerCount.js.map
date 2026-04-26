@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/app/timerCount.ts"],
+  "sourcesContent": ["class TimerCount {\n    private count = 0;\n\n    public increment(): void {\n        this.count++;\n    }\n\n    public getCount(): number {\n        return this.count;\n    }\n    public decrement(): void {\n        if (this.count > 0) {\n            this.count--;\n        }\n    }\n}\n\nexport default new TimerCount();\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,MAAM,WAAW;AAAA,EACL,QAAQ;AAAA,EAET,YAAkB;AACrB,SAAK;AAAA,EACT;AAAA,EAEO,WAAmB;AACtB,WAAO,KAAK;AAAA,EAChB;AAAA,EACO,YAAkB;AACrB,QAAI,KAAK,QAAQ,GAAG;AAChB,WAAK;AAAA,IACT;AAAA,EACJ;AACJ;AAEA,IAAO,qBAAQ,IAAI,WAAW;",
+  "names": []
+}
