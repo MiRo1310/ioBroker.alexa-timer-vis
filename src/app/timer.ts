@@ -114,7 +114,7 @@ export class Timer {
         this.voiceInputAsSeconds += seconds;
         this.updateInitialTimer(seconds);
     }
-    getDataAsJson(): ioBroker.State | ioBroker.StateValue | ioBroker.SettableState {
+    getDataAsJson(): string {
         return JSON.stringify({
             name: this.timerName,
             hours: this.hours,

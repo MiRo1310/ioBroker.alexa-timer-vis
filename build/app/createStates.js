@@ -36,19 +36,19 @@ var import_logging = require("../lib/logging");
 const createStates = async (value) => {
   const { adapter } = import_store.default;
   try {
+    await adapter.setObjectNotExistsAsync("all_Timer.alive", {
+      type: "state",
+      common: {
+        name: "Is a Timer active?",
+        type: "boolean",
+        role: "indicator",
+        read: true,
+        write: false,
+        def: false
+      },
+      native: {}
+    });
     for (let i = 1; i <= value; i++) {
-      await adapter.setObjectNotExistsAsync("all_Timer.alive", {
-        type: "state",
-        common: {
-          name: "Is a Timer active?",
-          type: "boolean",
-          role: "indicator",
-          read: true,
-          write: false,
-          def: false
-        },
-        native: {}
-      });
       await adapter.setObjectNotExistsAsync(`timer${i}.percent`, {
         type: "state",
         common: {

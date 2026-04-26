@@ -3,6 +3,12 @@ import { errorLogger } from '@/lib/logging';
 import store from '@/app/store';
 import { getTimerByIndex } from '@/app/timer';
 
+interface ICheckObject {
+    init: boolean;
+    exist: boolean;
+}
+
+const timerObjectStatus: Record<string, ICheckObject> = {};
 export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean): Promise<void> => {
     const adapter = store.adapter;
     if (!adapter) {
@@ -12,6 +18,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
     const timer = getTimerByIndex(timerIndex);
 
     if (!timer) {
+        adapter.log.debug(`No timer for ${timerIndex}`);
         return;
     }
 
@@ -19,7 +26,20 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
         await timer?.reset();
     }
 
-    adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
+    if (!timerObjectStatus[timerIndex]?.init || reset) {
+        const objectExists = await adapter.getObjectAsync(`${timerIndex}.alive`);
+        timerObjectStatus[timerIndex] = { init: true, exist: !!objectExists };
+
+        if (!objectExists) {
+            adapter.log.debug(`Object for ${timerIndex} does not exist, no reset statements will be written`);
+            return;
+        }
+    }
+
+    if (!timerObjectStatus[timerIndex].exist) {
+        return;
+    }
+
     const {
         hours,
         minutes,
@@ -34,6 +54,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
         percent2,
         initialTimer,
     } = timer.getOutputProperties();
+    adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
     adapter.setStateChanged(`${timerIndex}.hour`, hours, true);
     adapter.setStateChanged(`${timerIndex}.minute`, minutes, true);
     adapter.setStateChanged(`${timerIndex}.second`, seconds, true);

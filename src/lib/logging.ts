@@ -48,7 +48,7 @@ class ErrorLoggerClass {
             if (e) {
                 scope.setExtra('Exception', e);
             }
-            this.Sentry.captureMessage(title, level);
+            this.Sentry?.captureMessage(title, level);
         });
     }
 
