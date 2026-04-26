@@ -38,6 +38,10 @@ export default class AlexaTimerVis extends utils.Adapter {
             return;
         }
         errorLogger.init();
+        this.log.warn('AlexaTimer is already in progress');
+        await initStateCreation();
+
+        this.log.info('AlexaTimer states have been created');
 
         await this.setState('info.connection', false, true);
         obj.timers.timer1 = new Timer({ store });
@@ -46,7 +50,7 @@ export default class AlexaTimerVis extends utils.Adapter {
         obj.timers.timer4 = new Timer({ store });
 
         await subscribeActiveTimerListStates();
-        await initStateCreation();
+
         await resetAllTimerValuesAndStateValues();
 
         this.on('stateChange', async (id, state) => {

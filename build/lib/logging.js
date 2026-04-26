@@ -60,6 +60,7 @@ class ErrorLoggerClass {
   sendMessageToSentry(title, level, infos, e) {
     var _a;
     (_a = this.Sentry) == null ? void 0 : _a.withScope((scope) => {
+      var _a2;
       scope.setLevel(level);
       for (const [label, value] of infos) {
         scope.setExtra(label, value);
@@ -67,7 +68,7 @@ class ErrorLoggerClass {
       if (e) {
         scope.setExtra("Exception", e);
       }
-      this.Sentry.captureMessage(title, level);
+      (_a2 = this.Sentry) == null ? void 0 : _a2.captureMessage(title, level);
     });
   }
   iobrokerLogging(title, e) {

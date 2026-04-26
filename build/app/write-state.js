@@ -36,19 +36,32 @@ var import_timer_data = require("../config/timer-data");
 var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../app/store"));
 var import_timer = require("../app/timer");
+const timerObjectStatus = {};
 const writeStatesByTimerIndex = async (timerIndex, reset) => {
+  var _a;
   const adapter = import_store.default.adapter;
   if (!adapter) {
     return;
   }
   const timer = (0, import_timer.getTimerByIndex)(timerIndex);
   if (!timer) {
+    adapter.log.debug(`No timer for ${timerIndex}`);
     return;
   }
   if (reset) {
     await (timer == null ? void 0 : timer.reset());
   }
-  adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
+  if (!((_a = timerObjectStatus[timerIndex]) == null ? void 0 : _a.init) || reset) {
+    const objectExists = await adapter.getObjectAsync(`${timerIndex}.alive`);
+    timerObjectStatus[timerIndex] = { init: true, exist: !!objectExists };
+    if (!objectExists) {
+      adapter.log.debug(`Object for ${timerIndex} does not exist, no reset statements will be written`);
+      return;
+    }
+  }
+  if (!timerObjectStatus[timerIndex].exist) {
+    return;
+  }
   const {
     hours,
     minutes,
@@ -63,6 +76,7 @@ const writeStatesByTimerIndex = async (timerIndex, reset) => {
     percent2,
     initialTimer
   } = timer.getOutputProperties();
+  adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
   adapter.setStateChanged(`${timerIndex}.hour`, hours, true);
   adapter.setStateChanged(`${timerIndex}.minute`, minutes, true);
   adapter.setStateChanged(`${timerIndex}.second`, seconds, true);
