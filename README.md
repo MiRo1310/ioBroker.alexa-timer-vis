@@ -70,6 +70,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 -->
 
 ### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
 
 - CHORE: Update dependencies
 
