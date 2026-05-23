@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "news": {
+      "3.0.1": {
+        "en": "FIX: Update connection state to true when initializing AlexaTimer",
+        "de": "FIX: Aktualisieren Sie den Verbindungszustand bei der Initialisierung von AlexaTimer",
+        "ru": "FIX: Обновление состояния соединения истинно при инициализации AlexaTimer",
+        "pt": "FIX: Atualizar o estado de conexão para true ao inicializar o AlexaTimer",
+        "nl": "FIX: Update verbindingstoestand waar te maken bij het initialiseren van AlexaTimer",
+        "fr": "FIX: Mettre à jour l'état de connexion à true lors de l'initialisation d'AlexaTimer",
+        "it": "FIX: Aggiornare lo stato di connessione a true quando inizializzare AlexaTimer",
+        "es": "FIX: Actualizar el estado de conexión a la verdad al inicializar AlexaTimer",
+        "pl": "FIX: Aktualizacja stanu połączenia do true przy inicjalizacji AlexaTimer",
+        "uk": "FIX: Оновити стан з'єднання вірно, коли ініціалізація AlexaTimer",
+        "zh-cn": "FIX: 初始化 AlexaTimer 时将连接状态更新为真"
+      },
       "3.0.0": {
         "en": "Adapter requires node.js >= 22 now\nCHORE: Update dependencies\nFIX: #270 Errors has no existing object \nFEAT: Complete refactored with new logic, it should work with all languages which are supported by Alexa2 adapter\nChore: Alexa2 adapter version >= 3.28.1",
         "de": "Adapter benötigt node.js >= 22 jetzt\nCHORE: Aktualisieren von Abhängigkeiten\nFIX: #270 Fehler haben kein bestehendes Objekt\nFEAT: Komplett refactored mit neuer Logik, es sollte mit allen Sprachen arbeiten, die von Alexa2 Adapter unterstützt werden\nChor: Alexa2 Adapter Version >= 3.28.1",
@@ -80,19 +93,6 @@
         "pl": "FIX: Błędy zgłoszone przez Sentry\nFIX: Dodaj budzik do ignorowanych słów",
         "uk": "FIX: Помилки, що повідомляються Sentry\nFIX: Додати годинник сигналізації для ігнорування слів",
         "zh-cn": "FIX:哨兵报告的错误\nFIX: 在忽略的单词中添加提醒钟"
-      },
-      "2.1.1": {
-        "en": "FEAT: #141 Activate sentry",
-        "de": "FEAT: #141 Aktivieren Sie die Sendung",
-        "ru": "#141 Активировать часового",
-        "pt": "FEAT: #141 Activar sentinela",
-        "nl": "FEAT: #141 Activeer wachters",
-        "fr": "VIANDE: #141 Activer la sentinelle",
-        "it": "FEAT: #141 Attiva la sentinella",
-        "es": "FEAT: #141 Activar centry",
-        "pl": "FEAT: # 141 Włącz wartownik",
-        "uk": "FEAT: #141 Активувати відправлення",
-        "zh-cn": "FEAT: #141 启动哨兵"
       }
     },
     "titleLang": {
