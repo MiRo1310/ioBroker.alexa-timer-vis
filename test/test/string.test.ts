@@ -1,7 +1,15 @@
 import { expect } from 'chai';
-import { countOccurrences, firstLetterToUpperCase, isString } from '@/lib/string';
+import { countOccurrences, firstLetterToUpperCase, isString, isStringEmpty } from '@/lib/string';
 
 describe('String Tests', () => {
+    it('should be false if string has charts', () => {
+        expect(isStringEmpty('t2')).to.equal(false);
+    });
+
+    it('should be true for empty string', () => {
+        expect(isStringEmpty('')).to.equal(true);
+    });
+
     it('should be correct first letter in uppercase with empty string', () => {
         expect(firstLetterToUpperCase('')).to.be.equal('');
     });

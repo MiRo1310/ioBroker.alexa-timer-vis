@@ -31,24 +31,24 @@ __export(createStates_exports, {
   createStates: () => createStates
 });
 module.exports = __toCommonJS(createStates_exports);
-var import_store = __toESM(require("../store/store"));
-var import_logging = __toESM(require("../lib/logging"));
+var import_store = __toESM(require("../app/store"));
+var import_logging = require("../lib/logging");
 const createStates = async (value) => {
   const { adapter } = import_store.default;
   try {
+    await adapter.setObjectNotExistsAsync("all_Timer.alive", {
+      type: "state",
+      common: {
+        name: "Is a Timer active?",
+        type: "boolean",
+        role: "indicator",
+        read: true,
+        write: false,
+        def: false
+      },
+      native: {}
+    });
     for (let i = 1; i <= value; i++) {
-      await adapter.setObjectNotExistsAsync("all_Timer.alive", {
-        type: "state",
-        common: {
-          name: "Is a Timer active?",
-          type: "boolean",
-          role: "indicator",
-          read: true,
-          write: false,
-          def: false
-        },
-        native: {}
-      });
       await adapter.setObjectNotExistsAsync(`timer${i}.percent`, {
         type: "state",
         common: {
@@ -241,11 +241,11 @@ const createStates = async (value) => {
         },
         native: {}
       });
-      const id = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
-      adapter.subscribeForeignStates(id);
+      const resetBtnId = `alexa-timer-vis.${adapter.instance}.timer${i}.Reset`;
+      adapter.subscribeForeignStates(resetBtnId);
     }
   } catch (e) {
-    import_logging.default.send({ title: "Error in createState", e });
+    import_logging.errorLogger.send({ title: "Error in createState", e });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

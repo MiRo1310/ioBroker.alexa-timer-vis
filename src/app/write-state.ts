@@ -1,21 +1,45 @@
-import { timerObject } from '@/config/timer-data';
-import errorLogger from '@/lib/logging';
-import store from '@/store/store';
+import { obj } from '@/config/timer-data';
+import { errorLogger } from '@/lib/logging';
+import store from '@/app/store';
 import { getTimerByIndex } from '@/app/timer';
 
+interface ICheckObject {
+    init: boolean;
+    exist: boolean;
+}
+
+const timerObjectStatus: Record<string, ICheckObject> = {};
 export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean): Promise<void> => {
     const adapter = store.adapter;
+    if (!adapter) {
+        return;
+    }
+
     const timer = getTimerByIndex(timerIndex);
 
     if (!timer) {
+        adapter.log.debug(`No timer for ${timerIndex}`);
         return;
     }
 
     if (reset) {
-        await timer.reset();
+        await timer?.reset();
     }
 
-    adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
+    if (!timerObjectStatus[timerIndex]?.init || reset) {
+        const objectExists = await adapter.getObjectAsync(`${timerIndex}.alive`);
+        timerObjectStatus[timerIndex] = { init: true, exist: !!objectExists };
+
+        if (!objectExists) {
+            adapter.log.debug(`Object for ${timerIndex} does not exist, no reset statements will be written`);
+            return;
+        }
+    }
+
+    if (!timerObjectStatus[timerIndex].exist) {
+        return;
+    }
+
     const {
         hours,
         minutes,
@@ -30,6 +54,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
         percent2,
         initialTimer,
     } = timer.getOutputProperties();
+    adapter.setStateChanged(`${timerIndex}.alive`, timer.isActive, true);
     adapter.setStateChanged(`${timerIndex}.hour`, hours, true);
     adapter.setStateChanged(`${timerIndex}.minute`, minutes, true);
     adapter.setStateChanged(`${timerIndex}.second`, seconds, true);
@@ -49,7 +74,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
 
 export async function writeStates({ reset }: { reset: boolean }): Promise<void> {
     try {
-        for (const timerIndex in timerObject.timerActive.timer) {
+        for (const timerIndex in obj.status) {
             await writeStatesByTimerIndex(timerIndex, reset);
         }
     } catch (e: any) {

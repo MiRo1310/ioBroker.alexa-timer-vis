@@ -41,9 +41,8 @@ to make them visible in the Vis. So you have a better overview if you have sever
 - The Vis Widget isn´t yet integrated
 - Every Timer has a button, to stop it. Stops the Timer in Alexa and in the Adapter
 - Unlimited timers can be created with Alexa by voice command.
-- When the adapter is started, 4 folders are created with all of the states.
+- On adapter start, 4 folders will be created with all states.
 - Additional folders will be created as soon as a 5th and more timers are created via Alexa's voice input.
-- It works with German input
 
 ### Timer add ( Examples )
 
@@ -70,9 +69,12 @@ to make them visible in the Vis. So you have a better overview if you have sever
 -->
 
 ### **WORK IN PROGRESS**
-- (copilot) Adapter requires node.js >= 22 now
 
+- (copilot) Adapter requires node.js >= 22 now
 - CHORE: Update dependencies
+- FIX: #270 Errors has no existing object 
+- FEAT: Complete refactored with new logic, it should work with all languages which are supported by Alexa2 adapter
+- Chore: Alexa2 adapter version >= 3.28.1
 
 ### 2.2.2 (2025-12-12)
 

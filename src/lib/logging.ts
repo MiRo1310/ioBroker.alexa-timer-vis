@@ -1,4 +1,4 @@
-import store from '@/store/store';
+import store from '@/app/store';
 import type AlexaTimerVis from '@/main';
 
 type SentryLevels = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
@@ -6,7 +6,7 @@ export type AdditionalInformation = [string, any];
 
 interface CaptureMessage {
     title: string;
-    e: any;
+    e?: any;
     additionalInfos?: AdditionalInformation[];
     level?: SentryLevels;
 }
@@ -29,7 +29,7 @@ class ErrorLoggerClass {
     send({ title, e, additionalInfos, level = 'error' }: CaptureMessage): void {
         if (additionalInfos) {
             this.sendMessageToSentry(title, level, additionalInfos, e);
-        } else {
+        } else if (e) {
             this.sendErrorToSentry(e);
         }
         this.iobrokerLogging(title, e);
@@ -39,14 +39,16 @@ class ErrorLoggerClass {
         this.Sentry?.captureException(e);
     }
 
-    private sendMessageToSentry(title: string, level: SentryLevels, infos: AdditionalInformation[], e: any): void {
+    private sendMessageToSentry(title: string, level: SentryLevels, infos: AdditionalInformation[], e?: any): void {
         this.Sentry?.withScope((scope: any) => {
             scope.setLevel(level);
             for (const [label, value] of infos) {
                 scope.setExtra(label, value);
             }
-            scope.setExtra('Exception', e);
-            this.Sentry.captureMessage(title, level);
+            if (e) {
+                scope.setExtra('Exception', e);
+            }
+            this.Sentry?.captureMessage(title, level);
         });
     }
 
@@ -68,4 +70,4 @@ class ErrorLoggerClass {
     }
 }
 
-export default new ErrorLoggerClass();
+export const errorLogger = new ErrorLoggerClass();

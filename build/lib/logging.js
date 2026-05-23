@@ -28,10 +28,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var logging_exports = {};
 __export(logging_exports, {
-  default: () => logging_default
+  errorLogger: () => errorLogger
 });
 module.exports = __toCommonJS(logging_exports);
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 class ErrorLoggerClass {
   Sentry;
   adapter;
@@ -48,7 +48,7 @@ class ErrorLoggerClass {
   send({ title, e, additionalInfos, level = "error" }) {
     if (additionalInfos) {
       this.sendMessageToSentry(title, level, additionalInfos, e);
-    } else {
+    } else if (e) {
       this.sendErrorToSentry(e);
     }
     this.iobrokerLogging(title, e);
@@ -60,12 +60,15 @@ class ErrorLoggerClass {
   sendMessageToSentry(title, level, infos, e) {
     var _a;
     (_a = this.Sentry) == null ? void 0 : _a.withScope((scope) => {
+      var _a2;
       scope.setLevel(level);
       for (const [label, value] of infos) {
         scope.setExtra(label, value);
       }
-      scope.setExtra("Exception", e);
-      this.Sentry.captureMessage(title, level);
+      if (e) {
+        scope.setExtra("Exception", e);
+      }
+      (_a2 = this.Sentry) == null ? void 0 : _a2.captureMessage(title, level);
     });
   }
   iobrokerLogging(title, e) {
@@ -85,5 +88,9 @@ class ErrorLoggerClass {
     }
   }
 }
-var logging_default = new ErrorLoggerClass();
+const errorLogger = new ErrorLoggerClass();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  errorLogger
+});
 //# sourceMappingURL=logging.js.map

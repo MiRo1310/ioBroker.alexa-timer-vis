@@ -33,41 +33,31 @@ __export(timer_add_exports, {
 module.exports = __toCommonJS(timer_add_exports);
 var import_createStates = require("../app/createStates");
 var import_timer_data = require("../config/timer-data");
-var import_store = __toESM(require("../store/store"));
+var import_store = __toESM(require("../app/store"));
 var import_timer = require("../app/timer");
-var import_logging = __toESM(require("../lib/logging"));
+var import_logging = require("../lib/logging");
 var import_timer_start = require("../app/timer-start");
 var import_write_state_interval = require("../app/write-state-interval");
-var import_string = require("../lib/string");
 function addNewRawTimer(timerIndex) {
-  import_timer_data.timerObject.timerActive.timer[timerIndex] = false;
-  import_timer_data.timerObject.timer[timerIndex] = new import_timer.Timer({
+  import_store.default.adapter.log.debug(`Add new rawTimer: "${timerIndex}"`);
+  import_timer_data.obj.status[timerIndex] = false;
+  import_timer_data.obj.timers[timerIndex] = new import_timer.Timer({
     store: import_store.default
   });
 }
-const timerAdd = async (name, timerSec) => {
+const timerAdd = async (newActiveTimer) => {
   try {
-    if (timerSec && timerSec != 0) {
-      let nameExist = false;
-      for (const element in import_timer_data.timerObject.timer) {
-        if (import_timer_data.timerObject.timer[element].getName() == name && !(0, import_string.isStringEmpty)(name)) {
-          nameExist = true;
-          break;
-        }
-      }
-      if (!nameExist) {
-        import_timer_data.timerObject.timerActive.timerCount++;
-        await (0, import_createStates.createStates)(import_timer_data.timerObject.timerActive.timerCount);
-        const timerIndex = `timer${import_timer_data.timerObject.timerActive.timerCount}`;
-        if (!import_timer_data.timerObject.timerActive.timer[timerIndex]) {
-          addNewRawTimer(timerIndex);
-        }
-        await (0, import_timer_start.startTimer)(timerSec, name);
-        (0, import_write_state_interval.writeStateInterval)();
-      }
+    import_timer_data.obj.count.increment();
+    const timerCount = import_timer_data.obj.count.getCount();
+    await (0, import_createStates.createStates)(timerCount);
+    const timerIndex = `timer${timerCount}`;
+    if (!(0, import_timer.getTimerByIndex)(timerIndex)) {
+      addNewRawTimer(timerIndex);
     }
+    await (0, import_timer_start.startTimer)(newActiveTimer);
+    (0, import_write_state_interval.writeStateInterval)();
   } catch (e) {
-    import_logging.default.send({ title: "Error timerAdd", e });
+    import_logging.errorLogger.send({ title: "Error timerAdd", e });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

@@ -1,58 +1,40 @@
-import type { TimerIndex } from '@/types/types';
-import { timerObject } from '@/config/timer-data';
-import store from '@/store/store';
+import type { AlexaActiveTimerList, TimerIndex } from '@/types/types';
+import { obj } from '@/config/timer-data';
+import store from '@/app/store';
 import { interval } from '@/app/interval';
-import errorLogger from '@/lib/logging';
-import { isMoreThanAMinute, secToHourMinSec, timeToString } from '@/lib/time';
-import { getParsedAlexaJson } from '@/app/ioBrokerStateAndObjects';
+import { errorLogger } from '@/lib/logging';
+import { isMoreThanAMinute } from '@/lib/time';
 
-export const startTimer = async (sec: number, name: string): Promise<void> => {
+export const startTimer = async (newActiveTimer: AlexaActiveTimerList): Promise<void> => {
     try {
-        const timerIndex = getAvailableTimerIndex();
-        timerObject.timerActive.timer[timerIndex] = true;
+        const availableTimerIndex = getAvailableTimerIndex();
+        obj.status[availableTimerIndex] = true;
 
-        const alexaJson = await getParsedAlexaJson();
-        if (!alexaJson) {
+        const timer = obj.timers[availableTimerIndex];
+        await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
+        timer.setInterval(store.intervalSecLessThan60Sec * 1000);
+
+        if (isMoreThanAMinute(timer.calculatedSeconds)) {
+            interval(timer, store.intervalSecMoreThan60Sec * 1000, false);
             return;
         }
 
-        const creationTime = alexaJson.creationTime;
-        const startTimeString = timeToString(creationTime);
-        const timerMilliseconds = sec * 1000;
-        const endTimeNumber = creationTime + timerMilliseconds;
-        const endTimeString = timeToString(endTimeNumber);
-        const timer = timerObject.timer[timerIndex];
-        const result = secToHourMinSec(sec, true);
-        await timer.init({
-            timerIndex,
-            creationTime,
-            startTimeString,
-            endTimeNumber,
-            endTimeString,
-            initialTimerString: result.initialString,
-        });
-
-        if (isMoreThanAMinute(sec)) {
-            interval(sec, name, timer, store.intervalMore60 * 1000, false);
-            return;
-        }
-
-        timerObject.timer[timerIndex].setInterval(store.intervalLess60 * 1000);
-
-        interval(sec, name, timer, store.intervalLess60 * 1000, true);
+        interval(timer, store.intervalSecLessThan60Sec * 1000, true);
     } catch (e: any) {
         errorLogger.send({ title: 'Error startTimer', e });
     }
 };
 
+/**
+ * Get an available timer index or create a new one
+ *
+ * @returns - The available timer index
+ */
 export function getAvailableTimerIndex(): TimerIndex {
-    const keys = Object.keys(timerObject.timerActive.timer);
-    for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
+    const timerIndexes = Object.keys(obj.status)
+        .filter(key => key.startsWith('timer'))
+        .sort();
+    const index = timerIndexes.find(index => !obj.status[index]);
 
-        if (!timerObject.timerActive.timer[key]) {
-            return key;
-        }
-    }
-    return `timer${keys.length + 1}`;
+    return index ? index : `timer${timerIndexes.length + 1}`;
 }
