@@ -68,10 +68,9 @@ class AlexaTimerVis extends utils.Adapter {
       return;
     }
     import_logging.errorLogger.init();
-    this.log.warn("AlexaTimer is already in progress");
     await (0, import_ioBrokerStateAndObjects.initStateCreation)();
     this.log.info("AlexaTimer states have been created");
-    await this.setState("info.connection", false, true);
+    await this.setState("info.connection", true, true);
     import_timer_data.obj.timers.timer1 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.obj.timers.timer2 = new import_timer.Timer({ store: import_store.default });
     import_timer_data.obj.timers.timer3 = new import_timer.Timer({ store: import_store.default });
