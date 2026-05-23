@@ -10,7 +10,8 @@
             "@/*": ["src/*"]
         },
         "outDir": "./build/",
-        "rootDir": "src"
+        "rootDir": "src",
+        "ignoreDeprecations": "6.0"
     },
     "include": ["src/**/*.ts"],
     "exclude": ["src/**/*.test.ts"]

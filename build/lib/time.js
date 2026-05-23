@@ -35,8 +35,7 @@ __export(time_exports, {
   isMoreThanAMinute: () => isMoreThanAMinute,
   millisecondsToString: () => millisecondsToString,
   resetSuperiorValue: () => resetSuperiorValue,
-  secToHourMinSec: () => secToHourMinSec,
-  sleep: () => sleep
+  secToHourMinSec: () => secToHourMinSec
 });
 module.exports = __toCommonJS(time_exports);
 var import_store = __toESM(require("../app/store"));
@@ -110,7 +109,6 @@ function resetSuperiorValue(hours, minutes, seconds) {
   return { hours, minutes, seconds };
 }
 const millisecondsToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const getMsLeftFromNowToEndtime = (endTimeMS) => endTimeMS - (/* @__PURE__ */ new Date()).getTime();
 const getSecondsFromMS = (millisecondsLeft) => Math.round(millisecondsLeft / 1e3);
 function getTimerStringUnitBasedOnTime(hour, minutes, seconds) {
@@ -141,7 +139,6 @@ function getTimeUnit(leftSec) {
   isMoreThanAMinute,
   millisecondsToString,
   resetSuperiorValue,
-  secToHourMinSec,
-  sleep
+  secToHourMinSec
 });
 //# sourceMappingURL=time.js.map
