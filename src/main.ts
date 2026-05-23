@@ -38,12 +38,12 @@ export default class AlexaTimerVis extends utils.Adapter {
             return;
         }
         errorLogger.init();
-        this.log.warn('AlexaTimer is already in progress');
+
         await initStateCreation();
 
         this.log.info('AlexaTimer states have been created');
 
-        await this.setState('info.connection', false, true);
+        await this.setState('info.connection', true, true);
         obj.timers.timer1 = new Timer({ store });
         obj.timers.timer2 = new Timer({ store });
         obj.timers.timer3 = new Timer({ store });
