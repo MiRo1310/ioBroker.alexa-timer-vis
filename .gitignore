@@ -1,7 +1,6 @@
 # No dot-directories except github/vscode
 .*/
 .vscode/
-.github/
 
 iob_npm.done
 
@@ -19,8 +18,6 @@ Thumbs.db
 admin/i18n/flat.txt
 admin/i18n/*/flat.txt
 admin/custom_m.html
-
-
 
 # Dev Server
 .dev-server
