@@ -1,8 +1,8 @@
-// test/json.spec.ts
 import { expect } from 'chai';
+import { describe, it, beforeEach, afterEach } from 'mocha';
 import sinon from 'sinon';
 import { parseJSON } from '@/lib/json';
-import errorLogger from '@/lib/logging';
+import { errorLogger } from '@/lib/logging';
 import store from '@/app/store';
 
 describe('parseJSON', () => {

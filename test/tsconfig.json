@@ -3,7 +3,9 @@
     "compilerOptions": {
         "noImplicitAny": false,
         "noEmit": false,
-        "outDir": "./build/"
+        "outDir": "./build/",
+        "ignoreDeprecations": "6.0",
+        "rootDir": "."
     },
     "include": ["./test/lib/utils.test.ts"]
 }

@@ -108,7 +108,13 @@ function resetSuperiorValue(hours, minutes, seconds) {
   }
   return { hours, minutes, seconds };
 }
-const millisecondsToString = (milliseconds) => new Date(milliseconds).toString().split(" ").slice(4, 5).toString();
+const millisecondsToString = (milliseconds, locales = "de-DE", timeZone = "Europe/Berlin") => new Date(milliseconds).toLocaleTimeString(locales, {
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+  timeZone
+});
 const getMsLeftFromNowToEndtime = (endTimeMS) => endTimeMS - (/* @__PURE__ */ new Date()).getTime();
 const getSecondsFromMS = (millisecondsLeft) => Math.round(millisecondsLeft / 1e3);
 function getTimerStringUnitBasedOnTime(hour, minutes, seconds) {

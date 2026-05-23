@@ -155,11 +155,45 @@
         ],
         "globalDependencies": [
             {
-                "alexa2": ">=3.11.2",
+                "alexa2": ">=3.28.1",
                 "admin": ">=7.6.20"
             }
         ],
         "messages": [
+            {
+                "condition": {
+                    "operand": "and",
+                    "rules": ["oldVersion<0.3.0", "newVersion>=0.3.1"]
+                },
+                "title": {
+                    "en": "Important notice!",
+                    "de": "Wichtiger Hinweis!",
+                    "ru": "Важное замечание!",
+                    "pt": "Notícia importante!",
+                    "nl": "Belangrijke mededeling!",
+                    "fr": "Avis important!",
+                    "it": "Avviso IMPORTANTE!",
+                    "es": "Noticia importante!",
+                    "pl": "Ważna uwaga!",
+                    "zh-cn": "重要通知!",
+                    "uk": "Важливе повідомлення!"
+                },
+                "text": {
+                    "en": "Breaking change!!! At least Alexa >= 3.28.1 is required",
+                    "de": "Wechseln!!! Mindestens Alexa >= 3.28.1 ist erforderlich",
+                    "ru": "Разрыв изменения!!! По крайней мере Alexa >= 3.28.1 требуется",
+                    "pt": "Mudança de ruptura!!! Pelo menos Alexa >= 3.28.1 é necessário",
+                    "nl": "Breek verandering!!! Ten minste Alexa >= 3.28.1 is vereist",
+                    "fr": "Briser le changement!!! Au moins Alexa >= 3.28.1 est nécessaire",
+                    "it": "Cambiamento di rottura!!! Almeno Alexa >= 3.28.1 è richiesto",
+                    "es": "Cambio de ruptura! Por lo menos Alexa >= 3.28.1 es necesario",
+                    "pl": "Łamanie drobnych! Co najmniej Alexa >= 3.28.1 jest wymagane",
+                    "uk": "Змінити зміни! При найменшому Alexa >= 3.28.1 потрібно",
+                    "zh-cn": "突破变化!!! 至少需要 Alexa >= 3.28.1"
+                },
+                "level": "warn",
+                "buttons": ["agree", "cancel"]
+            },
             {
                 "condition": {
                     "operand": "and",

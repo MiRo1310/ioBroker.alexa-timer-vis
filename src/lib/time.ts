@@ -108,9 +108,17 @@ export function resetSuperiorValue(
  * Convert milliseconds to time in milliseconds to string => HH:MM:SS
  *
  * @param milliseconds - The time in milliseconds
+ * @param locales - Locale
+ * @param timeZone - TimeZone
  */
-export const millisecondsToString = (milliseconds: number): string =>
-    new Date(milliseconds).toString().split(' ').slice(4, 5).toString();
+export const millisecondsToString = (milliseconds: number, locales = 'de-DE', timeZone = 'Europe/Berlin'): string =>
+    new Date(milliseconds).toLocaleTimeString(locales, {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone,
+    });
 
 export const getMsLeftFromNowToEndtime = (endTimeMS: number): number => endTimeMS - new Date().getTime();
 
