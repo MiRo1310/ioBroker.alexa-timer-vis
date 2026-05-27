@@ -12,7 +12,7 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
         return;
     }
     try {
-        await adapter.setObject(pathArray.join('.'), {
+        await adapter.extendObject(pathArray.join('.'), {
             type: 'device',
             common: { name: val },
             native: {},
