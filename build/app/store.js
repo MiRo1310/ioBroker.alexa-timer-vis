@@ -143,6 +143,7 @@ class Store {
     var _a, _b;
     return (_b = (_a = this.localeActiveTimerList[serial]) == null ? void 0 : _a.find((activeList) => {
       if (!activeTimerLists.some((t) => t.id === activeList.id)) {
+        this.localeActiveTimerList[serial].filter((el) => el.id !== activeList.id);
         return activeList;
       }
     })) == null ? void 0 : _b.id;
