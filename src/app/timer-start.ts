@@ -15,6 +15,9 @@ export const startTimer = async (newActiveTimer: AlexaActiveTimerList): Promise<
             obj.timers[availableTimerIndex] = new Timer({ store });
         }
         const timer = obj.timers[availableTimerIndex];
+        if (!timer) {
+            obj.timers[availableTimerIndex] = new Timer({ store });
+        }
         await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
         timer.setInterval(store.intervalSecLessThan60Sec * 1000);
 
