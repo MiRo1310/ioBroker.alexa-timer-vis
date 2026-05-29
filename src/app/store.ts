@@ -124,6 +124,7 @@ class Store {
     getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[], serial: string): string | undefined {
         return this.localeActiveTimerList[serial]?.find(activeList => {
             if (!activeTimerLists.some(t => t.id === activeList.id)) {
+                this.localeActiveTimerList[serial].filter(el => el.id !== activeList.id);
                 return activeList;
             }
         })?.id;

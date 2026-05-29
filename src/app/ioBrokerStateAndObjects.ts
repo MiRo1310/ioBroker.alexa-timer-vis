@@ -1,7 +1,6 @@
-import type { AlexaJson, TimerIndex } from '@/types/types';
+import type { TimerIndex } from '@/types/types';
 import store from '@/app/store';
 import { errorLogger } from '@/lib/logging';
-import { isString } from '@/lib/string';
 import { createStates } from '@/app/createStates';
 import { isIobrokerValue } from '@/lib/state';
 
@@ -21,23 +20,6 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
         errorLogger.send({ title: 'Error setDeviceNameInObject', e });
     }
 };
-
-export async function getParsedAlexaJson(): Promise<AlexaJson | undefined> {
-    try {
-        const instance = store.getAlexa2Instance();
-        if (!instance) {
-            return;
-        }
-        const jsonAlexa = await store.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
-
-        if (isString(jsonAlexa?.val)) {
-            return JSON.parse(jsonAlexa.val);
-        }
-    } catch (e) {
-        errorLogger.send({ title: 'Error in getParsedAlexaJson', e });
-    }
-}
-
 export const initStateCreation = async (): Promise<void> => {
     const adapter = store.adapter;
     adapter.log.info('Alexa State was found');

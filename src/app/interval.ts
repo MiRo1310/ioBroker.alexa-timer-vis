@@ -33,16 +33,17 @@ export const interval = (timer: Timer, int: number, singleInstance: boolean): vo
             timer.setInactive();
 
             interval(timer, timer.getInterval(), true);
+            return;
         }
 
         if (timeLeftSec <= 0 || !obj.status[timerIndex]) {
-            obj.count.decrement();
-            await timer.reset();
-
-            adapter.log.debug(`Timer "${timerIndex}" stopped`);
-
             clearIntervalByTimerIndex(timerIndex);
             timer.setInactive();
+
+            obj.count.decrement();
+            adapter.log.debug(`Timer "${timerIndex}" stopped`);
+            await timer.reset();
+            return;
         }
     }, int);
 };

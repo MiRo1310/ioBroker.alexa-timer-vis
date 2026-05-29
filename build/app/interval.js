@@ -55,13 +55,15 @@ const interval = (timer, int, singleInstance) => {
       clearIntervalByTimerIndex(timerIndex);
       timer.setInactive();
       interval(timer, timer.getInterval(), true);
+      return;
     }
     if (timeLeftSec <= 0 || !import_timer_data.obj.status[timerIndex]) {
-      import_timer_data.obj.count.decrement();
-      await timer.reset();
-      adapter.log.debug(`Timer "${timerIndex}" stopped`);
       clearIntervalByTimerIndex(timerIndex);
       timer.setInactive();
+      import_timer_data.obj.count.decrement();
+      adapter.log.debug(`Timer "${timerIndex}" stopped`);
+      await timer.reset();
+      return;
     }
   }, int);
 };
