@@ -4,12 +4,16 @@ import store from '@/app/store';
 import { interval } from '@/app/interval';
 import { errorLogger } from '@/lib/logging';
 import { isMoreThanAMinute } from '@/lib/time';
+import { Timer } from '@/app/timer';
 
 export const startTimer = async (newActiveTimer: AlexaActiveTimerList): Promise<void> => {
     try {
         const availableTimerIndex = getAvailableTimerIndex();
         obj.status[availableTimerIndex] = true;
 
+        if (!obj.timers[availableTimerIndex]) {
+            obj.timers[availableTimerIndex] = new Timer({ store });
+        }
         const timer = obj.timers[availableTimerIndex];
         await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
         timer.setInterval(store.intervalSecLessThan60Sec * 1000);

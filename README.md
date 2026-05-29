@@ -67,6 +67,10 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- FIX: #288 Stop timer
+
 ### 3.0.1 (2026-05-23)
 
 - FIX: Update connection state to true when initializing AlexaTimer

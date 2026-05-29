@@ -29,7 +29,6 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var ioBrokerStateAndObjects_exports = {};
 __export(ioBrokerStateAndObjects_exports, {
   getIndexFromId: () => getIndexFromId,
-  getParsedAlexaJson: () => getParsedAlexaJson,
   initStateCreation: () => initStateCreation,
   isAlexaTimerVisResetButton: () => isAlexaTimerVisResetButton,
   setDeviceNameInObject: () => setDeviceNameInObject
@@ -37,7 +36,6 @@ __export(ioBrokerStateAndObjects_exports, {
 module.exports = __toCommonJS(ioBrokerStateAndObjects_exports);
 var import_store = __toESM(require("../app/store"));
 var import_logging = require("../lib/logging");
-var import_string = require("../lib/string");
 var import_createStates = require("../app/createStates");
 var import_state = require("../lib/state");
 const setDeviceNameInObject = async (index, val) => {
@@ -47,29 +45,27 @@ const setDeviceNameInObject = async (index, val) => {
     return;
   }
   try {
-    await adapter.setObject(pathArray.join("."), {
-      type: "device",
-      common: { name: val },
-      native: {}
+    await new Promise((resolve, reject) => {
+      adapter.extendObject(
+        pathArray.join("."),
+        {
+          type: "device",
+          common: { name: val },
+          native: {}
+        },
+        (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
+        }
+      );
     });
   } catch (e) {
     import_logging.errorLogger.send({ title: "Error setDeviceNameInObject", e });
   }
 };
-async function getParsedAlexaJson() {
-  try {
-    const instance = import_store.default.getAlexa2Instance();
-    if (!instance) {
-      return;
-    }
-    const jsonAlexa = await import_store.default.adapter.getForeignStateAsync(`alexa2.${instance}.History.json`);
-    if ((0, import_string.isString)(jsonAlexa == null ? void 0 : jsonAlexa.val)) {
-      return JSON.parse(jsonAlexa.val);
-    }
-  } catch (e) {
-    import_logging.errorLogger.send({ title: "Error in getParsedAlexaJson", e });
-  }
-}
 const initStateCreation = async () => {
   const adapter = import_store.default.adapter;
   adapter.log.info("Alexa State was found");
@@ -84,7 +80,6 @@ const getIndexFromId = (id) => {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   getIndexFromId,
-  getParsedAlexaJson,
   initStateCreation,
   isAlexaTimerVisResetButton,
   setDeviceNameInObject
