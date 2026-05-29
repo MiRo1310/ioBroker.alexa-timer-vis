@@ -17,7 +17,10 @@
 					"md": 6,
 					"lg": 6,
 					"xl": 2,
-					"textNotAlive": "You have to start the Adapter before you can configure!",
+					"textNotAlive": {
+						"en": "You have to start the adapter before you can configure!",
+						"de": "Du musst den Adapter starten, bevor du ihn konfigurieren kannst!"
+					},
 					"textAlive": ""
 				},
 				"alexa": {
@@ -46,7 +49,10 @@
 					"md": 6,
 					"lg": 2,
 					"xl": 2,
-					"label": "Intervall (sec)",
+					"label": {
+						"en": "Interval (sec)",
+						"de": "Intervall (Sek)"
+					},
 					"disabled": "!_alive",
 					"help": {
 						"en": "Intervall, time left more than 60 sec",
@@ -63,7 +69,10 @@
 					"md": 6,
 					"lg": 2,
 					"xl": 2,
-					"label": "Intervall (sec)",
+					"label": {
+						"en": "Interval (sec)",
+						"de": "Intervall (Sek)"
+					},
 					"disabled": "!_alive",
 					"help": {
 						"en": "Intervall, time left less than 60 sec",
