@@ -109,6 +109,9 @@ class Store {
         activeTimerLists: AlexaActiveTimerList[] | undefined,
         deviceSerial: string,
     ): AlexaActiveTimerList | undefined {
+        if (!this.localeActiveTimerList[deviceSerial]) {
+            this.localeActiveTimerList[deviceSerial] = [];
+        }
         const newestTimer = activeTimerLists?.find(t => !this.includesActiveTimerId(t.id, deviceSerial));
         if (newestTimer) {
             this.localeActiveTimerList[deviceSerial].push({ ...newestTimer, deviceSerialNumber: deviceSerial });
@@ -124,11 +127,11 @@ class Store {
     getRemovedTimerId(activeTimerLists: AlexaActiveTimerList[], serial: string): string | undefined {
         return this.localeActiveTimerList[serial]?.find(activeList => {
             if (!activeTimerLists.some(t => t.id === activeList.id)) {
-                this.localeActiveTimerList[serial].filter(el => el.id !== activeList.id);
                 return activeList;
             }
         })?.id;
     }
+
     /**
      * Returns an active timer with a different trigger time by comparing the local active timer list with the provided active timer lists.
      *
@@ -169,7 +172,7 @@ class Store {
      * @param serial - The serial number of the device.
      */
     includesActiveTimerId(id: string, serial: string): boolean {
-        return this.localeActiveTimerList[serial].some(t => t.id === id);
+        return this.localeActiveTimerList[serial]?.some(t => t.id === id) ?? false;
     }
     isIdFromActiveTimerList(id: string): boolean {
         return id.includes('.Timer.activeTimerList');
@@ -195,9 +198,8 @@ class Store {
                 const timer = getTimerById(removedId);
                 if (timer) {
                     await timer.reset();
-                    const index = this.localeActiveTimerList[serial].findIndex(el => el?.id === removedId);
-                    this.localeActiveTimerList[serial].splice(index, 1);
                 }
+                this.removeActiveTimerId(removedId, serial);
             }
             if (addedTimer) {
                 await timerAdd(addedTimer);
@@ -238,7 +240,7 @@ class Store {
      */
     clearTimeout(t: ioBroker.Timeout | undefined): void {
         this.adapter.clearTimeout(t);
-        this.timeouts = this.timeouts.filter(t => t !== t);
+        this.timeouts = this.timeouts.filter(timeout => timeout !== t);
     }
 
     /**

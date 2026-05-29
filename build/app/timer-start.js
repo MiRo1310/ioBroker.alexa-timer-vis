@@ -42,10 +42,10 @@ const startTimer = async (newActiveTimer) => {
   try {
     const availableTimerIndex = getAvailableTimerIndex();
     import_timer_data.obj.status[availableTimerIndex] = true;
-    const timer = import_timer_data.obj.timers[availableTimerIndex];
-    if (!timer) {
+    if (!import_timer_data.obj.timers[availableTimerIndex]) {
       import_timer_data.obj.timers[availableTimerIndex] = new import_timer.Timer({ store: import_store.default });
     }
+    const timer = import_timer_data.obj.timers[availableTimerIndex];
     await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
     timer.setInterval(import_store.default.intervalSecLessThan60Sec * 1e3);
     if ((0, import_time.isMoreThanAMinute)(timer.calculatedSeconds)) {

@@ -53,7 +53,6 @@ const interval = (timer, int, singleInstance) => {
     if (timeLeftSec <= 60 && !singleInstance) {
       singleInstance = true;
       clearIntervalByTimerIndex(timerIndex);
-      timer.setInactive();
       interval(timer, timer.getInterval(), true);
       return;
     }

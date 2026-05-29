@@ -11,10 +11,22 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
         return;
     }
     try {
-        await adapter.extendObject(pathArray.join('.'), {
-            type: 'device',
-            common: { name: val },
-            native: {},
+        await new Promise<void>((resolve, reject) => {
+            adapter.extendObject(
+                pathArray.join('.'),
+                {
+                    type: 'device',
+                    common: { name: val },
+                    native: {},
+                },
+                err => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    resolve();
+                },
+            );
         });
     } catch (e: any) {
         errorLogger.send({ title: 'Error setDeviceNameInObject', e });

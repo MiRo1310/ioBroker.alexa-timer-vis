@@ -30,7 +30,6 @@ export const interval = (timer: Timer, int: number, singleInstance: boolean): vo
             singleInstance = true;
 
             clearIntervalByTimerIndex(timerIndex);
-            timer.setInactive();
 
             interval(timer, timer.getInterval(), true);
             return;

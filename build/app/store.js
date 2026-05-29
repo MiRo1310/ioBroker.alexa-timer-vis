@@ -124,6 +124,9 @@ class Store {
    * @param deviceSerial - The serial number of the device.
    */
   getNewActiveTimer(activeTimerLists, deviceSerial) {
+    if (!this.localeActiveTimerList[deviceSerial]) {
+      this.localeActiveTimerList[deviceSerial] = [];
+    }
     const newestTimer = activeTimerLists == null ? void 0 : activeTimerLists.find((t) => !this.includesActiveTimerId(t.id, deviceSerial));
     if (newestTimer) {
       this.localeActiveTimerList[deviceSerial].push({ ...newestTimer, deviceSerialNumber: deviceSerial });
@@ -140,7 +143,6 @@ class Store {
     var _a, _b;
     return (_b = (_a = this.localeActiveTimerList[serial]) == null ? void 0 : _a.find((activeList) => {
       if (!activeTimerLists.some((t) => t.id === activeList.id)) {
-        this.localeActiveTimerList[serial].filter((el) => el.id !== activeList.id);
         return activeList;
       }
     })) == null ? void 0 : _b.id;
@@ -181,7 +183,8 @@ class Store {
    * @param serial - The serial number of the device.
    */
   includesActiveTimerId(id, serial) {
-    return this.localeActiveTimerList[serial].some((t) => t.id === id);
+    var _a, _b;
+    return (_b = (_a = this.localeActiveTimerList[serial]) == null ? void 0 : _a.some((t) => t.id === id)) != null ? _b : false;
   }
   isIdFromActiveTimerList(id) {
     return id.includes(".Timer.activeTimerList");
@@ -204,9 +207,8 @@ class Store {
         const timer = (0, import_timer.getTimerById)(removedId);
         if (timer) {
           await timer.reset();
-          const index = this.localeActiveTimerList[serial].findIndex((el) => (el == null ? void 0 : el.id) === removedId);
-          this.localeActiveTimerList[serial].splice(index, 1);
         }
+        this.removeActiveTimerId(removedId, serial);
       }
       if (addedTimer) {
         await (0, import_timer_add.timerAdd)(addedTimer);
@@ -244,7 +246,7 @@ class Store {
    */
   clearTimeout(t) {
     this.adapter.clearTimeout(t);
-    this.timeouts = this.timeouts.filter((t2) => t2 !== t2);
+    this.timeouts = this.timeouts.filter((timeout) => timeout !== t);
   }
   /**
    * Clears all stored timeouts.
