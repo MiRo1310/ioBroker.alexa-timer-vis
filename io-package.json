@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "news": {
+      "3.0.2": {
+        "en": "CHORE: Repository checker\nFIX: #288 Stop timer",
+        "de": "CHORE: Repository Checker\nFIX: #288 Zeitgeber stoppen",
+        "ru": "Источник: Repository Checker\n#288 Стоп таймер",
+        "pt": "CHORE: Verificador de repositório\nFIX: #288 Temporizador de Paragem",
+        "nl": "Repository-checker\nFIX: #288 Stoptimer",
+        "fr": "Vérification des dépôts\nFIXE: #288 Chronomètre d'arrêt",
+        "it": "CHORE: Repository checker\nFIX: #288 Stop timer",
+        "es": "CHORE: Repository checker\nFIX: #288 Stop timer",
+        "pl": "CHORE: Kontroler Repozycyjny\nFIX: # 288",
+        "uk": "CHORE: Репозиторійний чекер\nFIX: #288 Стоп таймер",
+        "zh-cn": "仓库检查器\nFIX: # 288 停止计时器"
+      },
       "3.0.1": {
         "en": "FIX: Update connection state to true when initializing AlexaTimer",
         "de": "FIX: Aktualisieren Sie den Verbindungszustand bei der Initialisierung von AlexaTimer",
@@ -80,19 +93,6 @@
         "pl": "CHORE: Aktualizacja zależności",
         "uk": "CHORE: Оновлення залежності",
         "zh-cn": "CHORE: 更新依赖性"
-      },
-      "2.1.2": {
-        "en": "FIX: Errors reported by Sentry\nFIX: Add alarm clock to ignored words",
-        "de": "FIX: Fehler, die von Sentry gemeldet wurden\nFIX: Alarmuhr hinzufügen, um Wörter zu ignorieren",
-        "ru": "FIX: Ошибки, о которых сообщает Sentry\nДобавьте будильник к проигнорированным словам",
-        "pt": "FIX: Erros relatados pelo Sentry\nFIX: Adicionar o despertador às palavras ignoradas",
-        "nl": "FIX: Fouten gemeld door Sentry\nFIX: Wekker toevoegen aan genegeerde woorden",
-        "fr": "FIX : Erreurs signalées par Sentry\nFIX: Ajouter un réveil aux mots ignorés",
-        "it": "FIX: Errori segnalati da Sentry\nFIX: Aggiungi orologio di allarme per le parole ignorate",
-        "es": "FIX: Errores reportados por Sentry\nFIX: Agregue el reloj de alarma para las palabras ignoradas",
-        "pl": "FIX: Błędy zgłoszone przez Sentry\nFIX: Dodaj budzik do ignorowanych słów",
-        "uk": "FIX: Помилки, що повідомляються Sentry\nFIX: Додати годинник сигналізації для ігнорування слів",
-        "zh-cn": "FIX:哨兵报告的错误\nFIX: 在忽略的单词中添加提醒钟"
       }
     },
     "titleLang": {

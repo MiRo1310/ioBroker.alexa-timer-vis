@@ -1,4 +1,10 @@
 # Older changes
+## 2.2.0 (2025-12-10)
+
+- FIX: #246 Error in time reset
+- FIX: Wrong objects created
+- FEAT: Add initial timer state
+
 ## 2.1.3 (2025-11-28)
 
 - CHORE: Update dependencies
