@@ -3,5 +3,7 @@
     "Alexa Timer für die Vis": "Vis 的 Alexa 计时器",
     "Datenpunkt, Alexa": "亚历克萨即时",
     "Intervall, Zeit übrig mehr als 60 sek": "间隔，剩余时间超过60秒",
-    "Intervall, Zeit übrig weniger als 60 sek": "间隔，剩余时间少于 60 秒"
+    "Intervall, Zeit übrig weniger als 60 sek": "间隔，剩余时间少于 60 秒",
+    "You have to start the adapter before you can configure!": "您必须先启动适配器才能配置！",
+    "notAlive": "您必须先启动适配器才能配置！"
 }

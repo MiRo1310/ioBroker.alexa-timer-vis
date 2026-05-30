@@ -3,5 +3,7 @@
     "Alexa Timer für die Vis": "Minuterie Alexa pour le Vis",
     "Datenpunkt, Alexa": "Alexa Instantz",
     "Intervall, Zeit übrig mehr als 60 sek": "Intervalle, temps restant supérieur à 60 sec",
-    "Intervall, Zeit übrig weniger als 60 sek": "Intervalle, temps restant inférieur à 60 sec"
+    "Intervall, Zeit übrig weniger als 60 sek": "Intervalle, temps restant inférieur à 60 sec",
+    "You have to start the adapter before you can configure!": "Vous devez démarrer l'adaptateur avant de pouvoir configurer !",
+    "notAlive": "Vous devez démarrer l'adaptateur avant de pouvoir configurer !"
 }
