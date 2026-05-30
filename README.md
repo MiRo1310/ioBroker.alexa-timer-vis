@@ -69,6 +69,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 -->
 ### **WORK IN PROGRESS**
 
+- CHORE: Repository checker
 - FIX: #288 Stop timer
 
 ### 3.0.1 (2026-05-23)
