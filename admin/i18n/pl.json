@@ -1,9 +1,8 @@
 {
     "Alexa": "Instancja Alexy",
-    "Alexa Timer für die Vis": "Alexa Timer dla Vis",
+    "Alexa Timer für die Vis": "Timer Alexa dla Vis",
     "Datenpunkt, Alexa": "Alexa Instanz",
-    "Intervall, Zeit übrig mehr als 60 sek": "Interwał, pozostało ponad 60 sekund",
-    "Intervall, Zeit übrig weniger als 60 sek": "Interwał, pozostało mniej niż 60 sekund",
-    "You have to start the adapter before you can configure!": "Przed konfiguracją należy uruchomić adapter!",
-    "notAlive": "Przed konfiguracją należy uruchomić adapter!"
+    "Intervall, Zeit übrig mehr als 60 sek": "Interwał, pozostały czas przekraczający 60 sek",
+    "Intervall, Zeit übrig weniger als 60 sek": "Interwał, pozostały czas poniżej 60 sek",
+    "You have to start the adapter before you can configure!": "Przed konfiguracją należy uruchomić adapter!"
 }

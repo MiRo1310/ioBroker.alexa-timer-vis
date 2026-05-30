@@ -1,9 +1,8 @@
 {
-    "Alexa": "Алекса Экземпляр",
-    "Alexa Timer für die Vis": "Alexa Timer для Vis",
+    "Alexa": "Экземпляр Алексы",
+    "Alexa Timer für die Vis": "Alexa Таймер для Vis",
     "Datenpunkt, Alexa": "Алекса Инстанц",
-    "Intervall, Zeit übrig mehr als 60 sek": "Интервал, осталось более 60 сек.",
-    "Intervall, Zeit übrig weniger als 60 sek": "Интервал, осталось менее 60 сек.",
-    "You have to start the adapter before you can configure!": "Прежде чем приступать к настройке, необходимо запустить адаптер!",
-    "notAlive": "Прежде чем приступать к настройке, необходимо запустить адаптер!"
+    "Intervall, Zeit übrig mehr als 60 sek": "Интервал, осталось времени более 60 секунд",
+    "Intervall, Zeit übrig weniger als 60 sek": "Интервал, осталось меньше 60 сек.",
+    "You have to start the adapter before you can configure!": "Прежде чем приступать к настройке, необходимо запустить адаптер!"
 }
