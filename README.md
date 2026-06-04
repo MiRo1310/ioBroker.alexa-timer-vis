@@ -67,6 +67,11 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- CHORE: Update dependencies
+
 ### 3.0.2 (2026-05-30)
 
 - CHORE: Repository checker
@@ -93,7 +98,9 @@ to make them visible in the Vis. So you have a better overview if you have sever
 - FEAT: Add more information to sentry reports
 - FIX: Errors reported by sentry
 
-[Older changelogs can be found there](CHANGELOG_OLD.md)## License
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
+## License
 
 Copyright (c) 2021-2026 Michael Roling <michael.roling@gmx.de>
 
