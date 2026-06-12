@@ -19,7 +19,7 @@ export const generateTimerValues = (timer: Timer): number => {
     const sec = timer.calculatedSeconds;
     const endTime = timer.getOutputProperties().endTimeNumber;
     if (endTime < 0) {
-        store.adapter.log.error(`Error no endTime set. ${JSON.stringify(endTime)}`);
+        store.adapter.log.warn(`No valid endTime set: ${JSON.stringify(endTime)}`);
         return 0;
     }
     const remainingMs = getMsLeftFromNowToEndtime(endTime);

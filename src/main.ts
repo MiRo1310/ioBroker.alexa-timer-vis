@@ -28,33 +28,33 @@ export default class AlexaTimerVis extends utils.Adapter {
     }
 
     private async onReady(): Promise<void> {
-        if (this.adapterConfig && '_id' in this.adapterConfig) {
-            store.init({
-                adapter: this,
-                alexaTimerVisInstance: this.adapterConfig?._id.replace('system.adapter.', ''),
-                ...this.config,
-            });
-        } else {
-            return;
-        }
-        errorLogger.init();
+        try {
+            if (this.adapterConfig && '_id' in this.adapterConfig) {
+                store.init({
+                    adapter: this,
+                    alexaTimerVisInstance: this.adapterConfig?._id.replace('system.adapter.', ''),
+                    ...this.config,
+                });
+            } else {
+                return;
+            }
+            errorLogger.init();
 
-        await initStateCreation();
+            await initStateCreation();
 
-        this.log.info('AlexaTimer states have been created');
+            this.log.info('AlexaTimer states have been created');
 
-        await this.setState('info.connection', true, true);
-        obj.timers.timer1 = new Timer({ store });
-        obj.timers.timer2 = new Timer({ store });
-        obj.timers.timer3 = new Timer({ store });
-        obj.timers.timer4 = new Timer({ store });
+            await this.setState('info.connection', true, true);
+            obj.timers.timer1 = new Timer({ store });
+            obj.timers.timer2 = new Timer({ store });
+            obj.timers.timer3 = new Timer({ store });
+            obj.timers.timer4 = new Timer({ store });
 
-        await subscribeActiveTimerListStates();
+            await subscribeActiveTimerListStates();
 
-        await resetAllTimerValuesAndStateValues();
+            await resetAllTimerValuesAndStateValues();
 
-        this.on('stateChange', async (id, state) => {
-            try {
+            this.on('stateChange', async (id, state) => {
                 await store.activeTimeListChangedHandler(id, state);
 
                 if (isAlexaTimerVisResetButton(state, id)) {
@@ -63,10 +63,10 @@ export default class AlexaTimerVis extends utils.Adapter {
                         await timer.stopTimerInAlexa();
                     }
                 }
-            } catch (e) {
-                errorLogger.send({ title: 'Error in stateChange', e });
-            }
-        });
+            });
+        } catch (e) {
+            errorLogger.send({ title: 'OnReady', e });
+        }
     }
 
     async onUnload(callback: () => void): Promise<void> {

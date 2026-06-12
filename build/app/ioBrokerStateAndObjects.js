@@ -68,7 +68,7 @@ const setDeviceNameInObject = async (index, val) => {
 };
 const initStateCreation = async () => {
   const adapter = import_store.default.adapter;
-  adapter.log.info("Alexa State was found");
+  adapter.log.debug("Initializing Alexa Timer states");
   await adapter.setState("info.connection", true, true);
   await (0, import_createStates.createStates)(4);
 };

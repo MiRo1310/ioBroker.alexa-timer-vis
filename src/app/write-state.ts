@@ -1,5 +1,4 @@
 import { obj } from '@/config/timer-data';
-import { errorLogger } from '@/lib/logging';
 import store from '@/app/store';
 import { getTimerByIndex } from '@/app/timer';
 
@@ -73,14 +72,7 @@ export const writeStatesByTimerIndex = async (timerIndex: string, reset: boolean
 };
 
 export async function writeStates({ reset }: { reset: boolean }): Promise<void> {
-    try {
-        for (const timerIndex in obj.status) {
-            await writeStatesByTimerIndex(timerIndex, reset);
-        }
-    } catch (e: any) {
-        errorLogger.send({
-            title: 'Error in writeState',
-            e,
-        });
+    for (const timerIndex in obj.status) {
+        await writeStatesByTimerIndex(timerIndex, reset);
     }
 }
