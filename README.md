@@ -67,8 +67,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 3.0.3 (2026-06-12)
 
 - FIX: #295 Extend timer
 - CHORE: Update dependencies
@@ -92,11 +91,6 @@ to make them visible in the Vis. So you have a better overview if you have sever
 
 ### 2.2.2 (2025-12-12)
 
-- FIX: Errors reported by sentry
-
-### 2.2.1 (2025-12-11)
-
-- FEAT: Add more information to sentry reports
 - FIX: Errors reported by sentry
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)

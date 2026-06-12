@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "alexa-timer-vis",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "news": {
+      "3.0.3": {
+        "en": "FIX: #295 Extend timer\nCHORE: Update dependencies",
+        "de": "BEHOBEN: #295 Timer verlängern\nAUFGABE: Abhängigkeiten aktualisieren",
+        "ru": "ИСПРАВЛЕНИЕ: #295 Увеличение таймера\nЗАДАЧА: Обновить зависимости",
+        "pt": "CORREÇÃO: #295 Estender temporizador\nTAREFA: Atualizar dependências",
+        "nl": "OPLOSSING: #295 Timer verlengen\nTAAK: Afhankelijkheden bijwerken",
+        "fr": "CORRECTION : #295 Prolonger le délai\nTÂCHE : Mettre à jour les dépendances",
+        "it": "CORREZIONE: #295 Estendi timer\nATTIVITÀ: Aggiorna le dipendenze",
+        "es": "CORRECCIÓN: #295 Extender temporizador\nTAREA: Actualizar dependencias",
+        "pl": "NAPRAWIONO: #295 Wydłużenie timera\nCHORE: Aktualizacja zależności",
+        "uk": "ВИПРАВЛЕННЯ: #295 Подовжити таймер\nЗАВДАННЯ: Оновлення залежностей",
+        "zh-cn": "修复：#295 延长定时器\n任务：更新依赖项"
+      },
       "3.0.2": {
         "en": "CHORE: Repository checker\nFIX: #288 Stop timer",
         "de": "CHORE: Repository Checker\nFIX: #288 Zeitgeber stoppen",
@@ -80,19 +93,6 @@
         "pl": "FIX: # 246 Błąd w resecie czasu\nFIX: Utworzono niewłaściwe obiekty\nFEAT: Dodaj początkowy stan timera",
         "uk": "FIX: #246 Помилка в часі скидання\nFIX: Створені об'єкти Wrong\nFEAT: Додати початковий стан таймера",
         "zh-cn": "FIX: # 246 时间重置错误\nFIX: 创建错误的对象\nFEAT: 添加初始计时器状态"
-      },
-      "2.1.3": {
-        "en": "CHORE: Update dependecies",
-        "de": "CHORE: Aktualisieren von Abhängigkeiten",
-        "ru": "Источник: Update Dependes",
-        "pt": "CHORE: Atualizar dependências",
-        "nl": "CHORE: Update afhankelijkheden",
-        "fr": "CHORE : Mise à jour des dépendances",
-        "it": "CHORE: dipendenze di aggiornamento",
-        "es": "CHORE: Actualizar dependencias",
-        "pl": "CHORE: Aktualizacja zależności",
-        "uk": "CHORE: Оновлення залежності",
-        "zh-cn": "CHORE: 更新依赖性"
       }
     },
     "titleLang": {
