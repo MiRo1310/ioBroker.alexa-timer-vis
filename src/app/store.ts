@@ -166,6 +166,20 @@ class Store {
     }
 
     /**
+     * Updates the triggerTime of a timer in the local active timer list.
+     *
+     * @param id - The ID of the timer to update.
+     * @param triggerTime - The new trigger time in milliseconds.
+     * @param serial - The serial number of the device.
+     */
+    updateLocalActiveTimerTriggerTime(id: string, triggerTime: number, serial: string): void {
+        const localTimer = this.localeActiveTimerList[serial]?.find(t => t.id === id);
+        if (localTimer) {
+            localTimer.triggerTime = triggerTime;
+        }
+    }
+
+    /**
      * Checks if an active timer ID exists in the local active timer list.
      *
      * @param id - The ID of the active timer to check.
@@ -209,6 +223,7 @@ class Store {
                 if (timer) {
                     timer.extendTimer(extendTimer.changedSec);
                 }
+                this.updateLocalActiveTimerTriggerTime(extendTimer.listEl.id, extendTimer.listEl.triggerTime, serial);
             }
         }
     }

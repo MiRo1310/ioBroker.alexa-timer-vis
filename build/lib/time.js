@@ -129,12 +129,12 @@ function getTimerStringUnitBasedOnTime(hour, minutes, seconds) {
 }
 function getTimeUnit(leftSec) {
   if (leftSec >= 3600) {
-    return ` ${import_store.default.unitHour3}`;
+    return ` ${import_store.default.unitHour3.trim()}`;
   }
   if (leftSec >= 60) {
-    return ` ${import_store.default.unitMinute3}`;
+    return ` ${import_store.default.unitMinute3.trim()}`;
   }
-  return ` ${import_store.default.unitSecond3}`;
+  return ` ${import_store.default.unitSecond3.trim()}`;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

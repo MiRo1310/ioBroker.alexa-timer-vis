@@ -70,6 +70,7 @@ to make them visible in the Vis. So you have a better overview if you have sever
 
 ### **WORK IN PROGRESS**
 
+- FIX: #295 Extend timer
 - CHORE: Update dependencies
 
 ### 3.0.2 (2026-05-30)

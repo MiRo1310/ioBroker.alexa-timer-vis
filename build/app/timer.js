@@ -190,21 +190,17 @@ class Timer {
     this.lengthTimer = length;
   }
   setValuesFromEchoDeviceTimerList(newActiveTimer) {
-    try {
-      if (newActiveTimer) {
-        const { id, label, triggerTime: endTime, durationMillis } = newActiveTimer;
-        this.timerId = id;
-        this.setTimerName(label);
-        if (this.endTime < 0) {
-          this.adapter.log.warn("Wrong endTime set");
-        }
-        this.endTime = endTime;
-        this.endTimeString = (0, import_time.millisecondsToString)(endTime);
-        this.calculatedSeconds = durationMillis / 1e3;
-        this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
+    if (newActiveTimer) {
+      const { id, label, triggerTime: endTime, durationMillis } = newActiveTimer;
+      this.timerId = id;
+      this.setTimerName(label);
+      if (this.endTime < 0) {
+        this.adapter.log.warn("Wrong endTime set");
       }
-    } catch (e) {
-      import_logging.errorLogger.send({ title: "Error in setIdFromEcoDeviceTimerList", e });
+      this.endTime = endTime;
+      this.endTimeString = (0, import_time.millisecondsToString)(endTime);
+      this.calculatedSeconds = durationMillis / 1e3;
+      this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds, true).initialString;
     }
   }
   updateInitialTimer(sec) {

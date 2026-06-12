@@ -177,6 +177,20 @@ class Store {
     this.localeActiveTimerList[serial] = (_a = this.localeActiveTimerList[serial]) == null ? void 0 : _a.filter((t) => t.id !== id);
   }
   /**
+   * Updates the triggerTime of a timer in the local active timer list.
+   *
+   * @param id - The ID of the timer to update.
+   * @param triggerTime - The new trigger time in milliseconds.
+   * @param serial - The serial number of the device.
+   */
+  updateLocalActiveTimerTriggerTime(id, triggerTime, serial) {
+    var _a;
+    const localTimer = (_a = this.localeActiveTimerList[serial]) == null ? void 0 : _a.find((t) => t.id === id);
+    if (localTimer) {
+      localTimer.triggerTime = triggerTime;
+    }
+  }
+  /**
    * Checks if an active timer ID exists in the local active timer list.
    *
    * @param id - The ID of the active timer to check.
@@ -218,6 +232,7 @@ class Store {
         if (timer) {
           timer.extendTimer(extendTimer.changedSec);
         }
+        this.updateLocalActiveTimerTriggerTime(extendTimer.listEl.id, extendTimer.listEl.triggerTime, serial);
       }
     }
   }

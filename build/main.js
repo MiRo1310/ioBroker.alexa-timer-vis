@@ -58,27 +58,27 @@ class AlexaTimerVis extends utils.Adapter {
   }
   async onReady() {
     var _a;
-    if (this.adapterConfig && "_id" in this.adapterConfig) {
-      import_store.default.init({
-        adapter: this,
-        alexaTimerVisInstance: (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", ""),
-        ...this.config
-      });
-    } else {
-      return;
-    }
-    import_logging.errorLogger.init();
-    await (0, import_ioBrokerStateAndObjects.initStateCreation)();
-    this.log.info("AlexaTimer states have been created");
-    await this.setState("info.connection", true, true);
-    import_timer_data.obj.timers.timer1 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.obj.timers.timer2 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.obj.timers.timer3 = new import_timer.Timer({ store: import_store.default });
-    import_timer_data.obj.timers.timer4 = new import_timer.Timer({ store: import_store.default });
-    await (0, import_subscribeStates.subscribeActiveTimerListStates)();
-    await (0, import_reset.resetAllTimerValuesAndStateValues)();
-    this.on("stateChange", async (id, state) => {
-      try {
+    try {
+      if (this.adapterConfig && "_id" in this.adapterConfig) {
+        import_store.default.init({
+          adapter: this,
+          alexaTimerVisInstance: (_a = this.adapterConfig) == null ? void 0 : _a._id.replace("system.adapter.", ""),
+          ...this.config
+        });
+      } else {
+        return;
+      }
+      import_logging.errorLogger.init();
+      await (0, import_ioBrokerStateAndObjects.initStateCreation)();
+      this.log.info("AlexaTimer states have been created");
+      await this.setState("info.connection", true, true);
+      import_timer_data.obj.timers.timer1 = new import_timer.Timer({ store: import_store.default });
+      import_timer_data.obj.timers.timer2 = new import_timer.Timer({ store: import_store.default });
+      import_timer_data.obj.timers.timer3 = new import_timer.Timer({ store: import_store.default });
+      import_timer_data.obj.timers.timer4 = new import_timer.Timer({ store: import_store.default });
+      await (0, import_subscribeStates.subscribeActiveTimerListStates)();
+      await (0, import_reset.resetAllTimerValuesAndStateValues)();
+      this.on("stateChange", async (id, state) => {
         await import_store.default.activeTimeListChangedHandler(id, state);
         if ((0, import_ioBrokerStateAndObjects.isAlexaTimerVisResetButton)(state, id)) {
           const timer = (0, import_timer.getTimerByIndex)((0, import_ioBrokerStateAndObjects.getIndexFromId)(id));
@@ -86,10 +86,10 @@ class AlexaTimerVis extends utils.Adapter {
             await timer.stopTimerInAlexa();
           }
         }
-      } catch (e) {
-        import_logging.errorLogger.send({ title: "Error in stateChange", e });
-      }
-    });
+      });
+    } catch (e) {
+      import_logging.errorLogger.send({ title: "OnReady", e });
+    }
   }
   async onUnload(callback) {
     try {

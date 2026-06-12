@@ -150,10 +150,10 @@ export function getTimerStringUnitBasedOnTime(hour: string, minutes: string, sec
  */
 export function getTimeUnit(leftSec: number): string {
     if (leftSec >= 3600) {
-        return ` ${store.unitHour3}`;
+        return ` ${store.unitHour3.trim()}`;
     }
     if (leftSec >= 60) {
-        return ` ${store.unitMinute3}`;
+        return ` ${store.unitMinute3.trim()}`;
     }
-    return ` ${store.unitSecond3}`;
+    return ` ${store.unitSecond3.trim()}`;
 }

@@ -30,4 +30,24 @@ describe('parseJSON', () => {
         expect(res.isValidJson).to.be.false;
         expect(res.ob).to.equal('');
     });
+
+    it('liefert isValidJson = false für leeren String', () => {
+        const res = parseJSON('');
+        expect(res.isValidJson).to.be.false;
+    });
+
+    it('liefert isValidJson = false für ungültiges JSON (error-Pfad, adapter falsy)', () => {
+        const res = parseJSON('{ kein json }');
+        expect(res.isValidJson).to.be.false;
+        expect(res.ob).to.equal('{ kein json }');
+        expect(sendStub.called).to.be.false;
+    });
+
+    it('ruft errorLogger.send bei ungültigem JSON auf wenn adapter truthy ist', () => {
+        (store as any).adapter = {};
+        const res = parseJSON('{ kein json }');
+        expect(res.isValidJson).to.be.false;
+        expect(sendStub.calledOnce).to.be.true;
+        (store as any).adapter = false;
+    });
 });

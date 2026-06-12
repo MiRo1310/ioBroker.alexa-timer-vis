@@ -34,7 +34,7 @@ export const setDeviceNameInObject = async (index: TimerIndex, val: string): Pro
 };
 export const initStateCreation = async (): Promise<void> => {
     const adapter = store.adapter;
-    adapter.log.info('Alexa State was found');
+    adapter.log.debug('Initializing Alexa Timer states');
     await adapter.setState('info.connection', true, true);
 
     await createStates(4);

@@ -33,7 +33,6 @@ __export(write_state_exports, {
 });
 module.exports = __toCommonJS(write_state_exports);
 var import_timer_data = require("../config/timer-data");
-var import_logging = require("../lib/logging");
 var import_store = __toESM(require("../app/store"));
 var import_timer = require("../app/timer");
 const timerObjectStatus = {};
@@ -94,15 +93,8 @@ const writeStatesByTimerIndex = async (timerIndex, reset) => {
   adapter.setStateChanged("all_Timer.alive", !reset, true);
 };
 async function writeStates({ reset }) {
-  try {
-    for (const timerIndex in import_timer_data.obj.status) {
-      await writeStatesByTimerIndex(timerIndex, reset);
-    }
-  } catch (e) {
-    import_logging.errorLogger.send({
-      title: "Error in writeState",
-      e
-    });
+  for (const timerIndex in import_timer_data.obj.status) {
+    await writeStatesByTimerIndex(timerIndex, reset);
   }
 }
 // Annotate the CommonJS export names for ESM import in node:
