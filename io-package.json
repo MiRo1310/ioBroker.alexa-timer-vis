@@ -23,8 +23,8 @@
         "pt": "CHORE: Verificador de repositório\nFIX: #288 Temporizador de Paragem",
         "nl": "Repository-checker\nFIX: #288 Stoptimer",
         "fr": "Vérification des dépôts\nFIXE: #288 Chronomètre d'arrêt",
-        "it": "CHORE: Repository checker\nFIX: #288 Stop timer",
-        "es": "CHORE: Repository checker\nFIX: #288 Stop timer",
+        "it": "CHORE: Controllo del repository\nFIX: #288 Arresta timer",
+        "es": "CHORE: Comprobador de repositorio\nFIX: #288 Detener temporizador",
         "pl": "CHORE: Kontroler Repozycyjny\nFIX: # 288",
         "uk": "CHORE: Репозиторійний чекер\nFIX: #288 Стоп таймер",
         "zh-cn": "仓库检查器\nFIX: # 288 停止计时器"
