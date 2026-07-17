@@ -206,7 +206,7 @@ class Timer {
   updateInitialTimer(sec) {
     this.initialTimer = (0, import_time.secToHourMinSec)(this.calculatedSeconds + sec, true).initialString;
   }
-  setInterval(interval) {
+  setIntervalMs(interval) {
     this.interval = interval;
   }
   setCreationTime(creationTime) {

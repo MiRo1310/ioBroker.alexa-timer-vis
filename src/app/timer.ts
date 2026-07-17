@@ -186,7 +186,7 @@ export class Timer {
     private updateInitialTimer(sec: number): void {
         this.initialTimer = secToHourMinSec(this.calculatedSeconds + sec, true).initialString;
     }
-    setInterval(interval: number): void {
+    setIntervalMs(interval: number): void {
         this.interval = interval;
     }
     setCreationTime(creationTime: number): void {

@@ -50,7 +50,7 @@ const startTimer = async (newActiveTimer) => {
       import_timer_data.obj.timers[availableTimerIndex] = new import_timer.Timer({ store: import_store.default });
     }
     await timer.init({ timerIndex: availableTimerIndex, newActiveTimer });
-    timer.setInterval(import_store.default.intervalSecLessThan60Sec * 1e3);
+    timer.setIntervalMs(import_store.default.intervalSecLessThan60Sec * 1e3);
     if ((0, import_time.isMoreThanAMinute)(timer.calculatedSeconds)) {
       (0, import_interval.interval)(timer, import_store.default.intervalSecMoreThan60Sec * 1e3, false);
       return;
