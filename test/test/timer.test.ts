@@ -343,7 +343,7 @@ describe('Timer Getter und Setter', () => {
     });
 
     it('setInterval setzt den Wert korrekt', () => {
-        timer.setInterval(500);
+        timer.setIntervalMs(500);
         expect(timer.getInterval()).to.equal(500);
     });
 
